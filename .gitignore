@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+
+# Eclipse
+.buildpath
+.project
+.settings
+
+# Yii
+web/assets/
+web/protected/runtime/
+web/themes/classic/views/

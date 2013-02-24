@@ -1,0 +1,90 @@
+a.sort-link {
+  background-position: 100% 50%;
+  background-repeat: no-repeat;
+  padding-right: 16px;
+}
+a.sort-link.asc {
+  background-image: url(../images/sort_asc.png);
+}
+a.sort-link.desc {
+  background-image: url(../images/sort_desc.png);
+}
+header {
+  overflow: auto;
+}
+header h1 {
+  float: left;
+}
+header .user {
+  float: right;
+  margin: 10px 0;
+}
+header .user .nav {
+  margin-bottom: 0;
+}
+footer {
+  clear: both;
+  text-align: center;
+}
+textarea {
+  height: 100px;
+}
+
+.bans {
+  float: left;
+}
+.blocks {
+  float: right;
+}
+#servers-grid tbody tr,
+#bans-grid tbody tr,
+#blocks-grid tbody tr {
+  cursor: pointer;
+}
+#bans-grid tr.expired td.length {
+  background-color: #dbf4d7;
+}
+
+.table-accordion tbody tr.section:hover td,
+.table-accordion tbody tr.section:hover th {
+  background-color: transparent;
+  cursor: default;
+}
+.table-accordion tr.section > td {
+  border-top: 0;
+  padding: 0;
+}
+.table-accordion tr.section > td > div {
+  display: none;
+}
+
+td.datetime,
+td.length,
+td.ServerQuery_map,
+td.ServerQuery_players,
+th.datetime,
+th.length,
+th.ServerQuery_map,
+th.ServerQuery_players {
+  white-space: nowrap;
+  width: 1px;
+}
+td.length,
+td.ServerQuery_players,
+th.length,
+th.ServerQuery_players {
+  text-align: right;
+}
+td.SBAdmin_name,
+th.SBAdmin_name {
+  width: 20%;
+}
+td.datetime,
+th.datetime {
+  text-align: center !important;
+}
+td.icon,
+th.icon {
+  text-align: center !important;
+  width: 16px;
+}

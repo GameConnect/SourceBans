@@ -27,9 +27,176 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-		$this->render('index');
+		$defaultAction = "action" . ucfirst(SourceBans::app()->settings->default_page);
+		
+		$this->$defaultAction();
+	}
+
+	public function actionDashboard()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Dashboard');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Dashboard'),
+		);
+		
+		$bans = new CActiveDataProvider('SBBan', array(
+			'criteria' => array(
+				'limit' => 10,
+				'with' => array('server', 'server.game'),
+			),
+			'sort' => array(
+				'defaultOrder' => array(
+					'time' => CSort::SORT_DESC,
+				),
+			),
+		));
+		$blocks = new CActiveDataProvider('SBBlock', array(
+			'criteria' => array(
+				'limit' => 10,
+				'with' => array('ban'),
+			),
+			'sort' => array(
+				'defaultOrder' => array(
+					'time' => CSort::SORT_DESC,
+				),
+			),
+		));
+		$servers = new CActiveDataProvider('SBServer', array(
+			'criteria' => array(
+				'condition' => 't.enabled = 1',
+				'with' => array('game'),
+			),
+			'pagination' => false,
+			'sort' => array(
+				'attributes' => array(
+					'game.name' => array(
+						'asc' => 'game.name',
+						'desc' => 'game.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder' => array(
+					'game.name' => CSort::SORT_ASC,
+					'ip' => CSort::SORT_ASC,
+					'port' => CSort::SORT_ASC,
+				),
+			),
+		));
+		
+		$this->render('dashboard', array(
+			'bans' => $bans,
+			'blocks' => $blocks,
+			'servers' => $servers,
+			'total_bans' => SBBan::model()->count(),
+			'total_blocks' => SBBlock::model()->count(),
+		));
+	}
+
+	public function actionBans()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Bans');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Bans'),
+		);
+		
+		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
+
+		$bans = new CActiveDataProvider('SBBan', array(
+			'criteria' => array(
+		    'scopes' => $hideInactive ? 'active' : null,
+				'with' => array('admin', 'country', 'server', 'server.game'),
+			),
+			'pagination' => array(
+				'pageSize' => SourceBans::app()->settings->items_per_page,
+			),
+			'sort' => array(
+				'attributes' => array(
+					'admin.name' => array(
+						'asc' => 'admin.name',
+						'desc' => 'admin.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder' => array(
+					'time' => CSort::SORT_DESC,
+				),
+			),
+		));
+		
+		$this->render('bans', array(
+			'bans' => $bans,
+	    'hideInactive' => $hideInactive,
+			'total_bans' => SBBan::model()->count(),
+		));
+	}
+
+	public function actionServers()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Servers');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Servers'),
+		);
+		
+		$servers = new CActiveDataProvider('SBServer', array(
+			'criteria' => array(
+				'condition' => 't.enabled = 1',
+				'with' => array('game'),
+			),
+			'pagination' => false,
+			'sort' => array(
+				'attributes' => array(
+					'game.name' => array(
+						'asc' => 'game.name',
+						'desc' => 'game.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder' => array(
+					'game.name' => CSort::SORT_ASC,
+					'ip' => CSort::SORT_ASC,
+					'port' => CSort::SORT_ASC,
+				),
+			),
+		));
+		
+		$this->render('servers', array(
+			'servers' => $servers,
+		));
+	}
+
+	public function actionSubmitban()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Submit ban');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Submit ban'),
+		);
+		
+		$model = new SBSubmission;
+		$model->demo = new SBDemo;
+		
+		$servers = SBServer::model()->findAll(array(
+			'order' => 'ip, port',
+		));
+		
+		$this->render('submitban', array(
+			'model' => $model,
+			'servers' => $servers,
+		));
+	}
+
+	public function actionProtestban()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Protest ban');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Protest ban'),
+		);
+		
+		$model = new SBProtest;
+		$model->ban = new SBBan;
+		
+		$this->render('protestban', array(
+			'model' => $model,
+		));
 	}
 
 	/**
@@ -37,6 +204,11 @@ class SiteController extends Controller
 	 */
 	public function actionError()
 	{
+		$this->pageTitle = Yii::t('sourcebans', 'Error');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Error'),
+		);
+
 		if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)
@@ -47,36 +219,15 @@ class SiteController extends Controller
 	}
 
 	/**
-	 * Displays the contact page
-	 */
-	public function actionContact()
-	{
-		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
-			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
-				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
-				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
-				$headers="From: $name <{$model->email}>\r\n".
-					"Reply-To: {$model->email}\r\n".
-					"MIME-Version: 1.0\r\n".
-					"Content-type: text/plain; charset=UTF-8";
-
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
-				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
-				$this->refresh();
-			}
-		}
-		$this->render('contact',array('model'=>$model));
-	}
-
-	/**
 	 * Displays the login page
 	 */
 	public function actionLogin()
 	{
+		$this->pageTitle = Yii::t('sourcebans', 'Login');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Login'),
+		);
+
 		$model=new LoginForm;
 
 		// if it is ajax validation request

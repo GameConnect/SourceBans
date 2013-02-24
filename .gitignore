@@ -10,3 +10,6 @@ Thumbs.db
 web/assets/
 web/protected/runtime/
 web/themes/classic/views/
+
+# SourceBans
+web/protected/config/database.php

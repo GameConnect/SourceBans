@@ -8,8 +8,8 @@ Thumbs.db
 
 # Yii
 web/assets/
-web/protected/runtime/
+web/application/runtime/
 web/themes/classic/views/
 
 # SourceBans
-web/protected/config/database.php
+web/application/config/database.php

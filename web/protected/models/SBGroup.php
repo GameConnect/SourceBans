@@ -16,7 +16,7 @@ class SBGroup extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Groups the static model class
+	 * @return SBGroup the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -87,6 +87,14 @@ class SBGroup extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'name'=>CSort::SORT_ASC,
+				),
+			),
 		));
 	}
 }

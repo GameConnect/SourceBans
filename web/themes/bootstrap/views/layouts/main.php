@@ -10,11 +10,15 @@
   <head>
     <title><?php if(!empty($this->pageTitle)) echo CHtml::encode($this->pageTitle . Yii::app()->params['titleSeparator']) ?><?php echo CHtml::encode(Yii::app()->name) ?></title>
     <meta charset="UTF-8" />
+    <meta name="author" content="GameConnect" />
+    <meta name="copyright" content="SourceBans © 2007-2013 GameConnect.net. All rights reserved." />
+    <meta name="description" content="Advanced admin and ban management for the Source engine" />
   </head>
-  <body class="container" id="<?php echo (!empty($this->pageId) ? $this->pageId : $this->id . '_' . $this->action->id); ?>">
-    <header>
-      <h1><?php echo CHtml::encode(Yii::app()->name) ?></h1>
-      <div class="user">
+  <body id="<?php echo (!empty($this->pageId) ? $this->pageId : $this->id . '_' . $this->action->id); ?>">
+    <div class="container">
+      <header>
+        <h1><?php echo CHtml::encode(Yii::app()->name) ?></h1>
+        <div class="user">
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'user',
 	'items' => array(
@@ -39,10 +43,10 @@
 		'class' => 'nav nav-pills',
 	),
 )) ?>
-      </div>
-    </header>
-    
-    <nav>
+        </div>
+      </header>
+      
+      <nav>
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'tabs',
 	'items' => array(
@@ -84,21 +88,23 @@
 		'class' => 'nav nav-tabs',
 	),
 )) ?>
-    </nav>
-    
-    <header>
-      <h2><?php echo CHtml::encode($this->pageTitle) ?></h2>
+
+      </nav>
+      
+      <header>
+        <h2><?php echo CHtml::encode($this->pageTitle) ?></h2>
 <?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
 	'links' => $this->breadcrumbs,
 )) ?>
-    </header>
-    
-<?php echo $content ?>
 
-    
-    <footer>
-      <strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::app()->version ?></strong>
-      <p>"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em></p>
-    </footer>
+      </header>
+      
+<?php echo $content ?>
+      
+      <footer>
+        <strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::app()->version ?></strong>
+        <p>"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em></p>
+      </footer>
+    </div>
   </body>
 </html>

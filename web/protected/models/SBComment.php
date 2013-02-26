@@ -23,7 +23,7 @@ class SBComment extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Comments the static model class
+	 * @return SBComment the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -110,6 +110,11 @@ class SBComment extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'time'=>CSort::SORT_DESC,
+				),
+			),
 		));
 	}
 

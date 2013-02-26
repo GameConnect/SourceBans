@@ -20,7 +20,7 @@ class SBServerGroup extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return ServerGroups the static model class
+	 * @return SBServerGroup the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -98,6 +98,14 @@ class SBServerGroup extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'name'=>CSort::SORT_ASC,
+				),
+			),
 		));
 	}
 }

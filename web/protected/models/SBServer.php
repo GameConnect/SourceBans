@@ -24,7 +24,7 @@ class SBServer extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Servers the static model class
+	 * @return SBServer the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -86,6 +86,7 @@ class SBServer extends CActiveRecord
 			'rcon' => Yii::t('sourcebans', 'RCON password'),
 			'game_id' => Yii::t('sourcebans', 'Game'),
 			'enabled' => Yii::t('sourcebans', 'Enabled'),
+			'game.name' => Yii::t('sourcebans', 'Game'),
 		);
 	}
 
@@ -99,6 +100,7 @@ class SBServer extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with='game';
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('ip',$this->ip,true);
@@ -109,6 +111,23 @@ class SBServer extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'attributes'=>array(
+					'game.name'=>array(
+						'asc'=>'game.name',
+						'desc'=>'game.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder'=>array(
+					'game.name'=>CSort::SORT_ASC,
+					'ip'=>CSort::SORT_ASC,
+					'port'=>CSort::SORT_ASC,
+				),
+			),
 		));
 	}
 
@@ -124,5 +143,10 @@ class SBServer extends CActiveRecord
 				'condition'=>$t.'.enabled = 1',
 			),
 		);
+	}
+	
+	public function getAddress()
+	{
+		return $this->ip . ':' . $this->port;
 	}
 }

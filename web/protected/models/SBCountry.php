@@ -13,7 +13,7 @@ class SBCountry extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Countries the static model class
+	 * @return SBCountry the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

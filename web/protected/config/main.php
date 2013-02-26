@@ -10,7 +10,7 @@ $db=require dirname(__FILE__).'/database.php';
 // CWebApplication properties can be configured here.
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
-	'language'=>'en',
+	'language'=>'nl',
 	'name'=>'SourceBans',
 	'theme'=>'bootstrap',
 
@@ -25,17 +25,15 @@ return array(
 
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
-		/*
 		'gii'=>array(
 			'class'=>'system.gii.GiiModule',
-			'password'=>'Enter Your Password Here',
+			'password'=>'sourcebans',
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 			'generatorPaths'=>array(
 				'bootstrap.gii',
 			),
 		),
-		*/
 	),
 
 	// application components

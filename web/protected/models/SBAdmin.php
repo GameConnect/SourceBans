@@ -30,10 +30,15 @@
  */
 class SBAdmin extends CActiveRecord
 {
+	const IP_AUTH    = 'ip';
+	const NAME_AUTH  = 'name';
+	const STEAM_AUTH = 'steam';
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Admins the static model class
+	 * @return SBAdmin the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -100,13 +105,14 @@ class SBAdmin extends CActiveRecord
 			'auth' => Yii::t('sourcebans', 'Authentication type'),
 			'identity' => Yii::t('sourcebans', 'Identity'),
 			'password' => Yii::t('sourcebans', 'Password'),
-			'group_id' => Yii::t('sourcebans', 'Group'),
+			'group_id' => Yii::t('sourcebans', 'Web Group'),
 			'email' => Yii::t('sourcebans', 'Email address'),
 			'language' => Yii::t('sourcebans', 'Language'),
 			'theme' => Yii::t('sourcebans', 'Theme'),
-			'srv_password' => Yii::t('sourcebans', 'Server password'),
+			'srv_password' => Yii::t('sourcebans', 'Server Password'),
 			'validate' => 'Validate',
 			'lastvisit' => Yii::t('sourcebans', 'Last visit'),
+			'group.name' => Yii::t('sourcebans', 'Web Group'),
 		);
 	}
 
@@ -120,6 +126,7 @@ class SBAdmin extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with='group';
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
@@ -136,9 +143,23 @@ class SBAdmin extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'attributes'=>array(
+					'group.name'=>array(
+						'asc'=>'group.name',
+						'desc'=>'group.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder'=>array(
+					'name'=>CSort::SORT_ASC,
+				),
+			),
 		));
 	}
-	
 	
 	/**
 	 * Check whether admin has one of these permissions
@@ -195,6 +216,15 @@ class SBAdmin extends CActiveRecord
 		return $this->password == self::getPasswordHash($password, $this->password_key);
 	}
 	
+	
+	public static function getAuthTypes()
+	{
+		return array(
+			self::STEAM_AUTH => Yii::t('sourcebans', 'Steam ID'),
+			self::IP_AUTH    => Yii::t('sourcebans', 'IP address'),
+			self::NAME_AUTH  => Yii::t('sourcebans', 'Name'),
+		);
+	}
 	
 	public static function getPasswordHash($password, $key)
 	{

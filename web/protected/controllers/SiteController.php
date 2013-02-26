@@ -39,49 +39,19 @@ class SiteController extends Controller
 			Yii::t('sourcebans', 'Dashboard'),
 		);
 		
-		$bans = new CActiveDataProvider('SBBan', array(
-			'criteria' => array(
-				'limit' => 10,
-				'with' => array('server', 'server.game'),
-			),
-			'sort' => array(
-				'defaultOrder' => array(
-					'time' => CSort::SORT_DESC,
-				),
-			),
-		));
-		$blocks = new CActiveDataProvider('SBBlock', array(
-			'criteria' => array(
-				'limit' => 10,
-				'with' => array('ban'),
-			),
-			'sort' => array(
-				'defaultOrder' => array(
-					'time' => CSort::SORT_DESC,
-				),
-			),
-		));
-		$servers = new CActiveDataProvider('SBServer', array(
-			'criteria' => array(
-				'condition' => 't.enabled = 1',
-				'with' => array('game'),
-			),
-			'pagination' => false,
-			'sort' => array(
-				'attributes' => array(
-					'game.name' => array(
-						'asc' => 'game.name',
-						'desc' => 'game.name DESC',
-					),
-					'*',
-				),
-				'defaultOrder' => array(
-					'game.name' => CSort::SORT_ASC,
-					'ip' => CSort::SORT_ASC,
-					'port' => CSort::SORT_ASC,
-				),
-			),
-		));
+		$bans = SBBan::model()->search();
+		$bans->criteria->limit = 10;
+		$bans->criteria->with = array('server', 'server.game');
+		$bans->pagination = false;
+		
+		$blocks = SBBlock::model()->search();
+		$blocks->criteria->limit = 10;
+		$blocks->criteria->with = 'ban';
+		$blocks->pagination = false;
+		
+		$servers = SBServer::model()->search();
+		$servers->criteria->scopes = 'enabled';
+		$servers->pagination = false;
 		
 		$this->render('dashboard', array(
 			'bans' => $bans,
@@ -100,32 +70,15 @@ class SiteController extends Controller
 		);
 		
 		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
-
-		$bans = new CActiveDataProvider('SBBan', array(
-			'criteria' => array(
-		    'scopes' => $hideInactive ? 'active' : null,
-				'with' => array('admin', 'country', 'server', 'server.game'),
-			),
-			'pagination' => array(
-				'pageSize' => SourceBans::app()->settings->items_per_page,
-			),
-			'sort' => array(
-				'attributes' => array(
-					'admin.name' => array(
-						'asc' => 'admin.name',
-						'desc' => 'admin.name DESC',
-					),
-					'*',
-				),
-				'defaultOrder' => array(
-					'time' => CSort::SORT_DESC,
-				),
-			),
-		));
+		
+		$bans = new SBBan('search');
+		$bans->unsetAttributes();  // clear any default values
+		if(isset($_GET['SBBan']))
+			$bans->attributes=$_GET['SBBan'];
 		
 		$this->render('bans', array(
 			'bans' => $bans,
-	    'hideInactive' => $hideInactive,
+			'hideInactive' => $hideInactive,
 			'total_bans' => SBBan::model()->count(),
 		));
 	}
@@ -137,27 +90,9 @@ class SiteController extends Controller
 			Yii::t('sourcebans', 'Servers'),
 		);
 		
-		$servers = new CActiveDataProvider('SBServer', array(
-			'criteria' => array(
-				'condition' => 't.enabled = 1',
-				'with' => array('game'),
-			),
-			'pagination' => false,
-			'sort' => array(
-				'attributes' => array(
-					'game.name' => array(
-						'asc' => 'game.name',
-						'desc' => 'game.name DESC',
-					),
-					'*',
-				),
-				'defaultOrder' => array(
-					'game.name' => CSort::SORT_ASC,
-					'ip' => CSort::SORT_ASC,
-					'port' => CSort::SORT_ASC,
-				),
-			),
-		));
+		$servers = SBServer::model()->search();
+		$servers->criteria->scopes = 'enabled';
+		$servers->pagination = false;
 		
 		$this->render('servers', array(
 			'servers' => $servers,

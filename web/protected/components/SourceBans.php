@@ -19,22 +19,9 @@ class SourceBans extends CApplicationComponent
 	
 	
 	/**
-	 * @return CApplicationComponent the component singleton
-	 */
-	public static function &app()
-	{
-		if(!self::$_app)
-		{
-			self::$_app = new self();
-		}
-	
-		return self::$_app;
-	}
-	
-	/**
 	 * @return stdClass a random SourceBans quote
 	 */
-	public static function getQuote()
+	public function getQuote()
 	{
 		static $_quote;
 		if(!isset($_quote))
@@ -49,7 +36,7 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * @return stdClass the SourceBans settings
 	 */
-	public static function getSettings()
+	public function getSettings()
 	{
 		static $_settings;
 		if(!isset($_settings))
@@ -63,8 +50,22 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * @return string the version of SourceBans
 	 */
-	public static function getVersion()
+	public function getVersion()
 	{
 		return '2.0.0-dev';
+	}
+	
+	
+	/**
+	 * @return CApplicationComponent the component singleton
+	 */
+	public static function &app()
+	{
+		if(!self::$_app)
+		{
+			self::$_app = new self();
+		}
+	
+		return self::$_app;
 	}
 }

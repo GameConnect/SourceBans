@@ -30,6 +30,16 @@ textarea {
   height: 100px;
 }
 
+.grid-view {
+  padding-top: 0;
+}
+.grid-view-loading {
+  background: none;
+}
+.grid-view-loading th.button-column {
+  background: url(../images/loading.gif) no-repeat 45px center;
+}
+
 .bans {
   float: left;
 }
@@ -65,7 +75,8 @@ td.ServerQuery_players,
 th.datetime,
 th.length,
 th.ServerQuery_map,
-th.ServerQuery_players {
+th.ServerQuery_players,
+.grid-view .button-column {
   white-space: nowrap;
   width: 1px;
 }

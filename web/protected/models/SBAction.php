@@ -23,7 +23,7 @@ class SBAction extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Actions the static model class
+	 * @return SBAction the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -87,6 +87,7 @@ class SBAction extends CActiveRecord
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'admin_ip' => 'Admin IP address',
 			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'admin.name' => Yii::t('sourcebans', 'Admin'),
 		);
 	}
 
@@ -100,6 +101,7 @@ class SBAction extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with='admin';
 
 		$criteria->compare('id',$this->id,true);
 		$criteria->compare('name',$this->name,true);
@@ -113,6 +115,21 @@ class SBAction extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'attributes'=>array(
+					'admin.name'=>array(
+						'asc'=>'admin.name',
+						'desc'=>'admin.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder'=>array(
+					'time'=>CSort::SORT_DESC,
+				),
+			),
 		));
 	}
 }

@@ -1,7 +1,17 @@
     <section>
+      <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced Search'),'#',array('class'=>'search-button')); ?>
+      <div class="search-form" style="display:none">
+      <?php $this->renderPartial('/bans/_search',array(
+      	'model'=>$bans,
+      )); ?>
+      </div><!-- search-form -->
+
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'bans-grid',
-	'dataProvider'=>$bans,
+	'dataProvider'=>$bans->search(array(
+		'scopes' => $hideInactive ? 'active' : null,
+		'with' => array('admin', 'country', 'server', 'server.game'),
+	)),
 	'columns'=>array(
 		array(
 			'header'=>Yii::t('sourcebans', 'Game') . '/' . Yii::t('sourcebans', 'Country'),
@@ -47,7 +57,7 @@
 			'value'=>'$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent")',
 		),
 	),
-  'afterAjaxUpdate'=>'js:createSections',
+	'afterAjaxUpdate'=>'js:createSections',
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
 	'pager'=>array(
@@ -109,6 +119,19 @@
     </tbody>
   </table>
 </script>
+
+<?php Yii::app()->clientScript->registerScript('search', "
+  $('.search-button').click(function(){
+  	$('.search-form').slideToggle();
+  	return false;
+  });
+  $('.search-form form').submit(function(){
+  	$('#bans-grid').yiiGridView('update', {
+  		data: $(this).serialize()
+  	});
+  	return false;
+  });
+"); ?>
 
 <?php Yii::app()->clientScript->registerScript('site_bans_hashchange', '
   $(window).bind("hashchange", function(e) {

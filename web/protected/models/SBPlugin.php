@@ -12,7 +12,7 @@ class SBPlugin extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Plugins the static model class
+	 * @return SBPlugin the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -82,6 +82,14 @@ class SBPlugin extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'name'=>CSort::SORT_ASC,
+				),
+			),
 		));
 	}
 
@@ -98,4 +106,29 @@ class SBPlugin extends CActiveRecord
 			),
 		);
 	}
+	
+	/**
+	 * @return string the name of this SourceBans plugin
+	 */
+	public function getName() {}
+	
+	/**
+	 * @return string the description of this SourceBans plugin
+	 */
+	public function getDescription() {}
+	
+	/**
+	 * @return string the author of this SourceBans plugin
+	 */
+	public function getAuthor() {}
+	
+	/**
+	 * @return string the version of this SourceBans plugin
+	 */
+	public function getVersion() {}
+	
+	/**
+	 * @return string the URL of this SourceBans plugin
+	 */
+	public function getUrl() {}
 }

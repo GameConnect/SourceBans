@@ -12,7 +12,7 @@ class SBSetting extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Settings the static model class
+	 * @return SBSetting the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

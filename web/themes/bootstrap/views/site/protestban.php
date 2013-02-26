@@ -5,16 +5,13 @@
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
+		'validateOnSubmit'=>true,
 	),
 	'errorMessageCssClass'=>'help-inline',
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
 	),
 )) ?>
-
-      <div class="control-group">
-        <p class="note">Fields with <span class="required">*</span> are required.</p>
-      </div>
 
       <div class="control-group">
         <?php echo $form->labelEx($model->ban,'steam',array('class' => 'control-label')); ?>

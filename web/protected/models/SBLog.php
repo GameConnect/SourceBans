@@ -22,7 +22,7 @@ class SBLog extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Log the static model class
+	 * @return SBLog the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -111,6 +111,25 @@ class SBLog extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'time'=>CSort::SORT_DESC,
+				),
+			),
 		));
+	}
+	
+	public function behaviors()
+	{
+		return array(
+			'CTimestampBehavior' => array(
+				'class' => 'zii.behaviors.CTimestampBehavior',
+				'createAttribute' => 'time',
+				'updateAttribute' => null,
+			),
+		);
 	}
 }

@@ -34,12 +34,12 @@ class SBBan extends CActiveRecord
 	const STEAM_TYPE   = 0;
 	const IP_TYPE      = 1;
 	const DEFAULT_TYPE = 0;
-	 
+	
 	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Bans the static model class
+	 * @return SBBan the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -121,12 +121,12 @@ class SBBan extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($criteria=array())
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=new CDbCriteria($criteria);
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('type',$this->type);
@@ -145,6 +145,21 @@ class SBBan extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'attributes'=>array(
+					'admin.name'=>array(
+						'asc'=>'admin.name',
+						'desc'=>'admin.name DESC',
+					),
+					'*',
+				),
+				'defaultOrder'=>array(
+					'time'=>CSort::SORT_DESC,
+				),
+			),
 		));
 	}
 
@@ -176,6 +191,58 @@ class SBBan extends CActiveRecord
 				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
+		);
+	}
+	
+	
+	public static function getTimes()
+	{
+		return array(
+			0 => Yii::t('sourcebans', 'Permanent'),
+			Yii::t('sourcebans', 'minutes') => array(
+				1  => Yii::t('sourcebans', '{n} minute|{n} minutes', 1),
+				5  => Yii::t('sourcebans', '{n} minute|{n} minutes', 5),
+				10 => Yii::t('sourcebans', '{n} minute|{n} minutes', 10),
+				15 => Yii::t('sourcebans', '{n} minute|{n} minutes', 15),
+				30 => Yii::t('sourcebans', '{n} minute|{n} minutes', 30),
+				45 => Yii::t('sourcebans', '{n} minute|{n} minutes', 45),
+			),
+			Yii::t('sourcebans', 'hours') => array(
+				60  => Yii::t('sourcebans', '{n} hour|{n} hours', 1),
+				120 => Yii::t('sourcebans', '{n} hour|{n} hours', 2),
+				180 => Yii::t('sourcebans', '{n} hour|{n} hours', 3),
+				240 => Yii::t('sourcebans', '{n} hour|{n} hours', 4),
+				480 => Yii::t('sourcebans', '{n} hour|{n} hours', 8),
+				720 => Yii::t('sourcebans', '{n} hour|{n} hours', 12),
+			),
+			Yii::t('sourcebans', 'days') => array(
+				1440 => Yii::t('sourcebans', '{n} day|{n} days', 1),
+				2880 => Yii::t('sourcebans', '{n} day|{n} days', 2),
+				4320 => Yii::t('sourcebans', '{n} day|{n} days', 3),
+				5760 => Yii::t('sourcebans', '{n} day|{n} days', 4),
+				7200 => Yii::t('sourcebans', '{n} day|{n} days', 5),
+				8640 => Yii::t('sourcebans', '{n} day|{n} days', 6),
+			),
+			Yii::t('sourcebans', 'weeks') => array(
+				10080 => Yii::t('sourcebans', '{n} week|{n} weeks', 1),
+				20160 => Yii::t('sourcebans', '{n} week|{n} weeks', 2),
+				30240 => Yii::t('sourcebans', '{n} week|{n} weeks', 3),
+			),
+			Yii::t('sourcebans', 'months') => array(
+				43200  => Yii::t('sourcebans', '{n} month|{n} months', 1),
+				86400  => Yii::t('sourcebans', '{n} month|{n} months', 2),
+				129600 => Yii::t('sourcebans', '{n} month|{n} months', 3),
+				259200 => Yii::t('sourcebans', '{n} month|{n} months', 6),
+				518400 => Yii::t('sourcebans', '{n} month|{n} months', 12),
+			),
+		);
+	}
+	
+	public static function getTypes()
+	{
+		return array(
+			self::STEAM_TYPE => Yii::t('sourcebans', 'Steam ID'),
+			self::IP_TYPE    => Yii::t('sourcebans', 'IP address'),
 		);
 	}
 }

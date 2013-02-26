@@ -20,7 +20,7 @@ class SBProtest extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return Protests the static model class
+	 * @return SBProtest the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -104,6 +104,14 @@ class SBProtest extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>SourceBans::app()->settings->items_per_page,
+			),
+			'sort'=>array(
+				'defaultOrder'=>array(
+					'time'=>CSort::SORT_DESC,
+				),
+			),
 		));
 	}
 

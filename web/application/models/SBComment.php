@@ -3,20 +3,27 @@
 /**
  * This is the model class for table "{{comments}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{comments}}':
- * @property integer $id
- * @property string $type
- * @property integer $ban_id
- * @property integer $admin_id
- * @property string $message
- * @property string $time
- * @property integer $edit_admin_id
- * @property string $edit_time
+ * @property integer $id ID
+ * @property string $type Type
+ * @property integer $ban_id Ban ID
+ * @property integer $admin_id Admin ID
+ * @property string $message Message
+ * @property integer $time Date/Time
+ * @property integer $edit_admin_id Edited by
+ * @property integer $edit_time Edited on
  *
  * The followings are the available model relations:
  * @property SBBan $ban
  * @property SBAdmin $admin
  * @property SBAdmin $edit_admin
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBComment extends CActiveRecord
 {
@@ -82,9 +89,9 @@ class SBComment extends CActiveRecord
 			'ban_id' => Yii::t('sourcebans', 'Ban'),
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'message' => Yii::t('sourcebans', 'Message'),
-			'time' => Yii::t('sourcebans', 'Time'),
-			'edit_admin_id' => 'Edit Admin',
-			'edit_time' => 'Edit Time',
+			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'edit_admin_id' => 'Edited by',
+			'edit_time' => 'Edited on',
 		);
 	}
 

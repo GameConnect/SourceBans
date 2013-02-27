@@ -3,10 +3,17 @@
 /**
  * This is the model class for table "{{countries}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{countries}}':
- * @property string $ip
- * @property string $code
- * @property string $name
+ * @property string $ip IP address
+ * @property string $code Code
+ * @property string $name Name
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBCountry extends CActiveRecord
 {

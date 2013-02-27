@@ -55,6 +55,7 @@
 	'enableSorting'=>false,
 	'itemsCssClass'=>'items table table-condensed table-hover',
 	'rowHtmlOptionsExpression'=>'array(
+		"class"=>($data->length && $data->time + $data->length * 60 < time() ? "expired" : ($data->unban_admin_id ? "unbanned" : "")),
 		"data-key"=>$data->primaryKey,
 	)',
 	'selectionChanged'=>'js:function(grid) {

@@ -3,13 +3,20 @@
 /**
  * This is the model class for table "{{groups}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{groups}}':
- * @property integer $id
- * @property string $name
+ * @property integer $id ID
+ * @property string $name Name
  *
  * The followings are the available model relations:
  * @property SBAdmin[] $admins
- * @property SBPermission[] $permissions
+ * @property SBGroupPermission[] $permissions
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBGroup extends CActiveRecord
 {
@@ -56,7 +63,7 @@ class SBGroup extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'admins' => array(self::HAS_MANY, 'SBAdmin', 'group_id'),
-			'permissions' => array(self::MANY_MANY, 'SBPermission', '{{groups_permissions}}(group_id, permission_id)'),
+			'permissions' => array(self::HAS_MANY, 'SBGroupPermission', 'group_id'),
 		);
 	}
 

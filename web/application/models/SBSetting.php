@@ -3,9 +3,16 @@
 /**
  * This is the model class for table "{{settings}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{settings}}':
- * @property string $name
- * @property string $value
+ * @property string $name Name
+ * @property string $value Value
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBSetting extends CActiveRecord
 {

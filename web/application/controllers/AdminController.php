@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * SourceBans admin controller
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.controllers
+ * @since 2.0
+ */
 class AdminController extends Controller
 {
 	/**
@@ -36,6 +45,9 @@ class AdminController extends Controller
 		);
 	}
 	
+	/**
+	 * Displays the admin page
+	 */
 	public function actionIndex()
 	{
 	  $this->layout = '//layouts/column1';
@@ -59,6 +71,9 @@ class AdminController extends Controller
 		));
 	}
 	
+	/**
+	 * Displays the 'admins' admin page
+	 */
 	public function actionAdmins()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Admins') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
@@ -84,6 +99,9 @@ class AdminController extends Controller
 		));
 	}
 	
+	/**
+	 * Displays the 'bans' admin page
+	 */
 	public function actionBans()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Bans') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
@@ -102,6 +120,9 @@ class AdminController extends Controller
 		));
 	}
 	
+	/**
+	 * Displays the 'games' admin page
+	 */
 	public function actionGames()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Games') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
@@ -127,6 +148,9 @@ class AdminController extends Controller
 		));
 	}
 	
+	/**
+	 * Displays the 'groups' admin page
+	 */
 	public function actionGroups()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Groups') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
@@ -152,6 +176,9 @@ class AdminController extends Controller
 		));
 	}
 	
+	/**
+	 * Displays the 'servers' admin page
+	 */
 	public function actionServers()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Servers') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');

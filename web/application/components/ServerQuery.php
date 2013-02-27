@@ -2,13 +2,13 @@
 /**
  * Query servers for details, map, players, etc
  * 
- * @author     SteamFriends, InterWave Studios, GameConnect
- * @author     IceMatrix
- * @copyright  (C)2007-2013 GameConnect.net.  All rights reserved.
- * @link       http://www.sourcebans.net
- * @package    SourceBans
- * @subpackage Server
- * @version    $Id$
+ * @author GameConnect
+ * @author IceMatrix
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.components
+ * @since 2.0
  */
 class ServerQuery
 {
@@ -33,6 +33,12 @@ class ServerQuery
 	private $_socket    = false;
 	
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $address IP address or domain name
+	 * @param integer $port port number
+	 */
 	function __construct($address, $port)
 	{
 		$this->_address = $address;
@@ -40,6 +46,11 @@ class ServerQuery
 	}
 	
 	
+	/**
+	 * Returns the A2S_INFO response
+	 * 
+	 * @return array the A2S_INFO response
+	 */
 	public function getInfo()
 	{
 		$socket = $this->_getSocket();
@@ -100,6 +111,11 @@ class ServerQuery
 		return $info;
 	}
 	
+	/**
+	 * Returns the A2S_PLAYER response
+	 * 
+	 * @return array the A2S_PLAYER response
+	 */
 	public function getPlayers()
 	{
 		$socket = $this->_getSocket();
@@ -127,6 +143,11 @@ class ServerQuery
 		return $players;
 	}
 	
+	/**
+	 * Returns the A2S_RULES response
+	 * 
+	 * @return array the A2S_RULES response
+	 */
 	public function getRules()
 	{
 		$socket = $this->_getSocket();

@@ -12,4 +12,4 @@ web/application/runtime/
 web/themes/classic/views/
 
 # SourceBans
-web/application/config/database.php
+web/application/config/sourcebans.php

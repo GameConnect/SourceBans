@@ -3,9 +3,16 @@
 /**
  * This is the model class for table "{{plugins}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{plugins}}':
- * @property string $name
- * @property integer $enabled
+ * @property string $name Name
+ * @property boolean $enabled Enabled
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBPlugin extends CActiveRecord
 {
@@ -36,7 +43,7 @@ class SBPlugin extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name', 'required'),
-			array('enabled', 'numerical', 'integerOnly'=>true),
+			array('enabled', 'boolean'),
 			array('name', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -108,27 +115,80 @@ class SBPlugin extends CActiveRecord
 	}
 	
 	/**
+	 * Returns the name of this SourceBans plugin
+	 * 
 	 * @return string the name of this SourceBans plugin
 	 */
 	public function getName() {}
 	
 	/**
+	 * Returns the description of this SourceBans plugin
+	 * 
 	 * @return string the description of this SourceBans plugin
 	 */
 	public function getDescription() {}
 	
 	/**
+	 * Returns the author of this SourceBans plugin
+	 * 
 	 * @return string the author of this SourceBans plugin
 	 */
 	public function getAuthor() {}
 	
 	/**
+	 * Returns the version of this SourceBans plugin
+	 * 
 	 * @return string the version of this SourceBans plugin
 	 */
 	public function getVersion() {}
 	
 	/**
+	 * Returns the URL of this SourceBans plugin
+	 * 
 	 * @return string the URL of this SourceBans plugin
 	 */
 	public function getUrl() {}
+	
+	/**
+	 * Raised right BEFORE the application processes the request.
+	 * @param CEvent $event the event parameter
+	 */
+	public function onBeginRequest($event) {}
+	
+	/**
+	 * Raised right AFTER the application processes the request.
+	 * @param CEvent $event the event parameter
+	 */
+	public function onEndRequest($event) {}
+	
+	/**
+	 * This method is invoked right before an action is to be executed (after all possible filters.)
+	 * You may override this method to do last-minute preparation for the action.
+	 * @param CAction $action the action to be executed.
+	 */
+	public function onBeforeAction($action) {}
+	
+	/**
+	 * This method is invoked at the beginning of {@link CController::render()}.
+	 * You may override this method to do some preprocessing when rendering a view.
+	 * @param string $view the view to be rendered
+	 */
+	public function onBeforeRender($view) {}
+	
+	/**
+	 * This method is invoked right after an action is executed.
+	 * You may override this method to do some postprocessing for the action.
+	 * @param CAction $action the action just executed.
+	 */
+	public function onAfterAction($action) {}
+	
+	/**
+	 * This method is invoked after the specified is rendered by calling {@link CController::render()}.
+	 * Note that this method is invoked BEFORE {@link CController::processOutput()}.
+	 * You may override this method to do some postprocessing for the view rendering.
+	 * @param string $view the view that has been rendered
+	 * @param string $output the rendering result of the view. Note that this parameter is passed
+	 * as a reference. That means you can modify it within this method.
+	 */
+	public function onAfterRender($view, &$output) {}
 }

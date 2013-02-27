@@ -3,10 +3,17 @@
 /**
  * This is the model class for table "{{overrides}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{overrides}}':
- * @property string $type
- * @property string $name
- * @property string $flags
+ * @property string $type Type
+ * @property string $name Name
+ * @property string $flags Flags
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBOverride extends CActiveRecord
 {

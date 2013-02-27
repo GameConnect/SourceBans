@@ -3,14 +3,21 @@
 /**
  * This is the model class for table "{{server_group_overrides}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{server_group_overrides}}':
- * @property integer $group_id
- * @property string $type
- * @property string $name
- * @property string $access
+ * @property integer $group_id Server Group ID
+ * @property string $type Type
+ * @property string $name Name
+ * @property string $access Access
  *
  * The followings are the available model relations:
  * @property SBServerGroup $group
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBServerGroupOverride extends CActiveRecord
 {
@@ -69,7 +76,7 @@ class SBServerGroupOverride extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'group_id' => Yii::t('sourcebans', 'Group'),
+			'group_id' => Yii::t('sourcebans', 'Server Group'),
 			'type' => Yii::t('sourcebans', 'Type'),
 			'name' => Yii::t('sourcebans', 'Name'),
 			'access' => Yii::t('sourcebans', 'Access'),

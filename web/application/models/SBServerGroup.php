@@ -3,17 +3,24 @@
 /**
  * This is the model class for table "{{server_groups}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{server_groups}}':
- * @property integer $id
- * @property string $name
- * @property string $flags
- * @property integer $immunity
+ * @property integer $id ID
+ * @property string $name Name
+ * @property string $flags Flags
+ * @property integer $immunity Immunity level
  *
  * The followings are the available model relations:
  * @property SBAdmin[] $admins
  * @property SBServerGroup[] $groups_immune
  * @property SBServerGroupOverride[] $overrides
  * @property SBServer[] $servers
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBServerGroup extends CActiveRecord
 {

@@ -3,20 +3,27 @@
 /**
  * This is the model class for table "{{actions}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{actions}}':
- * @property string $id
- * @property string $name
- * @property string $steam
- * @property string $ip
- * @property string $message
- * @property integer $server_id
- * @property integer $admin_id
- * @property string $admin_ip
- * @property string $time
+ * @property integer $id ID
+ * @property string $name Name
+ * @property string $steam Steam ID
+ * @property string $ip IP address
+ * @property string $message Message
+ * @property integer $server_id Server ID
+ * @property integer $admin_id Admin ID
+ * @property string $admin_ip Admin IP address
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
  * @property SBServer $server
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBAction extends CActiveRecord
 {

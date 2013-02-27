@@ -3,14 +3,21 @@
 /**
  * This is the model class for table "{{games}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{games}}':
- * @property integer $id
- * @property string $name
- * @property string $folder
- * @property string $icon
+ * @property integer $id ID
+ * @property string $name Name
+ * @property string $folder Folder
+ * @property string $icon Icon
  *
  * The followings are the available model relations:
  * @property SBServer[] $servers
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBGame extends CActiveRecord
 {

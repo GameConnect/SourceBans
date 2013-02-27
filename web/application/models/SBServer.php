@@ -3,13 +3,17 @@
 /**
  * This is the model class for table "{{servers}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{servers}}':
- * @property integer $id
- * @property string $ip
- * @property integer $port
- * @property string $rcon
- * @property integer $game_id
- * @property integer $enabled
+ * @property integer $id ID
+ * @property string $ip IP address
+ * @property integer $port Port
+ * @property string $rcon RCON password
+ * @property integer $game_id Game ID
+ * @property boolean $enabled Enabled
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
@@ -18,6 +22,9 @@
  * @property SBGame $game
  * @property SBServerGroup[] $groups
  * @property SBSubmission[] $submissions
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBServer extends CActiveRecord
 {
@@ -48,8 +55,9 @@ class SBServer extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('ip, game_id', 'required'),
-			array('port, game_id, enabled', 'numerical', 'integerOnly'=>true),
-			array('ip', 'length', 'max'=>15),
+			array('port, game_id', 'numerical', 'integerOnly'=>true),
+			array('enabled', 'boolean'),
+			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
 			array('rcon', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.

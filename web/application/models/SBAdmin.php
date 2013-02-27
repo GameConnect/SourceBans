@@ -3,20 +3,24 @@
 /**
  * This is the model class for table "{{admins}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{admins}}':
- * @property integer $id
- * @property string $name
- * @property string $auth
- * @property string $identity
- * @property string $password
- * @property string $password_key
- * @property integer $group_id
- * @property string $email
- * @property string $language
- * @property string $theme
- * @property string $srv_password
- * @property string $validate
- * @property string $lastvisit
+ * @property integer $id ID
+ * @property string $name Name
+ * @property string $auth Authentication type
+ * @property string $identity Identity
+ * @property string $password Password
+ * @property string $password_key Password key
+ * @property integer $group_id Web Group ID
+ * @property string $email Email address
+ * @property string $language Language
+ * @property string $theme Theme
+ * @property string $srv_password Server password
+ * @property string $validate Validation key
+ * @property integer $lastvisit Last visit
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
@@ -27,6 +31,9 @@
  * @property SBComment[] $comments
  * @property SBComment[] $edit_comments
  * @property SBLog[] $logs
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBAdmin extends CActiveRecord
 {
@@ -63,7 +70,8 @@ class SBAdmin extends CActiveRecord
 		return array(
 			array('name, auth, identity', 'required'),
 			array('group_id', 'numerical', 'integerOnly'=>true),
-			array('name, identity, password, srv_password, validate', 'length', 'max'=>64),
+			array('name, identity, validate', 'length', 'max'=>64),
+			array('password, srv_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('auth', 'length', 'max'=>5),
 			array('email', 'length', 'max'=>128),
 			array('language', 'length', 'max'=>2),
@@ -110,7 +118,7 @@ class SBAdmin extends CActiveRecord
 			'language' => Yii::t('sourcebans', 'Language'),
 			'theme' => Yii::t('sourcebans', 'Theme'),
 			'srv_password' => Yii::t('sourcebans', 'Server Password'),
-			'validate' => 'Validate',
+			'validate' => 'Validation key',
 			'lastvisit' => Yii::t('sourcebans', 'Last visit'),
 			'group.name' => Yii::t('sourcebans', 'Web Group'),
 		);
@@ -217,6 +225,11 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	
+	/**
+	 * Returns the supported authentication types
+	 * 
+	 * @return array the supported authentication types
+	 */
 	public static function getAuthTypes()
 	{
 		return array(
@@ -226,6 +239,13 @@ class SBAdmin extends CActiveRecord
 		);
 	}
 	
+	/**
+	 * Returns a random hash based on a password and a password key
+	 * 
+	 * @param string $password the password
+	 * @param string $key the password key
+	 * @return string a random hash
+	 */
 	public static function getPasswordHash($password, $key)
 	{
 		if(empty($password) || empty($key))
@@ -234,6 +254,11 @@ class SBAdmin extends CActiveRecord
 		return sha1((str_repeat(chr(0x5C), 64) ^ $key) . pack('H40', sha1((str_repeat(chr(0x36), 64) ^ $key) . $password)));
 	}
 	
+	/**
+	 * Returns a random password key
+	 * 
+	 * @return string a random password key
+	 */
 	public static function getPasswordKey()
 	{
 		return sprintf('%08x%08x%08x%08x', mt_rand(), mt_rand(), mt_rand(), mt_rand());

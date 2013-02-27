@@ -26,7 +26,7 @@
   </div>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'auth',array('class' => 'control-label')); ?>
+    <?php echo $form->label($model,'auth',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'auth',SBAdmin::getAuthTypes()); ?>
       <?php echo $form->error($model,'auth',null,true,false); ?>

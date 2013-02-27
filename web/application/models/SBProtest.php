@@ -3,17 +3,24 @@
 /**
  * This is the model class for table "{{protests}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{protests}}':
- * @property integer $id
- * @property integer $ban_id
- * @property string $reason
- * @property string $email
- * @property string $ip
- * @property integer $archived
- * @property string $time
+ * @property integer $id ID
+ * @property integer $ban_id Ban ID
+ * @property string $reason Reason
+ * @property string $email Email address
+ * @property string $ip IP address
+ * @property boolean $archived Archived
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBBan $ban
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBProtest extends CActiveRecord
 {
@@ -43,12 +50,13 @@ class SBProtest extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ban_id, reason, email, ip, time', 'required'),
-			array('ban_id, archived', 'numerical', 'integerOnly'=>true),
+			array('ban_id, reason, email, ip', 'required'),
+			array('ban_id', 'numerical', 'integerOnly'=>true),
+			array('archived', 'boolean'),
 			array('reason', 'length', 'max'=>255),
 			array('email', 'length', 'max'=>128),
-			array('ip', 'length', 'max'=>15),
-			array('time', 'length', 'max'=>10),
+			array('email', 'email'),
+			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, ban_id, reason, email, ip, archived, time', 'safe', 'on'=>'search'),

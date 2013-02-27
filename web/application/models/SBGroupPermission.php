@@ -1,21 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{permissions}}".
+ * This is the model class for table "{{group_permissions}}".
  *
- * The followings are the available columns in table '{{permissions}}':
- * @property integer $id
- * @property string $name
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
+ * The followings are the available columns in table '{{group_permissions}}':
+ * @property integer $group_id Web Group ID
+ * @property string $name Name
  *
  * The followings are the available model relations:
- * @property SBGroupsPermissions[] $groups_permissions
+ * @property SBGroup[] $groups
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
-class SBPermission extends CActiveRecord
+class SBGroupPermission extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return SBPermission the static model class
+	 * @return SBGroupPermission the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -27,7 +34,7 @@ class SBPermission extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{permissions}}';
+		return '{{group_permissions}}';
 	}
 
 	/**
@@ -42,7 +49,7 @@ class SBPermission extends CActiveRecord
 			array('name', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('group_id, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +61,7 @@ class SBPermission extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'groups' => array(self::MANY_MANY, 'SBGroup', '{{groups_permissions}}(permission_id, group_id)'),
+			'groups' => array(self::HAS_MANY, 'SBGroup', 'group_id'),
 		);
 	}
 
@@ -64,7 +71,7 @@ class SBPermission extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
+			'group_id' => Yii::t('sourcebans', 'Web Group'),
 			'name' => Yii::t('sourcebans', 'Name'),
 		);
 	}

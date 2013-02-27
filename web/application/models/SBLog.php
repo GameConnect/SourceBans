@@ -1,21 +1,28 @@
 <?php
 
 /**
- * This is the model class for table "{{log}}".
+ * This is the model class for table "{{logs}}".
  *
- * The followings are the available columns in table '{{log}}':
- * @property string $id
- * @property string $type
- * @property string $title
- * @property string $message
- * @property string $function
- * @property string $query
- * @property integer $admin_id
- * @property string $admin_ip
- * @property string $time
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
+ * The followings are the available columns in table '{{logs}}':
+ * @property integer $id ID
+ * @property string $type Type
+ * @property string $title Title
+ * @property string $message Message
+ * @property string $function Function
+ * @property string $query Query
+ * @property integer $admin_id Admin ID
+ * @property string $admin_ip Admin IP address
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBLog extends CActiveRecord
 {
@@ -34,7 +41,7 @@ class SBLog extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{log}}';
+		return '{{logs}}';
 	}
 
 	/**
@@ -45,13 +52,12 @@ class SBLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('type, title, message, function, query, admin_id, admin_ip, time', 'required'),
+			array('type, title, message, function, query, admin_id, admin_ip', 'required'),
 			array('admin_id', 'numerical', 'integerOnly'=>true),
 			array('type', 'length', 'max'=>1),
 			array('title', 'length', 'max'=>64),
 			array('message, function, query', 'length', 'max'=>255),
-			array('admin_ip', 'length', 'max'=>15),
-			array('time', 'length', 'max'=>10),
+			array('admin_ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, type, title, message, function, query, admin_id, admin_ip, time', 'safe', 'on'=>'search'),

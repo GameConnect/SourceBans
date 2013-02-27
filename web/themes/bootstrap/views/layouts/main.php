@@ -51,27 +51,32 @@
 	'id' => 'tabs',
 	'items' => array(
 		array(
+			'active' => $this->route == 'site/dashboard' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'dashboard'),
 			'label' => Yii::t('sourcebans', 'Dashboard'),
 			'url' => array('site/dashboard'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'This page shows an overview of your bans and servers.')),
 		),
 		array(
+			'active' => $this->route == 'site/bans' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'bans'),
 			'label' => Yii::t('sourcebans', 'Bans'),
 			'url' => array('site/bans'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'All of the bans in the database can be viewed from here.')),
 		),
 		array(
+			'active' => $this->route == 'site/servers' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'servers'),
 			'label' => Yii::t('sourcebans', 'Servers'),
 			'url' => array('site/servers'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'All of your servers and their status can be viewed here.')),
 		),
 		array(
+			'active' => $this->route == 'site/submitban' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'submitban'),
 			'label' => Yii::t('sourcebans', 'Submit ban'),
 			'url' => array('site/submitban'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'You can submit a demo or screenshot of a suspected cheater here. It will then be up for review by one of the admins.')),
 			'visible' => SourceBans::app()->settings->enable_submit,
 		),
 		array(
+			'active' => $this->route == 'site/protestban' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'protestban'),
 			'label' => Yii::t('sourcebans', 'Protest ban'),
 			'url' => array('site/protestban'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'Here you can protest your ban. And prove your case as to why you should be unbanned.')),
@@ -102,7 +107,7 @@
 <?php echo $content ?>
       
       <footer>
-        <strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::app()->version ?></strong>
+        <strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::getVersion() ?></strong>
         <p>"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em></p>
       </footer>
     </div>

@@ -3,15 +3,22 @@
 /**
  * This is the model class for table "{{blocks}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{blocks}}':
- * @property integer $ban_id
- * @property string $name
- * @property integer $server_id
- * @property string $time
+ * @property integer $ban_id Ban ID
+ * @property string $name Name
+ * @property integer $server_id Server ID
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBBan $ban
  * @property SBServer $server
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBBlock extends CActiveRecord
 {

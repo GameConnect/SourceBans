@@ -3,15 +3,22 @@
 /**
  * This is the model class for table "{{demos}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{demos}}':
- * @property string $id
- * @property integer $object_id
- * @property string $object_type
- * @property string $filename
+ * @property integer $id ID
+ * @property integer $object_id Object ID
+ * @property string $object_type Type
+ * @property string $filename Filename
  *
  * The followings are the available model relations:
  * @property SBBan $ban
  * @property SBSubmission $submission
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBDemo extends CActiveRecord
 {

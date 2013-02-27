@@ -3,22 +3,29 @@
 /**
  * This is the model class for table "{{submissions}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{submissions}}':
- * @property integer $id
- * @property string $name
- * @property string $steam
- * @property string $ip
- * @property string $reason
- * @property integer $server_id
- * @property string $subname
- * @property string $subemail
- * @property string $subip
- * @property integer $archived
- * @property string $time
+ * @property integer $id ID
+ * @property string $name Name
+ * @property string $steam Steam ID
+ * @property string $ip IP address
+ * @property string $reason Reason
+ * @property integer $server_id Server ID
+ * @property string $subname Name
+ * @property string $subemail Email address
+ * @property string $subip IP address
+ * @property boolean $archived Archived
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBDemo $demo
  * @property SBServer $server
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBSubmission extends CActiveRecord
 {
@@ -48,14 +55,15 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, reason, subname, subemail, subip, time', 'required'),
-			array('server_id, archived', 'numerical', 'integerOnly'=>true),
+			array('name, reason, subname, subemail, subip', 'required'),
+			array('server_id', 'numerical', 'integerOnly'=>true),
+			array('archived', 'boolean'),
 			array('name, subname', 'length', 'max'=>64),
-			array('steam', 'length', 'max'=>32),
-			array('ip, subip', 'length', 'max'=>15),
+			array('steam', 'match', 'pattern'=>'^STEAM_[0-9]:[0-9]:[0-9]+$'),
+			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
 			array('reason', 'length', 'max'=>255),
 			array('subemail', 'length', 'max'=>128),
-			array('time', 'length', 'max'=>10),
+			array('subemail', 'email'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, steam, ip, reason, server_id, subname, subemail, subip, archived, time', 'safe', 'on'=>'search'),

@@ -2,12 +2,12 @@
 /**
  * Send and receive RCON packets
  * 
- * @author     SteamFriends, InterWave Studios, GameConnect
- * @copyright  (C)2007-2013 GameConnect.net.  All rights reserved.
- * @link       http://www.sourcebans.net
- * @package    SourceBans
- * @subpackage Server
- * @version    $Id$
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.components
+ * @since 2.0
  */
 class ServerRcon
 {
@@ -22,6 +22,13 @@ class ServerRcon
 	private $_sock = null;
 	
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $host IP address or domain name
+	 * @param integer $port port number
+	 * @param string $password RCON password
+	 */
 	function __construct($host, $port, $password)
 	{
 		$this->_password = $password;
@@ -38,10 +45,15 @@ class ServerRcon
 	}
 	
 	
+	/**
+	 * Authenticates to the server
+	 * 
+	 * @return boolean whether the authentication was successful
+	 */
 	public function auth()
 	{
 		if($this->_hl1)
-			return;
+			return true;
 		
 		// HL2
 		$PackID = $this->_write(self::SERVERDATA_AUTH, $this->_password);
@@ -50,6 +62,12 @@ class ServerRcon
 	}
 	
 	
+	/**
+	 * Executes an RCON command
+	 * 
+	 * @param string $command the command to execute
+	 * @return string the result
+	 */
 	public function execute($command)
 	{
 		// HL2

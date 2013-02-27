@@ -45,6 +45,7 @@
 			),
 			'name'=>'admin.name',
 			'value'=>'isset($data->admin) ? $data->admin->name : "CONSOLE"',
+			'visible'=>!SourceBans::app()->settings->bans_hide_admin,
 		),
 		array(
 			'headerHtmlOptions'=>array(

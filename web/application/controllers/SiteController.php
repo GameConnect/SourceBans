@@ -1,5 +1,14 @@
 <?php
-
+/**
+ * SourceBans site controller
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.controllers
+ * @since 2.0
+ */
 class SiteController extends Controller
 {
 	/**
@@ -32,6 +41,9 @@ class SiteController extends Controller
 		$this->$defaultAction();
 	}
 
+	/**
+	 * Displays the dashboard page
+	 */
 	public function actionDashboard()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Dashboard');
@@ -62,6 +74,9 @@ class SiteController extends Controller
 		));
 	}
 
+	/**
+	 * Displays the bans page
+	 */
 	public function actionBans()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Bans');
@@ -83,6 +98,9 @@ class SiteController extends Controller
 		));
 	}
 
+	/**
+	 * Displays the servers page
+	 */
 	public function actionServers()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Servers');
@@ -99,6 +117,9 @@ class SiteController extends Controller
 		));
 	}
 
+	/**
+	 * Displays the submit ban page
+	 */
 	public function actionSubmitban()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Submit ban');
@@ -119,6 +140,9 @@ class SiteController extends Controller
 		));
 	}
 
+	/**
+	 * Displays the protest ban page
+	 */
 	public function actionProtestban()
 	{
 		$this->pageTitle = Yii::t('sourcebans', 'Protest ban');

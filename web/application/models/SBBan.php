@@ -3,21 +3,25 @@
 /**
  * This is the model class for table "{{bans}}".
  *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
  * The followings are the available columns in table '{{bans}}':
- * @property integer $id
- * @property integer $type
- * @property string $steam
- * @property string $ip
- * @property string $name
- * @property string $reason
- * @property integer $length
- * @property integer $server_id
- * @property integer $admin_id
- * @property string $admin_ip
- * @property integer $unban_admin_id
- * @property string $unban_reason
- * @property string $unban_time
- * @property string $time
+ * @property integer $id ID
+ * @property integer $type Type
+ * @property string $steam Steam ID
+ * @property string $ip IP address
+ * @property string $name Name
+ * @property string $reason Reason
+ * @property integer $length Length
+ * @property integer $server_id Server ID
+ * @property integer $admin_id Admin ID
+ * @property string $admin_ip Admin IP address
+ * @property integer $unban_admin_id Unbanned by
+ * @property string $unban_reason Unban reason
+ * @property integer $unban_time Unbanned on
+ * @property integer $time Date/Time
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
@@ -28,6 +32,9 @@
  * @property SBDemo[] $demos
  * @property SBProtest[] $protests
  * @property SBServer $server
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class SBBan extends CActiveRecord
 {
@@ -62,10 +69,10 @@ class SBBan extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('type, reason, length, admin_ip', 'required'),
-			array('type, length, server_id, admin_id, unban_admin_id', 'numerical', 'integerOnly'=>true),
-			array('steam', 'length', 'max'=>32),
-			array('ip, admin_ip', 'length', 'max'=>15),
+			array('type, reason, length', 'required'),
+			array('type, length', 'numerical', 'integerOnly'=>true),
+			array('steam', 'match', 'pattern'=>'^STEAM_[0-9]:[0-9]:[0-9]+$'),
+			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
 			array('name', 'length', 'max'=>64),
 			array('reason, unban_reason', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -195,6 +202,11 @@ class SBBan extends CActiveRecord
 	}
 	
 	
+	/**
+	 * Returns a list of common ban lengths
+	 * 
+	 * @return array a list of common ban lengths
+	 */
 	public static function getTimes()
 	{
 		return array(
@@ -238,11 +250,30 @@ class SBBan extends CActiveRecord
 		);
 	}
 	
+	/**
+	 * Returns the supported ban types
+	 * 
+	 * @return array the supported ban types
+	 */
 	public static function getTypes()
 	{
 		return array(
 			self::STEAM_TYPE => Yii::t('sourcebans', 'Steam ID'),
 			self::IP_TYPE    => Yii::t('sourcebans', 'IP address'),
 		);
+	}
+	
+	
+	protected function beforeSave()
+	{
+		if($this->isNewRecord)
+		{
+			if(!Yii::app()->user->isGuest)
+				$this->admin_id = Yii::app()->user->id;
+			
+			$this->admin_ip = $_SERVER['SERVER_ADDR'];
+		}
+		
+		return parent::beforeSave();
 	}
 }

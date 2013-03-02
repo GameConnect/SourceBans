@@ -8,7 +8,7 @@
  * @link http://www.sourcebans.net
  *
  * The followings are the available columns in table '{{plugins}}':
- * @property string $name Name
+ * @property string $class Class
  * @property boolean $enabled Enabled
  *
  * @package sourcebans.models
@@ -42,12 +42,12 @@ class SBPlugin extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('class', 'required'),
 			array('enabled', 'boolean'),
-			array('name', 'length', 'max'=>32),
+			array('class', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('name, enabled', 'safe', 'on'=>'search'),
+			array('class, enabled', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,7 +68,7 @@ class SBPlugin extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'name' => Yii::t('sourcebans', 'Name'),
+			'class' => 'Class',
 			'enabled' => Yii::t('sourcebans', 'Enabled'),
 		);
 	}
@@ -84,7 +84,7 @@ class SBPlugin extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('class',$this->class,true);
 		$criteria->compare('enabled',$this->enabled);
 
 		return new CActiveDataProvider($this, array(
@@ -191,4 +191,29 @@ class SBPlugin extends CActiveRecord
 	 * as a reference. That means you can modify it within this method.
 	 */
 	public function onAfterRender($view, &$output) {}
+	
+	
+	/**
+	 * Creates an active record instance.
+	 * This method is called by {@link CActiveRecord::populateRecord} and {@link CActiveRecord::populateRecords}.
+	 * @param array $attributes list of attribute values for the active records.
+	 * @return CActiveRecord the active record
+	 */
+	protected function instantiate($attributes)
+	{
+		try
+		{
+			$class=Yii::import('application.plugins.'.$attributes['class'], true);
+		}
+		catch(CException $e)
+		{
+			// File is not readable, delete plugin
+			$this->deleteByPk($attributes['class']);
+			
+			$class=__CLASS__;
+		}
+		
+		$model=new $class(null);
+		return $model;
+	}
 }

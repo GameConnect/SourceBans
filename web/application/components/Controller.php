@@ -2,6 +2,8 @@
 /**
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
+ * 
+ * @property string $title Returns the site title based on {@link breadcrumbs}. If those are not set it will return {@link pageTitle} instead.
  */
 class Controller extends CController
 {
@@ -20,6 +22,32 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+	
+	
+	/**
+	 * Returns the site title based on {@link breadcrumbs}. If those are not set it will return {@link pageTitle} instead.
+	 * 
+	 * @return string the site title
+	 */
+	public function getTitle()
+	{
+		static $_data = '';
+		if(empty($_data))
+		{
+  		if(!empty($this->breadcrumbs))
+  		{
+  		  $data  = array();
+  			foreach(array_reverse($this->breadcrumbs) as $key => $value)
+  				$data[] = !is_array($value) ? $value : $key;
+  			
+  			$_data = implode(Yii::app()->params['titleSeparator'], $data);
+  		}
+  		else
+  			$_data = $this->pageTitle;
+		}
+		
+		return $_data;
+	}
 	
 	
 	/**

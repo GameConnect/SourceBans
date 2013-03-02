@@ -6,5 +6,5 @@ $config=dirname(__FILE__).'/application/config/api.php';
 
 require_once($yii);
 Yii::setPathOfAlias('application',dirname($config).DIRECTORY_SEPARATOR.'..');
-Yii::import('application.components.CApiApplication');
-Yii::createApplication('CApiApplication',$config)->run();
+Yii::import('application.components.ApiApplication');
+Yii::createApplication('ApiApplication',$config)->run();

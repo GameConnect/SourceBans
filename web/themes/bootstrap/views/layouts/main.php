@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="<?php echo Yii::app()->language ?>">
   <head>
-    <title><?php if(!empty($this->pageTitle)) echo CHtml::encode($this->pageTitle . Yii::app()->params['titleSeparator']) ?><?php echo CHtml::encode(Yii::app()->name) ?></title>
+    <title><?php if(!empty($this->title)) echo CHtml::encode($this->title . Yii::app()->params['titleSeparator']) ?><?php echo CHtml::encode(Yii::app()->name) ?></title>
     <meta charset="UTF-8" />
     <meta name="author" content="GameConnect" />
     <meta name="copyright" content="SourceBans © 2007-2013 GameConnect.net. All rights reserved." />

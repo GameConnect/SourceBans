@@ -90,7 +90,7 @@
 
 <?php if(!isset($isDashboard)): ?>
 <script id="servers-section" type="text/x-template">
-  <table class="table table-bordered table-condensed" style="float: left; width: 420px;">
+  <table class="table table-bordered table-condensed table-hover" style="float: left; width: 420px;">
     <thead>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
@@ -101,7 +101,7 @@
     <tbody>
 <% if(server.players.length) { %>
 <% $.each(server.players, function(i, player) { %>
-      <tr>
+      <tr class="player" data-name="<%=player.name %>">
         <td><%=player.name %></td>
         <td style="text-align: right;"><%=player.score %></td>
         <td style="width: 1px; white-space: nowrap;"><%=player.time %></td>
@@ -144,6 +144,56 @@
     location.hash = $this.hasClass("selected") ? 0 : $this.data("key");
   });
 ') ?>
+
+<?php if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS')): ?>
+<?php $this->widget('bootstrap.widgets.TbDropdown', array(
+	'id' => 'player-menu',
+	'items' => array(
+		array(
+			'itemOptions' => array('class' => 'player-name'),
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Kick player'),
+			'url' => '#',
+			'linkOptions' => array('id' => 'player-kick'),
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Ban player'),
+			'url' => '#',
+			'linkOptions' => array('id' => 'player-ban'),
+		),
+	),
+)) ?>
+
+<?php Yii::app()->clientScript->registerScript('site_servers_playerMenu', '
+  $(document).on("click", function() {
+    $("#player-menu").hide();
+  });
+  $(document).on("contextmenu", "#servers-grid .player", function(e) {
+    e.preventDefault();
+    var name = $(this).data("name");
+    
+    $("#player-menu .player-name").text(name);
+    $("#player-menu")
+      .data("name", name)
+      .css({
+        top: event.pageY - 12,
+        left: event.pageX + 2
+      })
+      .show();
+  });
+  
+  $("#player-kick").click(function() {
+    var id = $("#servers-grid tr.selected").data("key");
+    
+    $.post("' . $this->createUrl('servers/kick', array('id' => '__ID__')) . '".replace("__ID__", id), {
+	    name: $("#player-menu").data("name")
+    }, function() {
+	    queryServer(id);
+    });
+  });
+') ?>
+<?php endif ?>
 <?php endif ?>
 
 <?php Yii::app()->clientScript->registerScript('site_servers_queryServer', '
@@ -172,7 +222,7 @@
         if(server.players) {
           var $section = $header.next("tr.section");
           if(!$section.length) {
-            $section = $("<tr class=\"row section\"><td colspan=\"" + $header[0].cells.length + "\"><div class=\"span10\"></div></td></tr>").insertAfter($header);
+            $section = $("<tr class=\"section\"><td colspan=\"" + $header[0].cells.length + "\"><div></div></td></tr>").insertAfter($header);
           }
           
           $section.find("div").html($("#servers-section").template({

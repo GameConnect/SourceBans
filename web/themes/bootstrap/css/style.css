@@ -33,13 +33,25 @@ textarea {
 .grid-view {
   padding-top: 0;
 }
+.grid-view .null {
+  color: #677882;
+  font-style: italic;
+}
 .grid-view-loading {
   background: none;
 }
 .grid-view-loading th.button-column {
   background: url(../images/loading.gif) no-repeat 45px center;
 }
+.modal-body textarea {
+  width: 516px;
+}
 
+#flash-alert {
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+}
 .bans {
   float: left;
 }
@@ -54,11 +66,16 @@ textarea {
 #bans-grid tr.expired td.length {
   background-color: #dbf4d7;
 }
+#bans-grid tr.section > td > div,
+#servers-grid tr.section > td > div {
+  margin: 0 auto;
+  width: 780px;
+}
 
 .table-accordion tbody tr.section:hover td,
 .table-accordion tbody tr.section:hover th {
   background-color: transparent;
-  cursor: default;
+  cursor: auto;
 }
 .table-accordion tr.section > td {
   border-top: 0;
@@ -67,11 +84,18 @@ textarea {
 .table-accordion tr.section > td > div {
   display: none;
 }
+.table-accordion .table-hover tbody tr:hover > td,
+.table-accordion .table-hover tbody tr:hover > th {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
 
+td.nowrap,
 td.datetime,
 td.length,
 td.ServerQuery_map,
 td.ServerQuery_players,
+th.nowrap,
 th.datetime,
 th.length,
 th.ServerQuery_map,
@@ -80,8 +104,10 @@ th.ServerQuery_players,
   white-space: nowrap;
   width: 1px;
 }
+td.text-right,
 td.length,
 td.ServerQuery_players,
+th.text-right,
 th.length,
 th.ServerQuery_players {
   text-align: right;
@@ -90,7 +116,9 @@ td.SBAdmin_name,
 th.SBAdmin_name {
   width: 20%;
 }
+td.text-center,
 td.datetime,
+th.text-center,
 th.datetime {
   text-align: center !important;
 }

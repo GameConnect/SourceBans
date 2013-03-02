@@ -121,6 +121,14 @@ class SourceBans extends CApplicationComponent
 	 */
 	public static function onBeginRequest($event)
 	{
+		// Set timezone
+		// TODO: Make a timezone list based on names instead of hour offsets. Etc/GMT may be deprecated in the future.
+		$timezone = SourceBans::app()->settings->timezone + SourceBans::app()->settings->summer_time;
+		date_default_timezone_set('Etc/GMT' . ($timezone < 0 ? $timezone : '+' . $timezone));
+		
+		// Set date/time format
+		Yii::app()->format->datetimeFormat = SourceBans::app()->settings->date_format ?: 'm-d-y H:i';
+		
 		// Set language
 		if(!Yii::app()->user->isGuest && !empty(Yii::app()->user->data->language))
 			Yii::app()->setLanguage(Yii::app()->user->data->language);

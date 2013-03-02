@@ -47,11 +47,9 @@ return CMap::mergeArray(
 					*/
 				),
 			),
-			// uncomment the following to enable URLs in path-format
-			/*
 			'urlManager'=>array(
 				'urlFormat'=>'path',
-				'showScriptName'=>false,
+				'showScriptName'=>!(defined('PRETTY_URLS') && PRETTY_URLS),
 				'rules'=>array(
 					''=>'site/index',
 					'admin'=>'admin/index',
@@ -61,7 +59,6 @@ return CMap::mergeArray(
 					'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 				),
 			),
-			*/
 			'user'=>array(
 				'class'=>'WebUser',
 				// enable cookie-based authentication

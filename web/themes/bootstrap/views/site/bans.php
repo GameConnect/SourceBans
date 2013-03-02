@@ -45,7 +45,7 @@
 			),
 			'name'=>'admin.name',
 			'value'=>'isset($data->admin) ? $data->admin->name : "CONSOLE"',
-			'visible'=>!SourceBans::app()->settings->bans_hide_admin,
+			'visible'=>!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_admin),
 		),
 		array(
 			'headerHtmlOptions'=>array(
@@ -76,6 +76,7 @@
 		"data-reason"=>$data->reason,
 		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
 		"data-server-id"=>$data->server->id,
+		"data-community-id"=>$data->community_id,
 	)',
 	'selectableRows'=>0,
 	'summaryText'=>CHtml::link(Yii::t('sourcebans', $hideInactive == 'true' ? 'Show inactive' : 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
@@ -87,35 +88,46 @@
     <tbody>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
-        <td><%=header.data("name") %></th>
+        <td><%=header.data("name") %></td>
       </tr>
       <tr>
         <th style="white-space: nowrap; width: 150px;">Steam ID</th>
-        <td><%=header.data("steam") %></th>
+        <td>
+          <%=header.data("steam") %>
+<% if(header.data("communityId")) { %>
+          (<a href="http://steamcommunity.com/profiles/<%=header.data("communityId") %>" target="_blank"><?php echo Yii::t('sourcebans', 'Steam Profile') ?></a>)
+        </td>
       </tr>
+<% } %>
+        </td>
+      </tr>
+<?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_ip)): ?>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'IP address') ?></th>
-        <td><%=header.data("ip") %></th>
+        <td><%=header.data("ip") %></td>
       </tr>
+<?php endif ?>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Invoked on') ?></th>
-        <td><%=header.data("datetime") %></th>
+        <td><%=header.data("datetime") %></td>
       </tr>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Length') ?></th>
-        <td><%=header.data("length") %></th>
+        <td><%=header.data("length") %></td>
       </tr>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Reason') ?></th>
-        <td><%=header.data("reason") %></th>
+        <td><%=header.data("reason") %></td>
       </tr>
       <tr>
+<?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_admin)): ?>
         <th><?php echo Yii::t('sourcebans', 'Admin') ?></th>
-        <td><%=header.data("adminName") %></th>
+        <td><%=header.data("adminName") %></td>
       </tr>
+<?php endif ?>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Server') ?></th>
-        <td class="hostname_<%=header.data("serverId") %>">Querying server...</th>
+        <td class="hostname_<%=header.data("serverId") %>">Querying server...</td>
       </tr>
     </tbody>
   </table>
@@ -158,7 +170,7 @@
 <?php Yii::app()->clientScript->registerScript('site_bans_createSections', '
   function createSections() {
     $("#bans-grid tr[data-key]").each(function(i, header) {
-      $section = $("<tr class=\"row section\"><td colspan=\"" + header.cells.length + "\"><div class=\"span10\"></div></td></tr>").insertAfter($(header));
+      $section = $("<tr class=\"section\"><td colspan=\"" + header.cells.length + "\"><div></div></td></tr>").insertAfter($(header));
       
       $section.find("div").html($("#bans-section").template({
         header: $(header),

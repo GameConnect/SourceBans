@@ -76,7 +76,7 @@ class AdminController extends Controller
 	 */
 	public function actionAdmins()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Admins') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
+		$this->pageTitle = Yii::t('sourcebans', 'Admins');
 		$this->breadcrumbs = array(
 			Yii::t('sourcebans', 'Administration') => array('admin/index'),
 			Yii::t('sourcebans', 'Admins'),
@@ -104,7 +104,7 @@ class AdminController extends Controller
 	 */
 	public function actionBans()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Bans') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
+		$this->pageTitle = Yii::t('sourcebans', 'Bans');
 		$this->breadcrumbs = array(
 			Yii::t('sourcebans', 'Administration') => array('admin/index'),
 			Yii::t('sourcebans', 'Bans'),
@@ -125,7 +125,7 @@ class AdminController extends Controller
 	 */
 	public function actionGames()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Games') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
+		$this->pageTitle = Yii::t('sourcebans', 'Games');
 		$this->breadcrumbs = array(
 			Yii::t('sourcebans', 'Administration') => array('admin/index'),
 			Yii::t('sourcebans', 'Games'),
@@ -153,7 +153,7 @@ class AdminController extends Controller
 	 */
 	public function actionGroups()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Groups') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
+		$this->pageTitle = Yii::t('sourcebans', 'Groups');
 		$this->breadcrumbs = array(
 			Yii::t('sourcebans', 'Administration') => array('admin/index'),
 			Yii::t('sourcebans', 'Groups'),
@@ -181,7 +181,7 @@ class AdminController extends Controller
 	 */
 	public function actionServers()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Servers') . Yii::app()->params['titleSeparator'] . Yii::t('sourcebans', 'Administration');
+		$this->pageTitle = Yii::t('sourcebans', 'Servers');
 		$this->breadcrumbs = array(
 			Yii::t('sourcebans', 'Administration') => array('admin/index'),
 			Yii::t('sourcebans', 'Servers'),
@@ -201,6 +201,49 @@ class AdminController extends Controller
 		$this->render('servers',array(
 			'server'=>$server,
 			'servers'=>$servers,
+		));
+	}
+	
+	/**
+	 * Displays the 'settings' admin page
+	 */
+	public function actionSettings()
+	{
+		$this->pageTitle = Yii::t('sourcebans', 'Settings');
+		$this->breadcrumbs = array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Settings'),
+		);
+		$this->menu = array(
+			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
+		);
+		
+		// Find new plugins and save to database
+		$files=CFileHelper::findFiles(Yii::getPathOfAlias('application.plugins'), array(
+			'fileTypes' => array('php'),
+			'level' => 0,
+		));
+		foreach($files as $file)
+		{
+			$plugin=new SBPlugin;
+			$plugin->class=pathinfo($file, PATHINFO_FILENAME);
+			
+			try
+			{
+				$plugin->save();
+			}
+			catch(CDbException $e)
+			{
+				// Ignore duplicate keys
+				if ($e->errorInfo[1] != 1062)
+					throw $e;
+			}
+		}
+		
+		$plugins=SBPlugin::model()->findAll();
+		
+		$this->render('settings',array(
+			'plugins'=>$plugins,
 		));
 	}
 }

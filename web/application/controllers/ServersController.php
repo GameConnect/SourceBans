@@ -38,6 +38,15 @@ class ServersController extends Controller
 		Yii::app()->end(CJSON::encode($response));
 	}
 	
+	public function actionKick()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$name     = Yii::app()->request->getPost('name');
+		$response = $this->_rconServer('kick "' . $name . '"', $id);
+		
+		Yii::app()->end(CJSON::encode($response));
+	}
+	
 	
 	private function _queryServer($queries, $id = null)
 	{
@@ -101,6 +110,45 @@ class ServersController extends Controller
 			if($queries & self::QUERY_RULES)
 			{
 				$result['rules'] = $query->getRules();
+			}
+			
+			$results[] = $result;
+		}
+		
+		return empty($id)
+			? $results
+			: $results[0];
+	}
+	
+	private function _rconServer($command, $id = null)
+	{
+		if(empty($id))
+			$servers = SBServer::model()->findAll();
+		else if(is_array($id))
+			$servers = SBServer::model()->findByPk($id);
+		else
+			$servers = array(SBServer::model()->findByPk($id));
+		
+		$results = array();
+		foreach($servers as $server)
+		{
+			$rcon   = new ServerRcon($server->ip, $server->port, $server->rcon);
+			$result = array(
+				'id'   => $server->id,
+				'ip'   => $server->ip,
+				'port' => $server->port,
+			);
+			
+			if(!$rcon->auth())
+			{
+				$result['error'] = array(
+					'code'    => 'ERR_INVALID_PASSWORD',
+					'message' => Yii::t('yii', '{attribute} is invalid.', array('{attribute}' => $server->getAttributeLabel('rcon'))),
+				);
+			}
+			else
+			{
+				$result['result'] = $rcon->execute($command);
 			}
 			
 			$results[] = $result;

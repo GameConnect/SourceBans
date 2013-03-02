@@ -15,7 +15,7 @@ class Helpers
 		{
 			$data[$key] = $value[$column];
 		}
-	
+		
 		array_multisort($data, $order, $array);
 	}
 	

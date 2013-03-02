@@ -233,6 +233,7 @@ return array(
 	'Settings' => 'Einstellungen',
 	'Show inactive' => 'Zeige Inaktive',
 	'Slay/harm other players' => 'Erschlage/Verletze andere Spieler',
+	'Steam Profile' => 'Steam-Profil',
 	'Subject' => 'Subject',
 	'Submission Information' => 'Einsendungsinformationen',
 	'Submit' => 'Senden',

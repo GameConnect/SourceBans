@@ -42,6 +42,11 @@ class SBBan extends CActiveRecord
 	const IP_TYPE      = 1;
 	const DEFAULT_TYPE = 0;
 	
+	/**
+	 * @var integer Steam Community ID
+	 */
+	public $community_id;
+	
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -184,6 +189,9 @@ class SBBan extends CActiveRecord
 			'inactive'=>array(
 				'condition'=>$t.'.unban_admin_id IS NOT NULL OR ('.$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP())',
 			),
+			'permanent'=>array(
+				'condition'=>$t.'.length = 0',
+			),
 			'unbanned'=>array(
 				'condition'=>$t.'.unban_admin_id IS NOT NULL',
 			),
@@ -263,6 +271,21 @@ class SBBan extends CActiveRecord
 		);
 	}
 	
+	
+	protected function beforeFind()
+	{
+	  // Select community ID
+		$select=array(
+			'CAST("76561197960265728" AS UNSIGNED) + CAST(MID(t.steam, 9, 1) AS UNSIGNED) + CAST(MID(t.steam, 11, 10) * 2 AS UNSIGNED) AS community_id',
+		);
+	  if($this->dbCriteria->select==='*')
+	    $select[]='*';
+	  $this->dbCriteria->mergeWith(array(
+			'select'=>$select,
+		));
+		
+		return parent::beforeFind();
+	}
 	
 	protected function beforeSave()
 	{

@@ -1,4 +1,4 @@
-    <section class="pane" id="pane-plugins">
+    <section class="tab-pane fade" id="pane-plugins">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'plugins-grid',
 	'dataProvider'=>new CArrayDataProvider($plugins, array(

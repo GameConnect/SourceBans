@@ -21,6 +21,12 @@
  */
 class SBGame extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -49,6 +55,8 @@ class SBGame extends CActiveRecord
 		return array(
 			array('name, folder, icon', 'required'),
 			array('name, folder, icon', 'length', 'max'=>32),
+			array('icon', 'file', 'types'=>array('gif', 'ico', 'jpg', 'png'), 'on'=>'insert'),
+			array('icon', 'file', 'types'=>array('gif', 'ico', 'jpg', 'png'), 'allowEmpty'=>true, 'on'=>'update'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, folder, icon', 'safe', 'on'=>'search'),
@@ -107,5 +115,18 @@ class SBGame extends CActiveRecord
 				),
 			),
 		));
+	}
+	
+	
+	protected function afterSave()
+	{
+		// Save icon
+		$icon = CUploadedFile::getInstance($this, 'icon');
+		if(!empty($icon))
+		{
+			$icon->saveAs(Yii::getPathOfAlias('webroot.images.games') . $icon);
+		}
+		
+		parent::afterSave();
 	}
 }

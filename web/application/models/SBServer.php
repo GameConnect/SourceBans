@@ -28,6 +28,12 @@
  */
 class SBServer extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->address;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -57,7 +63,7 @@ class SBServer extends CActiveRecord
 			array('ip, game_id', 'required'),
 			array('port, game_id', 'numerical', 'integerOnly'=>true),
 			array('enabled', 'boolean'),
-			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
 			array('rcon', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -95,6 +101,7 @@ class SBServer extends CActiveRecord
 			'game_id' => Yii::t('sourcebans', 'Game'),
 			'enabled' => Yii::t('sourcebans', 'Enabled'),
 			'game.name' => Yii::t('sourcebans', 'Game'),
+			'groups.name' => Yii::t('sourcebans', 'Server groups'),
 		);
 	}
 

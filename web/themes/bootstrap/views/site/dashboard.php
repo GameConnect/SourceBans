@@ -54,6 +54,7 @@
 	'enablePagination'=>false,
 	'enableSorting'=>false,
 	'itemsCssClass'=>'items table table-condensed table-hover',
+	'nullDisplay'=>CHtml::tag('span', array('class'=>'null'), Yii::t('zii', 'Not set')),
 	'rowHtmlOptionsExpression'=>'array(
 		"class"=>($data->length && $data->time + $data->length * 60 < time() ? "expired" : ($data->unban_admin_id ? "unbanned" : "")),
 		"data-key"=>$data->primaryKey,

@@ -24,7 +24,6 @@ class AdminController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 	
@@ -163,16 +162,20 @@ class AdminController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add'),
 		);
 		
-		$group=new SBServerGroup;
+		$group=new SBGroup;
+		$server_group=new SBServerGroup;
 		
-		$groups=new SBServerGroup('search');
+		$groups=new SBGroup('search');
 		$groups->unsetAttributes();  // clear any default values
-		if(isset($_GET['SBServerGroup']))
-			$groups->attributes=$_GET['SBServerGroup'];
+		
+		$server_groups=new SBServerGroup('search');
+		$server_groups->unsetAttributes();  // clear any default values
 		
 		$this->render('groups',array(
 			'group'=>$group,
 			'groups'=>$groups,
+			'server_group'=>$server_group,
+			'server_groups'=>$server_groups,
 		));
 	}
 	

@@ -6,6 +6,7 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'admin-form',
+	'action'=>isset($action) ? $action : null,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -70,6 +71,16 @@
     <div class="controls">
       <?php echo $form->dropDownList($model,'group_id',CHtml::listData(SBGroup::model()->findAll(array('order' => 't.name')),'id','name'),array('empty'=>'- ' . Yii::t('sourcebans','None') . ' -')); ?>
       <?php echo $form->error($model,'group_id',null,true,false); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <?php echo $form->label($model,'server_groups.name',array('class' => 'control-label')); ?>
+    <div class="controls">
+<?php foreach(SBServerGroup::model()->findAll(array('order' => 't.name')) as $server_group): ?>
+      <?php $checkbox = CHtml::checkBox('SBServerGroup['.$server_group->id.']') . $server_group->name; ?>
+      <?php echo CHtml::label($checkbox,'SBServerGroup_' . $server_group->id,array('class' => 'checkbox')); ?>
+<?php endforeach ?>
     </div>
   </div>
 

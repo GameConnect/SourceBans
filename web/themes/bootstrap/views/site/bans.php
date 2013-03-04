@@ -1,12 +1,12 @@
     <section>
-      <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced Search'),'#',array('class'=>'search-button')); ?>
+      <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced search'),'#',array('class'=>'search-button')); ?>
       <div class="search-form" style="display:none">
       <?php $this->renderPartial('/bans/_search',array(
       	'model'=>$bans,
       )); ?>
       </div><!-- search-form -->
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $grid=$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'bans-grid',
 	'dataProvider'=>$bans->search(array(
 		'scopes' => $hideInactive ? 'active' : null,
@@ -61,6 +61,7 @@
 	'afterAjaxUpdate'=>'js:createSections',
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
+	'nullDisplay'=>CHtml::tag('span', array('class'=>'null'), Yii::t('zii', 'Not set')),
 	'pager'=>array(
 		'class'=>'bootstrap.widgets.TbPager',
 	),
@@ -88,12 +89,12 @@
     <tbody>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
-        <td><%=header.data("name") %></td>
+        <td><%=header.data("name") || nullDisplay %></td>
       </tr>
       <tr>
         <th style="white-space: nowrap; width: 150px;">Steam ID</th>
         <td>
-          <%=header.data("steam") %>
+          <%=header.data("steam") || nullDisplay %>
 <% if(header.data("communityId")) { %>
           (<a href="http://steamcommunity.com/profiles/<%=header.data("communityId") %>" target="_blank"><?php echo Yii::t('sourcebans', 'Steam Profile') ?></a>)
         </td>
@@ -104,7 +105,7 @@
 <?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_ip)): ?>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'IP address') ?></th>
-        <td><%=header.data("ip") %></td>
+        <td><%=header.data("ip") || nullDisplay %></td>
       </tr>
 <?php endif ?>
       <tr>
@@ -169,11 +170,14 @@
 
 <?php Yii::app()->clientScript->registerScript('site_bans_createSections', '
   function createSections() {
+    var nullDisplay = "' . addslashes($grid->nullDisplay) . '";
+    
     $("#bans-grid tr[data-key]").each(function(i, header) {
       $section = $("<tr class=\"section\"><td colspan=\"" + header.cells.length + "\"><div></div></td></tr>").insertAfter($(header));
       
       $section.find("div").html($("#bans-section").template({
         header: $(header),
+        nullDisplay: nullDisplay
       }));
     });
     

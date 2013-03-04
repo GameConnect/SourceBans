@@ -21,6 +21,12 @@
  */
 class SBServerGroupOverride extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -76,7 +82,7 @@ class SBServerGroupOverride extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'group_id' => Yii::t('sourcebans', 'Server Group'),
+			'group_id' => Yii::t('sourcebans', 'Server group'),
 			'type' => Yii::t('sourcebans', 'Type'),
 			'name' => Yii::t('sourcebans', 'Name'),
 			'access' => Yii::t('sourcebans', 'Access'),

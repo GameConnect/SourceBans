@@ -21,6 +21,7 @@
  * @property string $srv_password Server password
  * @property string $validate Validation key
  * @property integer $lastvisit Last visit
+ * @property string $flags Server flags
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
@@ -40,6 +41,12 @@ class SBAdmin extends CActiveRecord
 	const IP_AUTH    = 'ip';
 	const NAME_AUTH  = 'name';
 	const STEAM_AUTH = 'steam';
+	
+	
+	public function __toString()
+	{
+	  return $this->name;
+	}
 	
 	
 	/**
@@ -70,16 +77,15 @@ class SBAdmin extends CActiveRecord
 		return array(
 			array('name, auth, identity', 'required'),
 			array('group_id', 'numerical', 'integerOnly'=>true),
-			array('name, identity, validate', 'length', 'max'=>64),
+			array('name, identity', 'length', 'max'=>64),
 			array('password, srv_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('auth', 'length', 'max'=>5),
 			array('email', 'length', 'max'=>128),
 			array('language', 'length', 'max'=>2),
 			array('theme', 'length', 'max'=>32),
-			array('lastvisit', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, auth, identity, password, group_id, email, language, theme, srv_password, validate, lastvisit', 'safe', 'on'=>'search'),
+			array('id, name, auth, identity, password, group_id, email, language, theme, srv_password, lastvisit', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -113,14 +119,15 @@ class SBAdmin extends CActiveRecord
 			'auth' => Yii::t('sourcebans', 'Authentication type'),
 			'identity' => Yii::t('sourcebans', 'Identity'),
 			'password' => Yii::t('sourcebans', 'Password'),
-			'group_id' => Yii::t('sourcebans', 'Web Group'),
+			'group_id' => Yii::t('sourcebans', 'Web group'),
 			'email' => Yii::t('sourcebans', 'Email address'),
 			'language' => Yii::t('sourcebans', 'Language'),
 			'theme' => Yii::t('sourcebans', 'Theme'),
-			'srv_password' => Yii::t('sourcebans', 'Server Password'),
+			'srv_password' => Yii::t('sourcebans', 'Server password'),
 			'validate' => 'Validation key',
 			'lastvisit' => Yii::t('sourcebans', 'Last visit'),
-			'group.name' => Yii::t('sourcebans', 'Web Group'),
+			'group.name' => Yii::t('sourcebans', 'Web group'),
+			'server_groups.name' => Yii::t('sourcebans', 'Server groups'),
 		);
 	}
 
@@ -146,8 +153,7 @@ class SBAdmin extends CActiveRecord
 		$criteria->compare('language',$this->language,true);
 		$criteria->compare('theme',$this->theme,true);
 		$criteria->compare('srv_password',$this->srv_password,true);
-		$criteria->compare('validate',$this->validate,true);
-		$criteria->compare('lastvisit',$this->lastvisit,true);
+		$criteria->compare('lastvisit',$this->lastvisit);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -170,7 +176,77 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Check whether admin has one of these permissions
+	 * Returns the server flags of the admin
+	 * 
+	 * @return string the server flags of the admin
+	 */
+	public function getFlags()
+	{
+	  $flags = '';
+		foreach($this->server_groups as $server_group)
+		{
+			$flags .= $server_group->flags;
+		}
+		
+		return count_chars($flags, 3);
+	}
+	
+	/**
+	 * Returns whether the admin has one of these server flags
+	 * 
+	 * @param mixed $flag Flag(s) to check for
+	 * @return boolean
+	 */
+	public function hasFlag($flag)
+	{
+		if(func_num_args() > 1)
+			$flags = func_get_args();
+		else if(is_array($flag))
+			$flags = $flag;
+		else
+			$flags = str_split($flag);
+		
+		foreach($this->server_groups as $server_group)
+		{
+			foreach($flags as $flag)
+			{
+				if(strpos($server_group->flags, $flag) !== false)
+					return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns whether the admin has all of these server flags
+	 * 
+	 * @param mixed $flag Flag(s) to check for
+	 * @return boolean
+	 */
+	public function hasFlags($flag)
+	{
+		if(func_num_args() > 1)
+			$flags = func_get_args();
+		else if(is_array($flag))
+			$flags = $flag;
+		else
+			$flags = str_split($flag);
+		
+		foreach($this->server_groups as $server_group)
+		{
+			foreach($flags as $flag)
+			{
+				if(strpos($server_group->flags, $flag) === false)
+					return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Returns whether the admin has one of these web permissions
 	 * 
 	 * @param mixed $name Permission name(s) to check for
 	 * @return boolean
@@ -192,7 +268,7 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Check whether admin has all of these permissions
+	 * Returns whether the admin has all of these web permissions
 	 *
 	 * @param mixed $name Permission name(s) to check for
 	 * @return boolean

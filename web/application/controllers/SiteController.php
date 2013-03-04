@@ -130,7 +130,7 @@ class SiteController extends Controller
 		$model = new SBSubmission;
 		$model->demo = new SBDemo;
 		
-		$servers = SBServer::model()->findAll(array(
+		$servers = SBServer::model()->enabled()->findAll(array(
 			'order' => 'ip, port',
 		));
 		

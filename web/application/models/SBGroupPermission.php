@@ -19,6 +19,12 @@
  */
 class SBGroupPermission extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -71,7 +77,7 @@ class SBGroupPermission extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'group_id' => Yii::t('sourcebans', 'Web Group'),
+			'group_id' => Yii::t('sourcebans', 'Web group'),
 			'name' => Yii::t('sourcebans', 'Name'),
 		);
 	}

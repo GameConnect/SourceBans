@@ -76,8 +76,19 @@ class SBBan extends CActiveRecord
 		return array(
 			array('type, reason, length', 'required'),
 			array('type, length', 'numerical', 'integerOnly'=>true),
-			array('steam', 'match', 'pattern'=>'^STEAM_[0-9]:[0-9]:[0-9]+$'),
-			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+			array('steam, ip, name', 'default', 'setOnEmpty'=>true),
+			array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'condition'=>'type = :type',
+				'params'=>array(':type'=>SBBan::STEAM_TYPE),
+				'scopes'=>'active',
+			)),
+			array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'condition'=>'type = :type',
+				'params'=>array(':type'=>SBBan::IP_TYPE),
+				'scopes'=>'active',
+			)),
+			array('steam', 'match', 'pattern'=>'/^STEAM_[0-9]:[0-9]:[0-9]+$/'),
+			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
 			array('name', 'length', 'max'=>64),
 			array('reason, unban_reason', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -152,8 +163,8 @@ class SBBan extends CActiveRecord
 		$criteria->compare('admin_ip',$this->admin_ip,true);
 		$criteria->compare('unban_admin_id',$this->unban_admin_id);
 		$criteria->compare('unban_reason',$this->unban_reason,true);
-		$criteria->compare('unban_time',$this->unban_time,true);
-		$criteria->compare('time',$this->time,true);
+		$criteria->compare('unban_time',$this->unban_time);
+		$criteria->compare('time',$this->time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -274,13 +285,17 @@ class SBBan extends CActiveRecord
 	
 	protected function beforeFind()
 	{
-	  // Select community ID
+		$t = $this->tableAlias;
+		
+		// Select community ID
 		$select=array(
-			'CAST("76561197960265728" AS UNSIGNED) + CAST(MID(t.steam, 9, 1) AS UNSIGNED) + CAST(MID(t.steam, 11, 10) * 2 AS UNSIGNED) AS community_id',
+			'CAST("76561197960265728" AS UNSIGNED) + CAST(MID('.$t.'.steam, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.steam, 11, 10) * 2 AS UNSIGNED) AS community_id',
 		);
-	  if($this->dbCriteria->select==='*')
-	    $select[]='*';
-	  $this->dbCriteria->mergeWith(array(
+		if($this->dbCriteria->select==='*')
+		{
+			array_unshift($select,'*');
+		}
+		$this->dbCriteria->mergeWith(array(
 			'select'=>$select,
 		));
 		

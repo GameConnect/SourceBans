@@ -83,6 +83,7 @@
 			'visible' => SourceBans::app()->settings->enable_protest,
 		),
 		array(
+			'active' => $this->id == 'admin',
 			'label' => Yii::t('sourcebans', 'Administration'),
 			'url' => array('admin/index'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'This is the control panel for SourceBans where you can setup new admins, add new servers, etc.')),

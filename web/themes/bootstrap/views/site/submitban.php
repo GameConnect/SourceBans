@@ -10,6 +10,7 @@
 	'errorMessageCssClass'=>'help-inline',
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
+		'enctype'=>'multipart/form-data',
 	),
 )) ?>
 
@@ -79,10 +80,7 @@
         <div class="controls">
           <div class="fileupload fileupload-new" data-provides="fileupload">
             <div class="input-append">
-              <div class="uneditable-input span3">
-                <i class="icon-file fileupload-exists"></i>
-                <span class="fileupload-preview"></span>
-              </div>
+              <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
               <span class="btn btn-file">
                 <span class="fileupload-new"><?php echo Yii::t('sourcebans', 'Select') ?></span>
                 <span class="fileupload-exists"><?php echo Yii::t('sourcebans', 'Change') ?></span>

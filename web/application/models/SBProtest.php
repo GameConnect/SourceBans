@@ -56,7 +56,7 @@ class SBProtest extends CActiveRecord
 			array('reason', 'length', 'max'=>255),
 			array('email', 'length', 'max'=>128),
 			array('email', 'email'),
-			array('ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, ban_id, reason, email, ip, archived, time', 'safe', 'on'=>'search'),

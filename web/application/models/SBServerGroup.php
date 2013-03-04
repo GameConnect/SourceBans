@@ -24,6 +24,12 @@
  */
 class SBServerGroup extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -68,9 +74,11 @@ class SBServerGroup extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'admins' => array(self::MANY_MANY, 'SBAdmin', '{{admins_server_groups}}(group_id, admin_id)'),
+			'adminsCount' => array(self::STAT, 'SBAdmin', '{{admins_server_groups}}(group_id, admin_id)'),
 			'groups_immune' => array(self::HAS_MANY, 'SBServerGroup', '{{server_groups_immunity}}(group_id, other_id)'),
 			'overrides' => array(self::HAS_MANY, 'SBServerGroupsOverride', 'group_id'),
 			'servers' => array(self::MANY_MANY, 'SBServer', '{{servers_server_groups}}(group_id, server_id)'),
+			'serversCount' => array(self::STAT, 'SBServer', '{{servers_server_groups}}(group_id, server_id)'),
 		);
 	}
 
@@ -82,8 +90,9 @@ class SBServerGroup extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => Yii::t('sourcebans', 'Name'),
-			'flags' => Yii::t('sourcebans', 'Flags'),
+			'flags' => Yii::t('sourcebans', 'Server permissions'),
 			'immunity' => Yii::t('sourcebans', 'Immunity level'),
+			'adminsCount' => Yii::t('sourcebans', 'Admins in group'),
 		);
 	}
 
@@ -114,5 +123,16 @@ class SBServerGroup extends CActiveRecord
 				),
 			),
 		));
+	}
+	
+	
+	protected function beforeSave()
+	{
+		if(strpos($this->flags, 'z') !== false)
+		{
+			$this->flags = 'z';
+		}
+		
+		return parent::beforeSave();
 	}
 }

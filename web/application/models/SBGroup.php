@@ -20,6 +20,12 @@
  */
 class SBGroup extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -63,6 +69,7 @@ class SBGroup extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'admins' => array(self::HAS_MANY, 'SBAdmin', 'group_id'),
+			'adminsCount' => array(self::STAT, 'SBAdmin', 'group_id'),
 			'permissions' => array(self::HAS_MANY, 'SBGroupPermission', 'group_id'),
 		);
 	}
@@ -75,6 +82,8 @@ class SBGroup extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => Yii::t('sourcebans', 'Name'),
+			'adminsCount' => Yii::t('sourcebans', 'Admins in group'),
+			'permissions' => Yii::t('sourcebans', 'Web permissions'),
 		);
 	}
 

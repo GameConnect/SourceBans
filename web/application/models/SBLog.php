@@ -26,6 +26,10 @@
  */
 class SBLog extends CActiveRecord
 {
+	const ERROR_TYPE       = 'e';
+	const INFORMATION_TYPE = 'm';
+	const WARNING_TYPE     = 'w';
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -52,12 +56,10 @@ class SBLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('type, title, message, function, query, admin_id, admin_ip', 'required'),
-			array('admin_id', 'numerical', 'integerOnly'=>true),
+			array('type, title, message', 'required'),
 			array('type', 'length', 'max'=>1),
 			array('title', 'length', 'max'=>64),
-			array('message, function, query', 'length', 'max'=>255),
-			array('admin_ip', 'match', 'pattern'=>'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+			array('message', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, type, title, message, function, query, admin_id, admin_ip, time', 'safe', 'on'=>'search'),
@@ -91,6 +93,7 @@ class SBLog extends CActiveRecord
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'admin_ip' => 'Admin IP address',
 			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'admin.name' => Yii::t('sourcebans', 'Admin'),
 		);
 	}
 
@@ -137,5 +140,41 @@ class SBLog extends CActiveRecord
 				'updateAttribute' => null,
 			),
 		);
+	}
+	
+	
+	protected function beforeSave()
+	{
+		if($this->isNewRecord)
+		{
+			if(!Yii::app()->user->isGuest)
+				$this->admin_id = Yii::app()->user->id;
+			
+			$this->admin_ip = $_SERVER['SERVER_ADDR'];
+			$this->function = $this->_getTraces();
+			$this->query    = Yii::app()->request->queryString;
+		}
+		
+		return parent::beforeSave();
+	}
+	
+	
+	private function _getTraces($level = 5)
+	{
+		$traces = debug_backtrace();
+		$count  = 0;
+		$ret    = '';
+		
+		foreach($traces as $trace)
+		{
+			if(isset($trace['file'], $trace['line']))
+			{
+				$ret .= $trace['file'] . ' (' . $trace['line'] . ")\n";
+				if(++$count>=$level)
+					break;
+			}
+		}
+		
+		return trim($ret);
 	}
 }

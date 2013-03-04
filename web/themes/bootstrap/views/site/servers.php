@@ -252,8 +252,8 @@
     });
   }
   
-  $("#servers-grid tr[data-key]").each(function(i, header) {
-    var id = $(header).data("key");
+  $("#servers-grid tr[data-key]").each(function() {
+    var id = $(this).data("key");
     
     queryServer(id, function(id) {
       // If all servers are queried

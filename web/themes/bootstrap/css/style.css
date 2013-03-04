@@ -47,6 +47,9 @@ textarea {
   width: 516px;
 }
 
+#content.tab-content {
+  padding: 0;
+}
 #flash-alert {
   border-radius: 0;
   -moz-border-radius: 0;

@@ -22,6 +22,12 @@
  */
 class SBDemo extends CActiveRecord
 {
+	public function __toString()
+	{
+		return $this->filename;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -52,6 +58,7 @@ class SBDemo extends CActiveRecord
 			array('object_id', 'numerical', 'integerOnly'=>true),
 			array('object_type', 'length', 'max'=>1),
 			array('filename', 'length', 'max'=>255),
+			array('filename', 'file', 'types'=>array('dem', 'rar', 'zip'), 'allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, object_id, object_type, filename', 'safe', 'on'=>'search'),
@@ -103,5 +110,18 @@ class SBDemo extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	
+	
+	protected function afterSave()
+	{
+		// Save file
+		$file = CUploadedFile::getInstance($this, 'filename');
+		if(!empty($file))
+		{
+			$file->saveAs(Yii::getPathOfAlias('webroot.demos') . $file);
+		}
+		
+		parent::afterSave();
 	}
 }

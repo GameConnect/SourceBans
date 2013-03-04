@@ -25,6 +25,22 @@ class SourceBans extends CApplicationComponent
 	
 	
 	/**
+	 * Returns the supported SourceMod flags
+	 * 
+	 * @return array the supported SourceMod flags
+	 */
+	public function getFlags()
+	{
+		static $_data;
+		if(!isset($_data))
+		{
+			$_data = include Yii::getPathOfAlias('application.data') . '/flags.php';
+		}
+		
+		return $_data;
+	}
+	
+	/**
 	 * Returns the supported SourceBans permissions
 	 * 
 	 * @return array the supported SourceBans permissions
@@ -91,9 +107,9 @@ class SourceBans extends CApplicationComponent
 	
 	
 	/**
-	 * Returns the SourceBans component singleton
+	 * Returns the SourceBans application singleton
 	 * 
-	 * @return SourceBans the SourceBans component singleton
+	 * @return SourceBans the SourceBans application singleton
 	 */
 	public static function &app()
 	{
@@ -103,6 +119,47 @@ class SourceBans extends CApplicationComponent
 		}
 		
 		return self::$_app;
+	}
+	
+	/**
+	 * Logs a message.
+	 * @param string $message message to be logged
+	 * @param string $title title of the message
+	 * @param string $type type of the message (SBLog::ERROR_TYPE, SBLog::INFORMATION_TYPE, SBLog::WARNING_TYPE).
+	 */
+	public static function log($message, $title, $type = SBLog::INFORMATION_TYPE)
+	{
+		$log          = new SBLog;
+		$log->type    = $type;
+		$log->title   = $title;
+		$log->message = $message;
+		$log->save();
+	}
+	
+	/**
+	 * Translates a message to the specified language.
+	 * This method supports choice format (see {@link CChoiceFormat}),
+	 * i.e., the message returned will be chosen from a few candidates according to the given
+	 * number value. This feature is mainly used to solve plural format issue in case
+	 * a message has different plural forms in some languages.
+	 * @param string $message the original message
+	 * @param array $params parameters to be applied to the message using <code>strtr</code>.
+	 * The first parameter can be a number without key.
+	 * And in this case, the method will call {@link CChoiceFormat::format} to choose
+	 * an appropriate message translation.
+	 * Starting from version 1.1.6 you can pass parameter for {@link CChoiceFormat::format}
+	 * or plural forms format without wrapping it with array.
+	 * This parameter is then available as <code>{n}</code> in the message translation string.
+	 * @param string $source which message source application component to use.
+	 * Defaults to null, meaning using 'coreMessages' for messages belonging to
+	 * the 'yii' category and using 'messages' for the rest messages.
+	 * @param string $language the target language. If null (default), the {@link CApplication::getLanguage application language} will be used.
+	 * @return string the translated message
+	 * @see CMessageSource
+	 */
+	public static function t($message, $params = array(), $source = null, $language = null)
+	{
+		return Yii::t('sourcebans', $message, $params, $source, $language);
 	}
 	
 	/**

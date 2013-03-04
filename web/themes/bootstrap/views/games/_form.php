@@ -6,6 +6,7 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'game-form',
+	'action'=>isset($action) ? $action : null,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -14,6 +15,7 @@
 	'errorMessageCssClass'=>'help-inline',
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
+		'enctype'=>'multipart/form-data',
 	),
 )) ?>
 
@@ -36,12 +38,9 @@
   <div class="control-group">
     <?php echo $form->labelEx($model,'icon',array('class' => 'control-label')); ?>
     <div class="controls">
-      <div class="fileupload fileupload-new" data-provides="fileupload">
+      <div class="fileupload fileupload-<?php if($model->icon): ?>exists<?php else: ?>new<?php endif ?>" data-provides="fileupload">
         <div class="input-append">
-          <div class="uneditable-input span3">
-            <i class="icon-file fileupload-exists"></i>
-            <span class="fileupload-preview"></span>
-          </div>
+          <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"><?php echo $model->icon ?></span></div>
           <span class="btn btn-file">
             <span class="fileupload-new"><?php echo Yii::t('sourcebans', 'Select') ?></span>
             <span class="fileupload-exists"><?php echo Yii::t('sourcebans', 'Change') ?></span>

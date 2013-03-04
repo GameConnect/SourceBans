@@ -6,6 +6,8 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'ban-form',
+	'action'=>isset($action) ? $action : null,
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -14,6 +16,7 @@
 	'errorMessageCssClass'=>'help-inline',
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
+		'enctype'=>'multipart/form-data',
 	),
 )) ?>
 

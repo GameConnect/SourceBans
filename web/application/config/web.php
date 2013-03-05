@@ -2,7 +2,7 @@
 
 Yii::setPathOfAlias('bootstrap',dirname(__FILE__).'/../extensions/bootstrap');
 
-$parent=require(dirname(__FILE__).'/sourcebans.php');
+$parent=require(dirname(__FILE__).'/main.php');
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.

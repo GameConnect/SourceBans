@@ -10,7 +10,7 @@
 	'id'=>'bans-grid',
 	'dataProvider'=>$bans->search(array(
 		'scopes' => $hideInactive ? 'active' : null,
-		'with' => array('admin', 'country', 'server', 'server.game'),
+		'with' => array('admin', 'server', 'server.game'),
 	)),
 	'columns'=>array(
 		array(

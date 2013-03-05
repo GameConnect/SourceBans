@@ -22,13 +22,13 @@
  * @property string $unban_reason Unban reason
  * @property integer $unban_time Unbanned on
  * @property integer $time Date/Time
+ * @property object $country Country data for IP address
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
  * @property SBAdmin $unban_admin
  * @property SBBlock[] $blocks
  * @property SBComment[] $comments
- * @property SBCountry $country
  * @property SBDemo[] $demos
  * @property SBProtest[] $protests
  * @property SBServer $server
@@ -109,7 +109,6 @@ class SBBan extends CActiveRecord
 			'unban_admin' => array(self::BELONGS_TO, 'SBAdmin', 'unban_admin_id'),
 			'blocks' => array(self::HAS_MANY, 'SBBlock', 'ban_id'),
 			'comments' => array(self::HAS_MANY, 'SBComment', 'ban_id'),
-			'country' => array(self::BELONGS_TO, 'SBCountry', 'ip'),
 			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = "B"'),
 			'protests' => array(self::HAS_MANY, 'SBProtest', 'ban_id'),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
@@ -217,6 +216,32 @@ class SBBan extends CActiveRecord
 				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
+		);
+	}
+	
+	/**
+	 * Returns the country data for IP address
+	 * 
+	 * @return object the country data for IP address
+	 */
+	public function getCountry()
+	{
+		try
+		{
+			$code = Yii::app()->geoip->lookupCountryCode($this->ip);
+			$name = Yii::app()->geoip->lookupCountryName($this->ip);
+			
+			if(empty($code) || empty($name))
+				throw new CException;
+		}
+		catch(CException $e)
+		{
+			return null;
+		}
+		
+		return (object)array(
+			'code' => strtolower($code),
+			'name' => $name,
 		);
 	}
 	

@@ -2,10 +2,11 @@
 
 Yii::setPathOfAlias('bootstrap',dirname(__FILE__).'/../extensions/bootstrap');
 
+$parent=require(dirname(__FILE__).'/sourcebans.php');
+
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
 return CMap::mergeArray(
-	require(dirname(__FILE__).'/sourcebans.php'),
 	array(
 		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
 		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
@@ -75,5 +76,6 @@ return CMap::mergeArray(
 		'params'=>array(
 			'titleSeparator'=>' « ',
 		),
-	)
+	),
+	$parent
 );

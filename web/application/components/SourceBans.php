@@ -198,6 +198,17 @@ class SourceBans extends CApplicationComponent
 		else
 			Yii::app()->setTheme(SourceBans::app()->settings->theme);
 		
+		// Set mailer
+		if(SourceBans::app()->settings->enable_smtp)
+		{
+		  Yii::app()->mailer->mailer   = 'smtp';
+		  Yii::app()->mailer->host     = SourceBans::app()->settings->smtp_host;
+		  Yii::app()->mailer->port     = SourceBans::app()->settings->smtp_port;
+		  Yii::app()->mailer->username = SourceBans::app()->settings->smtp_username;
+		  Yii::app()->mailer->password = SourceBans::app()->settings->smtp_password;
+		  Yii::app()->mailer->security = SourceBans::app()->settings->smtp_secure;
+		}
+		
 		// Call onBeginRequest on SourceBans plugins
 		foreach(SourceBans::app()->plugins as $plugin)
 			$plugin->onBeginRequest($event);

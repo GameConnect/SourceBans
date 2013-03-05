@@ -1,7 +1,8 @@
 <?php
 
+$parent=require(dirname(__FILE__).'/web.php');
+
 return CMap::mergeArray(
-	require(dirname(__FILE__).'/web.php'),
 	array(
 		'components'=>array(
 			'fixture'=>array(
@@ -13,5 +14,6 @@ return CMap::mergeArray(
 			),
 			*/
 		),
-	)
+	),
+	$parent
 );

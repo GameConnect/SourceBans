@@ -1,7 +1,9 @@
 <?php
 
+$parent=require(dirname(__FILE__).'/main.php');
+
 return CMap::mergeArray(
-	require(dirname(__FILE__).'/sourcebans.php'),
 	array(
-	)
+	),
+	$parent
 );

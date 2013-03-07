@@ -208,6 +208,9 @@ class SBAdmin extends CActiveRecord
 		
 		foreach($this->server_groups as $server_group)
 		{
+			if(strpos($server_group->flags, SM_ROOT) !== false)
+				return true;
+			
 			foreach($flags as $flag)
 			{
 				if(strpos($server_group->flags, $flag) !== false)
@@ -235,6 +238,9 @@ class SBAdmin extends CActiveRecord
 		
 		foreach($this->server_groups as $server_group)
 		{
+			if(strpos($server_group->flags, SM_ROOT) !== false)
+				return true;
+			
 			foreach($flags as $flag)
 			{
 				if(strpos($server_group->flags, $flag) === false)

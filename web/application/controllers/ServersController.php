@@ -30,6 +30,10 @@ class ServersController extends Controller
 	public function accessRules()
 	{
 		return array(
+			array('allow',
+				'actions'=>array('rcon'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasFlag(SM_RCON)',
+			),
 			array('allow', // allow all users to perform 'info', 'players', 'query' and 'rules' actions
 				'actions' => array('info','players','query','rules'),
 				'users' => array('*'),
@@ -42,6 +46,38 @@ class ServersController extends Controller
 				'users'=>array('*'),
 			),
 		);
+	}
+
+	public function actionInfo()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$response = $this->_queryServer(self::QUERY_INFO, $id);
+		
+		Yii::app()->end(CJSON::encode($response));
+	}
+	
+	public function actionPlayers()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$response = $this->_queryServer(self::QUERY_PLAYERS, $id);
+		
+		Yii::app()->end(CJSON::encode($response));
+	}
+	
+	public function actionQuery()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$response = $this->_queryServer(self::QUERY_INFO|self::QUERY_PLAYERS, $id);
+		
+		Yii::app()->end(CJSON::encode($response));
+	}
+	
+	public function actionRules()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$response = $this->_queryServer(self::QUERY_RULES, $id);
+		
+		Yii::app()->end(CJSON::encode($response));
 	}
 
 	/**
@@ -100,44 +136,26 @@ class ServersController extends Controller
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
-	
-	public function actionInfo()
+
+	public function actionRcon($id)
 	{
-		$id       = Yii::app()->request->getQuery('id');
-		$response = $this->_queryServer(self::QUERY_INFO, $id);
+		$model=$this->loadModel($id);
+		if(empty($model->rcon) || (!$model->enabled && !Yii::app()->user->data->hasPermission('OWNER')))
+			throw new CHttpException(403);
 		
-		Yii::app()->end(CJSON::encode($response));
-	}
-	
-	public function actionPlayers()
-	{
-		$id       = Yii::app()->request->getQuery('id');
-		$response = $this->_queryServer(self::QUERY_PLAYERS, $id);
+		if(isset($_POST['command']))
+			Yii::app()->end($this->_rconServer($_POST['command'], $id));
 		
-		Yii::app()->end(CJSON::encode($response));
-	}
-	
-	public function actionQuery()
-	{
-		$id       = Yii::app()->request->getQuery('id');
-		$response = $this->_queryServer(self::QUERY_INFO|self::QUERY_PLAYERS, $id);
-		
-		Yii::app()->end(CJSON::encode($response));
-	}
-	
-	public function actionRules()
-	{
-		$id       = Yii::app()->request->getQuery('id');
-		$response = $this->_queryServer(self::QUERY_RULES, $id);
-		
-		Yii::app()->end(CJSON::encode($response));
+		$this->render('rcon', array(
+			'model'=>$model,
+		));
 	}
 	
 	public function actionKick()
 	{
 		$id       = Yii::app()->request->getQuery('id');
 		$name     = Yii::app()->request->getPost('name');
-		$response = $this->_rconServer('kick "' . $name . '"', $id);
+		$response = $this->_rconServer('kick "' . addslashes($name) . '"', $id);
 		
 		Yii::app()->end(CJSON::encode($response));
 	}

@@ -85,6 +85,7 @@ class SiteController extends Controller
 		);
 		
 		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
+		$search = Yii::app()->request->getQuery('q');
 		
 		$bans = new SBBan('search');
 		$bans->unsetAttributes();  // clear any default values
@@ -94,6 +95,7 @@ class SiteController extends Controller
 		$this->render('bans', array(
 			'bans' => $bans,
 			'hideInactive' => $hideInactive,
+			'search' => $search,
 			'total_bans' => SBBan::model()->count(),
 		));
 	}

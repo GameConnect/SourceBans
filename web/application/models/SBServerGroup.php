@@ -128,9 +128,9 @@ class SBServerGroup extends CActiveRecord
 	
 	protected function beforeSave()
 	{
-		if(strpos($this->flags, 'z') !== false)
+		if(strpos($this->flags, SM_ROOT) !== false)
 		{
-			$this->flags = 'z';
+			$this->flags = SM_ROOT;
 		}
 		
 		return parent::beforeSave();

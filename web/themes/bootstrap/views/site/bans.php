@@ -10,6 +10,7 @@
 	'id'=>'bans-grid',
 	'dataProvider'=>$bans->search(array(
 		'scopes' => $hideInactive ? 'active' : null,
+		'search' => $search,
 		'with' => array('admin', 'server', 'server.game'),
 	)),
 	'columns'=>array(
@@ -118,7 +119,7 @@
       </tr>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Reason') ?></th>
-        <td><%=header.data("reason") %></td>
+        <td><%=header.data("reason") || nullDisplay %></td>
       </tr>
       <tr>
 <?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_admin)): ?>
@@ -126,10 +127,12 @@
         <td><%=header.data("adminName") %></td>
       </tr>
 <?php endif ?>
+<% if(header.data("serverId")) { %>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Server') ?></th>
-        <td class="hostname_<%=header.data("serverId") %>">Querying server...</td>
+        <td class="ServerQuery_hostname">Querying server...</td>
       </tr>
+<% } %>
     </tbody>
   </table>
 </script>
@@ -181,8 +184,26 @@
       }));
     });
     
+    updateSections();
     $(window).trigger("hashchange");
+  }
+  function updateSections() {
+    if(typeof(window.serverInfo) == "undefined")
+      return;
+    
+    $.each(window.serverInfo, function(i, server) {
+      var $section = $("#bans-grid tr[data-server-id=\"" + server.id + "\"]").next("tr.section");
+      $section.find(".ServerQuery_hostname").html(server.error ? server.error.message : server.hostname);
+    });
   }
   
   createSections();
+') ?>
+
+<?php Yii::app()->clientScript->registerScript('site_bans_queryServer', '
+  $.getJSON("' . $this->createUrl('servers/info') . '", function(servers) {
+    window.serverInfo = servers;
+    
+    updateSections();
+  });
 ') ?>

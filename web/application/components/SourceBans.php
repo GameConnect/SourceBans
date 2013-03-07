@@ -6,6 +6,7 @@
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  * 
+ * @property array $flags The supported SourceMod flags
  * @property array $permissions The supported SourceBans permissions
  * @property array $plugins The enabled SourceBans plugins
  * @property object $quote A random SourceBans quote
@@ -14,6 +15,28 @@
  * @package sourcebans.components
  * @since 2.0
  */
+define('SM_RESERVATION', 'a');
+define('SM_GENERIC',     'b');
+define('SM_KICK',        'c');
+define('SM_BAN',         'd');
+define('SM_UNBAN',       'e');
+define('SM_SLAY',        'f');
+define('SM_CHANGEMAP',   'g');
+define('SM_CONVARS',     'h');
+define('SM_CONFIG',      'i');
+define('SM_CHAT',        'j');
+define('SM_VOTE',        'k');
+define('SM_PASSWORD',    'l');
+define('SM_RCON',        'm');
+define('SM_CHEATS',      'n');
+define('SM_CUSTOM1',     'o');
+define('SM_CUSTOM2',     'p');
+define('SM_CUSTOM3',     'q');
+define('SM_CUSTOM4',     'r');
+define('SM_CUSTOM5',     's');
+define('SM_CUSTOM6',     't');
+define('SM_ROOT',        'z');
+
 class SourceBans extends CApplicationComponent
 {
 	private static $_app;
@@ -137,32 +160,6 @@ class SourceBans extends CApplicationComponent
 	}
 	
 	/**
-	 * Translates a message to the specified language.
-	 * This method supports choice format (see {@link CChoiceFormat}),
-	 * i.e., the message returned will be chosen from a few candidates according to the given
-	 * number value. This feature is mainly used to solve plural format issue in case
-	 * a message has different plural forms in some languages.
-	 * @param string $message the original message
-	 * @param array $params parameters to be applied to the message using <code>strtr</code>.
-	 * The first parameter can be a number without key.
-	 * And in this case, the method will call {@link CChoiceFormat::format} to choose
-	 * an appropriate message translation.
-	 * Starting from version 1.1.6 you can pass parameter for {@link CChoiceFormat::format}
-	 * or plural forms format without wrapping it with array.
-	 * This parameter is then available as <code>{n}</code> in the message translation string.
-	 * @param string $source which message source application component to use.
-	 * Defaults to null, meaning using 'coreMessages' for messages belonging to
-	 * the 'yii' category and using 'messages' for the rest messages.
-	 * @param string $language the target language. If null (default), the {@link CApplication::getLanguage application language} will be used.
-	 * @return string the translated message
-	 * @see CMessageSource
-	 */
-	public static function t($message, $params = array(), $source = null, $language = null)
-	{
-		return Yii::t('sourcebans', $message, $params, $source, $language);
-	}
-	
-	/**
 	 * Returns the version of SourceBans
 	 * 
 	 * @return string the version of SourceBans
@@ -184,29 +181,30 @@ class SourceBans extends CApplicationComponent
 		date_default_timezone_set('Etc/GMT' . ($timezone < 0 ? $timezone : '+' . $timezone));
 		
 		// Set date/time format
-		Yii::app()->format->datetimeFormat = SourceBans::app()->settings->date_format ?: 'm-d-y H:i';
+		if(!empty(SourceBans::app()->settings->date_format))
+			Yii::app()->format->datetimeFormat = SourceBans::app()->settings->date_format;
 		
 		// Set language
 		if(!Yii::app()->user->isGuest && !empty(Yii::app()->user->data->language))
 			Yii::app()->setLanguage(Yii::app()->user->data->language);
-		else
+		else if(!empty(SourceBans::app()->settings->language))
 			Yii::app()->setLanguage(SourceBans::app()->settings->language);
 		
 		// Set theme
 		if(!Yii::app()->user->isGuest && !empty(Yii::app()->user->data->theme))
 			Yii::app()->setTheme(Yii::app()->user->data->theme);
-		else
+		else if(!empty(SourceBans::app()->settings->theme))
 			Yii::app()->setTheme(SourceBans::app()->settings->theme);
 		
 		// Set mailer
 		if(SourceBans::app()->settings->enable_smtp)
 		{
-		  Yii::app()->mailer->mailer   = 'smtp';
-		  Yii::app()->mailer->host     = SourceBans::app()->settings->smtp_host;
-		  Yii::app()->mailer->port     = SourceBans::app()->settings->smtp_port;
-		  Yii::app()->mailer->username = SourceBans::app()->settings->smtp_username;
-		  Yii::app()->mailer->password = SourceBans::app()->settings->smtp_password;
-		  Yii::app()->mailer->security = SourceBans::app()->settings->smtp_secure;
+			Yii::app()->mailer->mailer   = 'smtp';
+			Yii::app()->mailer->host     = SourceBans::app()->settings->smtp_host;
+			Yii::app()->mailer->port     = SourceBans::app()->settings->smtp_port;
+			Yii::app()->mailer->username = SourceBans::app()->settings->smtp_username;
+			Yii::app()->mailer->password = SourceBans::app()->settings->smtp_password;
+			Yii::app()->mailer->security = SourceBans::app()->settings->smtp_secure;
 		}
 		
 		// Call onBeginRequest on SourceBans plugins

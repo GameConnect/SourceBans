@@ -17,7 +17,7 @@
   <body id="<?php echo (!empty($this->pageId) ? $this->pageId : $this->id . '_' . $this->action->id); ?>">
     <div class="container">
       <header>
-        <h1><?php echo CHtml::encode(Yii::app()->name) ?></h1>
+        <h1><?php echo CHtml::link(CHtml::encode(Yii::app()->name), array('site/index')) ?></h1>
         <div class="user">
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'user',
@@ -45,6 +45,12 @@
 )) ?>
         </div>
       </header>
+      
+      <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-prepend input-append pull-right" id="search">
+        <span class="add-on"><i class="icon-search"></i></span>
+        <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
+        <input class="btn" type="submit" value="<?php echo Yii::t('sourcebans', 'Go') ?>!" />
+      </form>
       
       <nav>
 <?php $this->widget('zii.widgets.CMenu', array(

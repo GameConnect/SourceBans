@@ -29,6 +29,7 @@ return CMap::mergeArray(
 			),
 			'format'=>array(
 				'class'=>'Formatter',
+				'datetimeFormat'=>'m-d-y H:i',
 			),
 			'log'=>array(
 				'class'=>'CLogRouter',

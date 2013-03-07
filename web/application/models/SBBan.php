@@ -148,8 +148,19 @@ class SBBan extends CActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
+		if(array_key_exists('search', $criteria))
+		{
+			$search=$criteria['search'];
+			unset($criteria['search']);
+		}
 		$criteria=new CDbCriteria($criteria);
 
+		if(isset($search))
+		{
+			$criteria->compare('t.steam',$search,true,'OR');
+			$criteria->compare('t.ip',$search,true,'OR');
+			$criteria->compare('t.name',$search,true,'OR');
+		}
 		$criteria->compare('id',$this->id);
 		$criteria->compare('type',$this->type);
 		$criteria->compare('steam',$this->steam,true);

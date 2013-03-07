@@ -9,6 +9,13 @@ a.sort-link.asc {
 a.sort-link.desc {
   background-image: url(../images/sort_desc.png);
 }
+h1 a {
+  background-image: url(../images/logo.png);
+  display: block;
+  height: 42px;
+  text-indent: -9999px;
+  width: 320px;
+}
 header {
   overflow: auto;
 }
@@ -47,6 +54,9 @@ textarea {
   width: 516px;
 }
 
+#search {
+  margin-bottom: 0;
+}
 #content.tab-content {
   padding: 0;
 }
@@ -129,4 +139,14 @@ td.icon,
 th.icon {
   text-align: center !important;
   width: 16px;
+}
+
+#servers_rcon #console {
+  height: 340px;
+}
+#servers_rcon #command {
+  width: 587px;
+}
+#servers_rcon #submit {
+  width: 100px;
 }

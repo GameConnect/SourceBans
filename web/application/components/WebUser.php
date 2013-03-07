@@ -14,4 +14,11 @@ class WebUser extends CWebUser
 		
 		return $_data;
 	}
+	
+	
+	protected function afterLogin($fromCookie)
+	{
+		$this->data->lastvisit = time();
+		$this->data->save();
+	}
 }

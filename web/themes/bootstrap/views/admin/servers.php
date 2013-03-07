@@ -64,7 +64,7 @@
 
     </section>
 
-<?php Yii::app()->clientScript->registerScript('site_servers_queryServer', '
+<?php Yii::app()->clientScript->registerScript('admin_servers_queryServer', '
   function queryServer(id, callback) {
     if(typeof(id) == "function") {
       callback = id;

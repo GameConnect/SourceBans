@@ -1,9 +1,15 @@
 <?php
 
 /**
- * LoginForm class.
- * LoginForm is the data structure for keeping
- * user login form data. It is used by the 'login' action of 'SiteController'.
+ * LoginForm is the data structure for keeping user login form data.
+ * It is used by the 'login' action of 'SiteController'.
+ *
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ *
+ * @package sourcebans.models
+ * @since 2.0
  */
 class LoginForm extends CFormModel
 {

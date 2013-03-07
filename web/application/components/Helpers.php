@@ -1,4 +1,14 @@
 <?php
+/**
+ * Global data and functionality
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.components
+ * @since 2.0
+ */
 class Helpers
 {
 	/**

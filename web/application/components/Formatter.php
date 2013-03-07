@@ -1,4 +1,14 @@
 <?php
+/**
+ * Formatter provides a set of commonly used data formatting methods.
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @package sourcebans.components
+ * @since 2.0
+ */
 class Formatter extends CFormatter
 {
 	/**

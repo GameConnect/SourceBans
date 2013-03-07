@@ -3,7 +3,14 @@
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
  * @property string $title Returns the site title based on {@link breadcrumbs}. If those are not set it will return {@link pageTitle} instead.
+ * 
+ * @package sourcebans.components
+ * @since 2.0
  */
 class Controller extends CController
 {

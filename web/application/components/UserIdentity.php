@@ -5,7 +5,14 @@
  * It contains the authentication method that checks if the provided
  * data can identity the user.
  * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
  * @property integer $id SourceBans admin ID
+ * 
+ * @package sourcebans.components
+ * @since 2.0
  */
 class UserIdentity extends CUserIdentity
 {
@@ -41,6 +48,11 @@ class UserIdentity extends CUserIdentity
 		return !$this->errorCode;
 	}
 
+	/**
+	 * Returns the SourceBans admin ID
+	 * 
+	 * @return integer the SourceBans admin ID
+	 */
 	public function getId()
 	{
 		return $this->_id;

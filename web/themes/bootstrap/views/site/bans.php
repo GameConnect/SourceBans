@@ -1,3 +1,16 @@
+<?php
+/* @var $this SiteController */
+/* @var $bans SBBan */
+/* @var $hideInactive string */
+/* @var $search string */
+/* @var $total_bans integer */
+
+$this->pageTitle=Yii::t('sourcebans', 'Bans');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Bans'),
+);
+?>
     <section>
       <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced search'),'#',array('class'=>'search-button')); ?>
       <div class="search-form" style="display:none">
@@ -14,6 +27,11 @@
 		'with' => array('admin', 'server', 'server.game'),
 	)),
 	'columns'=>array(
+		array(
+			'class'=>'CCheckBoxColumn',
+			'selectableRows'=>2,
+			'visible'=>!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
+		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Game') . '/' . Yii::t('sourcebans', 'Country'),
 			'headerHtmlOptions'=>array(
@@ -168,6 +186,9 @@
   $(document).on("click.yiiGridView", "#bans-grid tr.header", function(e) {
     var $this     = $(this);
     location.hash = $this.hasClass("selected") ? 0 : $this.data("key");
+  });
+  $(document).on("click.yiiGridView", "#bans-grid tr.header :checkbox", function(e) {
+    e.stopImmediatePropagation();
   });
 ') ?>
 

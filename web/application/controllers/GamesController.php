@@ -27,8 +27,19 @@ class GamesController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow', // allow authenticated user to perform 'add', 'edit' and 'delete' actions
-				'actions'=>array('add','edit','delete'),
+			array('allow',
+				'actions'=>array('add'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_GAMES")',
+			),
+			array('allow',
+				'actions'=>array('delete'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("DELETE_GAMES")',
+			),
+			array('allow',
+				'actions'=>array('edit'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("EDIT_GAMES")',
+			),
+			array('allow',
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users

@@ -1,3 +1,18 @@
+<?php
+/* @var $this AdminController */
+/* @var $plugins SBPlugin[] */
+
+$this->pageTitle=Yii::t('sourcebans', 'Settings');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Administration') => array('admin/index'),
+	Yii::t('sourcebans', 'Settings'),
+);
+
+$this->menu=array(
+	array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
+);
+?>
     <section class="tab-pane fade" id="pane-plugins">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'plugins-grid',

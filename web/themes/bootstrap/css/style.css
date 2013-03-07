@@ -40,6 +40,13 @@ textarea {
 .grid-view {
   padding-top: 0;
 }
+.grid-view .button-column {
+  text-align: right;
+}
+.grid-view .checkbox-column input {
+  cursor: auto;
+  margin: 0;
+}
 .grid-view .null {
   color: #677882;
   font-style: italic;

@@ -1,3 +1,13 @@
+<?php
+/* @var $this SiteController */
+/* @var $model SBProtest */
+
+$this->pageTitle=Yii::t('sourcebans', 'Protest ban');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Protest ban'),
+);
+?>
 <div class="row">
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(

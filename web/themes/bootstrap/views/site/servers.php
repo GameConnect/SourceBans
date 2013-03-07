@@ -1,3 +1,13 @@
+<?php
+/* @var $this SiteController */
+/* @var $servers SBServer */
+
+$this->pageTitle=Yii::t('sourcebans', 'Servers');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Servers'),
+);
+?>
     <div class="row">
     <section class="span12 servers">
 <?php $this->widget('zii.widgets.grid.CGridView', array(

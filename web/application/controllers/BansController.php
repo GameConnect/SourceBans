@@ -28,11 +28,22 @@ class BansController extends Controller
 	{
 		return array(
 			array('allow',
+				'actions'=>array('add'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_ADMINS")',
+			),
+			array('allow',
+				'actions'=>array('delete'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("DELETE_ADMINS")',
+			),
+			array('allow',
+				'actions'=>array('edit'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("EDIT_ALL_BANS", "EDIT_GROUP_BANS", "EDIT_OWN_BANS")',
+			),
+			array('allow',
 				'actions'=>array('export'),
 				'expression'=>'SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))',
 			),
-			array('allow', // allow authenticated user to perform 'add', 'edit' and 'delete' actions
-				'actions'=>array('add','edit','delete'),
+			array('allow',
 				'users'=>array('@'),
 			),
 			array('deny',  // deny all users

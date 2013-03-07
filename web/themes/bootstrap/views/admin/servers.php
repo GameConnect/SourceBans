@@ -1,3 +1,22 @@
+<?php
+/* @var $this AdminController */
+/* @var $server SBServer */
+/* @var $servers SBServer */
+
+$this->pageTitle=Yii::t('sourcebans', 'Servers');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Administration') => array('admin/index'),
+	Yii::t('sourcebans', 'Servers'),
+);
+
+$this->menu=array(
+	array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
+	array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
+);
+?>
+
+<?php if(Yii::app()->user->data->hasPermission('LIST_SERVERS')): ?>
     <section class="tab-pane fade" id="pane-list">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'servers-grid',
@@ -36,10 +55,25 @@
 		),
 		array(
 			'class'=>'CButtonColumn',
-			'template'=>'{update} {delete}',
+			'buttons'=>array(
+				'rcon'=>array(
+					'label'=>Yii::t('sourcebans', 'RCON'),
+					'url'=>'Yii::app()->createUrl("servers/rcon", array("id" => $data->primaryKey))',
+					'imageUrl'=>false,
+					'visible'=>'!empty($data->rcon) && Yii::app()->user->data->hasFlag(SM_RCON)',
+				),
+				'update'=>array(
+					'visible'=>'Yii::app()->user->data->hasPermission("EDIT_SERVERS")',
+				),
+				'delete'=>array(
+					'visible'=>'Yii::app()->user->data->hasPermission("DELETE_SERVERS")',
+				),
+			),
+			'template'=>'{rcon} {update} {delete}',
 			'updateButtonLabel'=>Yii::t('sourcebans', 'Edit'),
 			'updateButtonUrl'=>'Yii::app()->createUrl("servers/edit", array("id" => $data->primaryKey))',
 			'deleteButtonUrl'=>'Yii::app()->createUrl("servers/delete", array("id" => $data->primaryKey))',
+			'visible'=>Yii::app()->user->data->hasFlag(SM_RCON) || Yii::app()->user->data->hasPermission('DELETE_SERVERS', 'EDIT_SERVERS'),
 		),
 	),
 	'cssFile'=>false,
@@ -56,6 +90,8 @@
 )) ?>
 
     </section>
+<?php endif ?>
+<?php if(Yii::app()->user->data->hasPermission('ADD_SERVERS')): ?>
     <section class="tab-pane fade" id="pane-add">
 <?php echo $this->renderPartial('/servers/_form', array(
 	'action'=>array('servers/add'),
@@ -63,6 +99,7 @@
 )) ?>
 
     </section>
+<?php endif ?>
 
 <?php Yii::app()->clientScript->registerScript('admin_servers_queryServer', '
   function queryServer(id, callback) {

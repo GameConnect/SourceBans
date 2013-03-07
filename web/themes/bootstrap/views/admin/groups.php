@@ -1,3 +1,24 @@
+<?php
+/* @var $this AdminController */
+/* @var $group SBGroup */
+/* @var $groups SBGroups */
+/* @var $server_group SBServerGroup */
+/* @var $server_groups SBServerGroups */
+
+$this->pageTitle=Yii::t('sourcebans', 'Groups');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Administration') => array('admin/index'),
+	Yii::t('sourcebans', 'Groups'),
+);
+
+$this->menu=array(
+	array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
+	array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
+);
+?>
+
+<?php if(Yii::app()->user->data->hasPermission('LIST_GROUPS')): ?>
     <section class="tab-pane fade" id="pane-list">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'server-groups-grid',
@@ -11,10 +32,19 @@
 		'adminsCount',
 		array(
 			'class'=>'CButtonColumn',
+			'buttons'=>array(
+				'update'=>array(
+					'visible'=>'Yii::app()->user->data->hasPermission("EDIT_GROUPS")',
+				),
+				'delete'=>array(
+					'visible'=>'Yii::app()->user->data->hasPermission("DELETE_GROUPS")',
+				),
+			),
 			'template'=>'{update} {delete}',
 			'updateButtonLabel'=>Yii::t('sourcebans', 'Edit'),
 			'updateButtonUrl'=>'Yii::app()->createUrl("groups/edit", array("id" => $data->primaryKey, "type" => "server"))',
 			'deleteButtonUrl'=>'Yii::app()->createUrl("groups/delete", array("id" => $data->primaryKey, "type" => "server"))',
+			'visible'=>Yii::app()->user->data->hasPermission('DELETE_GROUPS', 'EDIT_GROUPS'),
 		),
 	),
 	'cssFile'=>false,
@@ -42,6 +72,7 @@
 			'updateButtonLabel'=>Yii::t('sourcebans', 'Edit'),
 			'updateButtonUrl'=>'Yii::app()->createUrl("groups/edit", array("id" => $data->primaryKey, "type" => "web"))',
 			'deleteButtonUrl'=>'Yii::app()->createUrl("groups/delete", array("id" => $data->primaryKey, "type" => "web"))',
+			'visible'=>Yii::app()->user->data->hasPermission('DELETE_GROUPS', 'EDIT_GROUPS'),
 		),
 	),
 	'cssFile'=>false,
@@ -55,6 +86,8 @@
 )) ?>
 
     </section>
+<?php endif ?>
+<?php if(Yii::app()->user->data->hasPermission('ADD_GROUPS')): ?>
     <section class="tab-pane fade" id="pane-add">
       <form class="form-horizontal">
         <div class="control-group">
@@ -75,6 +108,7 @@
 )) ?>
 
     </section>
+<?php endif ?>
 
 <?php Yii::app()->clientScript->registerScript('type_change', '
   $("#type").change(function() {

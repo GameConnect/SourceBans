@@ -1,3 +1,21 @@
+<?php
+/* @var $this AdminController */
+/* @var $demosize string */
+/* @var $total_admins integer */
+/* @var $total_archived_protests integer */
+/* @var $total_archived_submissions integer */
+/* @var $total_bans integer */
+/* @var $total_blocks integer */
+/* @var $total_protests integer */
+/* @var $total_servers integer */
+/* @var $total_submissions integer */
+
+$this->pageTitle=Yii::t('sourcebans', 'Administration');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Administration'),
+);
+?>
           <h3><?php echo Yii::t('sourcebans', 'Please select an option to administer.') ?></h3>
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'admin',
@@ -10,7 +28,7 @@
 		array(
 			'label' => Yii::t('sourcebans', 'Bans'),
 			'url' => array('admin/bans'),
-			'visible' => Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS'),
+			'visible' => Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_PROTESTS', 'BAN_SUBMISSIONS'),
 		),
 		array(
 			'label' => Yii::t('sourcebans', 'Groups'),

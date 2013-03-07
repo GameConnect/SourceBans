@@ -36,10 +36,34 @@ class AdminController extends Controller
 	{
 		return array(
 			array('allow',
-				'users' => array('@'),
+				'actions'=>array('admins'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_ADMINS", "DELETE_ADMINS", "EDIT_ADMINS", "LIST_ADMINS")',
 			),
-			array('deny',
-				'users' => array('*'),
+			array('allow',
+				'actions'=>array('bans'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_BANS", "IMPORT_BANS", "BAN_PROTESTS", "BAN_SUBMISSIONS")',
+			),
+			array('allow',
+				'actions'=>array('games'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_GAMES", "DELETE_GAMES", "EDIT_GAMES", "LIST_GAMES")',
+			),
+			array('allow',
+				'actions'=>array('groups'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_GROUPS", "DELETE_GROUPS", "EDIT_GROUPS", "LIST_GROUPS")',
+			),
+			array('allow',
+				'actions'=>array('servers'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_SERVERS", "DELETE_SERVERS", "EDIT_SERVERS", "LIST_SERVERS")',
+			),
+			array('allow',
+				'actions'=>array('settings'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("SETTINGS")',
+			),
+			array('allow',
+				'users'=>array('@'),
+			),
+			array('deny',  // deny all users
+				'users'=>array('*'),
 			),
 		);
 	}
@@ -49,13 +73,9 @@ class AdminController extends Controller
 	 */
 	public function actionIndex()
 	{
-	  $this->layout = '//layouts/column1';
-		$this->pageTitle = Yii::t('sourcebans', 'Administration');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration'),
-		);
+	  $this->layout='//layouts/column1';
 		
-		$demosize = Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
+		$demosize=Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
 		
 		$this->render('index', array(
 			'demosize' => Yii::app()->format->formatSize($demosize['size']),
@@ -75,16 +95,6 @@ class AdminController extends Controller
 	 */
 	public function actionAdmins()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Admins');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Admins'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list'),
-			array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add'),
-		);
-		
 		$admin=new SBAdmin;
 		
 		$admins=new SBAdmin('search');
@@ -103,15 +113,6 @@ class AdminController extends Controller
 	 */
 	public function actionBans()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Bans');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Bans'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'Add ban'), 'url'=>'#add'),
-		);
-		
 		$ban=new SBBan;
 		
 		$this->render('bans',array(
@@ -124,16 +125,6 @@ class AdminController extends Controller
 	 */
 	public function actionGames()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Games');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Games'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'List games'), 'url'=>'#list'),
-			array('label'=>Yii::t('sourcebans', 'Add game'), 'url'=>'#add'),
-		);
-		
 		$game=new SBGame;
 		
 		$games=new SBGame('search');
@@ -152,16 +143,6 @@ class AdminController extends Controller
 	 */
 	public function actionGroups()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Groups');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Groups'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list'),
-			array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add'),
-		);
-		
 		$group=new SBGroup;
 		$server_group=new SBServerGroup;
 		
@@ -184,16 +165,6 @@ class AdminController extends Controller
 	 */
 	public function actionServers()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Servers');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Servers'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list'),
-			array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add'),
-		);
-		
 		$server=new SBServer;
 		
 		$servers=new SBServer('search');
@@ -212,15 +183,6 @@ class AdminController extends Controller
 	 */
 	public function actionSettings()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Settings');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Settings'),
-		);
-		$this->menu = array(
-			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
-		);
-		
 		// Find new plugins and save to database
 		$files=CFileHelper::findFiles(Yii::getPathOfAlias('application.plugins'), array(
 			'fileTypes' => array('php'),

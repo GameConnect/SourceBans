@@ -46,11 +46,6 @@ class SiteController extends Controller
 	 */
 	public function actionDashboard()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Dashboard');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Dashboard'),
-		);
-		
 		$bans = SBBan::model()->search();
 		$bans->criteria->limit = 10;
 		$bans->criteria->with = array('server', 'server.game');
@@ -79,11 +74,6 @@ class SiteController extends Controller
 	 */
 	public function actionBans()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Bans');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Bans'),
-		);
-		
 		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
 		$search = Yii::app()->request->getQuery('q');
 		
@@ -105,11 +95,6 @@ class SiteController extends Controller
 	 */
 	public function actionServers()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Servers');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Servers'),
-		);
-		
 		$servers = SBServer::model()->search();
 		$servers->criteria->scopes = 'enabled';
 		$servers->pagination = false;
@@ -124,11 +109,6 @@ class SiteController extends Controller
 	 */
 	public function actionSubmitban()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Submit ban');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Submit ban'),
-		);
-		
 		$model = new SBSubmission;
 		$model->demo = new SBDemo;
 		
@@ -147,11 +127,6 @@ class SiteController extends Controller
 	 */
 	public function actionProtestban()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Protest ban');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Protest ban'),
-		);
-		
 		$model = new SBProtest;
 		$model->ban = new SBBan;
 		
@@ -165,11 +140,6 @@ class SiteController extends Controller
 	 */
 	public function actionError()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Error');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Error'),
-		);
-
 		if($error=Yii::app()->errorHandler->error)
 		{
 			if(Yii::app()->request->isAjaxRequest)
@@ -184,11 +154,6 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-		$this->pageTitle = Yii::t('sourcebans', 'Login');
-		$this->breadcrumbs = array(
-			Yii::t('sourcebans', 'Login'),
-		);
-
 		$model=new LoginForm;
 
 		// if it is ajax validation request

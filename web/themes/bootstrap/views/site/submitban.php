@@ -1,3 +1,14 @@
+<?php
+/* @var $this SiteController */
+/* @var $model SBSubmission */
+/* @var $servers SBServer[] */
+
+$this->pageTitle=Yii::t('sourcebans', 'Submit ban');
+
+$this->breadcrumbs=array(
+	Yii::t('sourcebans', 'Submit ban'),
+);
+?>
 <div class="row">
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(

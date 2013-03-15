@@ -78,8 +78,12 @@ $this->breadcrumbs=array(
         <div class="controls">
           <select class="span6" id="SBSubmission_server_id" name="SBSubmission[server_id]">
             <option value="">- <?php echo Yii::t('sourcebans', 'Unknown') ?> -</option>
-<?php foreach($servers as $server): ?>
-            <option value="<?php echo $server->id ?>">Querying server... (<?php echo $server->ip, ':', $server->port ?>)</option>
+<?php foreach($games as $game): ?>
+            <optgroup label="<?php echo CHtml::encode($game->name) ?>">
+<?php foreach($game->servers as $server): ?>
+              <option value="<?php echo $server->id ?>">Querying server... (<?php echo $server->ip, ':', $server->port ?>)</option>
+<?php endforeach ?>
+            </optgroup>
 <?php endforeach ?>
             </select>
           <?php echo $form->error($model,'server_id',null,true,false); ?>

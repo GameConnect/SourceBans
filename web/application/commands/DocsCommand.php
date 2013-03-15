@@ -154,9 +154,9 @@ EOD;
 		$this->pageTitle='API « '.Yii::app()->name;
 		$themePath=dirname(__FILE__).'/docs';
 
-		echo "\nBuilding.. : " . $this->pageTitle."\n";
+		echo "\nBuilding.. : " . Yii::app()->name ."\n";
 		echo "Type...... : " . ( $offline ? "offline" : "online" ). "\n";
-		echo "Version... : " . $this->version."\n";
+		echo "Version... : " . $this->version." (using Yii ".Yii::getVersion().")\n";
 		echo "Source URL : " . $this->baseSourceUrl."\n\n";
 
 		echo "Building model...\n";

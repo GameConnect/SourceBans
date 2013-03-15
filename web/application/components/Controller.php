@@ -41,16 +41,16 @@ class Controller extends CController
 		static $_data = '';
 		if(empty($_data))
 		{
-  		if(!empty($this->breadcrumbs))
-  		{
-  		  $data  = array();
-  			foreach(array_reverse($this->breadcrumbs) as $key => $value)
-  				$data[] = !is_array($value) ? $value : $key;
-  			
-  			$_data = implode(Yii::app()->params['titleSeparator'], $data);
-  		}
-  		else
-  			$_data = $this->pageTitle;
+			if(!empty($this->breadcrumbs))
+			{
+				$data  = array();
+				foreach(array_reverse($this->breadcrumbs) as $key => $value)
+					$data[] = !is_array($value) ? $value : $key;
+				
+				$_data = implode(Yii::app()->params['titleSeparator'], $data);
+			}
+			else
+				$_data = $this->pageTitle;
 		}
 		
 		return $_data;

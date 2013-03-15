@@ -89,7 +89,7 @@ class SourceBans extends CApplicationComponent
 		static $_data;
 		if(!isset($_data))
 		{
-			$_data = SBPlugin::model()->enabled()->findAll();
+			$_data = SBPlugin::model()->enabled()->findAll(array('index' => 'id'));
 		}
 		
 		return $_data;

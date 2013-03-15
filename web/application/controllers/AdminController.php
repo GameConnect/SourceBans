@@ -73,7 +73,7 @@ class AdminController extends Controller
 	 */
 	public function actionIndex()
 	{
-	  $this->layout='//layouts/column1';
+		$this->layout='//layouts/column1';
 		
 		$demosize=Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
 		
@@ -185,13 +185,16 @@ class AdminController extends Controller
 	{
 		// Find new plugins and save to database
 		$files=CFileHelper::findFiles(Yii::getPathOfAlias('application.plugins'), array(
-			'fileTypes' => array('php'),
-			'level' => 0,
+			'fileTypes'=>array('php'),
+			'level'=>1,
 		));
 		foreach($files as $file)
 		{
+			$id=substr(pathinfo($file, PATHINFO_DIRNAME), strlen(Yii::getPathOfAlias('application.plugins')) + 1);
+			$class=(!empty($id)?$id.'.':'').pathinfo($file, PATHINFO_FILENAME);
+			
 			$plugin=new SBPlugin;
-			$plugin->class=pathinfo($file, PATHINFO_FILENAME);
+			$plugin->class=$class;
 			
 			try
 			{
@@ -200,7 +203,7 @@ class AdminController extends Controller
 			catch(CDbException $e)
 			{
 				// Ignore duplicate keys
-				if ($e->errorInfo[1] != 1062)
+				if($e->errorInfo[1] != 1062)
 					throw $e;
 			}
 		}

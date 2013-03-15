@@ -9,13 +9,38 @@
  *
  * The followings are the available columns in table '{{plugins}}':
  * @property string $class Class
- * @property boolean $enabled Enabled
+ * @property integer $status Status
+ * @property string $id ID
+ * @property string $name Name
+ * @property string $description Description
+ * @property string $author Author
+ * @property string $version Version
+ * @property string $url URL
+ * @property boolean $isEnabled Whether the plugin is enabled
+ * @property boolean $isInstalled Whether the plugin is installed
+ * @property string $path Path to the plugin directory
+ * @property string $pathAlias Path alias to the plugin directory
  *
  * @package sourcebans.models
  * @since 2.0
  */
 class SBPlugin extends CActiveRecord
 {
+	const STATUS_INSTALLED = 1;
+	const STATUS_ENABLED   = 2;
+	
+	/**
+	 * @var boolean whether the plugin can be disabled.
+	 * You may set this to false when the plugin does not provide any web functionality,
+	 * for example if it simply provides a page to configure a game plugins' settings.
+	 * This property will be ignored if the plugin does not have an installation procedure.
+	 * @see canDisable()
+	 */
+	public $allowDisable = true;
+	
+	private static $_plugins;
+	
+	
 	public function __toString()
 	{
 		return $this->name;
@@ -49,11 +74,11 @@ class SBPlugin extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('class', 'required'),
-			array('enabled', 'boolean'),
-			array('class', 'length', 'max'=>32),
+			array('status', 'numerical', 'integerOnly'=>true),
+			array('class', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('class, enabled', 'safe', 'on'=>'search'),
+			array('class, status', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,7 +100,12 @@ class SBPlugin extends CActiveRecord
 	{
 		return array(
 			'class' => 'Class',
-			'enabled' => Yii::t('sourcebans', 'Enabled'),
+			'status' => Yii::t('sourcebans', 'Status'),
+			'name' => Yii::t('sourcebans', 'Name'),
+			'description' => Yii::t('sourcebans', 'Description'),
+			'author' => Yii::t('sourcebans', 'Author'),
+			'version' => Yii::t('sourcebans', 'Version'),
+			'url' => Yii::t('sourcebans', 'URL'),
 		);
 	}
 
@@ -91,7 +121,7 @@ class SBPlugin extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('class',$this->class,true);
-		$criteria->compare('enabled',$this->enabled);
+		$criteria->compare('status',$this->status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -112,12 +142,103 @@ class SBPlugin extends CActiveRecord
 		
 		return array(
 			'disabled'=>array(
-				'condition'=>$t.'.enabled = 0',
+				'condition'=>$t.'.status != '.self::STATUS_ENABLED,
 			),
 			'enabled'=>array(
-				'condition'=>$t.'.enabled = 1',
+				'condition'=>$t.'.status = '.self::STATUS_ENABLED,
 			),
 		);
+	}
+	
+	/**
+	 * Returns whether the plugin can be disabled.
+	 * 
+	 * @return boolean whether the plugin can be disabled
+	 */
+	public function canDisable()
+	{
+		if($this->allowDisable)
+			return true;
+		
+		return !$this->hasInstall();
+	}
+
+	public function findById($id)
+	{
+		static $_plugins;
+		if(!isset($_plugins))
+		{
+			$_plugins = SBPlugin::model()->findAll(array('index' => 'id'));
+		}
+		
+		return $_plugins[$id];
+	}
+	
+	public function getAction()
+	{
+		if($this->isEnabled)
+			return $this->canDisable() ? 'Disable' : 'Uninstall';
+		
+		if($this->isInstalled)
+			return $this->canDisable() ? 'Enable' : 'Uninstall';
+		
+		return $this->hasInstall() ? 'Install' : 'Enable';
+	}
+	
+	public function getId()
+	{
+		return strtok($this->class, '.');
+	}
+	
+	/**
+	 * Returns whether the plugin is enabled
+	 * 
+	 * @return boolean whether the plugin is enabled
+	 */
+	public function getIsEnabled()
+	{
+		return $this->status == self::STATUS_ENABLED;
+	}
+	
+	/**
+	 * Returns whether the plugin is installed
+	 * 
+	 * @return boolean whether the plugin is installed
+	 */
+	public function getIsInstalled()
+	{
+		return $this->status == self::STATUS_INSTALLED;
+	}
+	
+	/**
+	 * Returns a path relative to the plugin directory
+	 * 
+	 * @param string $alias alias (e.g. models.SBPlugin)
+	 * @return mixed file path corresponding to the alias, false if the alias is invalid.
+	 */
+	public function getPath($alias = null)
+	{
+		return Yii::getPathOfAlias($this->getPathAlias($alias));
+	}
+	
+	/**
+	 * Returns a path alias for the plugin
+	 * 
+	 * @param string $alias alias (e.g. models.SBPlugin)
+	 * @return string a path alias for the plugin
+	 */
+	public function getPathAlias($alias = null)
+	{
+		return 'application.plugins.' . $this->id . ($alias == '' ? '' : '.' . $alias);
+	}
+	
+	public function getViewFile($viewName)
+	{
+		$viewName = $this->getPathAlias('views.' . $viewName);
+		if(Yii::app()->controller->getViewFile($viewName))
+			return $viewName;
+		
+		return null;
 	}
 	
 	/**
@@ -154,6 +275,58 @@ class SBPlugin extends CActiveRecord
 	 * @return string the URL of this SourceBans plugin
 	 */
 	public function getUrl() {}
+	
+	/**
+	 * Returns whether the plugin has an installation procedure
+	 * 
+	 * @return boolean whether the plugin has an installation procedure
+	 */
+	public function hasInstall()
+	{
+		$class  = new ReflectionClass($this);
+		$method = $class->getMethod('runInstall');
+		
+		return $class->getName() == $method->getDeclaringClass()->getName();
+	}
+	
+	/**
+	 * Returns whether the plugin has an uninstallation procedure
+	 * 
+	 * @return boolean whether the plugin has an uninstallation procedure
+	 */
+	public function hasUninstall()
+	{
+		$class  = new ReflectionClass($this);
+		$method = $class->getMethod('runUninstall');
+		
+		return $class->getName() == $method->getDeclaringClass()->getName();
+	}
+	
+	/**
+	 * This method is invoked when installing the plugin.
+	 * 
+	 * @return boolean Whether the installation was successful
+	 */
+	public function runInstall()
+	{
+		return true;
+	}
+	
+	/**
+	 * This method is invoked right before the settings action is to be executed (after all possible filters.)
+	 * You may override this method to do last-minute preparation for the action.
+	 */
+	public function runSettings() {}
+	
+	/**
+	 * This method is invoked when uninstalling the plugin.
+	 * 
+	 * @return boolean Whether the uninstallation was successful
+	 */
+	public function runUninstall()
+	{
+		return true;
+	}
 	
 	/**
 	 * Raised right BEFORE the application processes the request.
@@ -219,7 +392,10 @@ class SBPlugin extends CActiveRecord
 			$class=__CLASS__;
 		}
 		
-		$model=new $class(null);
-		return $model;
+		$id = strtok($attributes['class'], '.');
+		if(!isset(self::$_plugins[$id]))
+			self::$_plugins[$id]=new $class(null);
+		
+		return self::$_plugins[$id];
 	}
 }

@@ -22,17 +22,8 @@ $this->menu=array(
 	'columns'=>array(
 		array(
 			'header'=>Yii::t('sourcebans', 'Name'),
-			'headerHtmlOptions'=>array(
-				'class'=>'nowrap',
-			),
-			'htmlOptions'=>array(
-				'class'=>'nowrap',
-			),
 			'name'=>'name',
-		),
-		array(
-			'header'=>Yii::t('sourcebans', 'Description'),
-			'name'=>'description',
+			'value'=>'!empty($data->name) ? $data->name : $data->class',
 		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Version'),
@@ -45,6 +36,18 @@ $this->menu=array(
 			'name'=>'version',
 		),
 		array(
+			'header'=>Yii::t('sourcebans', 'Author'),
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'author',
+			'type'=>'raw',
+			'value'=>'!empty($data->url) ? CHtml::link(CHtml::encode($data->author), $data->url, array("target"=>"_blank")) : CHtml::encode($data->author)',
+		),
+		array(
 			'header'=>false,
 			'headerHtmlOptions'=>array(
 				'class'=>'nowrap text-right',
@@ -52,9 +55,21 @@ $this->menu=array(
 			'htmlOptions'=>array(
 				'class'=>'nowrap text-right',
 			),
-			'name'=>'enabled',
-			'type'=>'html',
-			'value'=>'CHtml::link(Yii::t("sourcebans", $data->enabled ? "Disable" : "Enable"), "#")',
+			'name'=>'settings',
+			'type'=>'raw',
+			'value'=>'$data->status && $data->getViewFile("settings") ? CHtml::link(Yii::t("sourcebans", "Settings"), array("plugins/settings", "id"=>$data->id)) : ""',
+		),
+		array(
+			'header'=>false,
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'name'=>'status',
+			'type'=>'raw',
+			'value'=>'CHtml::link(Yii::t("sourcebans", $data->action), "#", array("class"=>"link-action", "data-action"=>strtolower($data->action)))',
 		),
 	),
 	'cssFile'=>false,
@@ -64,7 +79,8 @@ $this->menu=array(
 	),
 	'pagerCssClass'=>'pagination pagination-right',
 	'rowHtmlOptionsExpression'=>'array(
-		"class"=>$data->enabled ? "enabled" : "disabled",
+		"class"=>($data->isEnabled ? "enabled" : "disabled") . (empty($data->name) ? " error" : ""),
+		"data-id"=>$data->id,
 	)',
 	'selectableRows'=>0,
 	'summaryCssClass'=>'',
@@ -72,3 +88,25 @@ $this->menu=array(
 )) ?>
 
     </section>
+
+<?php Yii::app()->clientScript->registerCoreScript('jquery.ui') ?>
+<?php Yii::app()->clientScript->registerScript('plugins_settings', '
+  $(document).on("click", "#plugins-grid .link-action", function(e) {
+    e.preventDefault();
+    var data = {
+      action: $(this).data("action"),
+      id: $(this).parents("tr").data("id")
+    };
+    if(data["action"] == "uninstall" && !confirm("' . Yii::t('sourcebans', 'Are you sure you want to uninstall this plugin?\nThis will delete all its data!') . '"))
+	    return;
+    
+    $.post("' . $this->createUrl('plugins/__ACTION__', array('id' => '__ID__')) . '".replace(/__(\w+)__/g, function(str, key) {
+	    return data[key.toLowerCase()] || str;
+    }), function(result) {
+	    if(!result)
+	      return;
+	    
+	    $.fn.yiiGridView.update("plugins-grid");
+    });
+  });
+') ?>

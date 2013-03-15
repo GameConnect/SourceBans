@@ -46,10 +46,9 @@
         </div>
       </header>
       
-      <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-prepend input-append pull-right" id="search">
-        <span class="add-on"><i class="icon-search"></i></span>
+      <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
         <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
-        <input class="btn" type="submit" value="<?php echo Yii::t('sourcebans', 'Go') ?>!" />
+        <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
       </form>
       
       <nav>

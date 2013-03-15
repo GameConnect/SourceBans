@@ -75,7 +75,7 @@ class SBServerGroup extends CActiveRecord
 		return array(
 			'admins' => array(self::MANY_MANY, 'SBAdmin', '{{admins_server_groups}}(group_id, admin_id)'),
 			'adminsCount' => array(self::STAT, 'SBAdmin', '{{admins_server_groups}}(group_id, admin_id)'),
-			'groups_immune' => array(self::HAS_MANY, 'SBServerGroup', '{{server_groups_immunity}}(group_id, other_id)'),
+			'groups_immune' => array(self::MANY_MANY, 'SBServerGroup', '{{server_groups_immunity}}(group_id, other_id)'),
 			'overrides' => array(self::HAS_MANY, 'SBServerGroupsOverride', 'group_id'),
 			'servers' => array(self::MANY_MANY, 'SBServer', '{{servers_server_groups}}(group_id, server_id)'),
 			'serversCount' => array(self::STAT, 'SBServer', '{{servers_server_groups}}(group_id, server_id)'),

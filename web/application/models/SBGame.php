@@ -53,8 +53,9 @@ class SBGame extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, folder, icon', 'required'),
-			array('name, folder, icon', 'length', 'max'=>32),
+			array('name, folder', 'required'),
+			array('name, folder', 'length', 'max'=>32),
+			array('name', 'unique'),
 			array('icon', 'file', 'types'=>array('gif', 'ico', 'jpg', 'png'), 'on'=>'insert'),
 			array('icon', 'file', 'types'=>array('gif', 'ico', 'jpg', 'png'), 'allowEmpty'=>true, 'on'=>'update'),
 			// The following rule is used by search().
@@ -124,7 +125,7 @@ class SBGame extends CActiveRecord
 		$icon = CUploadedFile::getInstance($this, 'icon');
 		if(!empty($icon))
 		{
-			$icon->saveAs(Yii::getPathOfAlias('webroot.images.games') . $icon);
+			$icon->saveAs(Yii::getPathOfAlias('webroot.images.games') . '/' . $icon);
 		}
 		
 		parent::afterSave();

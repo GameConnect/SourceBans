@@ -32,7 +32,7 @@
     <?php echo $form->label($model,'type',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'type',SBBan::getTypes()); ?>
-      <?php echo $form->error($model,'type',null,true,false); ?>
+      <?php echo $form->error($model,'type'); ?>
     </div>
   </div>
 
@@ -64,7 +64,7 @@
     <?php echo $form->label($model,'length',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'length',SBBan::getTimes()); ?>
-      <?php echo $form->error($model,'length',null,true,false); ?>
+      <?php echo $form->error($model,'length'); ?>
     </div>
   </div>
 

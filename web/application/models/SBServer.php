@@ -65,6 +65,7 @@ class SBServer extends CActiveRecord
 			array('enabled', 'boolean'),
 			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
 			array('rcon', 'length', 'max'=>32),
+			array('groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, ip, port, rcon, game_id, enabled', 'safe', 'on'=>'search'),
@@ -156,6 +157,15 @@ class SBServer extends CActiveRecord
 			),
 			'enabled'=>array(
 				'condition'=>$t.'.enabled = 1',
+			),
+		);
+	}
+	
+	public function behaviors()
+	{
+		return array(
+			'EActiveRecordRelationBehavior'=>array(
+				'class'=>'ext.EActiveRecordRelationBehavior',
 			),
 		);
 	}

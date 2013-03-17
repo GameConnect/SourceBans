@@ -7,6 +7,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'admin-form',
 	'action'=>isset($action) ? $action : null,
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -30,7 +31,7 @@
     <?php echo $form->label($model,'auth',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'auth',SBAdmin::getAuthTypes()); ?>
-      <?php echo $form->error($model,'auth',null,true,false); ?>
+      <?php echo $form->error($model,'auth'); ?>
     </div>
   </div>
 
@@ -70,16 +71,17 @@
     <?php echo $form->labelEx($model,'group_id',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'group_id',CHtml::listData(SBGroup::model()->findAll(array('order' => 't.name')),'id','name'),array('empty'=>'- ' . Yii::t('sourcebans','None') . ' -')); ?>
-      <?php echo $form->error($model,'group_id',null,true,false); ?>
+      <?php echo $form->error($model,'group_id'); ?>
     </div>
   </div>
 
   <div class="control-group">
     <?php echo $form->label($model,'server_groups.name',array('class' => 'control-label')); ?>
     <div class="controls">
+<?php $server_groups = CHtml::listData($model->server_groups, 'id', 'id') ?>
 <?php foreach(SBServerGroup::model()->findAll(array('order' => 't.name')) as $server_group): ?>
-      <?php $checkbox = CHtml::checkBox('SBServerGroup['.$server_group->id.']') . $server_group->name; ?>
-      <?php echo CHtml::label($checkbox,'SBServerGroup_' . $server_group->id,array('class' => 'checkbox')); ?>
+      <?php $checkbox = CHtml::checkBox('SBAdmin[server_groups]['.$server_group->id.']', in_array($server_group->id, $server_groups), array('value'=>$server_group->id)) . CHtml::encode($server_group->name); ?>
+      <?php echo CHtml::label($checkbox,'SBAdmin_server_groups_' . $server_group->id,array('class' => 'checkbox')); ?>
 <?php endforeach ?>
     </div>
   </div>

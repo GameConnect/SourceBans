@@ -176,9 +176,8 @@ class SourceBans extends CApplicationComponent
 	public static function onBeginRequest($event)
 	{
 		// Set timezone
-		// TODO: Make a timezone list based on names instead of hour offsets. Etc/GMT may be deprecated in the future.
-		$timezone = SourceBans::app()->settings->timezone + SourceBans::app()->settings->summer_time;
-		date_default_timezone_set('Etc/GMT' . ($timezone < 0 ? $timezone : '+' . $timezone));
+		if(!empty(SourceBans::app()->settings->timezone))
+			date_default_timezone_set(SourceBans::app()->settings->timezone);
 		
 		// Set date/time format
 		if(!empty(SourceBans::app()->settings->date_format))

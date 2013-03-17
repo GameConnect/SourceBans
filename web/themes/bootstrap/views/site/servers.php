@@ -197,9 +197,9 @@ $this->breadcrumbs=array(
     var id = $("#servers-grid tr.selected").data("key");
     
     $.post("' . $this->createUrl('servers/kick', array('id' => '__ID__')) . '".replace("__ID__", id), {
-	    name: $("#player-menu").data("name")
+      name: $("#player-menu").data("name")
     }, function() {
-	    queryServer(id);
+      queryServer(id);
     });
   });
 ') ?>

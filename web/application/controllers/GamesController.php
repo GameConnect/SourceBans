@@ -128,7 +128,7 @@ class GamesController extends Controller
 	{
 		if(isset($_POST['ajax']) && $_POST['ajax']==='game-form')
 		{
-			echo CActiveForm::validate($model);
+			echo CActiveForm::validate($model,array('name','folder'));
 			Yii::app()->end();
 		}
 	}

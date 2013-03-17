@@ -10,9 +10,14 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
+	array('label'=>Yii::t('sourcebans', 'Settings'), 'url'=>'#settings'),
 	array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
 );
 ?>
+    <section class="tab-pane fade" id="pane-settings">
+<?php echo $this->renderPartial('/settings/_form') ?>
+
+    </section>
     <section class="tab-pane fade" id="pane-plugins">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'plugins-grid',
@@ -98,15 +103,15 @@ $this->menu=array(
       id: $(this).parents("tr").data("id")
     };
     if(data["action"] == "uninstall" && !confirm("' . Yii::t('sourcebans', 'Are you sure you want to uninstall this plugin?\nThis will delete all its data!') . '"))
-	    return;
+      return;
     
     $.post("' . $this->createUrl('plugins/__ACTION__', array('id' => '__ID__')) . '".replace(/__(\w+)__/g, function(str, key) {
-	    return data[key.toLowerCase()] || str;
+      return data[key.toLowerCase()] || str;
     }), function(result) {
-	    if(!result)
-	      return;
-	    
-	    $.fn.yiiGridView.update("plugins-grid");
+      if(!result)
+        return;
+      
+      $.fn.yiiGridView.update("plugins-grid");
     });
   });
 ') ?>

@@ -30,14 +30,8 @@ foreach(explode(';', $queries) as $query)
 // Setup web group
 $group = new SBGroup;
 $group->name = 'Owner';
+$group->permissions = array('OWNER');
 if(!$group->save())
-  exit(json_encode(false));
-
-// Setup web permission
-$permission = new SBGroupPermission;
-$permission->group_id = $group->id;
-$permission->name     = 'OWNER';
-if(!$permission->save())
   exit(json_encode(false));
 
 // Setup admin

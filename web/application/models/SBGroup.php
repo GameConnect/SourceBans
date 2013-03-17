@@ -52,8 +52,9 @@ class SBGroup extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('name, permissions', 'required'),
 			array('name', 'length', 'max'=>32),
+			array('name', 'unique'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name', 'safe', 'on'=>'search'),
@@ -112,5 +113,24 @@ class SBGroup extends CActiveRecord
 				),
 			),
 		));
+	}
+	
+	
+	protected function afterSave()
+	{
+		SBGroupPermission::model()->deleteAllByAttributes(array('group_id'=>$this->id));
+		
+		if(in_array('OWNER', (array)$this->permissions))
+		{
+			$this->permissions = array('OWNER');
+		}
+		
+		foreach((array)$this->permissions as $name)
+		{
+			$permission           = new SBGroupPermission;
+			$permission->group_id = $this->id;
+			$permission->name     = $name;
+			$permission->save();
+		}
 	}
 }

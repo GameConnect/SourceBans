@@ -14,7 +14,7 @@
 #define _sourcebans_included
 
 #define SB_PREFIX		"[SourceBans] "
-#define SB_VERSION	"1.5.0-dev"
+#define SB_VERSION	"2.0.0-dev"
 
 /**
  * When connected to SourceBans database

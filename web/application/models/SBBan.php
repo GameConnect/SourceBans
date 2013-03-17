@@ -77,6 +77,7 @@ class SBBan extends CActiveRecord
 			array('type, reason, length', 'required'),
 			array('type, length', 'numerical', 'integerOnly'=>true),
 			array('steam, ip, name', 'default', 'setOnEmpty'=>true),
+			array('steam, ip', 'SBBanTypeValidator'),
 			array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
 				'condition'=>'type = :type',
 				'params'=>array(':type'=>SBBan::STEAM_TYPE),
@@ -87,8 +88,6 @@ class SBBan extends CActiveRecord
 				'params'=>array(':type'=>SBBan::IP_TYPE),
 				'scopes'=>'active',
 			)),
-			array('steam', 'match', 'pattern'=>'/^STEAM_[0-9]:[0-9]:[0-9]+$/'),
-			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
 			array('name', 'length', 'max'=>64),
 			array('reason, unban_reason', 'length', 'max'=>255),
 			// The following rule is used by search().
@@ -202,19 +201,19 @@ class SBBan extends CActiveRecord
 		
 		return array(
 			'active'=>array(
-				'condition'=>$t.'.unban_admin_id IS NULL AND ('.$t.'.length = 0 OR '.$t.'.time + '.$t.'.length * 60 > UNIX_TIMESTAMP())',
+				'condition'=>$t.'.unban_time IS NULL AND ('.$t.'.length = 0 OR '.$t.'.time + '.$t.'.length * 60 > UNIX_TIMESTAMP())',
 			),
 			'expired'=>array(
 				'condition'=>$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP()',
 			),
 			'inactive'=>array(
-				'condition'=>$t.'.unban_admin_id IS NOT NULL OR ('.$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP())',
+				'condition'=>$t.'.unban_time IS NOT NULL OR ('.$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP())',
 			),
 			'permanent'=>array(
 				'condition'=>$t.'.length = 0',
 			),
 			'unbanned'=>array(
-				'condition'=>$t.'.unban_admin_id IS NOT NULL',
+				'condition'=>$t.'.unban_time IS NOT NULL',
 			),
 		);
 	}

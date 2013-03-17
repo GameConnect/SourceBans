@@ -54,7 +54,7 @@ class GroupsController extends Controller
 	 */
 	public function actionAdd()
 	{
-	  $class=Yii::app()->request->getQuery('type') == 'web' ? 'SBGroup' : 'SBServerGroup';
+		$class=Yii::app()->request->getQuery('type') == 'web' ? 'SBGroup' : 'SBServerGroup';
 		$model=new $class;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -75,9 +75,9 @@ class GroupsController extends Controller
 	 */
 	public function actionEdit($id)
 	{
-	  $type=Yii::app()->request->getQuery('type');
-	  $class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
-	  $model=$this->loadModel($id, $type);
+		$type=Yii::app()->request->getQuery('type');
+		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
+		$model=$this->loadModel($id, $type);
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -118,7 +118,7 @@ class GroupsController extends Controller
 	 */
 	public function loadModel($id, $type)
 	{
-	  $class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
+		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
 		$model=$class::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');

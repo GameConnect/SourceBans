@@ -27,7 +27,7 @@ $this->menu=array(
 		array(
 			'name'=>'server_groups.name',
 			'type'=>'ntext',
-			'value'=>'implode("\n", $data->server_groups(array("order" => "name")))',
+			'value'=>'($server_groups = $data->server_groups(array("order" => "name"))) ? implode("\n", $server_groups) : null',
 		),
 		array(
 			'class'=>'CButtonColumn',
@@ -48,6 +48,7 @@ $this->menu=array(
 	),
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
+	'nullDisplay'=>CHtml::tag('span',array('class'=>'null'),Yii::t('sourcebans', 'None')),
 	'pager'=>array(
 		'class'=>'bootstrap.widgets.TbPager',
 	),

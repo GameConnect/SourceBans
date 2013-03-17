@@ -6,6 +6,8 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'group-form',
+	'action'=>isset($action) ? $action : null,
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -30,9 +32,10 @@
     <div class="controls">
 <?php $permissions = CHtml::listData($model->permissions, 'name', 'name') ?>
 <?php foreach(SourceBans::app()->permissions as $name => $description): ?>
-      <?php $checkbox = CHtml::checkBox('SBGroupPermission['.$name.']', in_array($name, $permissions)) . $description; ?>
-      <?php echo CHtml::label($checkbox,'SBGroupPermission_' . $name,array('class' => 'checkbox')); ?>
+      <?php $checkbox = CHtml::checkBox('SBGroup[permissions]['.$name.']', in_array($name, $permissions), array('value'=>$name)) . $description; ?>
+      <?php echo CHtml::label($checkbox,'SBGroup_permissions_' . $name,array('class' => 'checkbox')); ?>
 <?php endforeach ?>
+      <?php echo $form->error($model,'permissions'); ?>
     </div>
   </div>
 
@@ -45,14 +48,14 @@
 <?php $this->endWidget() ?>
 
 <?php Yii::app()->clientScript->registerScript('permissions_change', '
-  $("#SBGroupPermission_OWNER").change(function() {
+  $("#SBGroup_permissions_OWNER").change(function() {
     $(".permissions :checkbox").prop("checked", $(this).is(":checked")); 
   });
   $(".permissions :checkbox").change(function() {
-    $("#SBGroupPermission_OWNER").prop("checked", $(".permissions :checkbox").not("#SBGroupPermission_OWNER").are(":checked"));
+    $("#SBGroup_permissions_OWNER").prop("checked", $(".permissions :checkbox").not("#SBGroup_permissions_OWNER").are(":checked"));
   });
   
-  if($("#SBGroupPermission_OWNER").is(":checked")) {
-    $("#SBGroupPermission_OWNER").trigger("change");
+  if($("#SBGroup_permissions_OWNER").is(":checked")) {
+    $("#SBGroup_permissions_OWNER").trigger("change");
   }
 ') ?>

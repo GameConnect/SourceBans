@@ -51,7 +51,7 @@ class SBGroupPermission extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('group_id, name', 'required'),
 			array('name', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -93,7 +93,7 @@ class SBGroupPermission extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
+		$criteria->compare('group_id',$this->group_id);
 		$criteria->compare('name',$this->name,true);
 
 		return new CActiveDataProvider($this, array(

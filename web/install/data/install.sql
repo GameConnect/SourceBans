@@ -1,3 +1,4 @@
+SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- --------------------------------------------------------
@@ -19,8 +20,8 @@ CREATE TABLE {prefix}actions (
   PRIMARY KEY (id),
   KEY admin_id (admin_id),
   KEY server_id (server_id),
-  CONSTRAINT action_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id),
-  CONSTRAINT action_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id)
+  CONSTRAINT action_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
+  CONSTRAINT action_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -47,7 +48,7 @@ CREATE TABLE {prefix}admins (
   UNIQUE KEY name (name),
   UNIQUE KEY auth (auth,identity),
   KEY group_id (group_id),
-  CONSTRAINT admin_group FOREIGN KEY (group_id) REFERENCES {prefix}groups (id)
+  CONSTRAINT admin_group FOREIGN KEY (group_id) REFERENCES {prefix}groups (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -63,8 +64,8 @@ CREATE TABLE {prefix}admins_server_groups (
   PRIMARY KEY (admin_id,group_id),
   KEY admin_id (admin_id),
   KEY group_id (group_id),
-  CONSTRAINT admin_server_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id),
-  CONSTRAINT server_group_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id)
+  CONSTRAINT admin_server_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE,
+  CONSTRAINT server_group_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -92,9 +93,9 @@ CREATE TABLE {prefix}bans (
   KEY server_id (server_id),
   KEY admin_id (admin_id),
   KEY unban_admin_id (unban_admin_id),
-  CONSTRAINT ban_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id),
-  CONSTRAINT ban_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id),
-  CONSTRAINT ban_unban_admin FOREIGN KEY (unban_admin_id) REFERENCES {prefix}admins (id)
+  CONSTRAINT ban_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
+  CONSTRAINT ban_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE SET NULL,
+  CONSTRAINT ban_unban_admin FOREIGN KEY (unban_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -110,8 +111,8 @@ CREATE TABLE {prefix}blocks (
   time int(10) unsigned NOT NULL,
   KEY ban_id (ban_id),
   KEY server_id (server_id),
-  CONSTRAINT block_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id),
-  CONSTRAINT block_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id)
+  CONSTRAINT block_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE,
+  CONSTRAINT block_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -133,9 +134,9 @@ CREATE TABLE {prefix}comments (
   KEY ban_id (ban_id),
   KEY admin_id (admin_id),
   KEY edit_admin_id (edit_admin_id),
-  CONSTRAINT comment_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id),
-  CONSTRAINT comment_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id),
-  CONSTRAINT comment_edit_admin FOREIGN KEY (edit_admin_id) REFERENCES {prefix}admins (id)
+  CONSTRAINT comment_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
+  CONSTRAINT comment_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE,
+  CONSTRAINT comment_edit_admin FOREIGN KEY (edit_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -178,7 +179,7 @@ CREATE TABLE {prefix}group_permissions (
   name varchar(32) NOT NULL,
   PRIMARY KEY (group_id,name),
   KEY group_id (group_id) USING BTREE,
-  CONSTRAINT permission_group FOREIGN KEY (group_id) REFERENCES {prefix}groups (id)
+  CONSTRAINT permission_group FOREIGN KEY (group_id) REFERENCES {prefix}groups (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -212,7 +213,7 @@ CREATE TABLE {prefix}logs (
   time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY admin_id (admin_id),
-  CONSTRAINT log_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id)
+  CONSTRAINT log_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -256,7 +257,7 @@ CREATE TABLE {prefix}protests (
   time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY ban_id (ban_id),
-  CONSTRAINT protest_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id)
+  CONSTRAINT protest_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -272,7 +273,7 @@ CREATE TABLE {prefix}server_group_overrides (
   access enum('allow','deny') NOT NULL,
   PRIMARY KEY (group_id,type,name),
   KEY group_id (group_id),
-  CONSTRAINT server_group_override_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id)
+  CONSTRAINT server_group_override_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -302,8 +303,8 @@ CREATE TABLE {prefix}server_groups_immunity (
   PRIMARY KEY (group_id,other_id),
   KEY group_id (group_id),
   KEY other_id (other_id),
-  CONSTRAINT server_group_immunity_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id),
-  CONSTRAINT server_group_immunity_other FOREIGN KEY (other_id) REFERENCES {prefix}server_groups (id)
+  CONSTRAINT server_group_immunity_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE,
+  CONSTRAINT server_group_immunity_other FOREIGN KEY (other_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -321,7 +322,7 @@ CREATE TABLE {prefix}servers (
   enabled tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (id),
   KEY game_id (game_id) USING BTREE,
-  CONSTRAINT server_game FOREIGN KEY (game_id) REFERENCES {prefix}games (id)
+  CONSTRAINT server_game FOREIGN KEY (game_id) REFERENCES {prefix}games (id) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -336,8 +337,8 @@ CREATE TABLE {prefix}servers_server_groups (
   PRIMARY KEY (server_id,group_id),
   KEY server_id (server_id),
   KEY group_id (group_id),
-  CONSTRAINT server_server_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id),
-  CONSTRAINT server_group_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id)
+  CONSTRAINT server_server_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE,
+  CONSTRAINT server_group_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -372,7 +373,7 @@ CREATE TABLE {prefix}submissions (
   time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY server_id (server_id),
-  CONSTRAINT submission_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id)
+  CONSTRAINT submission_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -434,9 +435,8 @@ INSERT INTO {prefix}settings (name, value) VALUES
 ('smtp_port', '25'),
 ('smtp_secure', ''),
 ('smtp_username', ''),
-('summer_time', '0'),
 ('theme', 'bootstrap'),
-('timezone', '0');
+('timezone', 'Europe/London');
 
 -- --------------------------------------------------------
 

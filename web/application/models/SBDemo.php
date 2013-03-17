@@ -54,10 +54,9 @@ class SBDemo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('object_id, object_type, filename', 'required'),
+			array('object_id, object_type', 'required'),
 			array('object_id', 'numerical', 'integerOnly'=>true),
 			array('object_type', 'length', 'max'=>1),
-			array('filename', 'length', 'max'=>255),
 			array('filename', 'file', 'types'=>array('dem', 'rar', 'zip'), 'allowEmpty'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -119,7 +118,7 @@ class SBDemo extends CActiveRecord
 		$file = CUploadedFile::getInstance($this, 'filename');
 		if(!empty($file))
 		{
-			$file->saveAs(Yii::getPathOfAlias('webroot.demos') . $file);
+			$file->saveAs(Yii::getPathOfAlias('webroot.demos') . '/' . $file);
 		}
 		
 		parent::afterSave();

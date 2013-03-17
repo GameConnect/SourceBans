@@ -62,6 +62,8 @@ class AdminsController extends Controller
 		if(isset($_POST['SBAdmin']))
 		{
 			$model->attributes=$_POST['SBAdmin'];
+			if(!isset($_POST['SBAdmin']['server_groups']))
+				$model->server_groups=array();
 			if($model->save())
 				$this->redirect(array('admin/admins','#'=>$model->id));
 		}
@@ -82,6 +84,8 @@ class AdminsController extends Controller
 		if(isset($_POST['SBAdmin']))
 		{
 			$model->attributes=$_POST['SBAdmin'];
+			if(!isset($_POST['SBAdmin']['server_groups']))
+				$model->server_groups=array();
 			if($model->save())
 				$this->redirect(array('admin/admins','#'=>$model->id));
 		}

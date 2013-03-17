@@ -24,6 +24,9 @@
         $pane = $("#pane-" + pane);
     if(!$pane.length) {
       $pane = $(".tab-pane:first");
+      if(!$pane.length)
+        return;
+      
       pane  = $pane.prop("id").substring(5);
     }
     

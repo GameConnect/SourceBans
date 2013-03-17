@@ -183,6 +183,19 @@ class AdminController extends Controller
 	 */
 	public function actionSettings()
 	{
+		if(isset($_POST['settings']))
+		{
+			$settings = SBSetting::model()->findAll(array('index' => 'name'));
+			
+			foreach($_POST['settings'] as $name => $value)
+			{
+				$settings[$name]->value = $value;
+				$settings[$name]->save();
+			}
+			
+			$this->redirect(array('','#'=>'settings'));
+		}
+		
 		// Find new plugins and save to database
 		$files=CFileHelper::findFiles(Yii::getPathOfAlias('application.plugins'), array(
 			'fileTypes'=>array('php'),
@@ -213,5 +226,22 @@ class AdminController extends Controller
 		$this->render('settings',array(
 			'plugins'=>$plugins,
 		));
+	}
+	
+	public function actionVersion()
+	{
+		$version = @file_get_contents('http://www.sourcebans.net/public/versionchecker/?type=rel');
+		
+		if(empty($version) || strlen($version) > 8)
+		{
+			Yii::app()->end(CJSON::encode(array(
+				'error' => Yii::t('sourcebans', 'Error retrieving latest release.'),
+			)));
+		}
+		
+		Yii::app()->end(CJSON::encode(array(
+			'version' => $version,
+			'update'  => version_compare($version, SourceBans::getVersion()) > 0,
+		)));
 	}
 }

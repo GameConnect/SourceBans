@@ -7,6 +7,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'server-form',
 	'action'=>isset($action) ? $action : null,
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -29,7 +30,7 @@
   <div class="control-group">
     <?php echo $form->labelEx($model,'port',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'port'); ?>
+      <?php echo $form->textField($model,'port',array('placeholder'=>27015)); ?>
       <?php echo $form->error($model,'port'); ?>
     </div>
   </div>
@@ -59,9 +60,10 @@
   <div class="control-group">
     <?php echo $form->label($model,'groups.name',array('class' => 'control-label')); ?>
     <div class="controls">
+<?php $groups = CHtml::listData($model->groups, 'id', 'id') ?>
 <?php foreach(SBServerGroup::model()->findAll(array('order' => 't.name')) as $server_group): ?>
-      <?php $checkbox = CHtml::checkBox('SBServerGroup['.$server_group->id.']') . $server_group->name; ?>
-      <?php echo CHtml::label($checkbox,'SBServerGroup_' . $server_group->id,array('class' => 'checkbox')); ?>
+      <?php $checkbox = CHtml::checkBox('SBServer[groups]['.$server_group->id.']', in_array($server_group->id, $groups), array('value'=>$server_group->id)) . CHtml::encode($server_group->name); ?>
+      <?php echo CHtml::label($checkbox,'SBServer_groups_' . $server_group->id,array('class' => 'checkbox')); ?>
 <?php endforeach ?>
     </div>
   </div>

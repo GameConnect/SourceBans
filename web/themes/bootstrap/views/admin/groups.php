@@ -28,8 +28,24 @@ $this->menu=array(
 			'header'=>Yii::t('sourcebans', 'Server group'),
 			'name'=>'name',
 		),
-		'immunity',
-		'adminsCount',
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'immunity',
+		),
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'adminsCount',
+		),
 		array(
 			'class'=>'CButtonColumn',
 			'buttons'=>array(
@@ -65,7 +81,15 @@ $this->menu=array(
 			'header'=>Yii::t('sourcebans', 'Web group'),
 			'name'=>'name',
 		),
-		'adminsCount',
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'adminsCount',
+		),
 		array(
 			'class'=>'CButtonColumn',
 			'template'=>'{update} {delete}',
@@ -101,9 +125,11 @@ $this->menu=array(
         </div>
       </form>
 <?php echo $this->renderPartial('/groups/_server_form', array(
+	'action'=>array('groups/add', 'type'=>'server'),
 	'model'=>$server_group,
 )) ?>
 <?php echo $this->renderPartial('/groups/_web_form', array(
+	'action'=>array('groups/add', 'type'=>'web'),
 	'model'=>$group,
 )) ?>
 

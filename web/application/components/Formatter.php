@@ -58,7 +58,7 @@ class Formatter extends CFormatter
 	/**
 	 * Format size in English units
 	 *
-	 * @param integer $size	     The size in bytes
+	 * @param integer $size      The size in bytes
 	 * @param boolean $precision The optional number of decimal digits to round to
 	 * @return string
 	 */

@@ -7,6 +7,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'game-form',
 	'action'=>isset($action) ? $action : null,
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',

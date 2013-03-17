@@ -64,11 +64,7 @@ $this->breadcrumbs=array(
               <td><?php echo Yii::t('sourcebans', 'Total bans') ?>: <strong><?php echo $total_bans ?></strong></td>
             </tr>
             <tr>
-              <td>
-<?php if(YII_DEBUG): ?>
-                Latest SVN: <strong id="svnrev"><?php echo Yii::t('sourcebans', 'Please wait') ?>...</strong>
-<?php endif ?>
-              </td>
+              <td>&nbsp;</td>
               <td>&nbsp;</td>
               <td><?php echo Yii::t('sourcebans', 'Connection blocks') ?>: <strong><?php echo $total_blocks ?></strong></td>
             </tr>
@@ -96,3 +92,22 @@ $this->breadcrumbs=array(
               <td colspan="3">&nbsp;</td>
             </tr>
           </table>
+
+<?php Yii::app()->clientScript->registerScript('admin_index', '
+  $.getJSON("' . $this->createUrl('admin/version') . '", function(data) {
+    if(data.error) {
+      $("#relver").text("' . Yii::t('sourcebans', 'Error') . '").addClass("text-error");
+      $("#versionmsg").text(data.error).addClass("text-error");
+      return;
+    }
+    if(data.update) {
+      $("#versionmsg").text("' . Yii::t('sourcebans', 'A new release is available.') . '").addClass("text-error");
+    }
+    else {
+      $("#versionmsg").text("' . Yii::t('sourcebans', 'You have the latest release.') . '").addClass("text-success");
+    }
+    
+    $("#relver").text(data.version);
+    $("#versionmsg").css("font-weight", "bold");
+  });
+') ?>

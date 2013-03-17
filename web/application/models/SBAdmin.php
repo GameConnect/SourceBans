@@ -45,7 +45,7 @@ class SBAdmin extends CActiveRecord
 	
 	public function __toString()
 	{
-	  return $this->name;
+		return $this->name;
 	}
 	
 	
@@ -78,11 +78,14 @@ class SBAdmin extends CActiveRecord
 			array('name, auth, identity', 'required'),
 			array('group_id', 'numerical', 'integerOnly'=>true),
 			array('name, identity', 'length', 'max'=>64),
+			array('name', 'unique'),
+			array('identity', 'SBAdminIdentityValidator'),
 			array('password, srv_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
-			array('auth', 'length', 'max'=>5),
+			array('email', 'email'),
 			array('email', 'length', 'max'=>128),
 			array('language', 'length', 'max'=>2),
 			array('theme', 'length', 'max'=>32),
+			array('server_groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, auth, identity, password, group_id, email, language, theme, srv_password, lastvisit', 'safe', 'on'=>'search'),
@@ -175,6 +178,15 @@ class SBAdmin extends CActiveRecord
 		));
 	}
 	
+	public function behaviors()
+	{
+		return array(
+			'EActiveRecordRelationBehavior'=>array(
+				'class'=>'ext.EActiveRecordRelationBehavior',
+			),
+		);
+	}
+	
 	/**
 	 * Returns the server flags of the admin
 	 * 
@@ -182,7 +194,7 @@ class SBAdmin extends CActiveRecord
 	 */
 	public function getFlags()
 	{
-	  $flags = '';
+		$flags = '';
 		foreach($this->server_groups as $server_group)
 		{
 			$flags .= $server_group->flags;

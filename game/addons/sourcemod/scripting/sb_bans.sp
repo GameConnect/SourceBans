@@ -190,7 +190,7 @@ public OnClientPostAdminCheck(client)
 	                                FROM   {{bans}} \
 	                                WHERE  ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) \
 	                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
-	                                  AND  unban_admin_id IS NULL",
+	                                  AND  unban_time IS NULL",
 	                                STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp);
 	SB_Query(Query_BanVerify, sQuery, GetClientUserId(client), DBPrio_High);
 }
@@ -296,7 +296,7 @@ public Action:OnBanIdentity(const String:identity[], time, flags, const String:r
 		                                WHERE  type  = %i \
 		                                  AND  steam REGEXP '^STEAM_[0-9]:%s$' \
 		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
-		                                  AND  unban_admin_id IS NULL",
+		                                  AND  unban_time IS NULL",
 		                                STEAM_BAN_TYPE, identity[8]);
 		SB_Query(Query_AddBanSelect, sQuery, hPack, DBPrio_High);
 		
@@ -309,7 +309,7 @@ public Action:OnBanIdentity(const String:identity[], time, flags, const String:r
 		                                WHERE  type = %i \
 		                                  AND  ip   = '%s' \
 		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
-		                                  AND  unban_admin_id IS NULL",
+		                                  AND  unban_time IS NULL",
 		                                IP_BAN_TYPE, identity);
 		SB_Query(Query_BanIpSelect,  sQuery, hPack, DBPrio_High);
 		
@@ -331,7 +331,7 @@ public Action:OnRemoveBan(const String:identity[], flags, const String:command[]
 		                                WHERE  type  = %i \
 		                                  AND  steam REGEXP '^STEAM_[0-9]:%s$' \
 		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
-		                                  AND  unban_admin_id IS NULL",
+		                                  AND  unban_time IS NULL",
 		                                STEAM_BAN_TYPE, identity[8]);
 	else if(flags & BANFLAG_IP)
 		Format(sQuery, sizeof(sQuery), "SELECT 1 \
@@ -339,7 +339,7 @@ public Action:OnRemoveBan(const String:identity[], flags, const String:command[]
 		                                WHERE  type = %i \
 		                                  AND  ip   = '%s' \
 		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
-		                                  AND  unban_admin_id IS NULL",
+		                                  AND  unban_time IS NULL",
 		                                IP_BAN_TYPE, identity);
 	SB_Query(Query_UnbanSelect, sQuery, hPack);
 	
@@ -1017,7 +1017,7 @@ public Query_BanVerify(Handle:owner, Handle:hndl, const String:error[], any:user
 	
 	SB_Escape(sName, sEscapedName, sizeof(sEscapedName));
 	Format(sQuery, sizeof(sQuery), "INSERT INTO {{blocks}} (ban_id, name, server_id, time) \
-	                                VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_admin_id IS NULL ORDER BY time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
+	                                VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_time IS NULL ORDER BY time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
 	                                STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp, sEscapedName, g_iServerId);
 	SB_Execute(sQuery, DBPrio_High);
 	

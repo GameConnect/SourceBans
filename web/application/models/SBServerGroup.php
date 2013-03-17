@@ -57,8 +57,9 @@ class SBServerGroup extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name, flags', 'required'),
-			array('immunity', 'numerical', 'integerOnly'=>true),
+			array('immunity', 'numerical', 'integerOnly'=>true, 'min'=>0),
 			array('name, flags', 'length', 'max'=>32),
+			array('name', 'unique'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, flags, immunity', 'safe', 'on'=>'search'),
@@ -93,6 +94,7 @@ class SBServerGroup extends CActiveRecord
 			'flags' => Yii::t('sourcebans', 'Server permissions'),
 			'immunity' => Yii::t('sourcebans', 'Immunity level'),
 			'adminsCount' => Yii::t('sourcebans', 'Admins in group'),
+			'serversCount' => Yii::t('sourcebans', 'Servers in group'),
 		);
 	}
 

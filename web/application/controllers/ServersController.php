@@ -109,6 +109,8 @@ class ServersController extends Controller
 		if(isset($_POST['SBServer']))
 		{
 			$model->attributes=$_POST['SBServer'];
+			if(!isset($_POST['SBServer']['groups']))
+				$model->groups=array();
 			if($model->save())
 				$this->redirect(array('admin/servers','#'=>$model->id));
 		}
@@ -129,6 +131,8 @@ class ServersController extends Controller
 		if(isset($_POST['SBServer']))
 		{
 			$model->attributes=$_POST['SBServer'];
+			if(!isset($_POST['SBServer']['groups']))
+				$model->groups=array();
 			if($model->save())
 				$this->redirect(array('admin/servers','#'=>$model->id));
 		}

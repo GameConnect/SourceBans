@@ -86,7 +86,7 @@ $this->breadcrumbs=array(
 	),
 	'pagerCssClass'=>'pagination pagination-right',
 	'rowHtmlOptionsExpression'=>'array(
-		"class"=>"header" . ($data->length && $data->time + $data->length * 60 < time() ? " expired" : ($data->unban_admin_id ? " unbanned" : "")),
+		"class"=>"header" . ($data->length && $data->time + $data->length * 60 < time() ? " expired" : ($data->unban_time ? " unbanned" : "")),
 		"data-key"=>$data->primaryKey,
 		"data-name"=>$data->name,
 		"data-steam"=>$data->steam,
@@ -95,7 +95,7 @@ $this->breadcrumbs=array(
 		"data-length"=>$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent"),
 		"data-reason"=>$data->reason,
 		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
-		"data-server-id"=>$data->server->id,
+		"data-server-id"=>$data->server_id,
 		"data-community-id"=>$data->community_id,
 	)',
 	'selectableRows'=>0,

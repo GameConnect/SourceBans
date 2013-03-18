@@ -340,10 +340,14 @@ class SBAdmin extends CActiveRecord
 	 * @param string $key the password key
 	 * @return string a random hash
 	 */
-	public static function getPasswordHash($password, $key)
+	public static function getPasswordHash($password, $key = null)
 	{
-		if(empty($password) || empty($key))
+		if(empty($password))
 			return null;
+		
+		// Backwards compatibility with old password format
+		if(empty($key))
+			return sha1(sha1('SourceBans' . $password));
 		
 		return sha1((str_repeat(chr(0x5C), 64) ^ $key) . pack('H40', sha1((str_repeat(chr(0x36), 64) ^ $key) . $password)));
 	}

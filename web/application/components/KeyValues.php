@@ -9,13 +9,8 @@
  * @package sourcebans.components
  * @since 2.0
  */
-class KeyValues
+class KeyValues extends ArrayObject
 {
-	/**
-	 * @var array Key values data
-	 */
-	protected $_data = array();
-	
 	/**
 	 * @var string Root section name
 	 */
@@ -28,13 +23,13 @@ class KeyValues
 	 * @param string $name Root section name
 	 * @param array $data Optional key values data
 	 */
-	function __construct($name, $data = null)
+	function __construct($name = null, $data = null)
 	{
 		$this->_name = $name;
 		
 		if(is_array($data))
 		{
-			$this->_data = $data;
+			parent::__construct($data);
 		}
 	}
 	
@@ -77,7 +72,7 @@ class KeyValues
 	public function __toString()
 	{
 		$ret  = $this->name . "\n{\n";
-		$ret .= $this->_build($this->_data);
+		$ret .= $this->_build($this->getArrayCopy());
 		$ret .= '}';
 		
 		return $ret;
@@ -96,11 +91,12 @@ class KeyValues
 			return false;
 		
 		// Use token_get_all() to easily ignore comments and whitespace
-		$tokens      = token_get_all("<?php\n" . file_get_contents($file) . "\n?>");
-		$this->_data = $this->_parse($tokens);
-		
+		$tokens = token_get_all("<?php\n" . file_get_contents($file) . "\n?>");
+		$data   = $this->_parse($tokens);
 		// Strip root section
-		$this->_data = reset($this->_data);
+		$data   = reset($data);
+		
+		$this->exchangeArray($data);
 		return true;
 	}
 	
@@ -127,7 +123,7 @@ class KeyValues
 	 */
 	public function toArray()
 	{
-		return $this->_data;
+		return $this->getArrayCopy();
 	}
 	
 	

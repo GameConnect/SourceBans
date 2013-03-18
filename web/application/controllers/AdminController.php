@@ -111,6 +111,7 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
 			array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'Import admins'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
 		);
 		
 		$admin=new SBAdmin;
@@ -140,6 +141,7 @@ class AdminController extends Controller
 		
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'Add ban'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
+			array('label'=>Yii::t('sourcebans', 'Import bans'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
 		);
 		
 		$ban=new SBBan;
@@ -194,6 +196,7 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
 			array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'Import groups'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
 		);
 		
 		$group=new SBGroup;

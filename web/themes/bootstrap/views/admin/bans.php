@@ -11,4 +11,8 @@
 )) ?>
 
     </section>
+    <section class="tab-pane fade" id="pane-import">
+<?php echo $this->renderPartial('/bans/_import') ?>
+
+    </section>
 <?php endif ?>

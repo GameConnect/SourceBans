@@ -30,5 +30,6 @@ return array(
 	'ADD_GAMES' => Yii::t('sourcebans', 'Add games'),
 	'EDIT_GAMES' => Yii::t('sourcebans', 'Edit games'),
 	'DELETE_GAMES' => Yii::t('sourcebans', 'Delete games'),
+	'OVERRIDES' => Yii::t('sourcebans', 'Overrides'),
 	'SETTINGS' => Yii::t('sourcebans', 'Settings'),
 );

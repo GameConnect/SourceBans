@@ -56,10 +56,11 @@ class SBServerGroup extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, flags', 'required'),
+			array('name', 'required'),
 			array('immunity', 'numerical', 'integerOnly'=>true, 'min'=>0),
 			array('name, flags', 'length', 'max'=>32),
 			array('name', 'unique'),
+			array('flags', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, flags, immunity', 'safe', 'on'=>'search'),

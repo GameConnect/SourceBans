@@ -152,7 +152,7 @@
 <?php if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS')): ?>
 <?php $this->widget('bootstrap.widgets.TbDropdown', array(
 	'id' => 'player-menu',
-	'items' => array(
+	'items' => array_merge(array(
 		array(
 			'itemOptions' => array('class' => 'player-name'),
 		),
@@ -166,7 +166,7 @@
 			'url' => '#',
 			'linkOptions' => array('id' => 'player-ban'),
 		),
-	),
+	), $this->menu),
 )) ?>
 
 <?php Yii::app()->clientScript->registerScript('site_servers_playerMenu', '

@@ -55,4 +55,8 @@
 )) ?>
 
     </section>
+    <section class="tab-pane fade" id="pane-import">
+<?php echo $this->renderPartial('/admins/_import') ?>
+
+    </section>
 <?php endif ?>

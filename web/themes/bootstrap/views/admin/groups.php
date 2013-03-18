@@ -122,6 +122,10 @@
 )) ?>
 
     </section>
+    <section class="tab-pane fade" id="pane-import">
+<?php echo $this->renderPartial('/groups/_import') ?>
+
+    </section>
 <?php endif ?>
 
 <?php Yii::app()->clientScript->registerScript('type_change', '

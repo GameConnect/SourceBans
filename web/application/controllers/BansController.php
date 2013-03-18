@@ -15,7 +15,7 @@ class BansController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + add, delete', // we only allow deletion via POST request
+			'postOnly + add, delete, import', // we only allow deletion via POST request
 		);
 	}
 
@@ -119,6 +119,42 @@ class BansController extends Controller
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+	public function actionImport()
+	{
+		$file = $_FILES['file'];
+		
+		foreach(file($file['tmp_name']) as $line)
+		{
+			list(, $length, $identity) = explode(' ', $line);
+			// If this is not a permanent ban, ignore
+			if($length)
+				continue;
+			
+			// Steam ID
+			if(preg_match('/^STEAM_[0-9]:[0-9]:[0-9]+$/', $identity))
+			{
+				$ban         = new SBBan;
+				$ban->type   = SBBan::STEAM_TYPE;
+				$ban->steam  = $identity;
+				$ban->reason = 'Imported banned_user.cfg';
+				$ban->length = 0;
+				$ban->save();
+			}
+			// IP address
+			else if(preg_match('/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/', $identity))
+			{
+				$ban         = new SBBan;
+				$ban->type   = SBBan::IP_TYPE;
+				$ban->ip     = $identity;
+				$ban->reason = 'Imported banned_ip.cfg';
+				$ban->length = 0;
+				$ban->save();
+			}
+		}
+		
+		$this->redirect(array('site/bans'));
 	}
 	
 	/**

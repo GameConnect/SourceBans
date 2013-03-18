@@ -15,7 +15,7 @@ class GroupsController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + add, delete', // we only allow deletion via POST request
+			'postOnly + add, delete, import', // we only allow deletion via POST request
 		);
 	}
 
@@ -118,6 +118,47 @@ class GroupsController extends Controller
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+	public function actionImport()
+	{
+		$file = $_FILES['file'];
+		
+		$kv = new KeyValues('Groups');
+		$kv->load($file['tmp_name']);
+		
+		foreach($kv as $name => $data)
+		{
+			$server_group           = new SBServerGroup;
+			$server_group->name     = $name;
+			$server_group->flags    = isset($data['flags'])    ? $data['flags']    : '';
+			$server_group->immunity = isset($data['immunity']) ? $data['immunity'] : 0;
+			$server_group->save();
+			
+			if(isset($data['Overrides']))
+			{
+				foreach($data['Overrides'] as $name => $access)
+				{
+					// Parse name
+					if($name{0} == ':')
+					{
+						$type = 'group';
+						$name = substr($name, 1);
+					}
+					else
+						$type = 'command';
+					
+					$override           = new SBServerGroupOverride;
+					$override->group_id = $server_group->id;
+					$override->type     = $type;
+					$override->name     = $name;
+					$override->access   = $access;
+					$override->save();
+				}
+			}
+		}
+		
+		$this->redirect(array('admin/groups'));
 	}
 
 	/**

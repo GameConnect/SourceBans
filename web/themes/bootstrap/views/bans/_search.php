@@ -68,7 +68,7 @@
   <div class="control-group">
     <?php echo $form->label($model,'server_id',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->dropDownList($model,'server_id',CHtml::listData(SBServer::model()->enabled()->findAll(array('order' => 'ip, port')), 'id', 'address'),array('empty' => '- ' . Yii::t('sourcebans', 'None') . ' -')); ?>
+      <?php echo $form->dropDownList($model,'server_id',CHtml::listData(SBServer::model()->enabled()->with('game')->findAll(array('order' => 'game.name, t.ip, t.port')), 'id', 'address', 'game.name'),array('empty' => '- ' . Yii::t('sourcebans', 'None') . ' -')); ?>
     </div>
   </div>
 

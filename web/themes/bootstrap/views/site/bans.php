@@ -4,12 +4,6 @@
 /* @var $hideInactive string */
 /* @var $search string */
 /* @var $total_bans integer */
-
-$this->pageTitle=Yii::t('sourcebans', 'Bans');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Bans'),
-);
 ?>
     <section>
       <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced search'),'#',array('class'=>'search-button')); ?>
@@ -215,6 +209,7 @@ $this->breadcrumbs=array(
     $.each(window.serverInfo, function(i, server) {
       var $section = $("#bans-grid tr[data-server-id=\"" + server.id + "\"]").next("tr.section");
       $section.find(".ServerQuery_hostname").html(server.error ? server.error.message : server.hostname);
+      $("#SBBan_server_id option[value=\"" + server.id + "\"]").html(server.error ? server.error.message : server.hostname);
     });
   }
   

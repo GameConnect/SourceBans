@@ -2,18 +2,6 @@
 /* @var $this AdminController */
 /* @var $admin SBAdmin */
 /* @var $admins SBAdmin */
-
-$this->pageTitle=Yii::t('sourcebans', 'Admins');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Administration') => array('admin/index'),
-	Yii::t('sourcebans', 'Admins'),
-);
-
-$this->menu=array(
-	array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
-	array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
-);
 ?>
 
 <?php if(Yii::app()->user->data->hasPermission('LIST_ADMINS')): ?>

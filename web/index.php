@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL ^ E_STRICT);
-ini_set('display_errors', 1);
-
 // change the following paths if necessary
 $yii=dirname(__FILE__).'/framework/yii.php';
 $config=dirname(__FILE__).'/application/config/web.php';

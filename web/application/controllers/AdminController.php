@@ -75,6 +75,12 @@ class AdminController extends Controller
 	{
 		$this->layout='//layouts/column1';
 		
+		$this->pageTitle=Yii::t('sourcebans', 'Administration');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration'),
+		);
+		
 		$demosize=Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
 		
 		$this->render('index', array(
@@ -95,6 +101,18 @@ class AdminController extends Controller
 	 */
 	public function actionAdmins()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Admins');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Admins'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+		);
+		
 		$admin=new SBAdmin;
 		
 		$admins=new SBAdmin('search');
@@ -113,6 +131,17 @@ class AdminController extends Controller
 	 */
 	public function actionBans()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Bans');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Bans'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Add ban'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
+		);
+		
 		$ban=new SBBan;
 		
 		$this->render('bans',array(
@@ -125,6 +154,18 @@ class AdminController extends Controller
 	 */
 	public function actionGames()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Games');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Games'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'List games'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'Add game'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
+		);
+		
 		$game=new SBGame;
 		
 		$games=new SBGame('search');
@@ -143,6 +184,18 @@ class AdminController extends Controller
 	 */
 	public function actionGroups()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Groups');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Groups'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
+		);
+		
 		$group=new SBGroup;
 		$server_group=new SBServerGroup;
 		
@@ -165,6 +218,18 @@ class AdminController extends Controller
 	 */
 	public function actionServers()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Servers');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Servers'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
+		);
+		
 		$server=new SBServer;
 		
 		$servers=new SBServer('search');
@@ -183,6 +248,18 @@ class AdminController extends Controller
 	 */
 	public function actionSettings()
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Settings');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Settings'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Settings'), 'url'=>'#settings'),
+			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
+		);
+		
 		if(isset($_POST['settings']))
 		{
 			$settings = SBSetting::model()->findAll(array('index' => 'name'));

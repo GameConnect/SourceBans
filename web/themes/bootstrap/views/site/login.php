@@ -1,12 +1,6 @@
 <?php
 /* @var $this SiteController */
 /* @var $model LoginForm */
-
-$this->pageTitle=Yii::t('sourcebans', 'Login');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Login'),
-);
 ?>
     <div class="row">
       <section class="span12">

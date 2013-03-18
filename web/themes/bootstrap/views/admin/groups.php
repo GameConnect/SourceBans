@@ -4,18 +4,6 @@
 /* @var $groups SBGroups */
 /* @var $server_group SBServerGroup */
 /* @var $server_groups SBServerGroups */
-
-$this->pageTitle=Yii::t('sourcebans', 'Groups');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Administration') => array('admin/index'),
-	Yii::t('sourcebans', 'Groups'),
-);
-
-$this->menu=array(
-	array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
-	array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
-);
 ?>
 
 <?php if(Yii::app()->user->data->hasPermission('LIST_GROUPS')): ?>

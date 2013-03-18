@@ -9,12 +9,6 @@
 /* @var $total_protests integer */
 /* @var $total_servers integer */
 /* @var $total_submissions integer */
-
-$this->pageTitle=Yii::t('sourcebans', 'Administration');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Administration'),
-);
 ?>
           <h3><?php echo Yii::t('sourcebans', 'Please select an option to administer.') ?></h3>
 <?php $this->widget('zii.widgets.CMenu', array(

@@ -79,6 +79,18 @@ class GroupsController extends Controller
 		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
 		$model=$this->loadModel($id, $type);
 
+		$this->pageTitle=Yii::t('sourcebans', 'Groups');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Groups') => array('admin/groups'),
+			$model->name,
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/groups')),
+		);
+
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 

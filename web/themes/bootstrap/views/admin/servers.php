@@ -2,18 +2,6 @@
 /* @var $this AdminController */
 /* @var $server SBServer */
 /* @var $servers SBServer */
-
-$this->pageTitle=Yii::t('sourcebans', 'Servers');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Administration') => array('admin/index'),
-	Yii::t('sourcebans', 'Servers'),
-);
-
-$this->menu=array(
-	array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
-	array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
-);
 ?>
 
 <?php if(Yii::app()->user->data->hasPermission('LIST_SERVERS')): ?>

@@ -5,12 +5,6 @@
 /* @var $servers SBServer */
 /* @var $total_bans integer */
 /* @var $total_blocks integer */
-
-$this->pageTitle=Yii::t('sourcebans', 'Dashboard');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Dashboard'),
-);
 ?>
     <div class="row">
     <section class="span12 intro">

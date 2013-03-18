@@ -75,6 +75,19 @@ class PluginsController extends Controller
 	public function actionSettings($id)
 	{
 		$plugin=$this->loadModel($id);
+		
+		$this->pageTitle=$plugin->name;
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Plugins') => array('admin/settings', '#'=>'plugins'),
+			$plugin->name,
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/settings','#'=>'plugins')),
+		);
+		
 		$plugin->runSettings();
 		
 		$this->render('settings',array(

@@ -80,6 +80,18 @@ class BansController extends Controller
 	{
 		$model=$this->loadModel($id);
 
+		$this->pageTitle=Yii::t('sourcebans', 'Bans');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Bans') => array('admin/bans'),
+			$model->name,
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('site/bans')),
+		);
+
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 

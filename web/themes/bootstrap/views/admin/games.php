@@ -2,18 +2,6 @@
 /* @var $this AdminController */
 /* @var $game SBGame */
 /* @var $games SBGame */
-
-$this->pageTitle=Yii::t('sourcebans', 'Games');
-
-$this->breadcrumbs=array(
-	Yii::t('sourcebans', 'Administration') => array('admin/index'),
-	Yii::t('sourcebans', 'Games'),
-);
-
-$this->menu=array(
-	array('label'=>Yii::t('sourcebans', 'List games'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GAMES')),
-	array('label'=>Yii::t('sourcebans', 'Add game'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
-);
 ?>
 
 <?php if(Yii::app()->user->data->hasPermission('LIST_GAMES')): ?>

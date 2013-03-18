@@ -125,6 +125,18 @@ class ServersController extends Controller
 	{
 		$model=$this->loadModel($id);
 
+		$this->pageTitle=Yii::t('sourcebans', 'Servers');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
+			$model->address,
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
+		);
+
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
@@ -158,6 +170,18 @@ class ServersController extends Controller
 
 	public function actionRcon($id)
 	{
+		$this->pageTitle=Yii::t('sourcebans', 'Remote Console');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
+			$model->address,
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
+		);
+		
 		$model=$this->loadModel($id);
 		if(empty($model->rcon) || (!$model->enabled && !Yii::app()->user->data->hasPermission('OWNER')))
 			throw new CHttpException(403);

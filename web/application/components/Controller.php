@@ -20,6 +20,10 @@ class Controller extends CController
 	 */
 	public $layout='//layouts/column1';
 	/**
+	 * @var array header tab items. This property will be assigned to {@link CMenu::items}.
+	 */
+	public $tabs=array();
+	/**
 	 * @var array context menu items. This property will be assigned to {@link CMenu::items}.
 	 */
 	public $menu=array();

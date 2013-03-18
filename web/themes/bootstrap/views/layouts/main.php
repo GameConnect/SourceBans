@@ -54,7 +54,7 @@
       <nav>
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'tabs',
-	'items' => array(
+	'items' => array_merge(array(
 		array(
 			'active' => $this->route == 'site/dashboard' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'dashboard'),
 			'label' => Yii::t('sourcebans', 'Dashboard'),
@@ -94,7 +94,7 @@
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'This is the control panel for SourceBans where you can setup new admins, add new servers, etc.')),
 			'visible' => !Yii::app()->user->isGuest,
 		),
-	),
+	), $this->tabs),
 	'htmlOptions' => array(
 		'class' => 'nav nav-tabs',
 	),

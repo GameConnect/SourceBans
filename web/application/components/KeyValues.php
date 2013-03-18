@@ -38,6 +38,12 @@ class KeyValues
 		}
 	}
 	
+	/**
+	 * Returns a property value
+	 * 
+	 * @param string $name The property name
+	 * @return mixed The property value
+	 */
 	public function __get($name)
 	{
 		switch($name)
@@ -47,14 +53,27 @@ class KeyValues
 		}
 	}
 	
-	// Block setting values
+	/**
+	 * Blocks setting property values
+	 * 
+	 * @param string $name The property name
+	 * @param string $value The property value
+	 */
 	public function __set($name, $value) {}
 	
+	/**
+	 * Serializes key values data and root section name
+	 */
 	public function __sleep()
 	{
 		return array('_data', '_name');
 	}
 	
+	/**
+	 * Returns a string representation of the data
+	 * 
+	 * @return string The string representation of the data
+	 */
 	public function __toString()
 	{
 		$ret  = $this->name . "\n{\n";
@@ -102,9 +121,9 @@ class KeyValues
 	}
 	
 	/**
-	 * Returns array representation of data
+	 * Returns an array representation of the data
 	 * 
-	 * @return array array representation of data
+	 * @return array The array representation of the data
 	 */
 	public function toArray()
 	{
@@ -152,8 +171,8 @@ class KeyValues
 				// Otherwise, recursively write section
 				else
 				{
-					$ret .= sprintf("%s%s\"%s\"\n%s{\n",
-						($level > 0 ? "\n" : ''), $indent, $key, $indent);
+					$ret .= sprintf("%s\"%s\"\n%s{\n",
+						$indent, $key, $indent);
 					
 					$ret .= $this->_build($value, $level + 1);
 					$ret .= $indent . "}\n";

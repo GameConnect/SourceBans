@@ -1,0 +1,252 @@
+<?php
+require_once 'SteamCommunity.php';
+
+/**
+ * Steam Community profile
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @property string $steamID64
+ * @property string $steamID
+ * @property string $onlineState
+ * @property string $stateMessage
+ * @property integer $visibilityState
+ * @property string $privacyState
+ * @property string $avatarIcon
+ * @property string $avatarMedium
+ * @property string $avatarFull
+ * @property integer $vacBanned
+ * @property string $tradeBanState
+ * @property integer $isLimitedAccount
+ * @property string $customURL
+ * @property string $memberSince
+ * @property float $steamRating
+ * @property float $hoursPlayed2Wk
+ * @property string $headline
+ * @property string $location
+ * @property string $realname
+ * @property string $summary
+ * @property array $inGameInfo
+ * @property array $mostPlayedGames
+ * @property array $webLinks
+ * @property array $groups
+ * 
+ * @package sourcebans.components
+ * @since 2.0
+ */
+class SteamProfile
+{
+	const VISIBILITY_STATE_HIDDEN  = 1;
+	const VISIBILITY_STATE_VISIBLE = 3;
+	
+	/**
+	 * @var array The profile data
+	 */
+	private $_data;
+	
+	/**
+	 * @var string The Steam Community ID or custom URL
+	 */
+	private $_id;
+	
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param string $id The Steam Community ID or custom URL
+	 */
+	function __construct($id)
+	{
+		$this->_id = $id;
+	}
+	
+	/**
+	 * Returns a property value
+	 *
+	 * @param string $name The property name
+	 * @return mixed The property value
+	 */
+	public function __get($name)
+	{
+		if(empty($this->_data))
+		{
+			$this->_requestData();
+		}
+		
+		if(isset($this->_data[$name]))
+			return $this->_data[$name];
+		
+		return null;
+	}
+	
+	
+	/**
+	 * ISteamUser/GetFriendList/v0001
+	 * 
+	 * @return array
+	 */
+	public function getFriends()
+	{
+		$data = SteamCommunity::apiRequest('ISteamUser', 'GetFriendList', 1, array(
+			'relationship' => 'friend',
+			'steamid' => is_numeric($this->_id) ? $this->_id : $this->steamID64,
+		));
+		if(empty($data))
+			return array();
+		
+		$data = json_decode($data, true);
+		return $data['friendslist']['friends'];
+	}
+	
+	/**
+	 * Returns the owned games
+	 * 
+	 * @return array
+	 */
+	public function getGames()
+	{
+		$data = $this->_request('games');
+		if(empty($data))
+			return array();
+		
+		$data = new SimpleXMLElement($data);
+		
+		$this->_data['steamID64'] = (string)$data->steamID64;
+		$this->_data['steamID'] = (string)$data->steamID;
+		
+		$results = array();
+		foreach($data->games->game as $game)
+		{
+			$results[] = (object)array(
+				'appID' => (string)$game->appID,
+				'name' => (string)$game->name,
+				'logo' => (string)$game->logo,
+				'storeLink' => (string)$game->storeLink,
+				'hoursLast2Weeks' => (float)$game->hoursLast2Weeks,
+				'hoursOnRecord' => (int)$game->hoursOnRecord,
+				'statsLink' => (string)$game->statsLink,
+				'globalStatsLink' => (string)$game->globalStatsLink,
+			);
+		}
+		
+		return $results;
+	}
+	
+	
+	/**
+	 * Requests the profile data
+	 */
+	private function _requestData()
+	{
+		$data = $this->_request();
+		if(empty($data))
+			return;
+		
+		$data = new SimpleXMLElement($data);
+		
+		$this->_data = array(
+			'steamID64' => (string)$data->steamID64,
+			'steamID' => (string)$data->steamID,
+			'onlineState' => (string)$data->onlineState,
+			'stateMessage' => (string)$data->stateMessage,
+			'privacyState' => (string)$data->privacyState,
+			'visibilityState' => (int)$data->visibilityState,
+			'avatarIcon' => (string)$data->avatarIcon,
+			'avatarMedium' => (string)$data->avatarMedium,
+			'avatarFull' => (string)$data->avatarFull,
+			'vacBanned' => (int)$data->vacBanned,
+			'tradeBanState' => (string)$data->tradeBanState,
+			'isLimitedAccount' => (int)$data->isLimitedAccount,
+		);
+		
+		if($this->privacyState == 'public')
+		{
+			$this->_data['customURL'] = (string)$data->customURL;
+			$this->_data['memberSince'] = (string)$data->memberSince;
+			$this->_data['steamRating'] = (float)$data->steamRating;
+			$this->_data['hoursPlayed2Wk'] = (float)$data->hoursPlayed2Wk;
+			$this->_data['headline'] = (string)$data->headline;
+			$this->_data['location'] = (string)$data->location;
+			$this->_data['realname'] = (string)$data->realname;
+			$this->_data['summary'] = (string)$data->summary;
+		}
+		if($this->onlineState == 'in-game')
+		{
+			$this->_data['inGameInfo'] = array(
+				'gameName' => (string)$data->inGameInfo->gameName,
+				'gameLink' => (string)$data->inGameInfo->gameLink,
+				'gameIcon' => (string)$data->inGameInfo->gameIcon,
+				'gameLogo' => (string)$data->inGameInfo->gameLogo,
+				'gameLogoSmall' => (string)$data->inGameInfo->gameLogoSmall,
+			);
+		}
+		
+		if(isset($data->mostPlayedGames))
+		{
+			$this->_data['mostPlayedGames'] = array();
+			foreach($data->mostPlayedGames->mostPlayedGame as $mostPlayedGame)
+			{
+				$this->_data['mostPlayedGames'][] = (object)array(
+					'gameName' => (string)$mostPlayedGame->gameName,
+					'gameLink' => (string)$mostPlayedGame->gameLink,
+					'gameIcon' => (string)$mostPlayedGame->gameIcon,
+					'gameLogo' => (string)$mostPlayedGame->gameLogo,
+					'gameLogoSmall' => (string)$mostPlayedGame->gameLogoSmall,
+					'hoursPlayed' => (float)$mostPlayedGame->hoursPlayed,
+					'hoursOnRecord' => (int)$mostPlayedGame->hoursOnRecord,
+					'statsName' => (string)$mostPlayedGame->statsName,
+				);
+			}
+		}
+		if(isset($data->webLinks))
+		{
+			$this->_data['webLinks'] = array();
+			foreach($data->webLinks as $webLink)
+			{
+				$this->_data['webLinks'][] = (object)array(
+					'title' => (string)$mostPlayedGame->title,
+					'link' => (string)$mostPlayedGame->link,
+				);
+			}
+		}
+		if(isset($data->groups))
+		{
+			$this->_data['groups'] = array();
+			foreach($data->groups->group as $group)
+			{
+				$this->_data['groups'][] = (object)array(
+					'groupID64' => (string)$group->groupID64,
+					'groupName' => (string)$group->groupName,
+					'groupURL' => (string)$group->groupURL,
+					'headline' => (string)$group->headline,
+					'summary' => (string)$group->summary,
+					'avatarIcon' => (string)$group->avatarIcon,
+					'avatarMedium' => (string)$group->avatarMedium,
+					'avatarFull' => (string)$group->avatarFull,
+					'memberCount' => (int)$group->memberCount,
+					'membersInChat' => (int)$group->membersInChat,
+					'membersInGame' => (int)$group->membersInGame,
+					'membersOnline' => (int)$group->membersOnline,
+					'isPrimary' => (int)$group['isPrimary'],
+				);
+			}
+		}
+	}
+	
+	/**
+	 * Normalizes a request
+	 * 
+	 * @param string $path
+	 * @param array $data
+	 * @return string
+	 */
+	private function _request($path = '', $data = array())
+	{
+		$path = (is_numeric($this->_id) ? 'profiles/' . $this->_id : 'id/' . $this->_id)
+		      . (!empty($path) ? '/' . $path : '');
+		
+		return SteamCommunity::request($path, $data);
+	}
+}

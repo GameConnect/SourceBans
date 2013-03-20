@@ -57,14 +57,6 @@ class KeyValues extends ArrayObject
 	public function __set($name, $value) {}
 	
 	/**
-	 * Serializes key values data and root section name
-	 */
-	public function __sleep()
-	{
-		return array('_data', '_name');
-	}
-	
-	/**
 	 * Returns a string representation of the data
 	 * 
 	 * @return string The string representation of the data
@@ -117,6 +109,17 @@ class KeyValues extends ArrayObject
 	}
 	
 	/**
+	 * Serializes key values data and root section name
+	 */
+	public function serialize()
+	{
+		return serialize(array(
+			'data' => parent::serialize(),
+			'name' => $this->_name,
+		));
+	}
+	
+	/**
 	 * Returns an array representation of the data
 	 * 
 	 * @return array The array representation of the data
@@ -124,6 +127,17 @@ class KeyValues extends ArrayObject
 	public function toArray()
 	{
 		return $this->getArrayCopy();
+	}
+	
+	/**
+	 * Unserializes key values data and root section name
+	 */
+	public function unserialize($data)
+	{
+		$data        = unserialize($data);
+		$this->_name = $data['name'];
+		
+		parent::unserialize($data['data']);
 	}
 	
 	

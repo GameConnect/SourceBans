@@ -1,9 +1,10 @@
 <?php
 /* @var $this AdminController */
 /* @var $plugins SBPlugin[] */
+/* @var $settings SettingsForm */
 ?>
     <section class="tab-pane fade" id="pane-settings">
-<?php echo $this->renderPartial('/settings/_form') ?>
+<?php echo $this->renderPartial('/settings/_form', array('model'=>$settings)) ?>
 
     </section>
     <section class="tab-pane fade" id="pane-plugins">

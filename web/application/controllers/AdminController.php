@@ -231,6 +231,7 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
 			array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'Server configuration'), 'url'=>array('servers/config'), 'visible'=>Yii::app()->user->data->hasFlag(SM_CONFIG)),
 		);
 		
 		$server=new SBServer;
@@ -263,17 +264,20 @@ class AdminController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
 		);
 		
-		if(isset($_POST['settings']))
+		$model=new SettingsForm;
+		
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='settings-form')
 		{
-			$settings = SBSetting::model()->findAll(array('index' => 'name'));
-			
-			foreach($_POST['settings'] as $name => $value)
-			{
-				$settings[$name]->value = $value;
-				$settings[$name]->save();
-			}
-			
-			$this->redirect(array('','#'=>'settings'));
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+		
+		if(isset($_POST['SettingsForm']))
+		{
+			$model->attributes=$_POST['SettingsForm'];
+			if($model->validate() && $model->save())
+				$this->redirect(array('','#'=>'settings'));
 		}
 		
 		// Find new plugins and save to database
@@ -305,6 +309,7 @@ class AdminController extends Controller
 		
 		$this->render('settings',array(
 			'plugins'=>$plugins,
+			'settings'=>$model,
 		));
 	}
 	

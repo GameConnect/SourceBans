@@ -229,7 +229,7 @@ class AdminsController extends Controller
 				
 				break;
 			default:
-				throw new CHttpException(500, Yii::t('sourcebans', 'Unsupported format'));
+				throw new CHttpException(500, Yii::t('sourcebans', 'Unsupported format.'));
 		}
 		
 		$this->redirect(array('admin/admins'));

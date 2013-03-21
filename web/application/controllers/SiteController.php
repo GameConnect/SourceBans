@@ -31,12 +31,40 @@ class SiteController extends Controller
 	}
 
 	/**
+	 * @return array action filters
+	 */
+	public function filters()
+	{
+		return array(
+			'accessControl', // perform access control for CRUD operations
+		);
+	}
+
+	/**
+	 * Specifies the access control rules.
+	 * This method is used by the 'accessControl' filter.
+	 * @return array access control rules
+	 */
+	public function accessRules()
+	{
+		return array(
+			array('deny',  // deny anonymous users
+				'actions'=>array('account'),
+				'users'=>array('?'),
+			),
+			array('allow', // allow all users
+				'users'=>array('*'),
+			),
+		);
+	}
+
+	/**
 	 * This is the default 'index' action that is invoked
 	 * when an action is not explicitly requested by users.
 	 */
 	public function actionIndex()
 	{
-		$defaultAction = "action" . ucfirst(SourceBans::app()->settings->default_page);
+		$defaultAction = 'action' . ucfirst(SourceBans::app()->settings->default_page);
 		
 		$this->$defaultAction();
 	}
@@ -167,6 +195,57 @@ class SiteController extends Controller
 	}
 
 	/**
+	 * Displays the account page
+	 */
+	public function actionAccount()
+	{
+		$this->layout='//layouts/column2';
+		
+		$this->pageTitle=Yii::t('sourcebans', 'Your account');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Your account'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'View permissions'), 'url'=>'#permissions'),
+			array('label'=>Yii::t('sourcebans', 'Settings'), 'url'=>'#settings'),
+			array('label'=>Yii::t('sourcebans', 'Email'), 'url'=>'#email'),
+			array('label'=>Yii::t('sourcebans', 'Password'), 'url'=>'#password'),
+			array('label'=>Yii::t('sourcebans', 'Server password'), 'url'=>'#server-password'),
+		);
+		
+		$model=new AccountForm;
+
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && in_array($_POST['ajax'],array(
+			'email-form',
+			'password-form',
+			'server-password-form',
+			'settings-form',
+		)))
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+		// collect user input data
+		if(isset($_POST['AccountForm']))
+		{
+			$model->setScenario($_POST['scenario']);
+			$model->attributes=$_POST['AccountForm'];
+			// validate user input and redirect to the previous page if valid
+			if($model->validate() && $model->save())
+				$this->redirect(array('','#'=>'permissions'));
+		}
+
+		// display the account form
+		$this->render('account', array(
+			'model' => $model,
+		));
+	}
+
+	/**
 	 * This is the action to handle external exceptions.
 	 */
 	public function actionError()
@@ -225,5 +304,65 @@ class SiteController extends Controller
 	{
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
+	}
+
+	/**
+	 * Displays the lost password page
+	 */
+	public function actionLostPassword()
+	{
+		$this->pageTitle=Yii::t('sourcebans', 'Lost password');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Lost password'),
+		);
+		
+		$model=new LostPasswordForm;
+
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='lost-password-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+
+		// collect user input data
+		if(isset($_POST['LostPasswordForm']))
+		{
+			$model->attributes=$_POST['LostPasswordForm'];
+			// validate user input and redirect to the previous page if valid
+			if($model->validate() && $model->reset())
+				$this->redirect(Yii::app()->user->returnUrl);
+		}
+
+		$email = Yii::app()->request->getQuery('email');
+		$validationKey = Yii::app()->request->getQuery('key');
+		if(!empty($email) && !empty($validationKey))
+		{
+			$admin = SBAdmin::model()->findByAttributes(array(
+				'email' => $email,
+				'validate' => $validationKey,
+			));
+			if($admin === null)
+				throw new CHttpException(403, 'The validation key does not match the email address for this reset request.');
+			
+			$password = substr(str_shuffle('qwertyuiopasdfghjklmnbvcxz0987612345'), 0, 8);
+			Yii::app()->mailer->AddAddress($admin->email);
+			Yii::app()->mailer->Subject = Yii::t('sourcebans', 'SourceBans password reset');
+			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'Hello {name},\nYour password reset was successful.\nYour password was changed to: {password}\n\nLogin to your SourceBans account and change your password in {link}.', array(
+				'{name}' => $admin->name,
+				'{link}' => CHtml::link(Yii::t('sourcebans', 'Your account'), array('site/account')),
+			)));
+			if(!Yii::app()->mailer->Send())
+				throw new CHttpException(500, 'Please try again later or contact your system administrator.');
+			
+			$admin->setPassword($password);
+			$admin->validate = null;
+			$admin->save();
+			$this->redirect(Yii::app()->user->homeUrl);
+		}
+
+		// display the lost password form
+		$this->render('lostpassword',array('model'=>$model));
 	}
 }

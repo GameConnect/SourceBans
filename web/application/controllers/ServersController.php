@@ -43,6 +43,10 @@ class ServersController extends Controller
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("EDIT_SERVERS")',
 			),
 			array('allow',
+				'actions'=>array('config'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasFlag(SM_CONFIG)',
+			),
+			array('allow',
 				'actions'=>array('kick'),
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasFlag(SM_KICK)',
 			),
@@ -170,6 +174,8 @@ class ServersController extends Controller
 
 	public function actionRcon($id)
 	{
+		$model=$this->loadModel($id);
+		
 		$this->pageTitle=Yii::t('sourcebans', 'Remote Console');
 		
 		$this->breadcrumbs=array(
@@ -182,7 +188,6 @@ class ServersController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
 		);
 		
-		$model=$this->loadModel($id);
 		if(empty($model->rcon) || (!$model->enabled && !Yii::app()->user->data->hasPermission('OWNER')))
 			throw new CHttpException(403);
 		
@@ -201,6 +206,23 @@ class ServersController extends Controller
 		$response = $this->_rconServer('kick "' . addslashes($name) . '"', $id);
 		
 		Yii::app()->end(CJSON::encode($response));
+	}
+	
+	public function actionConfig()
+	{
+		$this->pageTitle=Yii::t('sourcebans', 'Server configuration');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'Administration') => array('admin/index'),
+			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
+			Yii::t('sourcebans', 'Server configuration'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
+		);
+		
+		$this->render('config');
 	}
 
 	/**

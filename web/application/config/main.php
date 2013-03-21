@@ -46,6 +46,7 @@ return CMap::mergeArray(
 			),
 			'mailer'=>array(
 				'class'=>'ext.swiftMailer.SwiftMailer',
+				'From'=>'noreply@'.$_SERVER['HTTP_HOST'],
 			),
 		),
 	),

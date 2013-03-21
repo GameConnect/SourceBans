@@ -1,6 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $model LoginForm */
+/* @var $form CActiveForm */
 ?>
     <div class="row">
       <section class="span12">
@@ -8,6 +9,7 @@
 	'id' => 'login-form',
 	'enableClientValidation' => true,
 	'clientOptions' => array(
+		'inputContainer'=>'.control-group',
 		'validateOnSubmit' => true,
 	),
 )) ?>
@@ -30,6 +32,7 @@
             </div>
             <div>
               <?php echo CHtml::submitButton(Yii::t('sourcebans', 'Login'), array('class' => 'btn btn-success')); ?>
+              <div class="help-inline"><?php echo CHtml::link(Yii::t('sourcebans', 'Lost password'), array('site/lostPassword')) ?></div>
             </div>
           </fieldset>
 <?php $this->endWidget() ?>

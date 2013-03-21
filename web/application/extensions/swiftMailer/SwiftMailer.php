@@ -55,7 +55,18 @@ class SwiftMailer extends CComponent
 
 	public function init()
 	{
-		require_once(dirname(__FILE__) . '/lib/swift_required.php');
+		if (!class_exists('Swift', false)) {
+			require_once(dirname(__FILE__) . '/lib/classes/Swift.php');
+			// Register SwiftMailer's autoloader before Yii for correct class loading.
+			Yii::registerAutoloader(array('Swift', 'autoload'));
+			// Include the SwiftMailer Dependencies
+			require_once dirname(__FILE__) . '/lib/dependency_maps/cache_deps.php';
+			require_once dirname(__FILE__) . '/lib/dependency_maps/mime_deps.php';
+			require_once dirname(__FILE__) . '/lib/dependency_maps/message_deps.php';
+			require_once dirname(__FILE__) . '/lib/dependency_maps/transport_deps.php';
+			// Load in global library preferences
+			require_once dirname(__FILE__) . '/lib/preferences.php';
+		}
 	}
 
 	public function AddAddress($address)

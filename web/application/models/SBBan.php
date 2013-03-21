@@ -22,6 +22,8 @@
  * @property string $unban_reason Unban reason
  * @property integer $unban_time Unbanned on
  * @property integer $time Date/Time
+ * @property object $community Steam Community data for Steam Community ID
+ * @property integer $communityId Steam Community ID
  * @property object $country Country data for IP address
  *
  * The followings are the available model relations:
@@ -45,7 +47,7 @@ class SBBan extends CActiveRecord
 	/**
 	 * @var integer Steam Community ID
 	 */
-	public $community_id;
+	protected $ban_community_id;
 	
 	
 	/**
@@ -134,6 +136,7 @@ class SBBan extends CActiveRecord
 			'unban_reason' => Yii::t('sourcebans', 'Unban reason'),
 			'unban_time' => 'Unbanned on',
 			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'community_id' => Yii::t('sourcebans', 'Steam Community ID'),
 			'demo.filename' => Yii::t('sourcebans', 'Demo'),
 		);
 	}
@@ -227,6 +230,35 @@ class SBBan extends CActiveRecord
 				'updateAttribute' => null,
 			),
 		);
+	}
+	
+	/**
+	 * Returns the Steam Community data for Steam Community ID
+	 * 
+	 * @return object the Steam Community data for Steam Community ID
+	 */
+	public function getCommunity()
+	{
+		if(empty($this->communityId))
+			return null;
+		
+		static $_data;
+		if(!isset($_data))
+		{
+			$_data = new SteamProfile($this->communityId);
+		}
+		
+		return $_data;
+	}
+	
+	/**
+	 * Returns the Steam Community ID
+	 * 
+	 * @return object the Steam Community ID
+	 */
+	public function getCommunityId()
+	{
+		return $this->ban_community_id;
 	}
 	
 	/**
@@ -324,7 +356,7 @@ class SBBan extends CActiveRecord
 		
 		// Select community ID
 		$select=array(
-			'CAST("76561197960265728" AS UNSIGNED) + CAST(MID('.$t.'.steam, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.steam, 11, 10) * 2 AS UNSIGNED) AS community_id',
+			'CAST("76561197960265728" AS UNSIGNED) + CAST(MID('.$t.'.steam, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.steam, 11, 10) * 2 AS UNSIGNED) AS ban_community_id',
 		);
 		if($this->dbCriteria->select==='*')
 		{

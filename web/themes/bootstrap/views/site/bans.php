@@ -90,7 +90,7 @@
 		"data-reason"=>$data->reason,
 		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
 		"data-server-id"=>$data->server_id,
-		"data-community-id"=>$data->community_id,
+		"data-community-id"=>$data->communityId,
 	)',
 	'selectableRows'=>0,
 	'summaryText'=>CHtml::link(Yii::t('sourcebans', $hideInactive == 'true' ? 'Show inactive' : 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',

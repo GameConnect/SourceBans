@@ -18,10 +18,13 @@
  * @property string $email Email address
  * @property string $language Language
  * @property string $theme Theme
+ * @property string $timezone Timezone
  * @property string $srv_password Server password
  * @property string $validate Validation key
  * @property integer $lastvisit Last visit
- * @property string $flags Server flags
+ * @property object $community Steam Community data for Steam Community ID
+ * @property integer $communityId Steam Community ID
+ * @property string $flags Server permissions
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
@@ -41,6 +44,11 @@ class SBAdmin extends CActiveRecord
 	const IP_AUTH    = 'ip';
 	const NAME_AUTH  = 'name';
 	const STEAM_AUTH = 'steam';
+	
+	/**
+	 * @var integer Steam Community ID
+	 */
+	protected $admin_community_id;
 	
 	
 	public function __toString()
@@ -83,9 +91,8 @@ class SBAdmin extends CActiveRecord
 			array('password, srv_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('email', 'email'),
 			array('email', 'length', 'max'=>128),
-			array('language', 'length', 'max'=>2),
-			array('theme', 'length', 'max'=>32),
-			array('server_groups', 'safe'),
+			array('language, theme, timezone, srv_password', 'default', 'setOnEmpty'=>true),
+			array('password_key, validate, lastvisit, server_groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, auth, identity, password, group_id, email, language, theme, srv_password, lastvisit', 'safe', 'on'=>'search'),
@@ -129,6 +136,8 @@ class SBAdmin extends CActiveRecord
 			'srv_password' => Yii::t('sourcebans', 'Server password'),
 			'validate' => 'Validation key',
 			'lastvisit' => Yii::t('sourcebans', 'Last visit'),
+			'community_id' => Yii::t('sourcebans', 'Steam Community ID'),
+			'flags' => Yii::t('sourcebans', 'Server permissions'),
 			'group.name' => Yii::t('sourcebans', 'Web group'),
 			'server_groups.name' => Yii::t('sourcebans', 'Server groups'),
 		);
@@ -185,6 +194,35 @@ class SBAdmin extends CActiveRecord
 				'class'=>'ext.EActiveRecordRelationBehavior',
 			),
 		);
+	}
+	
+	/**
+	 * Returns the Steam Community data for Steam Community ID
+	 * 
+	 * @return object the Steam Community data for Steam Community ID
+	 */
+	public function getCommunity()
+	{
+		if(empty($this->communityId))
+			return null;
+		
+		static $_data;
+		if(!isset($_data))
+		{
+			$_data = new SteamProfile($this-communityId);
+		}
+		
+		return $_data;
+	}
+	
+	/**
+	 * Returns the Steam Community ID
+	 * 
+	 * @return object the Steam Community ID
+	 */
+	public function getCommunityId()
+	{
+		return $this->admin_community_id;
 	}
 	
 	/**
@@ -360,5 +398,25 @@ class SBAdmin extends CActiveRecord
 	public static function getPasswordKey()
 	{
 		return sprintf('%08x%08x%08x%08x', mt_rand(), mt_rand(), mt_rand(), mt_rand());
+	}
+	
+	
+	protected function beforeFind()
+	{
+		$t = $this->tableAlias;
+		
+		// Select community ID
+		$select=array(
+			'(CASE '.$t.'.auth WHEN "'.self::STEAM_AUTH.'" THEN CAST("76561197960265728" AS UNSIGNED) + CAST(MID('.$t.'.identity, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.identity, 11, 10) * 2 AS UNSIGNED) END) AS admin_community_id',
+		);
+		if($this->dbCriteria->select==='*')
+		{
+			array_unshift($select,'*');
+		}
+		$this->dbCriteria->mergeWith(array(
+			'select'=>$select,
+		));
+		
+		return parent::beforeFind();
 	}
 }

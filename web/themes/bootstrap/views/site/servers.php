@@ -189,6 +189,8 @@
   
   $("#player-kick").click(function() {
     var id = $("#servers-grid tr.selected").data("key");
+    if(!confirm("' . Yii::t('sourcebans', 'Are you sure you want to kick {name}?') . '".replace("{name}", $("#player-menu").data("name"))))
+	    return;
     
     $.post("' . $this->createUrl('servers/kick', array('id' => '__ID__')) . '".replace("__ID__", id), {
       name: $("#player-menu").data("name")

@@ -14,8 +14,8 @@
 class SettingsForm extends CFormModel
 {
 	private $_data = array();
-	
-	
+
+
 	public function __get($name)
 	{
 		if(property_exists(SourceBans::app()->settings, $name))
@@ -23,7 +23,7 @@ class SettingsForm extends CFormModel
 		
 		return parent::__get($name);
 	}
-	
+
 	public function __set($name, $value)
 	{
 		if(property_exists(SourceBans::app()->settings, $name))
@@ -31,6 +31,7 @@ class SettingsForm extends CFormModel
 		
 		parent::__set($name, $value);
 	}
+	
 
 	/**
 	 * @return array validation rules for model attributes.
@@ -38,9 +39,10 @@ class SettingsForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('dashboard_text, dashboard_title, default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
+			array('default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
 			array('bans_hide_admin, bans_hide_ip, bans_public_export, disable_log_popup, enable_protest, enable_smtp, enable_submit', 'boolean'),
 			array('items_per_page, password_min_length, smtp_port', 'numerical', 'integerOnly'=>true, 'min'=>1),
+			array('dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure', 'safe'),
 		);
 	}
 
@@ -50,11 +52,13 @@ class SettingsForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
+			'dashboard_text' => '',
+			'dashboard_title' => Yii::t('sourcebans', 'Title'),
 			'bans_hide_admin' => Yii::t('sourcebans', 'Hide admins'),
 			'bans_hide_ip' => Yii::t('sourcebans', 'Hide IP addresses'),
 			'bans_public_export' => Yii::t('sourcebans', 'Enable public export'),
 			'date_format' => Yii::t('sourcebans', 'Date format'),
-			'defualt_page' => Yii::t('sourcebans', 'Default page'),
+			'default_page' => Yii::t('sourcebans', 'Default page'),
 			'enable_protest' => Yii::t('sourcebans', 'Enable Protest ban'),
 			'enable_smtp' => Yii::t('sourcebans', 'Enable SMTP'),
 			'enable_submit' => Yii::t('sourcebans', 'Enable Submit ban'),
@@ -81,7 +85,7 @@ class SettingsForm extends CFormModel
 		
 		foreach($this->_data as $name => $value)
 		{
-			$settings[$name]->value = $value;
+			$settings[$name]->value = trim($value);
 			$settings[$name]->save();
 		}
 		

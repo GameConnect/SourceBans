@@ -1,0 +1,20 @@
+/* 
+    Document   : ETinyMce.css
+    Created on : 9/01/2009, 01:55:27 PM
+    Author     : MetaYii
+    Description:
+        Style for the editor mode switch
+*/
+
+.mceSwitchLabel {
+   color:navy;
+   font-family:sans-serif;
+   font-size:8pt;
+   background-color:#F0F0EE;
+   border-style:solid;
+   border-width:0px 1px 1px 1px;
+   border-color:#CCCCCC;
+   text-decoration:none;
+   padding:1px 3px 3px 3px;
+   margin:2px 0 0 0;
+}

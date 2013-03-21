@@ -86,6 +86,45 @@
 </fieldset>
 
 <fieldset>
+  <legend><?php echo Yii::t('sourcebans', 'Dashboard') ?></legend>
+  <div class="control-group">
+    <?php echo $form->labelEx($model,'dashboard_title',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php echo $form->textField($model,'dashboard_title',array('class'=>'span6','size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'dashboard_title'); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <?php $this->widget('ext.tinymce.ETinyMce', array(
+      'model'=>$model,
+      'attribute'=>'dashboard_text',
+      'contentCSS'=>implode(',', array(
+        Yii::app()->assetManager->getPublishedUrl(Yii::getPathOfAlias('bootstrap.assets'), true) . '/css/bootstrap.min.css',
+        Yii::app()->assetManager->getPublishedUrl(Yii::getPathOfAlias('bootstrap.assets'), true) . '/css/yii.css',
+        Yii::app()->theme->baseUrl . '/css/style.css',
+        Yii::app()->theme->baseUrl . '/css/tinymce.css',
+      )),
+      'editorTemplate'=>'full',
+      'height'=>'300px',
+      'options'=>array(
+        'document_base_url'=>Yii::app()->request->hostInfo.Yii::app()->baseUrl.'/',
+				'plugins'=>'advhr,advimage,advlink,contextmenu,directionality,emotions,inlinepopups,media,nonbreaking,noneditable,paste,style,table,xhtmlxtras',
+        'schema'=>'html5',
+				'theme_advanced_buttons1'=>'bold,italic,underline,strikethrough,sub,sup,|,justifyleft,justifycenter,justifyright,justifyfull,|,forecolor,backcolor,formatselect,styleselect,styleprops,removeformat,|,advhr,charmap,emotions,image,media,|,code',
+				'theme_advanced_buttons2'=>'cut,copy,paste,|,undo,redo,|,bullist,numlist,outdent,indent,|,link,unlink,cite,abbr,acronym,ins,del,|,tablecontrols',
+				'theme_advanced_buttons3'=>'',
+				'theme_advanced_buttons4'=>'',
+				'theme_advanced_resize_horizontal'=>false,
+				'theme_advanced_resizing_min_height'=>300,
+      ),
+      'useSwitch'=>false,
+      'width'=>'100%',
+    )); ?>
+  </div>
+</fieldset>
+
+<fieldset>
   <legend><?php echo Yii::t('sourcebans', 'Bans') ?></legend>
   <div class="control-group">
     <?php echo $form->labelEx($model,'items_per_page',array('class' => 'control-label')); ?>

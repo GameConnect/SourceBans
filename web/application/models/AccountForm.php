@@ -33,6 +33,7 @@ class AccountForm extends CFormModel
 		return parent::__get($name);
 	}
 
+
 	public function init()
 	{
 		foreach($this->attributes as $name => $value)
@@ -113,7 +114,7 @@ class AccountForm extends CFormModel
 		Yii::app()->user->data->save();
 		return true;
 	}
-	
+
 	public function validateCurrentPassword()
 	{
 		return Yii::app()->user->data->validatePassword($this->current_password);

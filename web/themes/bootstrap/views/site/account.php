@@ -1,6 +1,7 @@
 <?php
 /* @var $this SiteController */
 /* @var $model AccountForm */
+/* @var $form CActiveForm */
 ?>
     <section class="tab-pane fade" id="pane-permissions">
       <div class="row-fluid">

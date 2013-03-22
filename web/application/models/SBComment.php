@@ -106,14 +106,14 @@ class SBComment extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('ban_id',$this->ban_id);
-		$criteria->compare('admin_id',$this->admin_id);
-		$criteria->compare('message',$this->message,true);
-		$criteria->compare('time',$this->time,true);
-		$criteria->compare('edit_admin_id',$this->edit_admin_id);
-		$criteria->compare('edit_time',$this->edit_time,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.type',$this->type,true);
+		$criteria->compare('t.ban_id',$this->ban_id);
+		$criteria->compare('t.admin_id',$this->admin_id);
+		$criteria->compare('t.message',$this->message,true);
+		$criteria->compare('t.time',$this->time,true);
+		$criteria->compare('t.edit_admin_id',$this->edit_admin_id);
+		$criteria->compare('t.edit_time',$this->edit_time,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

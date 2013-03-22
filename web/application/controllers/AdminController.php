@@ -112,6 +112,7 @@ class AdminController extends Controller
 			array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
 			array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
 			array('label'=>Yii::t('sourcebans', 'Import admins'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'Actions'), 'url'=>'#actions'),
 		);
 		
 		$admin=new SBAdmin;
@@ -121,7 +122,13 @@ class AdminController extends Controller
 		if(isset($_GET['SBAdmin']))
 			$admins->attributes=$_GET['SBAdmin'];
 		
+		$actions=new SBAction('search');
+		$actions->unsetAttributes();  // clear any default values
+		if(isset($_GET['SBAction']))
+			$actions->attributes=$_GET['SBAction'];
+		
 		$this->render('admins',array(
+			'actions'=>$actions,
 			'admin'=>$admin,
 			'admins'=>$admins,
 		));
@@ -262,6 +269,7 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'Settings'), 'url'=>'#settings'),
 			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
+			array('label'=>Yii::t('sourcebans', 'Logs'), 'url'=>'#logs'),
 		);
 		
 		$model=new SettingsForm;
@@ -307,7 +315,13 @@ class AdminController extends Controller
 		
 		$plugins=SBPlugin::model()->findAll();
 		
+		$logs=new SBLog('search');
+		$logs->unsetAttributes();  // clear any default values
+		if(isset($_GET['SBLog']))
+			$logs->attributes=$_GET['SBLog'];
+		
 		$this->render('settings',array(
+			'logs'=>$logs,
 			'plugins'=>$plugins,
 			'settings'=>$model,
 		));

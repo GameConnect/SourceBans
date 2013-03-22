@@ -107,16 +107,17 @@ class SBLog extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with='admin';
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('message',$this->message,true);
-		$criteria->compare('function',$this->function,true);
-		$criteria->compare('query',$this->query,true);
-		$criteria->compare('admin_id',$this->admin_id);
-		$criteria->compare('admin_ip',$this->admin_ip,true);
-		$criteria->compare('time',$this->time);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.type',$this->type);
+		$criteria->compare('t.title',$this->title,true);
+		$criteria->compare('t.message',$this->message,true);
+		$criteria->compare('t.function',$this->function,true);
+		$criteria->compare('t.query',$this->query,true);
+		$criteria->compare('t.admin_id',$this->admin_id);
+		$criteria->compare('t.admin_ip',$this->admin_ip,true);
+		$criteria->compare('t.time',$this->time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -139,6 +140,16 @@ class SBLog extends CActiveRecord
 				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
+		);
+	}
+	
+	
+	public static function getTypes()
+	{
+		return array(
+			self::ERROR_TYPE       => Yii::t('sourcebans', 'Error'),
+			self::INFORMATION_TYPE => Yii::t('sourcebans', 'Information'),
+			self::WARNING_TYPE     => Yii::t('sourcebans', 'Warning'),
 		);
 	}
 	

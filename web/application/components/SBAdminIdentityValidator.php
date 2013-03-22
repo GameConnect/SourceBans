@@ -16,10 +16,10 @@ class SBAdminIdentityValidator extends CRegularExpressionValidator
 		switch($object->auth)
 		{
 			case SBAdmin::STEAM_AUTH:
-				$this->pattern = '/^STEAM_[0-9]:[0-9]:[0-9]+$/';
+				$this->pattern = SourceBans::STEAM_PATTERN;
 				break;
 			case SBAdmin::IP_AUTH:
-				$this->pattern = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+				$this->pattern = SourceBans::IP_PATTERN;
 				break;
 			default:
 				return;
@@ -34,10 +34,10 @@ class SBAdminIdentityValidator extends CRegularExpressionValidator
 		switch($object->auth)
 		{
 			case SBAdmin::STEAM_AUTH:
-				$this->pattern = '/^STEAM_[0-9]:[0-9]:[0-9]+$/';
+				$this->pattern = SourceBans::STEAM_PATTERN;
 				break;
 			case SBAdmin::IP_AUTH:
-				$this->pattern = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+				$this->pattern = SourceBans::IP_PATTERN;
 				break;
 			default:
 				return;

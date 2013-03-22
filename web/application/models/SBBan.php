@@ -163,20 +163,20 @@ class SBBan extends CActiveRecord
 			$criteria->compare('t.ip',$search,true,'OR');
 			$criteria->compare('t.name',$search,true,'OR');
 		}
-		$criteria->compare('id',$this->id);
-		$criteria->compare('type',$this->type);
-		$criteria->compare('steam',$this->steam,true);
-		$criteria->compare('ip',$this->ip,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('reason',$this->reason,true);
-		$criteria->compare('length',$this->length);
-		$criteria->compare('server_id',$this->server_id);
-		$criteria->compare('admin_id',$this->admin_id);
-		$criteria->compare('admin_ip',$this->admin_ip,true);
-		$criteria->compare('unban_admin_id',$this->unban_admin_id);
-		$criteria->compare('unban_reason',$this->unban_reason,true);
-		$criteria->compare('unban_time',$this->unban_time);
-		$criteria->compare('time',$this->time);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.type',$this->type);
+		$criteria->compare('t.steam',$this->steam,true);
+		$criteria->compare('t.ip',$this->ip,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.reason',$this->reason,true);
+		$criteria->compare('t.length',$this->length);
+		$criteria->compare('t.server_id',$this->server_id);
+		$criteria->compare('t.admin_id',$this->admin_id);
+		$criteria->compare('t.admin_ip',$this->admin_ip,true);
+		$criteria->compare('t.unban_admin_id',$this->unban_admin_id);
+		$criteria->compare('t.unban_reason',$this->unban_reason,true);
+		$criteria->compare('t.unban_time',$this->unban_time);
+		$criteria->compare('t.time',$this->time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -374,9 +374,15 @@ class SBBan extends CActiveRecord
 		if($this->isNewRecord)
 		{
 			if(!Yii::app()->user->isGuest)
+			{
 				$this->admin_id = Yii::app()->user->id;
+			}
 			
 			$this->admin_ip = $_SERVER['SERVER_ADDR'];
+		}
+		if(!empty($this->steam))
+		{
+			$this->steam = strtoupper($this->steam);
 		}
 		
 		return parent::beforeSave();

@@ -18,7 +18,7 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 			case SBBan::STEAM_TYPE:
 				if($attribute == 'steam')
 				{
-					$this->pattern = '/^STEAM_[0-9]:[0-9]:[0-9]+$/';
+					$this->pattern = SourceBans::STEAM_PATTERN;
 					$this->allowEmpty = false;
 				}
 				else
@@ -27,7 +27,7 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 			case SBBan::IP_TYPE:
 				if($attribute == 'ip')
 				{
-					$this->pattern = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+					$this->pattern = SourceBans::IP_PATTERN;
 					$this->allowEmpty = false;
 				}
 				else
@@ -48,7 +48,7 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 			case SBBan::STEAM_TYPE:
 				if($attribute == 'steam')
 				{
-					$this->pattern = '/^STEAM_[0-9]:[0-9]:[0-9]+$/';
+					$this->pattern = SourceBans::STEAM_PATTERN;
 					$this->allowEmpty = false;
 				}
 				else
@@ -57,7 +57,7 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 			case SBBan::IP_TYPE:
 				if($attribute == 'ip')
 				{
-					$this->pattern = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+					$this->pattern = SourceBans::IP_PATTERN;
 					$this->allowEmpty = false;
 				}
 				else

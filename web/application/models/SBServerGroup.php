@@ -110,10 +110,10 @@ class SBServerGroup extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('flags',$this->flags,true);
-		$criteria->compare('immunity',$this->immunity);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.flags',$this->flags,true);
+		$criteria->compare('t.immunity',$this->immunity);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

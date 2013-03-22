@@ -59,8 +59,8 @@ class SBSubmission extends CActiveRecord
 			array('server_id', 'numerical', 'integerOnly'=>true),
 			array('archived', 'boolean'),
 			array('name, subname', 'length', 'max'=>64),
-			array('steam', 'match', 'pattern'=>'/^STEAM_[0-9]:[0-9]:[0-9]+$/'),
-			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
+			array('steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
+			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
 			array('reason', 'length', 'max'=>255),
 			array('subemail', 'length', 'max'=>128),
 			array('subemail', 'email'),
@@ -115,17 +115,17 @@ class SBSubmission extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('steam',$this->steam,true);
-		$criteria->compare('ip',$this->ip,true);
-		$criteria->compare('reason',$this->reason,true);
-		$criteria->compare('server_id',$this->server_id);
-		$criteria->compare('subname',$this->subname,true);
-		$criteria->compare('subemail',$this->subemail,true);
-		$criteria->compare('subip',$this->subip,true);
-		$criteria->compare('archived',$this->archived);
-		$criteria->compare('time',$this->time,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.steam',$this->steam,true);
+		$criteria->compare('t.ip',$this->ip,true);
+		$criteria->compare('t.reason',$this->reason,true);
+		$criteria->compare('t.server_id',$this->server_id);
+		$criteria->compare('t.subname',$this->subname,true);
+		$criteria->compare('t.subemail',$this->subemail,true);
+		$criteria->compare('t.subip',$this->subip,true);
+		$criteria->compare('t.archived',$this->archived);
+		$criteria->compare('t.time',$this->time,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -163,5 +163,15 @@ class SBSubmission extends CActiveRecord
 				'updateAttribute' => null,
 			),
 		);
+	}
+	
+	protected function beforeSave()
+	{
+		if(!empty($this->steam))
+		{
+			$this->steam = strtoupper($this->steam);
+		}
+		
+		return parent::beforeSave();
 	}
 }

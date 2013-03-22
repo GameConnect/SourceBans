@@ -147,9 +147,7 @@ class AdminsController extends Controller
 						
 						if(isset($data['password']))
 						{
-							$passwordKey         = SBAdmin::getPasswordKey();
-							$admin->password     = SBAdmin::getPasswordHash($data['password'], $passwordKey);
-							$admin->password_key = $passwordKey;
+							$admin->setPassword($data['password']);
 							$admin->srv_password = $data['password'];
 						}
 						if(isset($data['group']))
@@ -174,9 +172,9 @@ class AdminsController extends Controller
 						list($identity, $flags, $password) = array($admins[1][$i], $admins[2][$i], $admins[4][$i]);
 						
 						// Parse authentication type depending on identity
-						if(preg_match('/^STEAM_[0-9]:[0-9]:[0-9]+$/', $identity))
+						if(preg_match(SourceBans::STEAM_PATTERN, $identity))
 							$auth = SBAdmin::STEAM_AUTH;
-						else if($identity{0} == '!' && preg_match('/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/', $identity))
+						else if($identity{0} == '!' && preg_match(SourceBans::IP_PATTERN, $identity))
 							$auth = SBAdmin::IP_AUTH;
 						else
 							$auth = SBAdmin::NAME_AUTH;
@@ -198,9 +196,7 @@ class AdminsController extends Controller
 						
 						if(isset($password))
 						{
-							$passwordKey         = SBAdmin::getPasswordKey();
-							$admin->password     = SBAdmin::getPasswordHash($password, $passwordKey);
-							$admin->password_key = $passwordKey;
+							$admin->setPassword($password);
 							$admin->srv_password = $password;
 						}
 						if(isset($group))

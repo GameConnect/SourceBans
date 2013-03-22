@@ -133,10 +133,6 @@ th.length,
 th.ServerQuery_players {
   text-align: right;
 }
-td.SBAdmin_name,
-th.SBAdmin_name {
-  width: 20%;
-}
 td.text-center,
 td.datetime,
 th.text-center,

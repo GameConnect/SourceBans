@@ -133,7 +133,7 @@ class BansController extends Controller
 				continue;
 			
 			// Steam ID
-			if(preg_match('/^STEAM_[0-9]:[0-9]:[0-9]+$/', $identity))
+			if(preg_match(SourceBans::STEAM_PATTERN, $identity))
 			{
 				$ban         = new SBBan;
 				$ban->type   = SBBan::STEAM_TYPE;
@@ -143,7 +143,7 @@ class BansController extends Controller
 				$ban->save();
 			}
 			// IP address
-			else if(preg_match('/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/', $identity))
+			else if(preg_match(SourceBans::IP_PATTERN, $identity))
 			{
 				$ban         = new SBBan;
 				$ban->type   = SBBan::IP_TYPE;

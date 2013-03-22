@@ -93,8 +93,8 @@ class SBGroupPermission extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('group_id',$this->group_id);
-		$criteria->compare('name',$this->name,true);
+		$criteria->compare('t.group_id',$this->group_id);
+		$criteria->compare('t.name',$this->name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

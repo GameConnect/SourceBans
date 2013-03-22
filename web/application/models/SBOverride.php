@@ -93,9 +93,9 @@ class SBOverride extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('flags',$this->flags,true);
+		$criteria->compare('t.type',$this->type,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.flags',$this->flags,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

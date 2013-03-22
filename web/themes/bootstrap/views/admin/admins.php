@@ -1,5 +1,6 @@
 <?php
 /* @var $this AdminController */
+/* @var $actions SBAction */
 /* @var $admin SBAdmin */
 /* @var $admins SBAdmin */
 ?>
@@ -60,3 +61,51 @@
 
     </section>
 <?php endif ?>
+    <section class="tab-pane fade" id="pane-actions">
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'actions-grid',
+	'dataProvider'=>$actions->search(),
+	'columns'=>array(
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'name',
+		),
+		'message',
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'admin.name',
+		),
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'name'=>'time',
+			'type'=>'datetime',
+		),
+	),
+	'cssFile'=>false,
+	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
+	'pager'=>array(
+		'class'=>'bootstrap.widgets.TbPager',
+	),
+	'pagerCssClass'=>'pagination pagination-right',
+	'rowHtmlOptionsExpression'=>'array(
+		"data-id"=>$data->id,
+	)',
+	'selectableRows'=>0,
+)) ?>
+
+    </section>

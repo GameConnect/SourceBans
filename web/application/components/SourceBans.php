@@ -39,6 +39,10 @@ define('SM_ROOT',        'z');
 
 class SourceBans extends CApplicationComponent
 {
+	const IP_PATTERN     = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+	const STATUS_PATTERN = '/#[ ]*([0-9]+) "(.+)" (STEAM_[0-9]:[0-9]:[0-9]+)[ ]{1,2}([0-9]+[:[0-9]+) ([0-9]+)[ ]([0-9]+) ([a-zA-Z]+) ([0-9.:]+)/';
+	const STEAM_PATTERN  = '/^STEAM_[0-9]:[0-9]:[0-9]+$/i';
+	
 	private static $_app;
 	
 	

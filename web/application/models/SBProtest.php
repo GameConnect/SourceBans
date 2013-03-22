@@ -102,13 +102,13 @@ class SBProtest extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('ban_id',$this->ban_id);
-		$criteria->compare('reason',$this->reason,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('ip',$this->ip,true);
-		$criteria->compare('archived',$this->archived);
-		$criteria->compare('time',$this->time,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.ban_id',$this->ban_id);
+		$criteria->compare('t.reason',$this->reason,true);
+		$criteria->compare('t.email',$this->email,true);
+		$criteria->compare('t.ip',$this->ip,true);
+		$criteria->compare('t.archived',$this->archived);
+		$criteria->compare('t.time',$this->time,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

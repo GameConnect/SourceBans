@@ -1,5 +1,6 @@
 <?php
 /* @var $this AdminController */
+/* @var $logs SBLog */
 /* @var $plugins SBPlugin[] */
 /* @var $settings SettingsForm */
 ?>
@@ -79,6 +80,49 @@
 	'selectableRows'=>0,
 	'summaryCssClass'=>'',
 	'summaryText'=>false,
+)) ?>
+
+    </section>
+    <section class="tab-pane fade" id="pane-logs">
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'logs-grid',
+	'dataProvider'=>$logs->search(),
+	'columns'=>array(
+		array(
+			'header'=>false,
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'type',
+			'type'=>'raw',
+			'value'=>'($types = SBLog::getTypes()) ? $types[$data->type] : null',
+		),
+		'title',
+		'admin.name',
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap text-right',
+			),
+			'name'=>'time',
+			'type'=>'datetime',
+		),
+	),
+	'cssFile'=>false,
+	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
+	'pager'=>array(
+		'class'=>'bootstrap.widgets.TbPager',
+	),
+	'pagerCssClass'=>'pagination pagination-right',
+	'rowHtmlOptionsExpression'=>'array(
+		"data-id"=>$data->id,
+	)',
+	'selectableRows'=>0,
 )) ?>
 
     </section>

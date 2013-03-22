@@ -120,8 +120,8 @@ class SBPlugin extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('class',$this->class,true);
-		$criteria->compare('status',$this->status);
+		$criteria->compare('t.class',$this->class,true);
+		$criteria->compare('t.status',$this->status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

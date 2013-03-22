@@ -100,10 +100,10 @@ class SBServerGroupOverride extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('group_id',$this->group_id);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('access',$this->access,true);
+		$criteria->compare('t.group_id',$this->group_id);
+		$criteria->compare('t.type',$this->type,true);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.access',$this->access,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

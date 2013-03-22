@@ -51,10 +51,10 @@
 		array(
 			'header'=>Yii::t('sourcebans', 'Admin'),
 			'headerHtmlOptions'=>array(
-				'class'=>'SBAdmin_name',
+				'class'=>'SBAdmin_name span3',
 			),
 			'htmlOptions'=>array(
-				'class'=>'SBAdmin_name',
+				'class'=>'SBAdmin_name span3',
 			),
 			'name'=>'admin.name',
 			'value'=>'isset($data->admin) ? $data->admin->name : "CONSOLE"',
@@ -95,6 +95,13 @@
 	'selectableRows'=>0,
 	'summaryText'=>CHtml::link(Yii::t('sourcebans', $hideInactive == 'true' ? 'Show inactive' : 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
 )) ?><!-- bans grid -->
+
+<?php if(SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))): ?>
+      <div class="pull-left">
+      <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent Steam ID bans'), array('bans/export', 'type' => 'steam')) ?> |
+      <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent IP address bans'), array('bans/export', 'type' => 'ip')) ?>
+      </div>
+<?php endif ?>
     </section>
     
 <script id="bans-section" type="text/x-template">

@@ -155,17 +155,17 @@ class SBAdmin extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='group';
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('name',$this->name,true);
-		$criteria->compare('auth',$this->auth,true);
-		$criteria->compare('identity',$this->identity,true);
-		$criteria->compare('password',$this->password,true);
-		$criteria->compare('group_id',$this->group_id);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('language',$this->language,true);
-		$criteria->compare('theme',$this->theme,true);
-		$criteria->compare('srv_password',$this->srv_password,true);
-		$criteria->compare('lastvisit',$this->lastvisit);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.name',$this->name,true);
+		$criteria->compare('t.auth',$this->auth,true);
+		$criteria->compare('t.identity',$this->identity,true);
+		$criteria->compare('t.password',$this->password,true);
+		$criteria->compare('t.group_id',$this->group_id);
+		$criteria->compare('t.email',$this->email,true);
+		$criteria->compare('t.language',$this->language,true);
+		$criteria->compare('t.theme',$this->theme,true);
+		$criteria->compare('t.srv_password',$this->srv_password,true);
+		$criteria->compare('t.lastvisit',$this->lastvisit);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -418,5 +418,15 @@ class SBAdmin extends CActiveRecord
 		));
 		
 		return parent::beforeFind();
+	}
+	
+	protected function beforeSave()
+	{
+		if($this->auth == self::STEAM_AUTH)
+		{
+			$this->identity = strtoupper($this->identity);
+		}
+		
+		return parent::beforeSave();
 	}
 }

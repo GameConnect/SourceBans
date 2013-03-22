@@ -118,12 +118,12 @@ class SBServer extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='game';
 
-		$criteria->compare('id',$this->id);
-		$criteria->compare('ip',$this->ip,true);
-		$criteria->compare('port',$this->port);
-		$criteria->compare('rcon',$this->rcon,true);
-		$criteria->compare('game_id',$this->game_id);
-		$criteria->compare('enabled',$this->enabled);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.ip',$this->ip,true);
+		$criteria->compare('t.port',$this->port);
+		$criteria->compare('t.rcon',$this->rcon,true);
+		$criteria->compare('t.game_id',$this->game_id);
+		$criteria->compare('t.enabled',$this->enabled);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -101,10 +101,10 @@ class SBDemo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id',$this->id,true);
-		$criteria->compare('object_id',$this->object_id);
-		$criteria->compare('object_type',$this->object_type,true);
-		$criteria->compare('filename',$this->filename,true);
+		$criteria->compare('t.id',$this->id,true);
+		$criteria->compare('t.object_id',$this->object_id);
+		$criteria->compare('t.object_type',$this->object_type,true);
+		$criteria->compare('t.filename',$this->filename,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

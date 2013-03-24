@@ -60,10 +60,10 @@
   </div>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'srv_password',array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model,'server_password',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'srv_password',array('size'=>60,'maxlength'=>64)); ?>
-      <?php echo $form->error($model,'srv_password'); ?>
+      <?php echo $form->textField($model,'server_password',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'server_password'); ?>
     </div>
   </div>
 

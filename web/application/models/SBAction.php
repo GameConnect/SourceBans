@@ -16,7 +16,7 @@
  * @property integer $server_id Server ID
  * @property integer $admin_id Admin ID
  * @property string $admin_ip Admin IP address
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
@@ -53,16 +53,9 @@ class SBAction extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('message, server_id, admin_ip, time', 'required'),
-			array('server_id, admin_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>64),
-			array('steam, admin_ip', 'length', 'max'=>32),
-			array('ip', 'length', 'max'=>15),
-			array('message', 'length', 'max'=>255),
-			array('time', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, steam, ip, message, server_id, admin_id, admin_ip, time', 'safe', 'on'=>'search'),
+			array('id, name, steam, ip, message, server_id, admin_id, admin_ip, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,7 +86,7 @@ class SBAction extends CActiveRecord
 			'server_id' => Yii::t('sourcebans', 'Server'),
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'admin_ip' => 'Admin IP address',
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 			'admin.name' => Yii::t('sourcebans', 'Admin'),
 		);
 	}
@@ -110,7 +103,7 @@ class SBAction extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='admin';
 
-		$criteria->compare('t.id',$this->id,true);
+		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.steam',$this->steam,true);
 		$criteria->compare('t.ip',$this->ip,true);
@@ -118,7 +111,7 @@ class SBAction extends CActiveRecord
 		$criteria->compare('t.server_id',$this->server_id);
 		$criteria->compare('t.admin_id',$this->admin_id);
 		$criteria->compare('t.admin_ip',$this->admin_ip,true);
-		$criteria->compare('t.time',$this->time,true);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -134,7 +127,7 @@ class SBAction extends CActiveRecord
 					'*',
 				),
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));

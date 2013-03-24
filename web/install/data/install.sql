@@ -16,7 +16,7 @@ CREATE TABLE {prefix}actions (
   server_id smallint(5) unsigned NOT NULL,
   admin_id smallint(5) unsigned DEFAULT NULL,
   admin_ip varchar(32) NOT NULL,
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY admin_id (admin_id),
   KEY server_id (server_id),
@@ -41,9 +41,11 @@ CREATE TABLE {prefix}admins (
   email varchar(128) DEFAULT NULL,
   language varchar(2) DEFAULT NULL,
   theme varchar(32) DEFAULT NULL,
-  srv_password varchar(64) DEFAULT NULL,
-  validate varchar(64) DEFAULT NULL,
-  lastvisit int(10) unsigned DEFAULT NULL,
+  timezone varchar(32) DEFAULT NULL,
+  server_password varchar(64) DEFAULT NULL,
+  validation_key varchar(64) DEFAULT NULL,
+  login_time int(10) unsigned DEFAULT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY name (name),
   UNIQUE KEY auth (auth,identity),
@@ -88,7 +90,7 @@ CREATE TABLE {prefix}bans (
   unban_admin_id smallint(5) unsigned DEFAULT NULL,
   unban_reason varchar(255) DEFAULT NULL,
   unban_time int(10) unsigned DEFAULT NULL,
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY server_id (server_id),
   KEY admin_id (admin_id),
@@ -108,7 +110,7 @@ CREATE TABLE {prefix}blocks (
   ban_id mediumint(8) unsigned NOT NULL,
   name varchar(64) NOT NULL,
   server_id smallint(5) unsigned NOT NULL,
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   KEY ban_id (ban_id),
   KEY server_id (server_id),
   CONSTRAINT block_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE,
@@ -123,20 +125,20 @@ CREATE TABLE {prefix}blocks (
 
 CREATE TABLE {prefix}comments (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  type varchar(1) NOT NULL,
-  ban_id mediumint(8) unsigned NOT NULL,
+  object_type enum('B','P','S') NOT NULL,
+  object_id mediumint(8) unsigned NOT NULL,
   admin_id smallint(5) unsigned NOT NULL,
   message varchar(255) NOT NULL,
-  time int(10) unsigned NOT NULL,
-  edit_admin_id smallint(5) unsigned DEFAULT NULL,
-  edit_time int(10) unsigned DEFAULT NULL,
+  update_admin_id smallint(5) unsigned DEFAULT NULL,
+  update_time int(10) unsigned DEFAULT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY ban_id (ban_id),
   KEY admin_id (admin_id),
-  KEY edit_admin_id (edit_admin_id),
+  KEY update_admin_id (update_admin_id),
   CONSTRAINT comment_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
   CONSTRAINT comment_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE,
-  CONSTRAINT comment_edit_admin FOREIGN KEY (edit_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
+  CONSTRAINT comment_update_admin FOREIGN KEY (update_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -147,8 +149,8 @@ CREATE TABLE {prefix}comments (
 
 CREATE TABLE {prefix}demos (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  object_type enum('B','S') NOT NULL,
   object_id mediumint(8) unsigned NOT NULL,
-  object_type varchar(1) NOT NULL,
   filename varchar(255) NOT NULL,
   PRIMARY KEY (id),
   KEY object (object_id,object_type) USING BTREE
@@ -165,7 +167,8 @@ CREATE TABLE {prefix}games (
   name varchar(32) NOT NULL,
   folder varchar(32) NOT NULL,
   icon varchar(32) NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE KEY folder (folder)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -193,7 +196,7 @@ CREATE TABLE {prefix}groups (
   name varchar(32) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY name (name)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -210,7 +213,7 @@ CREATE TABLE {prefix}logs (
   query varchar(255) NOT NULL,
   admin_id smallint(5) unsigned NOT NULL,
   admin_ip varchar(15) NOT NULL,
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY admin_id (admin_id),
   CONSTRAINT log_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
@@ -236,8 +239,8 @@ CREATE TABLE {prefix}overrides (
 --
 
 CREATE TABLE {prefix}plugins (
-  class varchar(32) NOT NULL,
-  enabled tinyint(1) unsigned NOT NULL DEFAULT '0',
+  class varchar(255) NOT NULL,
+  status tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (class)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -251,10 +254,10 @@ CREATE TABLE {prefix}protests (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   ban_id mediumint(8) unsigned NOT NULL,
   reason varchar(255) NOT NULL,
-  email varchar(128) NOT NULL,
-  ip varchar(15) NOT NULL,
+  user_email varchar(128) NOT NULL,
+  user_ip varchar(15) NOT NULL,
   archived tinyint(1) unsigned NOT NULL DEFAULT '0',
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY ban_id (ban_id),
   CONSTRAINT protest_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE
@@ -289,7 +292,7 @@ CREATE TABLE {prefix}server_groups (
   immunity smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   UNIQUE KEY name (name)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -323,7 +326,7 @@ CREATE TABLE {prefix}servers (
   PRIMARY KEY (id),
   KEY game_id (game_id) USING BTREE,
   CONSTRAINT server_game FOREIGN KEY (game_id) REFERENCES {prefix}games (id) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -366,11 +369,11 @@ CREATE TABLE {prefix}submissions (
   ip varchar(15) DEFAULT NULL,
   reason varchar(255) NOT NULL,
   server_id smallint(5) unsigned DEFAULT NULL,
-  subname varchar(64) NOT NULL,
-  subemail varchar(128) NOT NULL,
-  subip varchar(15) NOT NULL,
+  user_name varchar(64) NOT NULL,
+  user_email varchar(128) NOT NULL,
+  user_ip varchar(15) NOT NULL,
   archived tinyint(1) unsigned NOT NULL DEFAULT '0',
-  time int(10) unsigned NOT NULL,
+  create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY server_id (server_id),
   CONSTRAINT submission_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE SET NULL
@@ -384,6 +387,7 @@ CREATE TABLE {prefix}submissions (
 
 INSERT INTO {prefix}games (name, folder, icon) VALUES
 ('Alien Swarm', 'alienswarm', 'alienswarm.png'),
+('Counter-Strike: Global Offensive', 'csgo', 'csgo.png'),
 ('Counter-Strike: Source', 'cstrike', 'csource.png'),
 ('CSPromod', 'cspromod', 'cspromod.png'),
 ('Day of Defeat: Source', 'dod', 'dods.png'),
@@ -418,11 +422,11 @@ INSERT INTO {prefix}settings (name, value) VALUES
 ('bans_hide_admin', '0'),
 ('bans_hide_ip', '0'),
 ('bans_public_export', '0'),
+('dashboard_blocks_popup', '1'),
 ('dashboard_text', '<img alt="SourceBans Logo" src="/images/logo-large.jpg" title="SourceBans Logo" /><h3>Your new SourceBans install</h3><p>SourceBans successfully installed!</p>'),
 ('dashboard_title', 'Your SourceBans install'),
 ('date_format', 'm-d-y H:i'),
 ('default_page', 'dashboard'),
-('disable_log_popup', '0'),
 ('enable_debug', '0'),
 ('enable_protest', '1'),
 ('enable_smtp', '0'),

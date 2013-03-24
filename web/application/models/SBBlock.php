@@ -11,7 +11,7 @@
  * @property integer $ban_id Ban ID
  * @property string $name Name
  * @property integer $server_id Server ID
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
  * @property SBBan $ban
@@ -42,7 +42,7 @@ class SBBlock extends CActiveRecord
 
 	public function primaryKey()
 	{
-		return array('ban_id', 'name', 'server_id', 'time');
+		return array('ban_id', 'name', 'server_id', 'create_time');
 	}
 
 	/**
@@ -53,13 +53,9 @@ class SBBlock extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ban_id, name, server_id, time', 'required'),
-			array('ban_id, server_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'length', 'max'=>64),
-			array('time', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ban_id, name, server_id, time', 'safe', 'on'=>'search'),
+			array('ban_id, name, server_id, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,7 +81,7 @@ class SBBlock extends CActiveRecord
 			'ban_id' => Yii::t('sourcebans', 'Ban'),
 			'name' => Yii::t('sourcebans', 'Name'),
 			'server_id' => Yii::t('sourcebans', 'Server'),
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 		);
 	}
 
@@ -103,7 +99,7 @@ class SBBlock extends CActiveRecord
 		$criteria->compare('t.ban_id',$this->ban_id);
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.time',$this->time);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -112,7 +108,7 @@ class SBBlock extends CActiveRecord
 			),
 			'sort'=>array(
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));

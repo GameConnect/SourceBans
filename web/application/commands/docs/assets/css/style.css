@@ -13,8 +13,8 @@ div.code {
   /* Put a nice border around it. */
   padding: 1px 1px 1px 15px;
   /* Don't wrap its contents, and show scrollbars. */
-  /* white-space: nowrap;*/
-  width: 90%;
+  /* white-space: nowrap; */
+  /* width: 90%; */
 }
 div.code code {
   background: none;

@@ -122,11 +122,11 @@ public Action:OnLogAction(Handle:source, Identity:ident, client, target, const S
 	
 	SB_Escape(message, sEscapedMessage, sizeof(sEscapedMessage));
 	SB_Escape(sName,   sEscapedName,    sizeof(sEscapedName));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{actions}} (name, steam, ip, message, server_id, admin_id, admin_ip, time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{actions}} (name, steam, ip, message, server_id, admin_id, admin_ip, create_time) \
 	                                VALUES      (NULLIF('%s', ''), NULLIF('%s', ''), NULLIF('%s', ''), '%s', %i, NULLIF(%i, 0), '%s', UNIX_TIMESTAMP())",
 	                                sEscapedName, sAuth, sIp, sEscapedMessage, g_iServerId, iAdminId, sAdminIp);
 	SB_Execute(sQuery);
-	return Plugin_Handled;
+	return Plugin_Continue;
 }
 
 
@@ -377,8 +377,8 @@ public Query_AddAdmin(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	SB_Escape(sIdentity, sEscapedIdentity, sizeof(sEscapedIdentity));
 	SB_Escape(sName,     sEscapedName,     sizeof(sEscapedName));
 	SB_Escape(sPassword, sEscapedPassword, sizeof(sEscapedPassword));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{admins}} (name, auth, identity, srv_password) \
-	                                VALUES      ('%s', '%s', '%s', NULLIF('%s', ''))",
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{admins}} (name, auth, identity, server_password, create_time) \
+	                                VALUES      ('%s', '%s', '%s', NULLIF('%s', ''), UNIX_TIMESTAMP())",
 	                                sEscapedName, sType, sEscapedIdentity, sEscapedPassword);
 	SB_Execute(sQuery);
 	
@@ -1194,7 +1194,7 @@ stock SB_FetchAdmin(iClient)
 		StrCat(sCondition, sizeof(sCondition), " AND ad.lastvisit IS NOT NULL");
 	
 	SB_Escape(sName, sEscapedName, sizeof(sEscapedName));
-	Format(sQuery, sizeof(sQuery), "SELECT    ad.id, ad.name, ad.auth, ad.identity, ad.srv_password, COUNT(ag.group_id) \
+	Format(sQuery, sizeof(sQuery), "SELECT    ad.id, ad.name, ad.auth, ad.identity, ad.server_password, COUNT(ag.group_id) \
 	                                FROM      {{admins}}                AS ad \
 	                                LEFT JOIN {{admins_server_groups}}  AS ag ON ag.admin_id = ad.id \
 	                                LEFT JOIN {{servers_server_groups}} AS gs ON gs.group_id = ag.group_id \

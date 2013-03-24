@@ -15,9 +15,11 @@
  *
  * The followings are the available model relations:
  * @property SBAdmin[] $admins
+ * @property integer $adminsCount
  * @property SBServerGroup[] $groups_immune
  * @property SBServerGroupOverride[] $overrides
  * @property SBServer[] $servers
+ * @property integer $serversCount
  *
  * @package sourcebans.models
  * @since 2.0

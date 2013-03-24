@@ -58,7 +58,7 @@ class LostPasswordForm extends CFormModel
 		if(!Yii::app()->mailer->Send())
 			return false;
 		
-		$admin->validate = $validationKey;
+		$admin->validation_key = $validationKey;
 		$admin->save();
 		return true;
 	}

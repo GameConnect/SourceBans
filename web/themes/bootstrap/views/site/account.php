@@ -8,9 +8,8 @@
         <div class="span6">
           <h3><?php echo Yii::t('sourcebans', 'Server permissions') ?></h3>
           <ul>
-<?php $flags = Yii::app()->user->data->flags ?>
 <?php foreach(SourceBans::app()->flags as $flag => $description): ?>
-<?php if(strpos($flags, SM_ROOT) !== false || strpos($flags, $flag) !== false): ?>
+<?php if($flag != SM_ROOT && Yii::app()->user->data->hasFlag($flag)): ?>
             <li><?php echo CHtml::encode($description) ?></li>
 <?php endif ?>
 <?php endforeach ?>
@@ -19,9 +18,8 @@
         <div class="span6">
           <h3><?php echo Yii::t('sourcebans', 'Web permissions') ?></h3>
           <ul>
-<?php $permissions = CHtml::listData(Yii::app()->user->data->group->permissions, 'name', 'name') ?>
 <?php foreach(SourceBans::app()->permissions as $name => $description): ?>
-<?php if(isset($permissions['OWNER']) || isset($permissions[$name])): ?>
+<?php if($name != 'OWNER' && Yii::app()->user->data->hasPermission($name)): ?>
             <li><?php echo CHtml::encode($description) ?></li>
 <?php endif ?>
 <?php endforeach ?>
@@ -193,21 +191,21 @@
 		'class'=>'form-horizontal',
 	),
 )) ?>
-<?php $model->setScenario('srv_password') ?>
+<?php $model->setScenario('server_password') ?>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'new_srv_password',array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model,'new_server_password',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->passwordField($model,'new_srv_password',array('size'=>60,'maxlength'=>64)); ?>
-      <?php echo $form->error($model,'new_srv_password'); ?>
+      <?php echo $form->passwordField($model,'new_server_password',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'new_server_password'); ?>
     </div>
   </div>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'confirm_srv_password',array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model,'confirm_server_password',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->passwordField($model,'confirm_srv_password',array('size'=>60,'maxlength'=>64)); ?>
-      <?php echo $form->error($model,'confirm_srv_password'); ?>
+      <?php echo $form->passwordField($model,'confirm_server_password',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'confirm_server_password'); ?>
     </div>
   </div>
 

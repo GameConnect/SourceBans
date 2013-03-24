@@ -8,22 +8,22 @@ require_once 'SteamCommunity.php';
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  * 
- * @property string $groupID64
- * @property string $groupName
- * @property string $groupURL
- * @property string $headline
- * @property string $summary
- * @property string $avatarIcon
- * @property string $avatarMedium
- * @property string $avatarFull
- * @property integer $memberCount
- * @property integer $membersInChat
- * @property integer $membersInGame
- * @property integer $membersOnline
- * @property integer $totalPages
- * @property integer $currentPage
- * @property integer $startingMember
- * @property array $members
+ * @property string $groupID64 Steam Community ID
+ * @property string $groupName Steam Community name
+ * @property string $groupURL URL
+ * @property string $headline Headline
+ * @property string $summary Summary
+ * @property string $avatarIcon Icon-sized avatar
+ * @property string $avatarMedium Medium-sized avatar
+ * @property string $avatarFull Full-sized avatar
+ * @property integer $memberCount Member count
+ * @property integer $membersInChat Members in chat
+ * @property integer $membersInGame Members in game
+ * @property integer $membersOnline Members online
+ * @property integer $totalPages Total pages
+ * @property integer $currentPage Current page
+ * @property integer $startingMember Starting member
+ * @property array $members Members
  * 
  * @package sourcebans.components
  * @since 2.0

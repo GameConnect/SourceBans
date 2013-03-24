@@ -6,6 +6,7 @@
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'protestban-form',
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -42,10 +43,10 @@
       </div>
 
       <div class="control-group">
-        <?php echo $form->labelEx($model,'email',array('class' => 'control-label')); ?>
+        <?php echo $form->labelEx($model,'user_email',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo $form->textField($model,'email'); ?>
-          <?php echo $form->error($model,'email'); ?>
+          <?php echo $form->textField($model,'user_email'); ?>
+          <?php echo $form->error($model,'user_email'); ?>
         </div>
       </div>
 

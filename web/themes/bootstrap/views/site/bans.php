@@ -44,7 +44,7 @@
 			'htmlOptions'=>array(
 				'class'=>'datetime',
 			),
-			'name'=>'time',
+			'name'=>'create_time',
 			'type'=>'datetime',
 		),
 		'name',
@@ -80,12 +80,12 @@
 	),
 	'pagerCssClass'=>'pagination pagination-right',
 	'rowHtmlOptionsExpression'=>'array(
-		"class"=>"header" . ($data->length && $data->time + $data->length * 60 < time() ? " expired" : ($data->unban_time ? " unbanned" : "")),
+		"class"=>"header" . ($data->length && $data->create_time + $data->length * 60 < time() ? " expired" : ($data->unban_time ? " unbanned" : "")),
 		"data-key"=>$data->primaryKey,
 		"data-name"=>$data->name,
 		"data-steam"=>$data->steam,
 		"data-ip"=>$data->ip,
-		"data-datetime"=>Yii::app()->format->formatDatetime($data->time),
+		"data-datetime"=>Yii::app()->format->formatDatetime($data->create_time),
 		"data-length"=>$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent"),
 		"data-reason"=>$data->reason,
 		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
@@ -98,8 +98,8 @@
 
 <?php if(SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))): ?>
       <div class="pull-left">
-      <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent Steam ID bans'), array('bans/export', 'type' => 'steam')) ?> |
-      <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent IP address bans'), array('bans/export', 'type' => 'ip')) ?>
+        <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent Steam ID bans'), array('bans/export', 'type' => 'steam')) ?> |
+        <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent IP address bans'), array('bans/export', 'type' => 'ip')) ?>
       </div>
 <?php endif ?>
     </section>

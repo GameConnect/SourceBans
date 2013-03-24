@@ -21,8 +21,8 @@ class AccountForm extends CFormModel
 	public $current_password;
 	public $new_password;
 	public $confirm_password;
-	public $new_srv_password;
-	public $confirm_srv_password;
+	public $new_server_password;
+	public $confirm_server_password;
 
 
 	public function __get($name)
@@ -57,9 +57,9 @@ class AccountForm extends CFormModel
 			array('current_password, new_password, confirm_password', 'length', 'min'=>SourceBans::app()->settings->password_min_length, 'on'=>'password'),
 			array('current_password', 'validateCurrentPassword', 'message'=>Yii::t('yii', '{attribute} is invalid.'), 'on'=>'password'),
 			array('confirm_password', 'compare', 'compareAttribute'=>'new_password', 'message'=>Yii::t('yii', '{attribute} must be repeated exactly.', array('{attribute}'=>'{compareAttribute}')), 'on'=>'email'),
-			array('new_srv_password, confirm_srv_password', 'required', 'on'=>'srv_password'),
-			array('new_srv_password, confirm_srv_password', 'length', 'min'=>SourceBans::app()->settings->password_min_length, 'on'=>'srv_password'),
-			array('confirm_srv_password', 'compare', 'compareAttribute'=>'new_srv_password', 'message'=>Yii::t('yii', '{attribute} must be repeated exactly.', array('{attribute}'=>'{compareAttribute}')), 'on'=>'email'),
+			array('new_server_password, confirm_server_password', 'required', 'on'=>'server_password'),
+			array('new_server_password, confirm_server_password', 'length', 'min'=>SourceBans::app()->settings->password_min_length, 'on'=>'server_password'),
+			array('confirm_server_password', 'compare', 'compareAttribute'=>'new_server_password', 'message'=>Yii::t('yii', '{attribute} must be repeated exactly.', array('{attribute}'=>'{compareAttribute}')), 'on'=>'email'),
 		);
 	}
 
@@ -78,8 +78,8 @@ class AccountForm extends CFormModel
 			'current_password' => Yii::t('sourcebans', 'Current password'),
 			'new_password' => Yii::t('sourcebans', 'New password'),
 			'confirm_password' => Yii::t('sourcebans', 'Confirm password'),
-			'new_srv_password' => Yii::t('sourcebans', 'New password'),
-			'confirm_srv_password' => Yii::t('sourcebans', 'Confirm password'),
+			'new_server_password' => Yii::t('sourcebans', 'New password'),
+			'confirm_server_password' => Yii::t('sourcebans', 'Confirm password'),
 		);
 	}
 
@@ -97,8 +97,8 @@ class AccountForm extends CFormModel
 			case 'password':
 				Yii::app()->user->data->setPassword($this->new_password);
 				break;
-			case 'srv_password':
-				Yii::app()->user->data->srv_password = $this->new_srv_password;
+			case 'server_password':
+				Yii::app()->user->data->server_password = $this->new_server_password;
 				break;
 			case 'settings':
 				foreach($this->attributes as $name => $value)

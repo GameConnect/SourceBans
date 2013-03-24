@@ -341,7 +341,7 @@ class SiteController extends Controller
 		{
 			$admin = SBAdmin::model()->findByAttributes(array(
 				'email' => $email,
-				'validate' => $validationKey,
+				'validation_key' => $validationKey,
 			));
 			if($admin === null)
 				throw new CHttpException(403, 'The validation key does not match the email address for this reset request.');
@@ -357,7 +357,7 @@ class SiteController extends Controller
 				throw new CHttpException(500, 'Please try again later or contact your system administrator.');
 			
 			$admin->setPassword($password);
-			$admin->validate = null;
+			$admin->validation_key = null;
 			$admin->save();
 			$this->redirect(Yii::app()->user->homeUrl);
 		}

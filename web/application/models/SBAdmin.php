@@ -19,22 +19,23 @@
  * @property string $language Language
  * @property string $theme Theme
  * @property string $timezone Timezone
- * @property string $srv_password Server password
- * @property string $validate Validation key
- * @property integer $lastvisit Last visit
+ * @property string $server_password Server password
+ * @property string $validation_key Validation key
+ * @property integer $login_time Last login time
+ * @property integer $create_time Date/Time
  * @property object $community Steam Community data for Steam Community ID
  * @property integer $communityId Steam Community ID
  * @property string $flags Server permissions
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
- * @property SBGroup $group
- * @property SBServerGroup[] $server_groups
  * @property SBBan[] $bans
- * @property SBBan[] $unban_bans
  * @property SBComment[] $comments
- * @property SBComment[] $edit_comments
+ * @property SBGroup $group
  * @property SBLog[] $logs
+ * @property SBServerGroup[] $server_groups
+ * @property SBBan[] $unbanned_bans
+ * @property SBComment[] $updated_comments
  *
  * @package sourcebans.models
  * @since 2.0
@@ -88,14 +89,14 @@ class SBAdmin extends CActiveRecord
 			array('name, identity', 'length', 'max'=>64),
 			array('name', 'unique'),
 			array('identity', 'SBAdminIdentityValidator'),
-			array('password, srv_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
+			array('password, server_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('email', 'email'),
 			array('email', 'length', 'max'=>128),
-			array('language, theme, timezone, srv_password', 'default', 'setOnEmpty'=>true),
-			array('password_key, validate, lastvisit, server_groups', 'safe'),
+			array('language, theme, timezone, server_password', 'default', 'setOnEmpty'=>true),
+			array('password_key, validation_key, login_time, server_groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, auth, identity, password, group_id, email, language, theme, srv_password, lastvisit', 'safe', 'on'=>'search'),
+			array('id, name, auth, identity, password, group_id, email, language, theme, server_password, login_time, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -108,13 +109,13 @@ class SBAdmin extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'actions' => array(self::HAS_MANY, 'SBAction', 'admin_id'),
-			'group' => array(self::BELONGS_TO, 'SBGroup', 'group_id'),
-			'server_groups' => array(self::MANY_MANY, 'SBServerGroup', '{{admins_server_groups}}(admin_id, group_id)', 'order' => 'inherit_order'),
 			'bans' => array(self::HAS_MANY, 'SBBan', 'admin_id'),
-			'unban_bans' => array(self::HAS_MANY, 'SBBan', 'unban_admin_id'),
 			'comments' => array(self::HAS_MANY, 'SBComment', 'admin_id'),
-			'edit_comments' => array(self::HAS_MANY, 'SBComment', 'edit_admin_id'),
+			'group' => array(self::BELONGS_TO, 'SBGroup', 'group_id'),
 			'logs' => array(self::HAS_MANY, 'SBLog', 'admin_id'),
+			'server_groups' => array(self::MANY_MANY, 'SBServerGroup', '{{admins_server_groups}}(admin_id, group_id)', 'order' => 'inherit_order'),
+			'unbanned_bans' => array(self::HAS_MANY, 'SBBan', 'unban_admin_id'),
+			'updated_comments' => array(self::HAS_MANY, 'SBComment', 'update_admin_id'),
 		);
 	}
 
@@ -133,10 +134,10 @@ class SBAdmin extends CActiveRecord
 			'email' => Yii::t('sourcebans', 'Email address'),
 			'language' => Yii::t('sourcebans', 'Language'),
 			'theme' => Yii::t('sourcebans', 'Theme'),
-			'srv_password' => Yii::t('sourcebans', 'Server password'),
-			'validate' => 'Validation key',
-			'lastvisit' => Yii::t('sourcebans', 'Last visit'),
-			'community_id' => Yii::t('sourcebans', 'Steam Community ID'),
+			'server_password' => Yii::t('sourcebans', 'Server password'),
+			'login_time' => Yii::t('sourcebans', 'Last visit'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'communityId' => Yii::t('sourcebans', 'Steam Community ID'),
 			'flags' => Yii::t('sourcebans', 'Server permissions'),
 			'group.name' => Yii::t('sourcebans', 'Web group'),
 			'server_groups.name' => Yii::t('sourcebans', 'Server groups'),
@@ -159,13 +160,12 @@ class SBAdmin extends CActiveRecord
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.auth',$this->auth,true);
 		$criteria->compare('t.identity',$this->identity,true);
-		$criteria->compare('t.password',$this->password,true);
 		$criteria->compare('t.group_id',$this->group_id);
 		$criteria->compare('t.email',$this->email,true);
 		$criteria->compare('t.language',$this->language,true);
 		$criteria->compare('t.theme',$this->theme,true);
-		$criteria->compare('t.srv_password',$this->srv_password,true);
-		$criteria->compare('t.lastvisit',$this->lastvisit);
+		$criteria->compare('t.login_time',$this->login_time);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -190,6 +190,10 @@ class SBAdmin extends CActiveRecord
 	public function behaviors()
 	{
 		return array(
+			'CTimestampBehavior'=>array(
+				'class'=>'zii.behaviors.CTimestampBehavior',
+				'updateAttribute'=>null,
+			),
 			'EActiveRecordRelationBehavior'=>array(
 				'class'=>'ext.EActiveRecordRelationBehavior',
 			),

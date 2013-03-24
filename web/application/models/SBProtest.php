@@ -11,13 +11,14 @@
  * @property integer $id ID
  * @property integer $ban_id Ban ID
  * @property string $reason Reason
- * @property string $email Email address
- * @property string $ip IP address
+ * @property string $user_email User email address
+ * @property string $user_ip User IP address
  * @property boolean $archived Archived
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
  * @property SBBan $ban
+ * @property SBComment[] $comments
  *
  * @package sourcebans.models
  * @since 2.0
@@ -50,16 +51,15 @@ class SBProtest extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ban_id, reason, email, ip', 'required'),
+			array('ban_id, reason, user_email, user_ip', 'required'),
 			array('ban_id', 'numerical', 'integerOnly'=>true),
 			array('archived', 'boolean'),
 			array('reason', 'length', 'max'=>255),
-			array('email', 'length', 'max'=>128),
-			array('email', 'email'),
-			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
+			array('user_email', 'length', 'max'=>128),
+			array('user_email', 'email'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, ban_id, reason, email, ip, archived, time', 'safe', 'on'=>'search'),
+			array('id, ban_id, reason, user_email, user_ip, archived, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,6 +72,7 @@ class SBProtest extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'ban_id'),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBComment::PROTEST_TYPE)),
 		);
 	}
 
@@ -84,10 +85,10 @@ class SBProtest extends CActiveRecord
 			'id' => 'ID',
 			'ban_id' => Yii::t('sourcebans', 'Ban'),
 			'reason' => Yii::t('sourcebans', 'Reason'),
-			'email' => Yii::t('sourcebans', 'Email address'),
-			'ip' => Yii::t('sourcebans', 'IP address'),
+			'user_email' => Yii::t('sourcebans', 'Your email address'),
+			'user_ip' => 'User IP address',
 			'archived' => Yii::t('sourcebans','Archived'),
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 		);
 	}
 
@@ -105,10 +106,10 @@ class SBProtest extends CActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.ban_id',$this->ban_id);
 		$criteria->compare('t.reason',$this->reason,true);
-		$criteria->compare('t.email',$this->email,true);
-		$criteria->compare('t.ip',$this->ip,true);
+		$criteria->compare('t.user_email',$this->user_email,true);
+		$criteria->compare('t.user_ip',$this->user_ip,true);
 		$criteria->compare('t.archived',$this->archived);
-		$criteria->compare('t.time',$this->time,true);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -117,7 +118,7 @@ class SBProtest extends CActiveRecord
 			),
 			'sort'=>array(
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));
@@ -142,9 +143,22 @@ class SBProtest extends CActiveRecord
 		return array(
 			'CTimestampBehavior' => array(
 				'class' => 'zii.behaviors.CTimestampBehavior',
-				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
 		);
+	}
+	
+	protected function beforeSave()
+	{
+		if($this->isNewRecord)
+		{
+			$this->user_ip = Yii::app()->request->userHostAddress;
+		}
+		if(!empty($this->steam))
+		{
+			$this->steam = strtoupper($this->steam);
+		}
+		
+		return parent::beforeSave();
 	}
 }

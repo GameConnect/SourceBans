@@ -33,9 +33,9 @@ class SteamGame
 	/**
 	 * ISteamNews/GetNewsForApp/v0002
 	 * 
-	 * @param integer $count
-	 * @param integer $maxlength
-	 * @return array
+	 * @param integer $count How many news enties you want to get returned
+	 * @param integer $maxlength Maximum length of each news entry
+	 * @return array An array of news item information
 	 */
 	public function getNews($count = 3, $maxlength = 300)
 	{
@@ -54,8 +54,8 @@ class SteamGame
 	/**
 	 * ISteamUserStats/GetSchemaForGame/v0002
 	 * 
-	 * @param string $lang
-	 * @return array
+	 * @param string $lang Localized language to return 
+	 * @return array An array of available game stats
 	 */
 	public function getSchema($lang = 'en')
 	{

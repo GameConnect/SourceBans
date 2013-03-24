@@ -9,24 +9,31 @@
  *
  * The followings are the available columns in table '{{comments}}':
  * @property integer $id ID
- * @property string $type Type
- * @property integer $ban_id Ban ID
+ * @property string $object_type Type
+ * @property integer $object_id Object ID
  * @property integer $admin_id Admin ID
  * @property string $message Message
- * @property integer $time Date/Time
- * @property integer $edit_admin_id Edited by
- * @property integer $edit_time Edited on
+ * @property integer $update_admin_id Edited by
+ * @property integer $update_time Edited on
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBBan $ban
  * @property SBAdmin $admin
- * @property SBAdmin $edit_admin
+ * @property SBBan $ban
+ * @property SBProtest $protest
+ * @property SBSubmission $submission
+ * @property SBAdmin $update_admin
  *
  * @package sourcebans.models
  * @since 2.0
  */
 class SBComment extends CActiveRecord
 {
+	const BAN_TYPE        = 'B';
+	const PROTEST_TYPE    = 'P';
+	const SUBMISSION_TYPE = 'S';
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -53,14 +60,11 @@ class SBComment extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('type, ban_id, admin_id, message, time', 'required'),
-			array('ban_id, admin_id, edit_admin_id', 'numerical', 'integerOnly'=>true),
-			array('type', 'length', 'max'=>1),
+			array('message', 'required'),
 			array('message', 'length', 'max'=>255),
-			array('time, edit_time', 'length', 'max'=>10),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, type, ban_id, admin_id, message, time, edit_admin_id, edit_time', 'safe', 'on'=>'search'),
+			array('id, object_type, object_id, admin_id, message, update_admin_id, update_time, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,9 +76,11 @@ class SBComment extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ban' => array(self::BELONGS_TO, 'SBBan', 'ban_id'),
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
-			'edit_admin' => array(self::BELONGS_TO, 'SBAdmin', 'edit_admin_id'),
+			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::BAN_TYPE)),
+			'protest' => array(self::BELONGS_TO, 'SBProtest', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::PROTEST_TYPE)),
+			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::SUBMISSION_TYPE)),
+			'update_admin' => array(self::BELONGS_TO, 'SBAdmin', 'update_admin_id'),
 		);
 	}
 
@@ -89,9 +95,9 @@ class SBComment extends CActiveRecord
 			'ban_id' => Yii::t('sourcebans', 'Ban'),
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'message' => Yii::t('sourcebans', 'Message'),
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
-			'edit_admin_id' => 'Edited by',
-			'edit_time' => 'Edited on',
+			'update_admin_id' => 'Edited by',
+			'update_time' => 'Edited on',
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 		);
 	}
 
@@ -107,19 +113,19 @@ class SBComment extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.type',$this->type,true);
-		$criteria->compare('t.ban_id',$this->ban_id);
+		$criteria->compare('t.object_type',$this->object_type);
+		$criteria->compare('t.object_id',$this->object_id);
 		$criteria->compare('t.admin_id',$this->admin_id);
 		$criteria->compare('t.message',$this->message,true);
-		$criteria->compare('t.time',$this->time,true);
-		$criteria->compare('t.edit_admin_id',$this->edit_admin_id);
-		$criteria->compare('t.edit_time',$this->edit_time,true);
+		$criteria->compare('t.update_admin_id',$this->update_admin_id);
+		$criteria->compare('t.update_time',$this->update_time);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'sort'=>array(
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));
@@ -128,10 +134,8 @@ class SBComment extends CActiveRecord
 	public function behaviors()
 	{
 		return array(
-			'CTimestampBehavior' => array(
-				'class' => 'zii.behaviors.CTimestampBehavior',
-				'createAttribute' => 'time',
-				'updateAttribute' => 'edit_time',
+			'CTimestampBehavior'=>array(
+				'class'=>'zii.behaviors.CTimestampBehavior',
 			),
 		);
 	}

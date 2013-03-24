@@ -88,6 +88,13 @@
 <fieldset>
   <legend><?php echo Yii::t('sourcebans', 'Dashboard') ?></legend>
   <div class="control-group">
+    <div class="controls">
+      <?php $checkbox = $form->checkBox($model,'dashboard_blocks_popup') . $model->getAttributeLabel('dashboard_blocks_popup'); ?>
+      <?php echo CHtml::label($checkbox,'SettingsForm_dashboard_blocks_popup',array('class' => 'checkbox')); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
     <?php echo $form->labelEx($model,'dashboard_title',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->textField($model,'dashboard_title',array('class'=>'span6','size'=>60,'maxlength'=>64)); ?>

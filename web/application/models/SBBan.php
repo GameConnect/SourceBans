@@ -21,19 +21,19 @@
  * @property integer $unban_admin_id Unbanned by
  * @property string $unban_reason Unban reason
  * @property integer $unban_time Unbanned on
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  * @property object $community Steam Community data for Steam Community ID
  * @property integer $communityId Steam Community ID
  * @property object $country Country data for IP address
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
- * @property SBAdmin $unban_admin
  * @property SBBlock[] $blocks
  * @property SBComment[] $comments
  * @property SBDemo[] $demos
  * @property SBProtest[] $protests
  * @property SBServer $server
+ * @property SBAdmin $unban_admin
  *
  * @package sourcebans.models
  * @since 2.0
@@ -94,7 +94,7 @@ class SBBan extends CActiveRecord
 			array('reason, unban_reason', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, unban_admin_id, unban_reason, unban_time, time', 'safe', 'on'=>'search'),
+			array('id, type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, unban_admin_id, unban_reason, unban_time, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -107,12 +107,12 @@ class SBBan extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
-			'unban_admin' => array(self::BELONGS_TO, 'SBAdmin', 'unban_admin_id'),
 			'blocks' => array(self::HAS_MANY, 'SBBlock', 'ban_id'),
-			'comments' => array(self::HAS_MANY, 'SBComment', 'ban_id'),
-			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = "B"'),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBComment::BAN_TYPE)),
+			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBDemo::BAN_TYPE)),
 			'protests' => array(self::HAS_MANY, 'SBProtest', 'ban_id'),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
+			'unban_admin' => array(self::BELONGS_TO, 'SBAdmin', 'unban_admin_id'),
 		);
 	}
 
@@ -135,8 +135,8 @@ class SBBan extends CActiveRecord
 			'unban_admin_id' => 'Unbanned by',
 			'unban_reason' => Yii::t('sourcebans', 'Unban reason'),
 			'unban_time' => 'Unbanned on',
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
-			'community_id' => Yii::t('sourcebans', 'Steam Community ID'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'communityId' => Yii::t('sourcebans', 'Steam Community ID'),
 			'demo.filename' => Yii::t('sourcebans', 'Demo'),
 		);
 	}
@@ -176,7 +176,7 @@ class SBBan extends CActiveRecord
 		$criteria->compare('t.unban_admin_id',$this->unban_admin_id);
 		$criteria->compare('t.unban_reason',$this->unban_reason,true);
 		$criteria->compare('t.unban_time',$this->unban_time);
-		$criteria->compare('t.time',$this->time);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -192,7 +192,7 @@ class SBBan extends CActiveRecord
 					'*',
 				),
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));
@@ -204,13 +204,13 @@ class SBBan extends CActiveRecord
 		
 		return array(
 			'active'=>array(
-				'condition'=>$t.'.unban_time IS NULL AND ('.$t.'.length = 0 OR '.$t.'.time + '.$t.'.length * 60 > UNIX_TIMESTAMP())',
+				'condition'=>$t.'.unban_time IS NULL AND ('.$t.'.length = 0 OR '.$t.'.create_time + '.$t.'.length * 60 > UNIX_TIMESTAMP())',
 			),
 			'expired'=>array(
-				'condition'=>$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP()',
+				'condition'=>$t.'.length > 0 AND '.$t.'.create_time + '.$t.'.length * 60 < UNIX_TIMESTAMP()',
 			),
 			'inactive'=>array(
-				'condition'=>$t.'.unban_time IS NOT NULL OR ('.$t.'.length > 0 AND '.$t.'.time + '.$t.'.length * 60 < UNIX_TIMESTAMP())',
+				'condition'=>$t.'.unban_time IS NOT NULL OR ('.$t.'.length > 0 AND '.$t.'.create_time + '.$t.'.length * 60 < UNIX_TIMESTAMP())',
 			),
 			'permanent'=>array(
 				'condition'=>$t.'.length = 0',
@@ -226,7 +226,6 @@ class SBBan extends CActiveRecord
 		return array(
 			'CTimestampBehavior' => array(
 				'class' => 'zii.behaviors.CTimestampBehavior',
-				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
 		);

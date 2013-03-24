@@ -10,21 +10,18 @@ require_once 'SteamProfile.php';
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  * 
- * @property string $apiKey
- * @property integer $requestTimeout
- * 
  * @package sourcebans.components
  * @since 2.0
  */
 class SteamCommunity
 {
 	/**
-	 * @var integer Request timeout in seconds
+	 * @var integer The request timeout in seconds
 	 */
 	public static $requestTimeout = 2;
 	
 	/**
-	 * @var string Steam Web API Key
+	 * @var string The Steam Web API Key
 	 */
 	private static $_apiKey;
 	
@@ -32,11 +29,11 @@ class SteamCommunity
 	/**
 	 * Normalizes an API request
 	 * 
-	 * @param string $interface
-	 * @param string $method
-	 * @param integer $version
-	 * @param array $data
-	 * @return string
+	 * @param string $interface The Steam Web API interface
+	 * @param string $method The Steam Web API interface method
+	 * @param integer $version The Steam Web API method version
+	 * @param array $data The request data
+	 * @return string The request output
 	 */
 	public static function apiRequest($interface, $method, $version, $data = array())
 	{
@@ -49,9 +46,9 @@ class SteamCommunity
 	/**
 	 * Normalizes a data request
 	 * 
-	 * @param string $path
-	 * @param array $data
-	 * @return string
+	 * @param string $path The request path
+	 * @param array $data The request data
+	 * @return string The request output
 	 */
 	public static function request($path, $data = array())
 	{
@@ -75,9 +72,9 @@ class SteamCommunity
 	/**
 	 * Builds a query string and requests the URL
 	 * 
-	 * @param string $url
-	 * @param array $data
-	 * @return string
+	 * @param string $url The request URL
+	 * @param array $data The request data
+	 * @return string The request output
 	 */
 	private static function _request($url, $data = array())
 	{

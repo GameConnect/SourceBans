@@ -9,8 +9,8 @@
  *
  * The followings are the available columns in table '{{demos}}':
  * @property integer $id ID
- * @property integer $object_id Object ID
  * @property string $object_type Type
+ * @property integer $object_id Object ID
  * @property string $filename Filename
  *
  * The followings are the available model relations:
@@ -22,6 +22,10 @@
  */
 class SBDemo extends CActiveRecord
 {
+	const BAN_TYPE        = 'B';
+	const SUBMISSION_TYPE = 'S';
+	
+	
 	public function __toString()
 	{
 		return $this->filename;
@@ -54,13 +58,10 @@ class SBDemo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('object_id, object_type', 'required'),
-			array('object_id', 'numerical', 'integerOnly'=>true),
-			array('object_type', 'length', 'max'=>1),
-			array('filename', 'file', 'types'=>array('dem', 'rar', 'zip'), 'allowEmpty'=>true),
+			array('filename', 'file', 'types'=>array('dem', 'rar', 'zip')),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, object_id, object_type, filename', 'safe', 'on'=>'search'),
+			array('id, object_type, object_id, filename', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -72,8 +73,8 @@ class SBDemo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = "B"'),
-			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = "S"'),
+			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::BAN_TYPE)),
+			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::SUBMISSION_TYPE)),
 		);
 	}
 

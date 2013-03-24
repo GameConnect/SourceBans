@@ -7,6 +7,7 @@
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'submitban-form',
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -46,24 +47,24 @@
       <div class="control-group">
         <?php echo $form->labelEx($model,'reason',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo $form->textField($model,'reason'); ?>
+          <?php echo $form->textArea($model,'reason'); ?>
           <?php echo $form->error($model,'reason'); ?>
         </div>
       </div>
 
       <div class="control-group">
-        <?php echo $form->labelEx($model,'subname',array('class' => 'control-label')); ?>
+        <?php echo $form->labelEx($model,'user_name',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo $form->textField($model,'subname'); ?>
-          <?php echo $form->error($model,'subname'); ?>
+          <?php echo $form->textField($model,'user_name'); ?>
+          <?php echo $form->error($model,'user_name'); ?>
         </div>
       </div>
 
       <div class="control-group">
-        <?php echo $form->labelEx($model,'subemail',array('class' => 'control-label')); ?>
+        <?php echo $form->labelEx($model,'user_email',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo $form->textField($model,'subemail'); ?>
-          <?php echo $form->error($model,'subemail'); ?>
+          <?php echo $form->textField($model,'user_email'); ?>
+          <?php echo $form->error($model,'user_email'); ?>
         </div>
       </div>
 

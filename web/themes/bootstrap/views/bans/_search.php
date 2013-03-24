@@ -45,9 +45,9 @@
   </div>
 
   <div class="control-group">
-    <?php echo $form->label($model,'time',array('class' => 'control-label')); ?>
+    <?php echo $form->label($model,'create_time',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'time'); ?>
+      <?php echo $form->textField($model,'create_time'); ?>
     </div>
   </div>
 

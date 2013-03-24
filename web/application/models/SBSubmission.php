@@ -14,13 +14,14 @@
  * @property string $ip IP address
  * @property string $reason Reason
  * @property integer $server_id Server ID
- * @property string $subname Name
- * @property string $subemail Email address
- * @property string $subip IP address
+ * @property string $user_name User name
+ * @property string $user_email User email address
+ * @property string $user_ip User IP address
  * @property boolean $archived Archived
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
+ * @property SBComment[] $comments
  * @property SBDemo $demo
  * @property SBServer $server
  *
@@ -55,18 +56,25 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, reason, subname, subemail, subip', 'required'),
+			array('name, reason, user_name, user_email', 'required'),
 			array('server_id', 'numerical', 'integerOnly'=>true),
 			array('archived', 'boolean'),
-			array('name, subname', 'length', 'max'=>64),
+			array('name, user_name', 'length', 'max'=>64),
+			array('steam, ip', 'default', 'setOnEmpty'=>true),
 			array('steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
 			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
+			array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'scopes'=>'active',
+			)),
+			array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'scopes'=>'active',
+			)),
 			array('reason', 'length', 'max'=>255),
-			array('subemail', 'length', 'max'=>128),
-			array('subemail', 'email'),
+			array('user_email', 'length', 'max'=>128),
+			array('user_email', 'email'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, steam, ip, reason, server_id, subname, subemail, subip, archived, time', 'safe', 'on'=>'search'),
+			array('id, name, steam, ip, reason, server_id, user_name, user_email, user_ip, archived, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +86,8 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = "S"'),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBComment::SUBMISSION_TYPE)),
+			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBDemo::SUBMISSION_TYPE)),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 		);
 	}
@@ -95,11 +104,11 @@ class SBSubmission extends CActiveRecord
 			'ip' => Yii::t('sourcebans', 'IP address'),
 			'reason' => Yii::t('sourcebans', 'Reason'),
 			'server_id' => Yii::t('sourcebans', 'Server'),
-			'subname' => 'Name',
-			'subemail' => 'Email address',
-			'subip' => 'IP address',
+			'user_name' => Yii::t('sourcebans', 'Your name'),
+			'user_email' => Yii::t('sourcebans', 'Your email address'),
+			'user_ip' => 'User IP address',
 			'archived' => Yii::t('sourcebans', 'Archived'),
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 			'demo.filename' => Yii::t('sourcebans', 'Demo'),
 		);
 	}
@@ -121,11 +130,11 @@ class SBSubmission extends CActiveRecord
 		$criteria->compare('t.ip',$this->ip,true);
 		$criteria->compare('t.reason',$this->reason,true);
 		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.subname',$this->subname,true);
-		$criteria->compare('t.subemail',$this->subemail,true);
-		$criteria->compare('t.subip',$this->subip,true);
+		$criteria->compare('t.user_name',$this->user_name,true);
+		$criteria->compare('t.user_email',$this->user_email,true);
+		$criteria->compare('t.user_ip',$this->user_ip,true);
 		$criteria->compare('t.archived',$this->archived);
-		$criteria->compare('t.time',$this->time,true);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -134,7 +143,7 @@ class SBSubmission extends CActiveRecord
 			),
 			'sort'=>array(
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));
@@ -159,7 +168,6 @@ class SBSubmission extends CActiveRecord
 		return array(
 			'CTimestampBehavior' => array(
 				'class' => 'zii.behaviors.CTimestampBehavior',
-				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
 		);
@@ -167,6 +175,10 @@ class SBSubmission extends CActiveRecord
 	
 	protected function beforeSave()
 	{
+		if($this->isNewRecord)
+		{
+			$this->user_ip = Yii::app()->request->userHostAddress;
+		}
 		if(!empty($this->steam))
 		{
 			$this->steam = strtoupper($this->steam);

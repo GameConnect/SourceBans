@@ -27,7 +27,7 @@ class WebUser extends CWebUser
 	
 	protected function afterLogin($fromCookie)
 	{
-		$this->data->lastvisit = time();
+		$this->data->login_time = time();
 		$this->data->save();
 	}
 }

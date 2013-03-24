@@ -40,7 +40,7 @@ class SettingsForm extends CFormModel
 	{
 		return array(
 			array('default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
-			array('bans_hide_admin, bans_hide_ip, bans_public_export, disable_log_popup, enable_protest, enable_smtp, enable_submit', 'boolean'),
+			array('dashboard_blocks_popup, bans_hide_admin, bans_hide_ip, bans_public_export, enable_protest, enable_smtp, enable_submit', 'boolean'),
 			array('items_per_page, password_min_length, smtp_port', 'numerical', 'integerOnly'=>true, 'min'=>1),
 			array('dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure', 'safe'),
 		);
@@ -52,6 +52,7 @@ class SettingsForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
+			'dashboard_blocks_popup' => Yii::t('sourcebans', 'Enable blocks information popup'),
 			'dashboard_text' => '',
 			'dashboard_title' => Yii::t('sourcebans', 'Title'),
 			'bans_hide_admin' => Yii::t('sourcebans', 'Hide admins'),

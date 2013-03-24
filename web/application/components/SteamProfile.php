@@ -8,30 +8,30 @@ require_once 'SteamCommunity.php';
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  * 
- * @property string $steamID64
- * @property string $steamID
- * @property string $onlineState
- * @property string $stateMessage
- * @property integer $visibilityState
- * @property string $privacyState
- * @property string $avatarIcon
- * @property string $avatarMedium
- * @property string $avatarFull
- * @property integer $vacBanned
- * @property string $tradeBanState
- * @property integer $isLimitedAccount
- * @property string $customURL
- * @property string $memberSince
- * @property float $steamRating
- * @property float $hoursPlayed2Wk
- * @property string $headline
- * @property string $location
- * @property string $realname
- * @property string $summary
- * @property array $inGameInfo
- * @property array $mostPlayedGames
- * @property array $webLinks
- * @property array $groups
+ * @property string $steamID64 Steam Community ID
+ * @property string $steamID Steam Community name
+ * @property string $onlineState Online state
+ * @property string $stateMessage State message
+ * @property integer $visibilityState Visibility state
+ * @property string $privacyState Privacy state
+ * @property string $avatarIcon Icon-sized avatar
+ * @property string $avatarMedium Medium-sized avatar
+ * @property string $avatarFull Full-sized avatar
+ * @property integer $vacBanned Whether the account is VAC banned
+ * @property string $tradeBanState Trade ban state
+ * @property integer $isLimitedAccount Whether the account is limited
+ * @property string $customURL Custom URL
+ * @property string $memberSince Member since
+ * @property float $steamRating Steam rating
+ * @property float $hoursPlayed2Wk Hours played past 2 weeks
+ * @property string $headline Headline
+ * @property string $location Location
+ * @property string $realname Real name
+ * @property string $summary Summary
+ * @property array $inGameInfo In-game info
+ * @property array $mostPlayedGames Most played games
+ * @property array $webLinks Web links
+ * @property array $groups Groups
  * 
  * @package sourcebans.components
  * @since 2.0
@@ -85,7 +85,7 @@ class SteamProfile
 	/**
 	 * ISteamUser/GetFriendList/v0001
 	 * 
-	 * @return array
+	 * @return array An array of friends
 	 */
 	public function getFriends()
 	{
@@ -103,7 +103,7 @@ class SteamProfile
 	/**
 	 * Returns the owned games
 	 * 
-	 * @return array
+	 * @return array An array of owned games
 	 */
 	public function getGames()
 	{
@@ -238,9 +238,9 @@ class SteamProfile
 	/**
 	 * Normalizes a request
 	 * 
-	 * @param string $path
-	 * @param array $data
-	 * @return string
+	 * @param string $path The request path
+	 * @param array $data The request data
+	 * @return string The request output
 	 */
 	private function _request($path = '', $data = array())
 	{

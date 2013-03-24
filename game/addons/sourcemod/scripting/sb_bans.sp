@@ -113,7 +113,7 @@ public OnPluginStart()
 	}
 	
 	// Create local bans table
-	SQL_FastQuery(g_hSQLiteDB, "CREATE TABLE IF NOT EXISTS sb_bans (type INTEGER, steam TEXT PRIMARY KEY ON CONFLICT REPLACE, ip TEXT, name TEXT, reason TEXT, length INTEGER, admin_id INTEGER, admin_ip TEXT, queued BOOLEAN, time INTEGER, insert_time INTEGER)");
+	SQL_FastQuery(g_hSQLiteDB, "CREATE TABLE IF NOT EXISTS sb_bans (type INTEGER, steam TEXT PRIMARY KEY ON CONFLICT REPLACE, ip TEXT, name TEXT, reason TEXT, length INTEGER, admin_id INTEGER, admin_ip TEXT, queued BOOLEAN, create_time INTEGER, insert_time INTEGER)");
 	
 	// Process temporary bans every minute
 	CreateTimer(60.0, Timer_ProcessTemp, _, TIMER_REPEAT);
@@ -186,10 +186,10 @@ public OnClientPostAdminCheck(client)
 	}
 	
 	decl String:sQuery[1024];
-	Format(sQuery, sizeof(sQuery), "SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, time \
+	Format(sQuery, sizeof(sQuery), "SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, create_time \
 	                                FROM   {{bans}} \
 	                                WHERE  ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) \
-	                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
+	                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 	                                  AND  unban_time IS NULL",
 	                                STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp);
 	SB_Query(Query_BanVerify, sQuery, GetClientUserId(client), DBPrio_High);
@@ -253,7 +253,7 @@ public Action:OnBanClient(client, time, flags, const String:reason[], const Stri
 	decl String:sEscapedName[MAX_NAME_LENGTH * 2 + 1], String:sEscapedReason[256], String:sQuery[1024];
 	SB_Escape(sName,  sEscapedName,   sizeof(sEscapedName));
 	SB_Escape(reason, sEscapedReason, sizeof(sEscapedReason));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, create_time) \
 	                                VALUES      (%i, '%s', '%s', '%s', '%s', %i, %i, NULLIF(%i, 0), '%s', UNIX_TIMESTAMP())",
 	                                iType, sAuth, sIp, sEscapedName, sEscapedReason, time, g_iServerId, iAdminId, sAdminIp);
 	SB_Query(Query_BanInsert, sQuery, hPack, DBPrio_High);
@@ -295,7 +295,7 @@ public Action:OnBanIdentity(const String:identity[], time, flags, const String:r
 		                                FROM   {{bans}} \
 		                                WHERE  type  = %i \
 		                                  AND  steam REGEXP '^STEAM_[0-9]:%s$' \
-		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
+		                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 		                                  AND  unban_time IS NULL",
 		                                STEAM_BAN_TYPE, identity[8]);
 		SB_Query(Query_AddBanSelect, sQuery, hPack, DBPrio_High);
@@ -308,7 +308,7 @@ public Action:OnBanIdentity(const String:identity[], time, flags, const String:r
 		                                FROM   {{bans}} \
 		                                WHERE  type = %i \
 		                                  AND  ip   = '%s' \
-		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
+		                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 		                                  AND  unban_time IS NULL",
 		                                IP_BAN_TYPE, identity);
 		SB_Query(Query_BanIpSelect,  sQuery, hPack, DBPrio_High);
@@ -330,7 +330,7 @@ public Action:OnRemoveBan(const String:identity[], flags, const String:command[]
 		                                FROM   {{bans}} \
 		                                WHERE  type  = %i \
 		                                  AND  steam REGEXP '^STEAM_[0-9]:%s$' \
-		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
+		                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 		                                  AND  unban_time IS NULL",
 		                                STEAM_BAN_TYPE, identity[8]);
 	else if(flags & BANFLAG_IP)
@@ -338,7 +338,7 @@ public Action:OnRemoveBan(const String:identity[], flags, const String:command[]
 		                                FROM   {{bans}} \
 		                                WHERE  type = %i \
 		                                  AND  ip   = '%s' \
-		                                  AND  (length = 0 OR time + length * 60 > UNIX_TIMESTAMP()) \
+		                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 		                                  AND  unban_time IS NULL",
 		                                IP_BAN_TYPE, identity);
 	SB_Query(Query_UnbanSelect, sQuery, hPack);
@@ -604,7 +604,7 @@ public Action:Timer_ProcessQueue(Handle:timer, any:data)
 	if(!g_hSQLiteDB)
 		return;
 	
-	new Handle:hQuery = SQL_Query(g_hSQLiteDB, "SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, time \
+	new Handle:hQuery = SQL_Query(g_hSQLiteDB, "SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, create_time \
 	                                            FROM   sb_bans \
 	                                            WHERE  queued = 1");
 	if(!hQuery)
@@ -635,7 +635,7 @@ public Action:Timer_ProcessQueue(Handle:timer, any:data)
 		new Handle:hPack = CreateDataPack();
 		WritePackString(hPack, iType == STEAM_BAN_TYPE ? sAuth : sIp);
 		
-		Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, time) \
+		Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, create_time) \
 		                                VALUES      (%i, NULLIF('%s', ''), NULLIF('%s', ''), NULLIF('%s', ''), '%s', %i, %i, NULLIF(%i, 0), '%s', %i)",
 		                                iType, sAuth, sIp, sEscapedName, sEscapedReason, iLength, g_iServerId, iAdminId, sAdminIp, iTime);
 		SB_Query(Query_AddedFromQueue, sQuery, hPack);
@@ -651,7 +651,7 @@ public Action:Timer_ProcessTemp(Handle:timer)
 	decl String:sQuery[1024];
 	Format(sQuery, sizeof(sQuery), "DELETE FROM sb_bans \
 	                                WHERE       queued = 0 \
-	                                  AND       (time + length * 60 <= %i OR insert_time + 300 <= %i)",
+	                                  AND       (create_time + length * 60 <= %i OR insert_time + 300 <= %i)",
 	                                GetTime(), GetTime());
 	SQL_FastQuery(g_hSQLiteDB, sQuery);
 }
@@ -808,7 +808,7 @@ public Query_BanIpSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 	}
 	
 	SB_Escape(sReason, sEscapedReason, sizeof(sEscapedReason));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, ip, reason, length, server_id, admin_id, admin_ip, time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, ip, reason, length, server_id, admin_id, admin_ip, create_time) \
 	                                VALUES      (%i, '%s', '%s', %i, %i, NULLIF(%i, 0), '%s', UNIX_TIMESTAMP())",
 	                                IP_BAN_TYPE, sIp, sEscapedReason, iLength, g_iServerId, iAdminId, sAdminIp);
 	SB_Query(Query_BanIpInsert, sQuery, pack, DBPrio_High);
@@ -869,7 +869,7 @@ public Query_AddBanSelect(Handle:owner, Handle:hndl, const String:error[], any:p
 	}
 	
 	SB_Escape(sReason, sEscapedReason, sizeof(sEscapedReason));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, reason, length, server_id, admin_id, admin_ip, time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{bans}} (type, steam, reason, length, server_id, admin_id, admin_ip, create_time) \
 	                                VALUES      (%i, '%s', '%s', %i, %i, NULLIF(%i, 0), '%s', UNIX_TIMESTAMP())",
 	                                STEAM_BAN_TYPE, sAuth, sEscapedReason, iLength, g_iServerId, iAdminId, sAdminIp);
 	SB_Query(Query_AddBanInsert, sQuery, pack, DBPrio_High);
@@ -931,7 +931,7 @@ public Query_UnbanSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 		                                         unban_time     = UNIX_TIMESTAMP() \
 		                                WHERE    type           = %i \
 		                                  AND    steam          REGEXP '^STEAM_[0-9]:%s$' \
-		                                ORDER BY time DESC \
+		                                ORDER BY create_time DESC \
 		                                LIMIT    1",
 		                                GetAdminId(iAdmin), STEAM_BAN_TYPE, sIdentity[8]);
 	else
@@ -940,7 +940,7 @@ public Query_UnbanSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 		                                         unban_time     = UNIX_TIMESTAMP() \
 		                                WHERE    type           = %i \
 		                                  AND    ip             = '%s' \
-		                                ORDER BY time DESC \
+		                                ORDER BY create_time DESC \
 		                                LIMIT    1",
 		                                GetAdminId(iAdmin), IP_BAN_TYPE, sIdentity);
 	
@@ -1016,12 +1016,12 @@ public Query_BanVerify(Handle:owner, Handle:hndl, const String:error[], any:user
 	GetClientName(iClient,       sName, sizeof(sName));
 	
 	SB_Escape(sName, sEscapedName, sizeof(sEscapedName));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{blocks}} (ban_id, name, server_id, time) \
-	                                VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_time IS NULL ORDER BY time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{blocks}} (ban_id, name, server_id, create_time) \
+	                                VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_time IS NULL ORDER BY create_time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
 	                                STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp, sEscapedName, g_iServerId);
 	SB_Execute(sQuery, DBPrio_High);
 	
-	// SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, time
+	// SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, create_time
 	new iType    = SQL_FetchInt(hndl, 0);
 	SQL_FetchString(hndl, 1, sAuth,    sizeof(sAuth));
 	SQL_FetchString(hndl, 2, sIp,      sizeof(sIp));
@@ -1086,7 +1086,7 @@ public Native_SubmitBan(Handle:plugin, numParams)
 	SB_Escape(sName,       sEscapedName,       sizeof(sEscapedName));
 	SB_Escape(sReason,     sEscapedReason,     sizeof(sEscapedReason));
 	SB_Escape(sTargetName, sEscapedTargetName, sizeof(sEscapedTargetName));
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{submissions}} (name, steam, ip, reason, server_id, subname, subip, time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{submissions}} (name, steam, ip, reason, server_id, user_name, user_ip, create_time) \
 	                                VALUES      ('%s', '%s', '%s', '%s', %i, '%s', '%s', UNIX_TIMESTAMP())",
 	                                sEscapedTargetName, sTargetAuth, sTargetIp, sEscapedReason, g_iServerId, sEscapedName, sIp);
 	SB_Query(Query_SubmitBan, sQuery, hPack);
@@ -1161,13 +1161,13 @@ bool:HasLocalBan(const String:sAuth[], const String:sIp[] = "", bool:bType = tru
 		Format(sQuery, sizeof(sQuery), "SELECT 1 \
 		                                FROM   sb_bans \
 		                                WHERE  ((type = %i AND steam = '%s') OR (type = %i AND ip = '%s')) \
-		                                  AND  (length = 0 OR time + length * 60 > %i OR (queued = 0 AND insert_time + 300 > %i))",
+		                                  AND  (length = 0 OR create_time + length * 60 > %i OR (queued = 0 AND insert_time + 300 > %i))",
 		                                STEAM_BAN_TYPE, sAuth[0] ? sAuth : "none", IP_BAN_TYPE, sIp[0] ? sIp : "none", GetTime(), GetTime());
 	else
 		Format(sQuery, sizeof(sQuery), "SELECT 1 \
 		                                FROM   sb_bans \
 		                                WHERE  (steam = '%s' OR ip = '%s') \
-		                                  AND  (length = 0 OR time + length * 60 > %i OR (queued = 0 AND insert_time + 300 > %i))",
+		                                  AND  (length = 0 OR create_time + length * 60 > %i OR (queued = 0 AND insert_time + 300 > %i))",
 		                                sAuth[0] ? sAuth : "none", sIp[0] ? sIp : "none", GetTime(), GetTime());
 	
 	new Handle:hQuery = SQL_Query(g_hSQLiteDB, sQuery);
@@ -1180,7 +1180,7 @@ InsertLocalBan(iType, const String:sAuth[], const String:sIp[], const String:sNa
 	SQL_EscapeString(g_hSQLiteDB, sName,   sEscapedName,   sizeof(sEscapedName));
 	SQL_EscapeString(g_hSQLiteDB, sReason, sEscapedReason, sizeof(sEscapedReason));
 	
-	Format(sQuery, sizeof(sQuery), "INSERT INTO sb_bans (type, steam, ip, name, reason, length, admin_id, admin_ip, queued, time, insert_time) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO sb_bans (type, steam, ip, name, reason, length, admin_id, admin_ip, queued, create_time, insert_time) \
 	                                VALUES      (%i, '%s', '%s', '%s', '%s', %i, %i, '%s', %i, %i, %i)",
 	                                iType, sAuth, sIp, sEscapedName, sEscapedReason, iLength, iAdminId, sAdminIp, bQueued ? 1 : 0, iTime, GetTime());
 	SQL_FastQuery(g_hSQLiteDB, sQuery);

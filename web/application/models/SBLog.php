@@ -16,7 +16,7 @@
  * @property string $query Query
  * @property integer $admin_id Admin ID
  * @property string $admin_ip Admin IP address
- * @property integer $time Date/Time
+ * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
@@ -56,13 +56,9 @@ class SBLog extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('type, title, message', 'required'),
-			array('type', 'length', 'max'=>1),
-			array('title', 'length', 'max'=>64),
-			array('message', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, type, title, message, function, query, admin_id, admin_ip, time', 'safe', 'on'=>'search'),
+			array('id, type, title, message, function, query, admin_id, admin_ip, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,7 +88,7 @@ class SBLog extends CActiveRecord
 			'query' => Yii::t('sourcebans', 'Query'),
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'admin_ip' => 'Admin IP address',
-			'time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 			'admin.name' => Yii::t('sourcebans', 'Admin'),
 		);
 	}
@@ -117,7 +113,7 @@ class SBLog extends CActiveRecord
 		$criteria->compare('t.query',$this->query,true);
 		$criteria->compare('t.admin_id',$this->admin_id);
 		$criteria->compare('t.admin_ip',$this->admin_ip,true);
-		$criteria->compare('t.time',$this->time);
+		$criteria->compare('t.create_time',$this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -126,7 +122,7 @@ class SBLog extends CActiveRecord
 			),
 			'sort'=>array(
 				'defaultOrder'=>array(
-					'time'=>CSort::SORT_DESC,
+					'create_time'=>CSort::SORT_DESC,
 				),
 			),
 		));
@@ -137,7 +133,6 @@ class SBLog extends CActiveRecord
 		return array(
 			'CTimestampBehavior' => array(
 				'class' => 'zii.behaviors.CTimestampBehavior',
-				'createAttribute' => 'time',
 				'updateAttribute' => null,
 			),
 		);
@@ -159,7 +154,9 @@ class SBLog extends CActiveRecord
 		if($this->isNewRecord)
 		{
 			if(!Yii::app()->user->isGuest)
+			{
 				$this->admin_id = Yii::app()->user->id;
+			}
 			
 			$this->admin_ip = $_SERVER['SERVER_ADDR'];
 			$this->function = $this->_getTraces();

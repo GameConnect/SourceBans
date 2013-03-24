@@ -244,8 +244,6 @@ return array(
 	'<p>Here you will be able to submit a ban for a player who is breaking the rules of the gameserver. When submitting a ban we request you to fill out all the fields to be as descriptive as possible in your comments. This will ensure that your ban submission is processed much faster.</p><p>For a short explanation on how to create a demo, click <a id="demo_howto" href="#">here</a>.</p>' => '<p>Hier kannst du einen Bann für einen Spieler einsenden, der gegen die Serverregeln verstoßen hat. Wenn du einen Bann einsenden willst, bitten wir dich alle Felder auszufüllen und in deinem Kommentar so klar beschreibend wie möglich zu sein. Das wird die Bearbeitung deiner Einsendung sehr beschleunigen.</p><p>Für eine kurze Erklärung, wie eine Demo aufgenommen wird, klicke <a id="demo_howto" href="#">hier</a>.</p>',
 	'<h4>What happens if someone gets banned?</h4><p>If someone gets banned, the specific Steam ID will be included in this SourceBans database and everytime this player tries to connect to one of our servers he/she will be blocked and will receive a message that they are blocked by SourceBans.</p>' => '<h4>Was passiert, wenn jemand gebannt wird?</h4><p>Wenn jemand gebannt wird, wird seine Steam ID in diese SourceBans Datenbank eingetragen und jedes Mal, wenn dieser Spieler versucht auf einem unserer Server zu spielen, wird er/sie mit einer Nachricht von SourceBans geblockt.</p>',
 	'Submitted on' => 'Eingesendet am',
-	'Summer time' => 'Sommerzeit',
-	'System Log' => 'System Log',
 	'Theme' => 'Thema',
 	'Choose your theme here.' => 'Wählen Sie hier Ihr Thema.',
 	'Themes' => 'Themas',

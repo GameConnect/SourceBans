@@ -13,6 +13,7 @@
  *
  * The followings are the available model relations:
  * @property SBAdmin[] $admins
+ * @property integer $adminsCount
  * @property SBGroupPermission[] $permissions
  *
  * @package sourcebans.models

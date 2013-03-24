@@ -92,7 +92,7 @@
 			'htmlOptions'=>array(
 				'class'=>'nowrap text-right',
 			),
-			'name'=>'time',
+			'name'=>'create_time',
 			'type'=>'datetime',
 		),
 	),
@@ -106,6 +106,8 @@
 		"data-id"=>$data->id,
 	)',
 	'selectableRows'=>0,
+	'summaryCssClass'=>'',
+	'summaryText'=>false,
 )) ?>
 
     </section>

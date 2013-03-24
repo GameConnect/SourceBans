@@ -248,7 +248,7 @@ public PanelHandler_BanInfo(Handle:menu, MenuAction:action, param1, param2)
 /**
  * Query Callbacks
  */
-public OnRecieveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
+public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
 	ResetPack(pack);
 	
@@ -413,7 +413,7 @@ stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 	// Get the steamid and format the query.
 	decl String:sAuth[20], String:sQuery[256];
 	GetClientAuthString(iTarget, sAuth, sizeof(sAuth));
-	Format(sQuery, sizeof(sQuery), "SELECT id, steam, name, reason, length, admin_id, unban_admin_id, time \
+	Format(sQuery, sizeof(sQuery), "SELECT id, steam, name, reason, length, admin_id, unban_admin_id, create_time \
 																	FROM   {{bans}} \
 																	WHERE  steam REGEXP '^STEAM_[0-9]:%s$'",
 																	sAuth[8]);
@@ -424,7 +424,7 @@ stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 	WritePackCell(hPack, iTarget);
 	WritePackCell(hPack, bOnConnect);
 	WritePackString(hPack, sQuery);
-	SB_Query(OnRecieveBans, sQuery, hPack);
+	SB_Query(OnReceiveBans, sQuery, hPack);
 }
 
 stock SendChatToAdmins(iTarget)

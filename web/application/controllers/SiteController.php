@@ -162,7 +162,22 @@ class SiteController extends Controller
 		);
 		
 		$model = new SBSubmission;
+		$model->steam = 'STEAM_';
 		$model->demo = new SBDemo;
+		
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='submitban-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+		
+		if(isset($_POST['SBSubmission']))
+		{
+			$model->attributes=$_POST['SBSubmission'];
+			if($model->save())
+				$this->redirect(array('site/index'));
+		}
 		
 		$games = SBGame::model()->with('servers:enabled')->findAll(array(
 			'condition' => 'servers.id IS NOT NULL',
@@ -187,7 +202,22 @@ class SiteController extends Controller
 		);
 		
 		$model = new SBProtest;
-		$model->ban = new SBBan;
+		$model->ban_steam = 'STEAM_';
+		$model->ban_ip = Yii::app()->request->userHostAddress;
+		
+		// if it is ajax validation request
+		if(isset($_POST['ajax']) && $_POST['ajax']==='protestban-form')
+		{
+			echo CActiveForm::validate($model);
+			Yii::app()->end();
+		}
+		
+		if(isset($_POST['SBProtest']))
+		{
+			$model->attributes=$_POST['SBProtest'];
+			if($model->save())
+				$this->redirect(array('site/index'));
+		}
 		
 		$this->render('protestban', array(
 			'model' => $model,

@@ -25,6 +25,9 @@
  */
 class SBProtest extends CActiveRecord
 {
+	public $ban_steam;
+	public $ban_ip;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -51,12 +54,18 @@ class SBProtest extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ban_id, reason, user_email, user_ip', 'required'),
-			array('ban_id', 'numerical', 'integerOnly'=>true),
+			array('reason, user_email', 'required'),
 			array('archived', 'boolean'),
 			array('reason', 'length', 'max'=>255),
 			array('user_email', 'length', 'max'=>128),
 			array('user_email', 'email'),
+			array('ban_steam, ban_ip', 'default', 'setOnEmpty'=>true),
+			array('ban_steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
+			array('ban_ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
+			array('ban_steam, ban_ip', 'SBProtestBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','{attribute} "{value}" is currently not banned.'), 'criteria'=>array(
+				'scopes'=>'active',
+			)),
+			array('ban_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, ban_id, reason, user_email, user_ip, archived, create_time', 'safe', 'on'=>'search'),
@@ -84,6 +93,8 @@ class SBProtest extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'ban_id' => Yii::t('sourcebans', 'Ban'),
+			'ban_ip' => Yii::t('sourcebans', 'IP address'),
+			'ban_steam' => Yii::t('sourcebans', 'Steam ID'),
 			'reason' => Yii::t('sourcebans', 'Reason'),
 			'user_email' => Yii::t('sourcebans', 'Your email address'),
 			'user_ip' => 'User IP address',
@@ -96,12 +107,13 @@ class SBProtest extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($criteria=array())
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=new CDbCriteria($criteria);
+		$criteria->with='ban';
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.ban_id',$this->ban_id);
@@ -117,6 +129,21 @@ class SBProtest extends CActiveRecord
 				'pageSize'=>SourceBans::app()->settings->items_per_page,
 			),
 			'sort'=>array(
+				'attributes'=>array(
+					'ban.name'=>array(
+						'asc'=>'ban.name',
+						'desc'=>'ban.name DESC',
+					),
+					'ban.steam'=>array(
+						'asc'=>'ban.steam',
+						'desc'=>'ban.steam DESC',
+					),
+					'ban.ip'=>array(
+						'asc'=>'ban.ip',
+						'desc'=>'ban.ip DESC',
+					),
+					'*',
+				),
 				'defaultOrder'=>array(
 					'create_time'=>CSort::SORT_DESC,
 				),

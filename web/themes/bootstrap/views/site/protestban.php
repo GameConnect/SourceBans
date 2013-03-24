@@ -19,18 +19,18 @@
 )) ?>
 
       <div class="control-group">
-        <?php echo $form->labelEx($model->ban,'steam',array('class' => 'control-label')); ?>
+        <?php echo $form->labelEx($model,'ban_steam',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo CHtml::textField('SBBan[steam]'); ?>
-          <?php echo $form->error($model->ban,'steam'); ?>
+          <?php echo $form->textField($model,'ban_steam'); ?>
+          <?php echo $form->error($model,'ban_steam'); ?>
         </div>
       </div>
 
       <div class="control-group">
-        <?php echo $form->labelEx($model->ban,'ip',array('class' => 'control-label')); ?>
+        <?php echo $form->labelEx($model,'ban_ip',array('class' => 'control-label')); ?>
         <div class="controls">
-          <?php echo CHtml::textField('SBBan[ip]',Yii::app()->request->userHostAddress); ?>
-          <?php echo $form->error($model->ban,'ip'); ?>
+          <?php echo $form->textField($model,'ban_ip'); ?>
+          <?php echo $form->error($model,'ban_ip'); ?>
         </div>
       </div>
 

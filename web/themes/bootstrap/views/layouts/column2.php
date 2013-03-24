@@ -20,7 +20,7 @@
 <?php Yii::app()->clientScript->registerCoreScript('bbq') ?>
 <?php Yii::app()->clientScript->registerScript('hashchange', '
   $(window).bind("hashchange", function(e) {
-    var pane  = $.param.fragment(),
+    var pane  = $.param.fragment().replace("/", "-"),
         $pane = $("#pane-" + pane);
     if(!$pane.length) {
       $pane = $(".tab-pane:first");

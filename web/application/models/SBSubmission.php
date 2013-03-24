@@ -63,10 +63,10 @@ class SBSubmission extends CActiveRecord
 			array('steam, ip', 'default', 'setOnEmpty'=>true),
 			array('steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
 			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
-			array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+			array('steam, ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" already has an active ban submission.'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
-			array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+			array('steam, ip', 'SBSubmitBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
 			array('reason', 'length', 'max'=>255),
@@ -117,12 +117,12 @@ class SBSubmission extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($criteria=array())
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria=new CDbCriteria($criteria);
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.name',$this->name,true);

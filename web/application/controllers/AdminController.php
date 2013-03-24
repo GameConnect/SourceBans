@@ -149,12 +149,22 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'Add ban'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
 			array('label'=>Yii::t('sourcebans', 'Import bans'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
+			array('label'=>Yii::t('sourcebans', 'Ban protests'), 'url'=>'#protests', 'visible'=>Yii::app()->user->data->hasPermission('BAN_PROTESTS')),
+			array('label'=>Yii::t('sourcebans', 'Ban submissions'), 'url'=>'#submissions', 'visible'=>Yii::app()->user->data->hasPermission('BAN_SUBMISSIONS')),
 		);
 		
 		$ban=new SBBan;
 		
+		$protests=new SBProtest('search');
+		$protests->unsetAttributes();  // clear any default values
+		
+		$submissions=new SBSubmission('search');
+		$submissions->unsetAttributes();  // clear any default values
+		
 		$this->render('bans',array(
 			'ban'=>$ban,
+			'protests'=>$protests,
+			'submissions'=>$submissions,
 		));
 	}
 	

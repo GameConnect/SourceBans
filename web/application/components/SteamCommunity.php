@@ -27,7 +27,7 @@ class SteamCommunity
 	
 	
 	/**
-	 * Normalizes an API request
+	 * Normalizes a request to http://api.steampowered.com
 	 * 
 	 * @param string $interface The Steam Web API interface
 	 * @param string $method The Steam Web API interface method
@@ -44,7 +44,7 @@ class SteamCommunity
 	}
 	
 	/**
-	 * Normalizes a data request
+	 * Normalizes a request to http://steamcommunity.com
 	 * 
 	 * @param string $path The request path
 	 * @param array $data The request data

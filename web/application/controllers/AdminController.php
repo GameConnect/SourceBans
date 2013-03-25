@@ -75,10 +75,19 @@ class AdminController extends Controller
 	{
 		$this->layout='//layouts/column1';
 		
-		$this->pageTitle=Yii::t('sourcebans', 'Administration');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.index.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration'),
+			Yii::t('sourcebans', 'controllers.admin.index.title'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.title'), 'url'=>array('admin/admins'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS', 'DELETE_ADMINS', 'EDIT_ADMINS', 'LIST_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.title'), 'url'=>array('admin/bans'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_PROTESTS', 'BAN_SUBMISSIONS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.title'), 'url'=>array('admin/groups'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS', 'DELETE_GROUPS', 'EDIT_GROUPS', 'LIST_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.title'), 'url'=>array('admin/servers'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS', 'DELETE_SERVERS', 'EDIT_SERVERS', 'LIST_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.title'), 'url'=>array('admin/games'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES', 'DELETE_GAMES', 'EDIT_GAMES', 'LIST_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.title'), 'url'=>array('admin/settings'), 'visible'=>Yii::app()->user->data->hasPermission('SETTINGS')),
 		);
 		
 		$demosize=Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
@@ -101,18 +110,18 @@ class AdminController extends Controller
 	 */
 	public function actionAdmins()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Admins');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.admins.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Admins'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.admins.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'List admins'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
-			array('label'=>Yii::t('sourcebans', 'Add admin'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
-			array('label'=>Yii::t('sourcebans', 'Import admins'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
-			array('label'=>Yii::t('sourcebans', 'Actions'), 'url'=>'#actions'),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.import'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.actions'), 'url'=>'#actions'),
 		);
 		
 		$admin=new SBAdmin;
@@ -139,18 +148,18 @@ class AdminController extends Controller
 	 */
 	public function actionBans()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Bans');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.bans.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Bans'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.bans.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'Add ban'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
-			array('label'=>Yii::t('sourcebans', 'Import bans'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
-			array('label'=>Yii::t('sourcebans', 'Ban protests'), 'url'=>'#protests', 'visible'=>Yii::app()->user->data->hasPermission('BAN_PROTESTS')),
-			array('label'=>Yii::t('sourcebans', 'Ban submissions'), 'url'=>'#submissions', 'visible'=>Yii::app()->user->data->hasPermission('BAN_SUBMISSIONS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.import'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.protests'), 'url'=>'#protests', 'visible'=>Yii::app()->user->data->hasPermission('BAN_PROTESTS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.submissions'), 'url'=>'#submissions', 'visible'=>Yii::app()->user->data->hasPermission('BAN_SUBMISSIONS')),
 		);
 		
 		$ban=new SBBan;
@@ -173,16 +182,16 @@ class AdminController extends Controller
 	 */
 	public function actionGames()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Games');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.games.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Games'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.games.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'List games'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GAMES')),
-			array('label'=>Yii::t('sourcebans', 'Add game'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
 		);
 		
 		$game=new SBGame;
@@ -203,17 +212,17 @@ class AdminController extends Controller
 	 */
 	public function actionGroups()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Groups');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.groups.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Groups'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.groups.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'List groups'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
-			array('label'=>Yii::t('sourcebans', 'Add group'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
-			array('label'=>Yii::t('sourcebans', 'Import groups'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.menu.import'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS')),
 		);
 		
 		$group=new SBGroup;
@@ -238,17 +247,17 @@ class AdminController extends Controller
 	 */
 	public function actionServers()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Servers');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.servers.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Servers'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.servers.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'List servers'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
-			array('label'=>Yii::t('sourcebans', 'Add server'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
-			array('label'=>Yii::t('sourcebans', 'Server configuration'), 'url'=>array('servers/config'), 'visible'=>Yii::app()->user->data->hasFlag(SM_CONFIG)),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.servers.config.title'), 'url'=>array('servers/config'), 'visible'=>Yii::app()->user->data->hasFlag(SM_CONFIG)),
 		);
 		
 		$server=new SBServer;
@@ -269,17 +278,17 @@ class AdminController extends Controller
 	 */
 	public function actionSettings()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Settings');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.settings.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Settings'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.settings.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'Settings'), 'url'=>'#settings'),
-			array('label'=>Yii::t('sourcebans', 'Plugins'), 'url'=>'#plugins'),
-			array('label'=>Yii::t('sourcebans', 'Logs'), 'url'=>'#logs'),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.menu.settings'), 'url'=>'#settings'),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.menu.plugins'), 'url'=>'#plugins'),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.menu.logs'), 'url'=>'#logs'),
 		);
 		
 		$model=new SettingsForm;
@@ -344,7 +353,7 @@ class AdminController extends Controller
 		if(empty($version) || strlen($version) > 8)
 		{
 			Yii::app()->end(CJSON::encode(array(
-				'error' => Yii::t('sourcebans', 'Error retrieving latest release.'),
+				'error' => Yii::t('sourcebans', 'controllers.admin.version.error'),
 			)));
 		}
 		

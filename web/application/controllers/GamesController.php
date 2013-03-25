@@ -76,11 +76,11 @@ class GamesController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		$this->pageTitle=Yii::t('sourcebans', 'Games');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.games.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Games') => array('admin/games'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.games.title') => array('admin/games'),
 			$model->name,
 		);
 		

@@ -79,11 +79,11 @@ class GroupsController extends Controller
 		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
 		$model=$this->loadModel($id, $type);
 
-		$this->pageTitle=Yii::t('sourcebans', 'Groups');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.groups.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Groups') => array('admin/groups'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.groups.title') => array('admin/groups'),
 			$model->name,
 		);
 		

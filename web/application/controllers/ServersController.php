@@ -129,11 +129,11 @@ class ServersController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		$this->pageTitle=Yii::t('sourcebans', 'Servers');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.servers.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
 			$model->address,
 		);
 		
@@ -176,11 +176,11 @@ class ServersController extends Controller
 	{
 		$model=$this->loadModel($id);
 		
-		$this->pageTitle=Yii::t('sourcebans', 'Remote Console');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.servers.rcon.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
 			$model->address,
 		);
 		
@@ -210,12 +210,12 @@ class ServersController extends Controller
 	
 	public function actionConfig()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'Server configuration');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.servers.config.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Servers') => array('admin/servers'),
-			Yii::t('sourcebans', 'Server configuration'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
+			Yii::t('sourcebans', 'controllers.servers.config.title'),
 		);
 		
 		$this->menu=array(

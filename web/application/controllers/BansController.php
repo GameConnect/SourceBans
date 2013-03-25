@@ -80,11 +80,11 @@ class BansController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		$this->pageTitle=Yii::t('sourcebans', 'Bans');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.bans.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Bans') => array('admin/bans'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.bans.title') => array('admin/bans'),
 			$model->name,
 		);
 		

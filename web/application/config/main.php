@@ -6,6 +6,8 @@ return CMap::mergeArray(
 	array(
 		'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 		'name'=>'SourceBans',
+		'language'=>'en',
+		'sourceLanguage'=>'00',
 		
 		// preloading 'log' component
 		'preload'=>array('log'),

@@ -26,7 +26,7 @@
 
 ********************************************************
 **                                                    **
-* SourceBans <?php echo str_pad(Yii::t('sourcebans', 'Remote Console'), 41) ?> *
+* SourceBans <?php echo str_pad(Yii::t('sourcebans', 'controllers.servers.rcon.title'), 41) ?> *
 * <?php echo str_pad(Yii::t('sourcebans', 'Type \'clr\' to clear the console'), 52) ?> *
 **                                                    **
 ********************************************************

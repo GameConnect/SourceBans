@@ -93,7 +93,7 @@
 		"data-community-id"=>$data->communityId,
 	)',
 	'selectableRows'=>0,
-	'summaryText'=>CHtml::link(Yii::t('sourcebans', $hideInactive == 'true' ? 'Show inactive' : 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
+	'summaryText'=>CHtml::link($hideInactive == 'true' ? Yii::t('sourcebans', 'Show inactive') : Yii::t('sourcebans', 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
 )) ?><!-- bans grid -->
 
 <?php if(SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))): ?>

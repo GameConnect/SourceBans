@@ -134,6 +134,7 @@ class SBAdmin extends CActiveRecord
 			'email' => Yii::t('sourcebans', 'Email address'),
 			'language' => Yii::t('sourcebans', 'Language'),
 			'theme' => Yii::t('sourcebans', 'Theme'),
+			'timezone' => Yii::t('sourcebans', 'Timezone'),
 			'server_password' => Yii::t('sourcebans', 'Server password'),
 			'login_time' => Yii::t('sourcebans', 'Last visit'),
 			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),

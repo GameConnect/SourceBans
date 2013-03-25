@@ -69,17 +69,17 @@ class AccountForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'language' => Yii::t('sourcebans', 'Language'),
-			'theme' => Yii::t('sourcebans', 'Theme'),
-			'timezone' => Yii::t('sourcebans', 'Timezone'),
-			'email' => Yii::t('sourcebans', 'Current email'),
-			'new_email' => Yii::t('sourcebans', 'New email'),
-			'confirm_email' => Yii::t('sourcebans', 'Confirm email'),
-			'current_password' => Yii::t('sourcebans', 'Current password'),
-			'new_password' => Yii::t('sourcebans', 'New password'),
-			'confirm_password' => Yii::t('sourcebans', 'Confirm password'),
-			'new_server_password' => Yii::t('sourcebans', 'New password'),
-			'confirm_server_password' => Yii::t('sourcebans', 'Confirm password'),
+			'language' => Yii::t('sourcebans', 'models.AccountForm.language'),
+			'theme' => Yii::t('sourcebans', 'models.AccountForm.theme'),
+			'timezone' => Yii::t('sourcebans', 'models.AccountForm.timezone'),
+			'email' => Yii::t('sourcebans', 'models.AccountForm.email'),
+			'new_email' => Yii::t('sourcebans', 'models.AccountForm.new_email'),
+			'confirm_email' => Yii::t('sourcebans', 'models.AccountForm.confirm_email'),
+			'current_password' => Yii::t('sourcebans', 'models.AccountForm.current_password'),
+			'new_password' => Yii::t('sourcebans', 'models.AccountForm.new_password'),
+			'confirm_password' => Yii::t('sourcebans', 'models.AccountForm.confirm_password'),
+			'new_server_password' => Yii::t('sourcebans', 'models.AccountForm.new_server_password'),
+			'confirm_server_password' => Yii::t('sourcebans', 'models.AccountForm.confirm_server_password'),
 		);
 	}
 

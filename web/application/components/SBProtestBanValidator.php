@@ -96,7 +96,7 @@ class SBProtestBanValidator extends CValidator
 		}
 		else if(!empty($ban->protests))
 		{
-			$message=Yii::t('sourcebans','{attribute} "{value}" already has an active ban protest.');
+			$message=Yii::t('sourcebans','components.SBProtestBanValidator.error');
 			$this->addError($object,$attribute,$message,array('{value}'=>CHtml::encode($value)));
 		}
 		else

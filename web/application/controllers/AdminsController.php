@@ -78,11 +78,11 @@ class AdminsController extends Controller
 	{
 		$model=$this->loadModel($id);
 
-		$this->pageTitle=Yii::t('sourcebans', 'Admins');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.admin.admins.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Admins') => array('admin/admins'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.admins.title') => array('admin/admins'),
 			$model->name,
 		);
 		
@@ -225,7 +225,7 @@ class AdminsController extends Controller
 				
 				break;
 			default:
-				throw new CHttpException(500, Yii::t('sourcebans', 'Unsupported format.'));
+				throw new CHttpException(500, Yii::t('sourcebans', 'controllers.admins.import.error'));
 		}
 		
 		$this->redirect(array('admin/admins'));

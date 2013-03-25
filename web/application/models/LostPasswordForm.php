@@ -32,7 +32,7 @@ class LostPasswordForm extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'email' => Yii::t('sourcebans', 'Email address'),
+			'email' => Yii::t('sourcebans', 'models.LostPasswordForm.email'),
 		);
 	}
 
@@ -50,7 +50,7 @@ class LostPasswordForm extends CFormModel
 		
 		$validationKey = SBAdmin::getPasswordKey();
 		Yii::app()->mailer->AddAddress($admin->email);
-		Yii::app()->mailer->Subject = Yii::t('sourcebans', 'SourceBans password reset');
+		Yii::app()->mailer->Subject = Yii::t('sourcebans', 'models.LostPasswordForm.reset.subject');
 		Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'Hello {name},\nyou have requested to have your password reset for your SourceBans account.\nTo complete this process, please click the following link.\nNOTE: If you did not request this reset, then simply ignore this email.\n\n{link}', array(
 			'{name}' => $admin->name,
 			'{link}' => Yii::app()->createUrl('site/lostPassword', array('email' => $admin->email, 'key' => $validationKey)),

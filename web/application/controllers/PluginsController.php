@@ -79,8 +79,8 @@ class PluginsController extends Controller
 		$this->pageTitle=$plugin->name;
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'Administration') => array('admin/index'),
-			Yii::t('sourcebans', 'Plugins') => array('admin/settings', '#'=>'plugins'),
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.settings.menu.plugins') => array('admin/settings', '#'=>'plugins'),
 			$plugin->name,
 		);
 		

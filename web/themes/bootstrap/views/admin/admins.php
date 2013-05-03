@@ -61,6 +61,44 @@
 
     </section>
 <?php endif ?>
+<?php if(Yii::app()->user->data->hasPermission('OVERRIDES')): ?>
+    <section class="tab-pane fade" id="pane-overrides">
+      <p><?php echo Yii::t('sourcebans', 'Here you can change the permissions on any command, either globally, or for a specific group, without editing plugin source code.') ?></p>
+      <p><?php echo Yii::t('sourcebans', 'See the {link} for more details.', array('{link}' => '<a href="http://wiki.alliedmods.net/Overriding_Command_Access_(SourceMod)" target="_blank">SourceMod wiki</a>')) ?></p>
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'overrides-grid',
+	'dataProvider'=>$overrides->search(),
+	'columns'=>array(
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'htmlOptions'=>array(
+				'class'=>'nowrap',
+			),
+			'name'=>'type',
+			'value'=>'($types = SBOverride::getTypes()) ? $types[$data->type] : null',
+		),
+		'name',
+		array(
+			'name'=>'flags',
+			'type'=>'ntext',
+			'value'=>'($flags = SourceBans::app()->flags) ? $flags[$data->flags] : null',
+		),
+	),
+	'cssFile'=>false,
+	'itemsCssClass'=>'items table table-condensed table-hover',
+	'pager'=>array(
+		'class'=>'bootstrap.widgets.TbPager',
+	),
+	'pagerCssClass'=>'pagination pagination-right',
+	'selectableRows'=>0,
+	'summaryCssClass'=>'',
+	'summaryText'=>false,
+)) ?>
+
+    </section>
+<?php endif ?>
     <section class="tab-pane fade" id="pane-actions">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'actions-grid',

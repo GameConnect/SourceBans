@@ -82,12 +82,12 @@ class AdminController extends Controller
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.title'), 'url'=>array('admin/admins'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS', 'DELETE_ADMINS', 'EDIT_ADMINS', 'LIST_ADMINS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.title'), 'url'=>array('admin/bans'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_PROTESTS', 'BAN_SUBMISSIONS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.title'), 'url'=>array('admin/groups'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS', 'DELETE_GROUPS', 'EDIT_GROUPS', 'LIST_GROUPS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.title'), 'url'=>array('admin/servers'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS', 'DELETE_SERVERS', 'EDIT_SERVERS', 'LIST_SERVERS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.title'), 'url'=>array('admin/games'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES', 'DELETE_GAMES', 'EDIT_GAMES', 'LIST_GAMES')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.title'), 'url'=>array('admin/settings'), 'visible'=>Yii::app()->user->data->hasPermission('SETTINGS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.title'), 'url'=>array('admin/admins'), 'itemOptions'=>array('class'=>'admins'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS', 'DELETE_ADMINS', 'EDIT_ADMINS', 'LIST_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.title'), 'url'=>array('admin/bans'), 'itemOptions'=>array('class'=>'bans'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_PROTESTS', 'BAN_SUBMISSIONS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.title'), 'url'=>array('admin/groups'), 'itemOptions'=>array('class'=>'groups'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS', 'DELETE_GROUPS', 'EDIT_GROUPS', 'LIST_GROUPS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.title'), 'url'=>array('admin/servers'), 'itemOptions'=>array('class'=>'servers'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS', 'DELETE_SERVERS', 'EDIT_SERVERS', 'LIST_SERVERS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.title'), 'url'=>array('admin/games'), 'itemOptions'=>array('class'=>'games'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES', 'DELETE_GAMES', 'EDIT_GAMES', 'LIST_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.settings.title'), 'url'=>array('admin/settings'), 'itemOptions'=>array('class'=>'settings'), 'visible'=>Yii::app()->user->data->hasPermission('SETTINGS')),
 		);
 		
 		$demosize=Helpers::getDirectorySize(Yii::getPathOfAlias('webroot.demos'));
@@ -121,6 +121,7 @@ class AdminController extends Controller
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_ADMINS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.import'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.overrides'), 'url'=>'#overrides', 'visible'=>Yii::app()->user->data->hasPermission('OVERRIDES')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.menu.actions'), 'url'=>'#actions'),
 		);
 		
@@ -136,10 +137,16 @@ class AdminController extends Controller
 		if(isset($_GET['SBAction']))
 			$actions->attributes=$_GET['SBAction'];
 		
+		$overrides=new SBOverride('search');
+		$overrides->unsetAttributes();  // clear any default values
+		if(isset($_GET['SBOverride']))
+			$overrides->attributes=$_GET['SBOverride'];
+		
 		$this->render('admins',array(
 			'actions'=>$actions,
 			'admin'=>$admin,
 			'admins'=>$admins,
+			'overrides'=>$overrides,
 		));
 	}
 	

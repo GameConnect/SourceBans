@@ -21,6 +21,12 @@
  */
 class SBServerGroupOverride extends CActiveRecord
 {
+	const ALLOW_ACCESS = 'allow';
+	const DENY_ACCESS  = 'deny';
+	const COMMAND_TYPE = 'command';
+	const GROUP_TYPE   = 'group';
+	
+	
 	public function __toString()
 	{
 		return $this->name;
@@ -108,5 +114,32 @@ class SBServerGroupOverride extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+	
+	
+	/**
+	 * Returns the supported access types
+	 * 
+	 * @return array the supported access types
+	 */
+	public static function getAccessTypes()
+	{
+		return array(
+			self::ALLOW_ACCESS => Yii::t('sourcebans', 'Allow'),
+			self::DENY_ACCESS  => Yii::t('sourcebans', 'Deny'),
+		);
+	}
+	
+	/**
+	 * Returns the supported override types
+	 * 
+	 * @return array the supported override types
+	 */
+	public static function getTypes()
+	{
+		return array(
+			self::COMMAND_TYPE => Yii::t('sourcebans', 'Command'),
+			self::GROUP_TYPE   => Yii::t('sourcebans', 'Group'),
+		);
 	}
 }

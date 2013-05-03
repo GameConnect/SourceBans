@@ -17,7 +17,11 @@
  */
 class SBOverride extends CActiveRecord
 {
-	public function __toString()
+	const COMMAND_TYPE = 'command';
+	const GROUP_TYPE   = 'group';
+	
+	
+  public function __toString()
 	{
 		return $this->name;
 	}
@@ -109,5 +113,19 @@ class SBOverride extends CActiveRecord
 				),
 			),
 		));
+	}
+	
+	
+	/**
+	 * Returns the supported override types
+	 * 
+	 * @return array the supported override types
+	 */
+	public static function getTypes()
+	{
+		return array(
+			self::COMMAND_TYPE => Yii::t('sourcebans', 'Command'),
+			self::GROUP_TYPE   => Yii::t('sourcebans', 'Group'),
+		);
 	}
 }

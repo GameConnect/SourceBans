@@ -15,7 +15,7 @@ class BansController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + add, delete, import', // we only allow deletion via POST request
+			'postOnly + add, delete, import, unban', // we only allow deletion via POST request
 		);
 	}
 
@@ -29,15 +29,19 @@ class BansController extends Controller
 		return array(
 			array('allow',
 				'actions'=>array('add'),
-				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_ADMINS")',
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_BANS")',
 			),
 			array('allow',
 				'actions'=>array('delete'),
-				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("DELETE_ADMINS")',
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("DELETE_BANS")',
 			),
 			array('allow',
 				'actions'=>array('edit'),
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("EDIT_ALL_BANS", "EDIT_GROUP_BANS", "EDIT_OWN_BANS")',
+			),
+			array('allow',
+				'actions'=>array('unban'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("UNBAN_ALL_BANS", "UNBAN_GROUP_BANS", "UNBAN_OWN_BANS")',
 			),
 			array('allow',
 				'actions'=>array('export'),
@@ -91,6 +95,12 @@ class BansController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('site/bans')),
 		);
+		
+		$groups = CHtml::listData($model->admin->server_groups, 'id', 'name');
+		if(!Yii::app()->user->data->hasPermission('EDIT_ALL_BANS')
+		   && (Yii::app()->user->data->hasPermission('EDIT_GROUP_BANS') && !Yii::app()->user->data->hasGroup($groups))
+		   && (Yii::app()->user->data->hasPermission('EDIT_OWN_BANS') && Yii::app()->user->id != $model->admin_id))
+			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -121,6 +131,24 @@ class BansController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
+	/**
+	 * Unbans a particular model.
+	 * @param integer $id the ID of the model to be unbanned
+	 */
+	public function actionUnban($id)
+	{
+		$reason=Yii::app()->request->getPost('reason');
+		$model=$this->loadModel($id);
+		
+		$groups = CHtml::listData($model->admin->server_groups, 'id', 'name');
+		if(!Yii::app()->user->data->hasPermission('UNBAN_ALL_BANS')
+		   && (Yii::app()->user->data->hasPermission('UNBAN_GROUP_BANS') && !Yii::app()->user->data->hasGroup($groups))
+		   && (Yii::app()->user->data->hasPermission('UNBAN_OWN_BANS') && Yii::app()->user->id) != $model->admin_id)
+			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
+		
+		Yii::app()->end(CJSON::encode($model->unban($reason)));
+	}
+
 	public function actionImport()
 	{
 		$file = $_FILES['file'];
@@ -138,7 +166,7 @@ class BansController extends Controller
 				$ban         = new SBBan;
 				$ban->type   = SBBan::STEAM_TYPE;
 				$ban->steam  = $identity;
-				$ban->reason = 'Imported banned_user.cfg';
+				$ban->reason = 'Imported from banned_user.cfg';
 				$ban->length = 0;
 				$ban->save();
 			}
@@ -148,7 +176,7 @@ class BansController extends Controller
 				$ban         = new SBBan;
 				$ban->type   = SBBan::IP_TYPE;
 				$ban->ip     = $identity;
-				$ban->reason = 'Imported banned_ip.cfg';
+				$ban->reason = 'Imported from banned_ip.cfg';
 				$ban->length = 0;
 				$ban->save();
 			}

@@ -126,7 +126,9 @@ class SiteController extends Controller
 			'bans' => $bans,
 			'hideInactive' => $hideInactive,
 			'search' => $search,
-			'total_bans' => SBBan::model()->count(),
+			'total_bans' => SBBan::model()->count(array(
+				'scopes' => $hideInactive ? 'active' : null,
+			)),
 		));
 	}
 

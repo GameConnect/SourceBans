@@ -492,19 +492,22 @@ ExecuteQuery(SQLTCallback:callback, String:sQuery[4096], any:data = 0, DBPriorit
 	if(!SB_Connect())
 		return;
 	
-	// Format {{table}} as DatabasePrefixtable
-	decl String:sSearch[65], String:sReplace[65], String:sTable[65];
-	static Handle:hTables;
-	if(!hTables)
-		hTables = CompileRegex("\\{\\{([0-9a-zA-Z\\$_]+?)\\}\\}");
-	
-	while(MatchRegex(hTables, sQuery) > 0)
+	if(g_sDatabasePrefix[0])
 	{
-		GetRegexSubString(hTables, 0, sSearch, sizeof(sSearch));
-		GetRegexSubString(hTables, 1, sTable,  sizeof(sTable));
-		Format(sReplace, sizeof(sReplace), "%s%s", g_sDatabasePrefix, sTable);
+		// Format {{table}} as DatabasePrefixtable
+		decl String:sSearch[65], String:sReplace[65], String:sTable[65];
+		static Handle:hTables;
+		if(!hTables)
+			hTables = CompileRegex("\\{\\{([0-9a-zA-Z\\$_]+?)\\}\\}");
 		
-		ReplaceString(sQuery, sizeof(sQuery), sSearch, sReplace);
+		while(MatchRegex(hTables, sQuery) > 0)
+		{
+			GetRegexSubString(hTables, 0, sSearch, sizeof(sSearch));
+			GetRegexSubString(hTables, 1, sTable,  sizeof(sTable));
+			Format(sReplace, sizeof(sReplace), "%s%s", g_sDatabasePrefix, sTable);
+			
+			ReplaceString(sQuery, sizeof(sQuery), sSearch, sReplace);
+		}
 	}
 	
 	SQL_TQuery(g_hDatabase, callback, sQuery, data, prio);

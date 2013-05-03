@@ -1,3 +1,6 @@
+a {
+  color: #2f4075;
+}
 a.sort-link {
   background-position: 100% 50%;
   background-repeat: no-repeat;
@@ -33,8 +36,40 @@ footer {
   clear: both;
   text-align: center;
 }
+table.table-stat td {
+  border-bottom: 1px solid #ddd;
+  border-top: 0;
+  color: #666;
+}
+table.table-stat td.value {
+  color: inherit;
+  font-size: 21px;
+  font-weight: bold;
+  text-align: right;
+  white-space: nowrap;
+}
 textarea {
   height: 100px;
+}
+ul.breadcrumbs {
+  background: none;
+  font-size: 21px;
+  padding: 8px 0;
+  text-transform: uppercase;
+}
+ul.breadcrumbs > li > a {
+  color: #999;
+}
+ul.breadcrumbs > li > a:hover {
+  border-bottom: 1px dotted #999;
+  text-decoration: none;
+}
+ul.breadcrumbs > li > .divider {
+  color: #000;
+  font-weight: bold;
+}
+ul.breadcrumbs > .active {
+  color: #b80202;
 }
 
 .grid-view {
@@ -73,18 +108,13 @@ textarea {
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
 }
-.bans {
-  float: left;
-}
-.blocks {
-  float: right;
-}
 #servers-grid tbody tr,
 #bans-grid tbody tr,
 #blocks-grid tbody tr {
   cursor: pointer;
 }
-#bans-grid tr.expired td.length {
+#bans-grid tr.expired td.length,
+#bans-grid tr.unbanned td.length {
   background-color: #dbf4d7;
 }
 #bans-grid tr.section > td > div,
@@ -111,6 +141,13 @@ textarea {
   cursor: pointer;
 }
 
+td.ban-menu {
+  width: 200px;
+}
+td.button-column img {
+  vertical-align: text-bottom;
+  width: 16px;
+}
 td.nowrap,
 td.datetime,
 td.length,
@@ -144,7 +181,46 @@ th.icon {
   text-align: center !important;
   width: 16px;
 }
+td.icon img {
+  vertical-align: text-bottom;
+}
 
+#site_dashboard .bans {
+  float: left;
+}
+#site_dashboard .blocks {
+  float: right;
+}
+#admin_index #admin li {
+  background-position: top center;
+  background-repeat: no-repeat;
+  float: left;
+  padding-top: 53px;
+  text-align: center;
+  width: 100px;
+}
+#admin_index #admin > li > a:hover,
+#admin_index #admin > li > a:focus {
+  background: none;
+}
+#admin_index #admin li.admins {
+  background-image: url(../../../images/icons/onebit/018.png);
+}
+#admin_index #admin li.bans {
+  background-image: url(../../../images/icons/onebit/035.png);
+}
+#admin_index #admin li.groups {
+  background-image: url(../../../images/icons/onebit/017.png);
+}
+#admin_index #admin li.servers {
+  background-image: url(../../../images/icons/onebit/014.png);
+}
+#admin_index #admin li.games {
+  background-image: url(../../../images/icons/onebit/101.png);
+}
+#admin_index #admin li.settings {
+  background-image: url(../../../images/icons/onebit/059.png);
+}
 #servers_rcon #console {
   height: 340px;
 }

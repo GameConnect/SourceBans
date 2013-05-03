@@ -122,7 +122,7 @@
     <img alt="<%=(server.error ? "<?php echo Yii::t('sourcebans', 'Unknown') ?>" : server.map) %>" src="<%=(server.error || !server.map_image ? "<?php echo Yii::app()->baseUrl ?>/images/maps/unknown.jpg" : server.map_image) %>" />
     <div style="margin-top: 20px; text-align: center;">
       <%=server.ip %>:<%=server.port %><br />
-      <a class="btn btn-success" href="steam://connect/<%=server.ip %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Connect') ?></a>
+      <a class="btn btn-success" href="steam://connect/<%=server.ip %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Join game') ?></a>
       <a class="btn btn-info" href="javascript:queryServer(<%=server.id %>)"><?php echo Yii::t('sourcebans', 'Refresh') ?></a>
     </div>
   </div>

@@ -25,6 +25,10 @@
  * @property object $community Steam Community data for Steam Community ID
  * @property integer $communityId Steam Community ID
  * @property object $country Country data for IP address
+ * @property boolean $isActive Whether the ban is active
+ * @property boolean $isExpired Whether the ban is expired
+ * @property boolean $isPermanent Whether the ban is permanent
+ * @property boolean $isUnbanned Whether the ban is unbanned
  *
  * The followings are the available model relations:
  * @property SBAdmin $admin
@@ -75,27 +79,33 @@ class SBBan extends CActiveRecord
 	{
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
-		return array(
+		$rules = array(
 			array('type, reason, length', 'required'),
 			array('type, length', 'numerical', 'integerOnly'=>true),
 			array('steam, ip, name', 'default', 'setOnEmpty'=>true),
 			array('steam, ip', 'SBBanTypeValidator'),
-			array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
-				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::STEAM_TYPE),
-				'scopes'=>'active',
-			)),
-			array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
-				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::IP_TYPE),
-				'scopes'=>'active',
-			)),
 			array('name', 'length', 'max'=>64),
 			array('reason, unban_reason', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, unban_admin_id, unban_reason, unban_time, create_time', 'safe', 'on'=>'search'),
 		);
+		
+		if($this->isActive)
+		{
+			$rules[] = array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'condition'=>'type = :type',
+				'params'=>array(':type'=>SBBan::STEAM_TYPE),
+				'scopes'=>'active',
+			));
+			$rules[] = array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+				'condition'=>'type = :type',
+				'params'=>array(':type'=>SBBan::IP_TYPE),
+				'scopes'=>'active',
+			));
+		}
+		
+		return $rules;
 	}
 
 	/**
@@ -284,6 +294,61 @@ class SBBan extends CActiveRecord
 			'code' => strtolower($code),
 			'name' => $name,
 		);
+	}
+	
+	/**
+	 * Returns whether the ban is active
+	 * 
+	 * @return boolean whether the ban is active
+	 */
+	public function getIsActive()
+	{
+		return !$this->unban_time && (!$this->length || $this->create_time + $this->length * 60 > time());
+	}
+	
+	/**
+	 * Returns whether the ban is expired
+	 * 
+	 * @return boolean whether the ban is expired
+	 */
+	public function getIsExpired()
+	{
+		return $this->length && $this->create_time + $this->length * 60 < time();
+	}
+	
+	/**
+	 * Returns whether the ban is permanent
+	 * 
+	 * @return boolean whether the ban is permanent
+	 */
+	public function getIsPermanent()
+	{
+		return !$this->length;
+	}
+	
+	/**
+	 * Returns whether the ban is unbanned
+	 * 
+	 * @return boolean whether the ban is unbanned
+	 */
+	public function getIsUnbanned()
+	{
+		return !!$this->unban_time;
+	}
+	
+	/**
+	 * Unbans the ban
+	 * 
+	 * @param string $reason optional unban reason
+	 * @return boolean whether the unbanning is successful
+	 */
+	public function unban($reason = null)
+	{
+		$this->unban_admin_id = Yii::app()->user->id;
+		$this->unban_reason   = $reason;
+		$this->unban_time     = time();
+		
+		return $this->save(false);
 	}
 	
 	

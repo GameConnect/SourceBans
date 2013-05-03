@@ -64,7 +64,7 @@ class KeyValues extends ArrayObject
 	public function __toString()
 	{
 		$ret  = $this->name . "\n{\n";
-		$ret .= $this->_build($this->getArrayCopy());
+		$ret .= $this->_build(parent::getArrayCopy());
 		$ret .= '}';
 		
 		return $ret;
@@ -72,24 +72,24 @@ class KeyValues extends ArrayObject
 	
 	
 	/**
-	 * Loads key values data from file
+	 * Loads key values data from a string or file
 	 * 
-	 * @param string $file File to load from
-	 * @return boolean Whether loading was successful
+	 * @param string $string String or file to load
 	 */
-	public function load($file)
+	public function load($string)
 	{
-		if(!is_readable($file))
-			return false;
+		if(is_readable($string))
+		{
+			$string = file_get_contents($string);
+		}
 		
 		// Use token_get_all() to easily ignore comments and whitespace
-		$tokens = token_get_all("<?php\n" . file_get_contents($file) . "\n?>");
+		$tokens = token_get_all("<?php\n" . $string . "\n?>");
 		$data   = $this->_parse($tokens);
 		// Strip root section
 		$data   = reset($data);
 		
-		$this->exchangeArray($data);
-		return true;
+		parent::exchangeArray($data);
 	}
 	
 	/**
@@ -126,7 +126,7 @@ class KeyValues extends ArrayObject
 	 */
 	public function toArray()
 	{
-		return $this->getArrayCopy();
+		return parent::getArrayCopy();
 	}
 	
 	/**

@@ -307,6 +307,20 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
+	 * Returns whether the admin has one of these server groups
+	 * 
+	 * @param mixed $name Group name(s) to check for
+	 * @return boolean
+	 */
+	public function hasGroup($name)
+	{
+		$names  = is_array($name) ? $name : func_get_args();
+		$groups = array_intersect($this->server_groups, $names);
+		
+		return !empty($groups);
+	}
+	
+	/**
 	 * Returns whether the admin has one of these web permissions
 	 * 
 	 * @param mixed $name Permission name(s) to check for

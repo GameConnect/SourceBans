@@ -211,7 +211,7 @@ CREATE TABLE {prefix}logs (
   message varchar(255) NOT NULL,
   function varchar(500) NOT NULL,
   query varchar(255) NOT NULL,
-  admin_id smallint(5) unsigned NOT NULL,
+  admin_id smallint(5) unsigned DEFAULT NULL,
   admin_ip varchar(15) NOT NULL,
   create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
@@ -276,7 +276,7 @@ CREATE TABLE {prefix}server_group_overrides (
   access enum('allow','deny') NOT NULL,
   PRIMARY KEY (group_id,type,name),
   KEY group_id (group_id),
-  CONSTRAINT server_group_override_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE
+  CONSTRAINT override_server_group FOREIGN KEY (group_id) REFERENCES {prefix}server_groups (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

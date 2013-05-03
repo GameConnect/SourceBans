@@ -5,13 +5,21 @@
 /* @var $search string */
 /* @var $total_bans integer */
 ?>
+
+<?php $summaryText = CHtml::link($hideInactive == 'true' ? Yii::t('sourcebans', 'Show inactive bans') : Yii::t('sourcebans', 'Hide inactive bans'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true')) . ' | <em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>'; ?>
+<?php if(SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))): ?>
+<?php $summaryText = '<div class="pull-left">' . CHtml::link(Yii::t('sourcebans', 'Export permanent Steam ID bans'), array('bans/export', 'type' => 'steam')) . ' | ' . CHtml::link(Yii::t('sourcebans', 'Export permanent IP address bans'), array('bans/export', 'type' => 'ip')) . '</div>' . $summaryText; ?>
+<?php endif ?>
+
     <section>
-      <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced search'),'#',array('class'=>'search-button')); ?>
+      <div class="container" style="margin-bottom: 1em; width: 500px;">
+      <?php echo CHtml::link(Yii::t('sourcebans', 'Advanced search'),'#',array('class'=>'search-button', 'style'=>'margin-left: 180px')); ?>
       <div class="search-form" style="display:none">
       <?php $this->renderPartial('/bans/_search',array(
       	'model'=>$bans,
       )); ?>
       </div><!-- search-form -->
+      </div>
 
 <?php $grid=$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'bans-grid',
@@ -68,7 +76,7 @@
 				'class'=>'length',
 			),
 			'name'=>'length',
-			'value'=>'$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent")',
+			'value'=>'$data->isPermanent ? Yii::t("sourcebans", "Permanent") : Yii::app()->format->formatLength($data->length*60)',
 		),
 	),
 	'afterAjaxUpdate'=>'js:createSections',
@@ -80,28 +88,21 @@
 	),
 	'pagerCssClass'=>'pagination pagination-right',
 	'rowHtmlOptionsExpression'=>'array(
-		"class"=>"header" . ($data->length && $data->create_time + $data->length * 60 < time() ? " expired" : ($data->unban_time ? " unbanned" : "")),
+		"class"=>"header" . ($data->isExpired ? " expired" : ($data->isUnbanned ? " unbanned" : "")),
 		"data-key"=>$data->primaryKey,
 		"data-name"=>$data->name,
 		"data-steam"=>$data->steam,
 		"data-ip"=>$data->ip,
 		"data-datetime"=>Yii::app()->format->formatDatetime($data->create_time),
-		"data-length"=>$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent"),
+		"data-length"=>$data->isPermanent ? Yii::t("sourcebans", "Permanent") : Yii::app()->format->formatLength($data->length*60),
 		"data-reason"=>$data->reason,
 		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
 		"data-server-id"=>$data->server_id,
 		"data-community-id"=>$data->communityId,
 	)',
 	'selectableRows'=>0,
-	'summaryText'=>CHtml::link($hideInactive == 'true' ? Yii::t('sourcebans', 'Show inactive') : Yii::t('sourcebans', 'Hide inactive'), array('', 'hideinactive' => $hideInactive == 'true' ? 'false' : 'true'), array('class' => 'pull-left')) . '<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
+	'summaryText'=>$summaryText,
 )) ?><!-- bans grid -->
-
-<?php if(SourceBans::app()->settings->bans_public_export || (!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("OWNER"))): ?>
-      <div class="pull-left">
-        <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent Steam ID bans'), array('bans/export', 'type' => 'steam')) ?> |
-        <?php echo CHtml::link(Yii::t('sourcebans', 'Export permanent IP address bans'), array('bans/export', 'type' => 'ip')) ?>
-      </div>
-<?php endif ?>
     </section>
     
 <script id="bans-section" type="text/x-template">
@@ -110,13 +111,39 @@
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
         <td><%=header.data("name") || nullDisplay %></td>
+        <td class="ban-menu" rowspan="7">
+<?php $this->widget('zii.widgets.CMenu', array(
+	'items' => array(
+		array(
+			'label' => Yii::t('sourcebans', 'Edit'),
+			'url' => array('bans/edit', 'id'=>'__ID__'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Unban'),
+			'url' => '#',
+			'itemOptions' => array('class' => 'ban-menu-unban'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Delete'),
+			'url' => array('bans/delete', 'id'=>'__ID__'),
+			'itemOptions' => array('class' => 'ban-menu-delete'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+	),
+	'htmlOptions' => array(
+		'class' => 'nav nav-stacked nav-tabs',
+	),
+)) ?>
+        </td>
       </tr>
       <tr>
         <th style="white-space: nowrap; width: 150px;">Steam ID</th>
         <td>
           <%=header.data("steam") || nullDisplay %>
 <% if(header.data("communityId")) { %>
-          (<a href="http://steamcommunity.com/profiles/<%=header.data("communityId") %>" target="_blank"><?php echo Yii::t('sourcebans', 'Steam Profile') ?></a>)
+          (<a href="http://steamcommunity.com/profiles/<%=header.data("communityId") %>" target="_blank"><?php echo Yii::t('sourcebans', 'View Steam Profile') ?></a>)
         </td>
       </tr>
 <% } %>
@@ -204,6 +231,15 @@
         header: $(header),
         nullDisplay: nullDisplay
       }));
+      $section.find("a").each(function() {
+        this.href = this.href.replace("__ID__", $(header).data("key"));
+      });
+      if($(header).hasClass("expired") || $(header).hasClass("unbanned")) {
+        $section.find(".ban-menu-unban").addClass("disabled");
+      }
+      else {
+        $section.find(".ban-menu-unban a").prop("rel", $(header).data("key"));
+      }
     });
     
     updateSections();
@@ -219,6 +255,28 @@
       $("#SBBan_server_id option[value=\"" + server.id + "\"]").html(server.error ? server.error.message : server.hostname);
     });
   }
+  
+  $(document).on("click", ".ban-menu-unban a", function(e) {
+    if($(this).parents("li").hasClass("disabled"))
+      return;
+    
+    $.post("' . $this->createUrl('bans/unban', array("id" => "__ID__")) . '".replace("__ID__", $(this).prop("rel")), {
+      reason: ""
+    }, function() {
+  	  $("#' . $grid->id . '").yiiGridView("update");
+    });
+  });
+  $(document).on("click", ".ban-menu-delete a", function(e) {
+    if(!confirm("' . Yii::t('zii', 'Are you sure you want to delete this item?') . '")) return false;
+    $("#' . $grid->id . '").yiiGridView("update", {
+      type: "POST",
+      url: $(this).attr("href"),
+      success: function(data) {
+        $("#' . $grid->id . '").yiiGridView("update");
+      }
+    });
+    return false;
+  });
   
   createSections();
 ') ?>

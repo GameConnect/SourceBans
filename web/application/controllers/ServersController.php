@@ -280,14 +280,14 @@ class ServersController extends Controller
 				{
 					$result['error'] = array(
 						'code'    => 'ERR_TIMEOUT',
-						'message' => Yii::t('sourcebans', 'Error connecting ({ip}:{port})', array('{ip}' => $server->ip, '{port}' => $server->port)),
+						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_timeout') . ' (' . $server->ip . ':' . $server->port . ')',
 					);
 				}
 				else if($info['hostname'] == "anned by server\n")
 				{
 					$result['error'] = array(
 						'code'    => 'ERR_BLOCKED',
-						'message' => Yii::t('sourcebans', 'Banned by server ({ip}:{port})', array('{ip}' => $server->ip, '{port}' => $server->port)),
+						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_blocked') . ' (' . $server->ip . ':' . $server->port . ')',
 					);
 				}
 				else
@@ -297,7 +297,7 @@ class ServersController extends Controller
 					$result['hostname']   = preg_replace('/[\x00-\x1F\x7F-\x9F]/', null, $info['hostname']);
 					$result['numplayers'] = $info['numplayers'];
 					$result['maxplayers'] = $info['maxplayers'];
-					$result['map']        = $info['map'];
+					$result['map']        = end(explode('/', $info['map']));
 					$result['os']         = $info['os'];
 					$result['secure']     = $info['secure'];
 					$result['map_image']  = file_exists(Yii::getPathOfAlias('webroot') . $map_image) ? Yii::app()->baseUrl . $map_image : null;

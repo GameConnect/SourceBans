@@ -136,6 +136,25 @@ class SteamProfile
 	
 	
 	/**
+	 * ISteamUser/GetPlayerSummaries/v0002
+	 * 
+	 * @param array $steamids List of 64 bit Steam IDs to return profile information for. Up to 100 Steam IDs can be requested.
+	 * @return array An array of player summaries
+	 */
+	public static function getSummaries(array $steamids)
+	{
+		$data = SteamCommunity::apiRequest('ISteamUser', 'GetPlayerSummaries', 2, array(
+			'steamids' => implode(',', $steamids),
+		));
+		if(empty($data))
+			return array();
+		
+		$data = json_decode($data, true);
+		return $data['response']['players'];
+	}
+	
+	
+	/**
 	 * Requests the profile data
 	 */
 	private function _requestData()
@@ -174,7 +193,7 @@ class SteamProfile
 		}
 		if($this->onlineState == 'in-game')
 		{
-			$this->_data['inGameInfo'] = array(
+			$this->_data['inGameInfo'] = (object)array(
 				'gameName' => (string)$data->inGameInfo->gameName,
 				'gameLink' => (string)$data->inGameInfo->gameLink,
 				'gameIcon' => (string)$data->inGameInfo->gameIcon,

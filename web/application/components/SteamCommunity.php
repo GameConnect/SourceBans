@@ -65,7 +65,7 @@ class SteamCommunity
 	 */
 	public static function setApiKey($apiKey)
 	{
-		$this->_apiKey = $apiKey;
+		self::$_apiKey = $apiKey;
 	}
 	
 	

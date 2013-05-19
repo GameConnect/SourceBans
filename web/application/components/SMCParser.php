@@ -15,19 +15,21 @@ require_once 'ISMCListener.php';
 class SMCParser
 {
 	/**
-	 * Parses a SourceMod Config file
+	 * Parses a SourceMod Config string or file
 	 * 
-	 * @param string $file File to parse
+	 * @param string $string String or file to load
 	 * @param ISMCListener $listener Listener to use for callbacks
 	 * @return boolean Whether the parsing was successful
 	 */
-	public static function parse($file, ISMCListener $listener)
+	public static function parse($string, ISMCListener $listener)
 	{
-		if(!is_readable($file))
-			return false;
+		if(is_readable($string))
+		{
+			$string = file_get_contents($string);
+		}
 		
 		// Use token_get_all() to easily ignore comments and whitespace
-		$tokens = token_get_all("<?php\n" . file_get_contents($file) . "\n?>");
+		$tokens = token_get_all("<?php\n" . $string . "\n?>");
 		$level  = 0;
 		$key    = null;
 		

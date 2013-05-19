@@ -3,7 +3,7 @@
 /* @var $servers SBServer */
 ?>
     <div class="row">
-    <section class="span12 servers">
+    <section class="servers span12">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'servers-grid',
 	'dataProvider'=>$servers,
@@ -28,7 +28,8 @@
 			'htmlOptions'=>array(
 				'class'=>'ServerQuery_OS icon',
 			),
-			'value'=>'Yii::t("sourcebans", "N/A")',
+			'type'=>'html',
+			'value'=>'CHtml::image(Yii::app()->theme->baseUrl . "/images/loading.gif", Yii::t("sourcebans", "N/A"))',
 		),
 		array(
 			'header'=>'VAC',
@@ -38,7 +39,8 @@
 			'htmlOptions'=>array(
 				'class'=>'ServerQuery_VAC icon',
 			),
-			'value'=>'Yii::t("sourcebans", "N/A")',
+			'type'=>'html',
+			'value'=>'CHtml::image(Yii::app()->theme->baseUrl . "/images/loading.gif", Yii::t("sourcebans", "N/A"))',
 		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Hostname'),
@@ -48,7 +50,7 @@
 			'htmlOptions'=>array(
 				'class'=>'ServerQuery_hostname',
 			),
-			'value'=>'Yii::t("sourcebans", "Querying server... ({ip}:{port})", array("{ip}" => $data->ip, "{port}" => $data->port))',
+			'value'=>'Yii::t("sourcebans", "components.ServerQuery.loading") . " (" . $data->ip . ":" . $data->port . ")"',
 		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Players'),
@@ -94,12 +96,12 @@
 
 <?php if(!isset($isDashboard)): ?>
 <script id="servers-section" type="text/x-template">
-  <table class="table table-bordered table-condensed table-hover" style="float: left; width: 420px;">
+  <table class="table table-bordered table-condensed table-hover pull-left" style="width: 380px">
     <thead>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
-        <th style="width: 1px;"><?php echo Yii::t('sourcebans', 'Score') ?></th>
-        <th style="width: 1px; white-space: nowrap;"><?php echo Yii::t('sourcebans', 'Time') ?></th>
+        <th class="nowrap text-right"><?php echo Yii::t('sourcebans', 'Score') ?></th>
+        <th class="nowrap"><?php echo Yii::t('sourcebans', 'Time') ?></th>
       </tr>
     </thead>
     <tbody>
@@ -107,21 +109,21 @@
 <% $.each(server.players, function(i, player) { %>
       <tr class="player" data-name="<%=player.name %>">
         <td><%=player.name %></td>
-        <td style="text-align: right;"><%=player.score %></td>
-        <td style="width: 1px; white-space: nowrap;"><%=player.time %></td>
+        <td class="text-right"><%=player.score %></td>
+        <td class="nowrap"><%=player.time %></td>
       </tr>
 <% }); %>
 <% } else { %>
       <tr>
-        <td colspan="3" style="font-style: italic; text-align: center;"><?php echo Yii::t('sourcebans', 'No players in the server') ?></td>
+        <td class="text-center" colspan="3"><em><?php echo Yii::t('sourcebans', 'No players in the server') ?></em></td>
       </tr>
 <% } %>
     </tbody>
   </table>
-  <div style="float: right; margin-bottom: 20px;">
+  <div class="well pull-right">
     <img alt="<%=(server.error ? "<?php echo Yii::t('sourcebans', 'Unknown') ?>" : server.map) %>" src="<%=(server.error || !server.map_image ? "<?php echo Yii::app()->baseUrl ?>/images/maps/unknown.jpg" : server.map_image) %>" />
-    <div style="margin-top: 20px; text-align: center;">
-      <%=server.ip %>:<%=server.port %><br />
+    <div class="text-center" style="margin-top: 10px">
+      <p><%=server.ip %>:<%=server.port %></p>
       <a class="btn btn-success" href="steam://connect/<%=server.ip %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Join game') ?></a>
       <a class="btn btn-info" href="javascript:queryServer(<%=server.id %>)"><?php echo Yii::t('sourcebans', 'Refresh') ?></a>
     </div>

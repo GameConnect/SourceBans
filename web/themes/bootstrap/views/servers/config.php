@@ -22,7 +22,7 @@ $db = array_combine($dsn[1], $dsn[2]);
 		"database"		"<?php echo $db['dbname'] ?>"
 		"user"			"<?php echo Yii::app()->db->username ?>"
 		"pass"			"<?php echo Yii::app()->db->password ?>"
-		//"timeout"			"0"
+		//"timeout"		"0"
 		"port"			"<?php echo $db['port'] ?>"
 	}
 	

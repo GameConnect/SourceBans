@@ -22,20 +22,14 @@
   <div class="control-group">
     <?php echo $form->label($model,'language',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->dropDownList($model,'language',array(
-        'nl'=>Yii::app()->locale->getLocaleDisplayName('nl'),
-        'en'=>Yii::app()->locale->getLocaleDisplayName('en'),
-        'de'=>Yii::app()->locale->getLocaleDisplayName('de'),
-      )); ?>
+      <?php echo $form->dropDownList($model,'language',SourceBans::app()->languages); ?>
     </div>
   </div>
 
   <div class="control-group">
     <?php echo $form->label($model,'theme',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->dropDownList($model,'theme',array(
-        'bootstrap'=>'Bootstrap',
-      )); ?>
+      <?php echo $form->dropDownList($model,'theme',SourceBans::app()->themes); ?>
     </div>
   </div>
 
@@ -71,7 +65,7 @@
   <div class="control-group">
     <?php echo $form->label($model,'date_format',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'date_format',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->textField($model,'date_format',array('size'=>60,'maxlength'=>64,'placeholder'=>'m-d-y H:i')); ?>
       <div class="help-inline"><?php echo CHtml::link(Yii::t('sourcebans', 'See') . ': PHP date()','http://www.php.net/date',array('target' => '_blank')); ?></div>
     </div>
   </div>
@@ -81,6 +75,19 @@
     <div class="controls">
       <?php echo $form->numberField($model,'password_min_length',array('size'=>60,'maxlength'=>64)); ?>
       <?php echo $form->error($model,'password_min_length'); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <?php echo $form->label($model,'steam_web_api_key',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php echo $form->textField($model,'steam_web_api_key',array('size'=>30,'maxlength'=>32,'class'=>'input-xlarge')); ?>
+      <?php echo $form->error($model,'steam_web_api_key'); ?>
+      <small class="help-block">
+        <?php echo nl2br(Yii::t('sourcebans', 'views.admin.settings.help.steam_web_api_key', array(
+          '{link}' => '<a href="http://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com</a>',
+        ))) ?>
+      </small>
     </div>
   </div>
 </fieldset>
@@ -97,7 +104,7 @@
   <div class="control-group">
     <?php echo $form->labelEx($model,'dashboard_title',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'dashboard_title',array('class'=>'span6','size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->textField($model,'dashboard_title',array('class'=>'span6','size'=>60,'maxlength'=>256)); ?>
       <?php echo $form->error($model,'dashboard_title'); ?>
     </div>
   </div>
@@ -165,7 +172,7 @@
   <div class="control-group">
     <?php echo $form->label($model,'smtp_host',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'smtp_host',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->textField($model,'smtp_host',array('size'=>60,'maxlength'=>256)); ?>
     </div>
   </div>
 
@@ -179,14 +186,14 @@
   <div class="control-group">
     <?php echo $form->label($model,'smtp_username',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'smtp_username',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->textField($model,'smtp_username',array('size'=>60,'maxlength'=>256)); ?>
     </div>
   </div>
 
   <div class="control-group">
     <?php echo $form->label($model,'smtp_password',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->passwordField($model,'smtp_password',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->passwordField($model,'smtp_password',array('size'=>60,'maxlength'=>256)); ?>
     </div>
   </div>
 

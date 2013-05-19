@@ -47,20 +47,14 @@
   <div class="control-group">
     <?php echo $form->label($model,'language',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->dropDownList($model,'language',array(
-        'nl'=>Yii::app()->locale->getLocaleDisplayName('nl'),
-        'en'=>Yii::app()->locale->getLocaleDisplayName('en'),
-        'de'=>Yii::app()->locale->getLocaleDisplayName('de'),
-      ),array('empty' => '- ' . Yii::t('sourcebans', 'Default setting') . ' -')); ?>
+      <?php echo $form->dropDownList($model,'language',SourceBans::app()->languages,array('empty' => '- ' . Yii::t('sourcebans', 'Default setting') . ' -')); ?>
     </div>
   </div>
 
   <div class="control-group">
     <?php echo $form->label($model,'theme',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->dropDownList($model,'theme',array(
-        'bootstrap'=>'Bootstrap',
-      ),array('empty' => '- ' . Yii::t('sourcebans', 'Default setting') . ' -')); ?>
+      <?php echo $form->dropDownList($model,'theme',SourceBans::app()->themes,array('empty' => '- ' . Yii::t('sourcebans', 'Default setting') . ' -')); ?>
     </div>
   </div>
 

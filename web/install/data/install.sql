@@ -439,6 +439,7 @@ INSERT INTO {prefix}settings (name, value) VALUES
 ('smtp_port', '25'),
 ('smtp_secure', ''),
 ('smtp_username', ''),
+('steam_web_api_key', ''),
 ('theme', 'bootstrap'),
 ('timezone', 'Europe/London');
 

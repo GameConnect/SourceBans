@@ -72,6 +72,9 @@ ul.breadcrumbs > .active {
   color: #b80202;
 }
 
+.help-block {
+  margin-top: 6px;
+}
 .grid-view {
   padding-top: 0;
 }

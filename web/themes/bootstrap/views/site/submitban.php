@@ -76,7 +76,7 @@
 <?php foreach($games as $game): ?>
             <optgroup label="<?php echo CHtml::encode($game->name) ?>">
 <?php foreach($game->servers as $server): ?>
-              <option value="<?php echo $server->id ?>"><?php echo Yii::t('sourcebans', 'Querying server... ({ip}:{port})', array('{ip}' => $server->ip, '{port}' => $server->port)) ?></option>
+              <option value="<?php echo $server->id ?>"><?php echo Yii::t('sourcebans', 'components.ServerQuery.loading') . ' (' . $server->ip . ':' . $server->port . ')' ?></option>
 <?php endforeach ?>
             </optgroup>
 <?php endforeach ?>

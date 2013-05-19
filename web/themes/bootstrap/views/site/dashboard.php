@@ -21,7 +21,7 @@
 )) ?>
     
     <div class="row">
-    <section class="span6 bans">
+    <section class="bans span6">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'bans-grid',
 	'dataProvider'=>$bans,
@@ -57,7 +57,7 @@
 				'class'=>'length',
 			),
 			'name'=>'length',
-			'value'=>'$data->length ? Yii::app()->format->formatLength($data->length*60) : Yii::t("sourcebans", "Permanent")',
+			'value'=>'$data->isPermanent ? Yii::t("sourcebans", "Permanent") : Yii::app()->format->formatLength($data->length*60)',
 		),
 	),
 	'cssFile'=>false,
@@ -66,7 +66,7 @@
 	'itemsCssClass'=>'items table table-condensed table-hover',
 	'nullDisplay'=>CHtml::tag('span', array('class'=>'null'), Yii::t('zii', 'Not set')),
 	'rowHtmlOptionsExpression'=>'array(
-		"class"=>($data->length && $data->create_time + $data->length * 60 < time() ? "expired" : ($data->unban_time ? "unbanned" : "")),
+		"class"=>($data->isExpired ? "expired" : ($data->isUnbanned ? "unbanned" : "")),
 		"data-key"=>$data->primaryKey,
 	)',
 	'selectionChanged'=>'js:function(grid) {
@@ -79,7 +79,7 @@
 )) ?><!-- bans grid -->
     </section>
     
-    <section class="span6 blocks">
+    <section class="blocks span6">
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'blocks-grid',
 	'dataProvider'=>$blocks,
@@ -108,7 +108,7 @@
 	'enableSorting'=>false,
 	'itemsCssClass'=>'items table table-condensed table-hover',
 	'selectableRows'=>0,
-	'summaryText'=>'<em>' . Yii::t('sourcebans', 'Total stopped') . ': ' . $total_blocks . '</em>',
+	'summaryText'=>'<em>' . Yii::t('sourcebans', 'Total blocked') . ': ' . $total_blocks . '</em>',
 )) ?><!-- blocks grid -->
     </section>
     </div>

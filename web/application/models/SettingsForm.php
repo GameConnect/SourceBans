@@ -42,7 +42,7 @@ class SettingsForm extends CFormModel
 			array('default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
 			array('dashboard_blocks_popup, bans_hide_admin, bans_hide_ip, bans_public_export, enable_protest, enable_smtp, enable_submit', 'boolean'),
 			array('items_per_page, password_min_length, smtp_port', 'numerical', 'integerOnly'=>true, 'min'=>1),
-			array('dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure', 'safe'),
+			array('dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure, steam_web_api_key', 'safe'),
 		);
 	}
 
@@ -71,6 +71,7 @@ class SettingsForm extends CFormModel
 			'smtp_port' => Yii::t('sourcebans', 'models.SettingsForm.smtp_port'),
 			'smtp_secure' => Yii::t('sourcebans', 'models.SettingsForm.smtp_secure'),
 			'smtp_username' => Yii::t('sourcebans', 'models.SettingsForm.smtp_username'),
+			'steam_web_api_key' => Yii::t('sourcebans', 'models.SettingsForm.steam_web_api_key'),
 			'theme' => Yii::t('sourcebans', 'models.SettingsForm.theme'),
 			'timezone' => Yii::t('sourcebans', 'models.SettingsForm.timezone'),
 		);

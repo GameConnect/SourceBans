@@ -129,7 +129,7 @@
 			'label' => Yii::t('sourcebans', 'Delete'),
 			'url' => array('bans/delete', 'id'=>'__ID__'),
 			'itemOptions' => array('class' => 'ban-menu-delete'),
-			'visible' => !Yii::app()->user->isGuest,
+			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
 		),
 	),
 	'htmlOptions' => array(
@@ -176,7 +176,7 @@
 <% if(header.data("serverId")) { %>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Server') ?></th>
-        <td class="ServerQuery_hostname">Querying server...</td>
+        <td class="ServerQuery_hostname"><?php echo Yii::t('sourcebans', 'components.ServerQuery.loading') ?></td>
       </tr>
 <% } %>
     </tbody>

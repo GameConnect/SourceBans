@@ -913,19 +913,19 @@ class LocaleData extends CApplicationComponent
 			'America/Noronha' => '(GMT-02:00) Mid-Atlantic',
 			'Atlantic/Cape_Verde' => '(GMT-01:00) Cape Verde Is.',
 			'Atlantic/Azores' => '(GMT-01:00) Azores',
-			'Europe/Dublin' => '(GMT) Greenwich Mean Time : Dublin',
-			'Europe/Lisbon' => '(GMT) Greenwich Mean Time : Lisbon',
-			'Europe/London' => '(GMT) Greenwich Mean Time : London',
+			'Europe/London' => '(GMT) Greenwich Mean Time : Dublin, Lisbon, London',
 			'Africa/Abidjan' => '(GMT) Monrovia, Reykjavik',
 			'Europe/Amsterdam' => '(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna',
 			'Europe/Belgrade' => '(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague',
 			'Europe/Brussels' => '(GMT+01:00) Brussels, Copenhagen, Madrid, Paris',
 			'Africa/Algiers' => '(GMT+01:00) West Central Africa',
 			'Africa/Windhoek' => '(GMT+01:00) Windhoek',
+			'Europe/Athens' => '(GMT+02:00) Athens, Istanbul, Kiev, Nicosia',
 			'Asia/Beirut' => '(GMT+02:00) Beirut',
 			'Africa/Cairo' => '(GMT+02:00) Cairo',
 			'Asia/Gaza' => '(GMT+02:00) Gaza',
 			'Africa/Blantyre' => '(GMT+02:00) Harare, Pretoria',
+			'Europe/Helsinki' => '(GMT+02:00) Helsinki, Riga, Tallinn, Vilnius',
 			'Asia/Jerusalem' => '(GMT+02:00) Jerusalem',
 			'Europe/Minsk' => '(GMT+02:00) Minsk',
 			'Asia/Damascus' => '(GMT+02:00) Syria',
@@ -965,7 +965,7 @@ class LocaleData extends CApplicationComponent
 			'Pacific/Fiji' => '(GMT+12:00) Fiji, Kamchatka, Marshall Is.',
 			'Pacific/Chatham' => '(GMT+12:45) Chatham Islands',
 			'Pacific/Tongatapu' => '(GMT+13:00) Nuku Alofa',
-			'Pacific/Kiritimati' => '(GMT+14:00) Kiritimati'
+			'Pacific/Kiritimati' => '(GMT+14:00) Kiritimati',
 		);
 	}
 }

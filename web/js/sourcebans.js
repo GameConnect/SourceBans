@@ -10,7 +10,7 @@
   };
   
   // Disable links with href ending with "#"
-  $('a[href$="#"]').click(function(e) {
+  $(document).on('click', 'a[href$="#"]', function(e) {
     e.preventDefault();
   });
 })(jQuery);

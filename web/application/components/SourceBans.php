@@ -7,10 +7,12 @@
  * @link http://www.sourcebans.net
  * 
  * @property array $flags The supported SourceMod flags
+ * @property array $languages The supported SourceBans languages
  * @property array $permissions The supported SourceBans permissions
  * @property array $plugins The enabled SourceBans plugins
  * @property object $quote A random SourceBans quote
  * @property object $settings The SourceBans settings
+ * @property array $themes The installed SourceBans themes
  * 
  * @package sourcebans.components
  * @since 2.0
@@ -62,6 +64,34 @@ class SourceBans extends CApplicationComponent
 		if(!isset($_data))
 		{
 			$_data = include Yii::getPathOfAlias('application.data') . '/flags.php';
+		}
+		
+		return $_data;
+	}
+	
+	/**
+	 * Returns the supported SourceBans languages
+	 * 
+	 * @return array the supported SourceBans languages
+	 */
+	public function getLanguages()
+	{
+		static $_data = array();
+		if(empty($_data))
+		{
+			$basePath = Yii::app()->getMessages()->basePath;
+			$folder = @opendir($basePath);
+			while(($file = @readdir($folder)) !== false)
+			{
+				if($file{0} === '.' || !is_dir($basePath . DIRECTORY_SEPARATOR .  $file))
+				  continue;
+				
+				$_data[$file] = CLocale::getInstance($file)->getLocaleDisplayName($file);
+				if($file !== Yii::app()->language)
+					$_data[$file] .= ' (' . Yii::app()->locale->getLocaleDisplayName($file) . ')';
+			}
+			closedir($folder);
+			ksort($_data);
 		}
 		
 		return $_data;
@@ -127,6 +157,27 @@ class SourceBans extends CApplicationComponent
 		if(!isset($_data))
 		{
 			$_data = (object)CHtml::listData(SBSetting::model()->findAll(), 'name', 'value');
+		}
+		
+		return $_data;
+	}
+	
+	/**
+	 * Returns the installed SourceBans themes
+	 * 
+	 * @return array the installed SourceBans themes
+	 */
+	public function getThemes()
+	{
+		static $_data = array();
+		if(empty($_data))
+		{
+			$themeNames = Yii::app()->getThemeManager()->getThemeNames();
+			foreach($themeNames as $themeName)
+			{
+				$_data[$themeName] = ucfirst($themeName);
+			}
+			sort($_data);
 		}
 		
 		return $_data;
@@ -213,6 +264,8 @@ class SourceBans extends CApplicationComponent
 			Yii::app()->mailer->password = SourceBans::app()->settings->smtp_password;
 			Yii::app()->mailer->security = SourceBans::app()->settings->smtp_secure;
 		}
+		
+		SteamCommunity::setApiKey(SourceBans::app()->settings->steam_web_api_key);
 		
 		// Call onBeginRequest on SourceBans plugins
 		foreach(SourceBans::app()->plugins as $plugin)

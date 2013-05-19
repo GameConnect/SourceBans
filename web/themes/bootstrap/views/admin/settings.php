@@ -52,7 +52,7 @@
 			),
 			'name'=>'settings',
 			'type'=>'raw',
-			'value'=>'$data->status && $data->getViewFile("settings") ? CHtml::link(Yii::t("sourcebans", "views.admin.settings.grid.settings"), array("plugins/settings", "id"=>$data->id)) : ""',
+			'value'=>'$data->status && $data->getViewFile("settings") ? CHtml::link(Yii::t("sourcebans", "views.admin.settings.plugins.grid.settings"), array("plugins/settings", "id"=>$data->id)) : ""',
 		),
 		array(
 			'header'=>false,
@@ -109,7 +109,7 @@
 			'htmlOptions'=>array(
 				'class'=>'nowrap text-right',
 			),
-			'name'=>'time',
+			'name'=>'create_time',
 			'type'=>'datetime',
 		),
 	),

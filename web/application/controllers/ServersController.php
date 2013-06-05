@@ -43,6 +43,10 @@ class ServersController extends Controller
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("EDIT_SERVERS")',
 			),
 			array('allow',
+				'actions'=>array('admins'),
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("LIST_ADMINS")',
+			),
+			array('allow',
 				'actions'=>array('config'),
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasFlag(SM_CONFIG)',
 			),
@@ -171,6 +175,35 @@ class ServersController extends Controller
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
+	
+	public function actionAdmins($id)
+	{
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.servers.admins.title');
+		
+		$this->breadcrumbs=array(
+			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
+			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
+			Yii::t('sourcebans', 'controllers.servers.admins.title'),
+		);
+		
+		$this->menu=array(
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
+		);
+		
+		$admins = SBAdmin::model()->findAll(array(
+			'condition' => 'servers.id = :server_id',
+			'order' => 't.name',
+			'params' => array(':server_id' => $id),
+			'with' => array(
+				'server_groups' => array('select' => false),
+				'server_groups.servers' => array('select' => false),
+			),
+		));
+		
+		$this->render('admins',array(
+			'admins'=>$admins,
+		));
+	}
 
 	public function actionRcon($id)
 	{
@@ -294,10 +327,10 @@ class ServersController extends Controller
 				{
 					$map_image = '/images/maps/' . $server->game->folder . '/' . $info['map'] . '.jpg';
 					
-					$result['hostname']   = preg_replace('/[\x00-\x1F\x7F-\x9F]/', null, $info['hostname']);
+					$result['hostname']   = preg_replace('/[\x00-\x1F\x7F-\x9F]/', null, $info['hostname']); // Strip UTF-8 characters
 					$result['numplayers'] = $info['numplayers'];
 					$result['maxplayers'] = $info['maxplayers'];
-					$result['map']        = end(explode('/', $info['map']));
+					$result['map']        = basename($info['map']); // Strip Steam Workshop folder
 					$result['os']         = $info['os'];
 					$result['secure']     = $info['secure'];
 					$result['map_image']  = file_exists(Yii::getPathOfAlias('webroot') . $map_image) ? Yii::app()->baseUrl . $map_image : null;
@@ -306,12 +339,15 @@ class ServersController extends Controller
 			if($queries & self::QUERY_PLAYERS)
 			{
 				$result['players'] = $query->getPlayers();
+				usort($result['players'], array($this, '_sortPlayers'));
+				
 				foreach($result['players'] as &$player)
 				{
+					if($player['time'] > 60)
+						$player['time'] = floor($player['time'] / 60) * 60;
+					
 					$player['time'] = Yii::app()->format->formatLength($player['time']);
 				}
-				
-				Helpers::array_qsort($result['players'], 'score', SORT_DESC);
 			}
 			if($queries & self::QUERY_RULES)
 			{
@@ -363,5 +399,18 @@ class ServersController extends Controller
 		return empty($id)
 			? $results
 			: $results[0];
+	}
+	
+	private function _sortPlayers($a, $b)
+	{
+		// Sort score descending
+		if($a['score'] != $b['score'])
+			return $a['score'] > $b['score'] ? -1 : 1;
+		
+		// Sort time descending
+		//if($a['time'] != $b['time'])
+		//	return $a['time'] > $b['time'] ? -1 : 1;
+		
+		return strcasecmp($a['name'], $b['name']);
 	}
 }

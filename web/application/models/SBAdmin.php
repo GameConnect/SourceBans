@@ -26,6 +26,7 @@
  * @property object $community Steam Community data for Steam Community ID
  * @property integer $communityId Steam Community ID
  * @property string $flags Server permissions
+ * @property integer $immunity Immunity level
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions
@@ -244,6 +245,23 @@ class SBAdmin extends CActiveRecord
 		}
 		
 		return count_chars($flags, 3);
+	}
+	
+	/**
+	 * Returns the immunity level of the admin
+	 * 
+	 * @return string the immunity level of the admin
+	 */
+	public function getImmunity()
+	{
+		$immunity = 0;
+		foreach($this->server_groups as $server_group)
+		{
+			if($server_group->immunity > $immunity)
+				$immunity = $server_group->immunity;
+		}
+		
+		return $immunity;
 	}
 	
 	/**

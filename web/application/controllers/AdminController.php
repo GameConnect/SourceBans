@@ -199,9 +199,11 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.menu.list'), 'url'=>'#list', 'visible'=>Yii::app()->user->data->hasPermission('LIST_GAMES')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.menu.map-image'), 'url'=>'#map-image', 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES')),
 		);
 		
 		$game=new SBGame;
+		$map_image=new MapImageForm;
 		
 		$games=new SBGame('search');
 		$games->unsetAttributes();  // clear any default values
@@ -211,6 +213,7 @@ class AdminController extends Controller
 		$this->render('games',array(
 			'game'=>$game,
 			'games'=>$games,
+			'map_image'=>$map_image,
 		));
 	}
 	

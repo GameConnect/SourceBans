@@ -44,6 +44,12 @@
 		array(
 			'class'=>'CButtonColumn',
 			'buttons'=>array(
+				'admins'=>array(
+					'label'=>Yii::t('sourcebans', 'controllers.servers.admins.title'),
+					'url'=>'Yii::app()->createUrl("servers/admins", array("id" => $data->primaryKey))',
+					'imageUrl'=>false,
+					'visible'=>'Yii::app()->user->data->hasPermission("LIST_ADMINS")',
+				),
 				'rcon'=>array(
 					'label'=>Yii::t('sourcebans', 'RCON'),
 					'url'=>'Yii::app()->createUrl("servers/rcon", array("id" => $data->primaryKey))',
@@ -57,7 +63,7 @@
 					'visible'=>'Yii::app()->user->data->hasPermission("DELETE_SERVERS")',
 				),
 			),
-			'template'=>'{rcon} {update} {delete}',
+			'template'=>'{rcon} {admins} {update} {delete}',
 			'updateButtonLabel'=>Yii::t('sourcebans', 'Edit'),
 			'updateButtonUrl'=>'Yii::app()->createUrl("servers/edit", array("id" => $data->primaryKey))',
 			'deleteButtonUrl'=>'Yii::app()->createUrl("servers/delete", array("id" => $data->primaryKey))',

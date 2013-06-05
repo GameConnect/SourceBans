@@ -225,7 +225,7 @@ UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING AND TO THE FULLEST
 <?php endif ?>
             </tr>
             <tr>
-              <td class="listtable_1">Database Config Writable (/application/config/database.php)</td>
+              <td class="listtable_1">Database Config Writable (/application/config/sourcebans.php)</td>
               <td class="listtable_1">Yes</td>
 <?php if(WRITABLE_CONFIG): ?>
               <td class="green">Yes</td>

@@ -67,6 +67,6 @@ class SteamGame
 			return array();
 		
 		$data = json_decode($data, true);
-		return $data['game']['availableGameStats'];
+		return $data['game'];
 	}
 }

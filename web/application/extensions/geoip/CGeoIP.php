@@ -87,7 +87,7 @@ class CGeoIP extends CApplicationComponent {
 
   protected function _getIP($ip=null) {
     if ($ip === null) {
-      $ip = CHttpRequest::getUserHostAddress();
+      $ip = Yii::app()->getRequest()->getUserHostAddress();
     }
     return $ip;
   }

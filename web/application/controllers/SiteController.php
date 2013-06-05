@@ -381,8 +381,9 @@ class SiteController extends Controller
 			$password = substr(str_shuffle('qwertyuiopasdfghjklmnbvcxz0987612345'), 0, 8);
 			Yii::app()->mailer->AddAddress($admin->email);
 			Yii::app()->mailer->Subject = Yii::t('sourcebans', 'controllers.site.lostPassword.subject');
-			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'Hello {name},\nYour password reset was successful.\nYour password was changed to: {password}\n\nLogin to your SourceBans account and change your password in {link}.', array(
+			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'controllers.site.lostPassword.body', array(
 				'{name}' => $admin->name,
+				'{password}' => $password,
 				'{link}' => CHtml::link(Yii::t('sourcebans', 'controllers.site.account.title'), array('site/account')),
 			)));
 			if(!Yii::app()->mailer->Send())
@@ -390,7 +391,7 @@ class SiteController extends Controller
 			
 			$admin->setPassword($password);
 			$admin->validation_key = null;
-			$admin->save();
+			$admin->save(false);
 			$this->redirect(Yii::app()->user->homeUrl);
 		}
 

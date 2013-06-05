@@ -109,7 +109,7 @@
   <table class="table table-bordered table-condensed">
     <tbody>
       <tr>
-        <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
+        <th style="white-space: nowrap; width: 150px;"><?php echo Yii::t('sourcebans', 'Name') ?></th>
         <td><%=header.data("name") || nullDisplay %></td>
         <td class="ban-menu" rowspan="7">
 <?php $this->widget('zii.widgets.CMenu', array(
@@ -139,7 +139,7 @@
         </td>
       </tr>
       <tr>
-        <th style="white-space: nowrap; width: 150px;">Steam ID</th>
+        <th>Steam ID</th>
         <td>
           <%=header.data("steam") || nullDisplay %>
 <% if(header.data("communityId")) { %>

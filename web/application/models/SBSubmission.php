@@ -86,8 +86,8 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBComment::SUBMISSION_TYPE)),
-			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBDemo::SUBMISSION_TYPE)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::SUBMISSION_TYPE)),
+			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::SUBMISSION_TYPE)),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 		);
 	}

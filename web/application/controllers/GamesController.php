@@ -28,7 +28,7 @@ class GamesController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('add'),
+				'actions'=>array('add','mapImage'),
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_GAMES")',
 			),
 			array('allow',
@@ -115,6 +115,21 @@ class GamesController extends Controller
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}
+
+	/**
+	 * Uploads a map image.
+	 */
+	public function actionMapImage()
+	{
+		$model=new MapImageForm;
+
+		if(isset($_POST['MapImageForm']))
+		{
+			$model->attributes=$_POST['MapImageForm'];
+			if($model->save())
+				$this->redirect(array('admin/games','#'=>'map-image'));
+		}
 	}
 
 	/**

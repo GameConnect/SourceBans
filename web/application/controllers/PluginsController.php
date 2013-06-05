@@ -88,11 +88,10 @@ class PluginsController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/settings','#'=>'plugins')),
 		);
 		
-		$plugin->runSettings();
+		$data = (array)$plugin->runSettings();
+		$data['plugin'] = $plugin;
 		
-		$this->render('settings',array(
-			'plugin'=>$plugin,
-		));
+		$this->render($plugin->getViewFile('settings'),$data);
 	}
 
 	public function actionUninstall($id)

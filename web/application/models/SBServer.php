@@ -63,7 +63,7 @@ class SBServer extends CActiveRecord
 			array('ip, game_id', 'required'),
 			array('port, game_id', 'numerical', 'integerOnly'=>true),
 			array('enabled', 'boolean'),
-			array('ip', 'match', 'pattern'=>'/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/'),
+			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
 			array('rcon', 'length', 'max'=>32),
 			array('groups', 'safe'),
 			// The following rule is used by search().

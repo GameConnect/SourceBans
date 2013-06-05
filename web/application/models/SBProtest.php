@@ -81,7 +81,7 @@ class SBProtest extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'ban_id'),
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', params => array(':object_type' => SBComment::PROTEST_TYPE)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::PROTEST_TYPE)),
 		);
 	}
 

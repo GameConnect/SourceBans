@@ -7,13 +7,21 @@
 
 <?php if(Yii::app()->user->data->hasPermission('LIST_ADMINS')): ?>
     <section class="tab-pane fade" id="pane-list">
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php $grid=$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'admins-grid',
 	'dataProvider'=>$admins->search(),
 	'columns'=>array(
 		'name',
-		'group.name',
 		array(
+			'headerHtmlOptions'=>array(
+				'width'=>'192',
+			),
+			'name'=>'group.name',
+		),
+		array(
+			'headerHtmlOptions'=>array(
+				'width'=>'192',
+			),
 			'name'=>'server_groups.name',
 			'type'=>'ntext',
 			'value'=>'($server_groups = $data->server_groups(array("order" => "name"))) ? implode("\n", $server_groups) : null',
@@ -35,6 +43,7 @@
 			'visible'=>Yii::app()->user->data->hasPermission('DELETE_ADMINS', 'EDIT_ADMINS'),
 		),
 	),
+	'afterAjaxUpdate'=>'js:createSections',
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
 	'nullDisplay'=>CHtml::tag('span',array('class'=>'null'),Yii::t('sourcebans', 'None')),
@@ -42,6 +51,25 @@
 		'class'=>'bootstrap.widgets.TbPager',
 	),
 	'pagerCssClass'=>'pagination pagination-right',
+	'rowHtmlOptionsExpression'=>'array(
+		"class"=>"header",
+		"data-key"=>$data->primaryKey,
+		"data-login-time"=>Yii::app()->format->formatDatetime($data->login_time),
+		"data-community-id"=>$data->communityId,
+		"data-flags"=>$data->flags,
+		"data-immunity"=>$data->immunity,
+		"data-permissions"=>isset($data->group) ? CJavaScript::encode(array_values(CHtml::listData($data->group->permissions,"name","name"))) : null,
+	)',
+	'selectionChanged'=>'js:function(grid) {
+		var $header = $("#" + grid + " tr.selected");
+		var $section = $header.next("tr.section").find("div");
+		
+		$("#" + grid + " tr.section div").not($section).slideUp(200, "linear");
+		if(!$header.length)
+			return;
+		
+		$section.slideDown(200, "linear");
+	}',
 	'summaryCssClass'=>'',
 	'summaryText'=>false,
 )) ?>
@@ -70,6 +98,7 @@
 	'dataProvider'=>$overrides->search(),
 	'columns'=>array(
 		array(
+			'footer'=>CHtml::dropDownList('SBOverride[type]', null, SBOverride::getTypes()),
 			'headerHtmlOptions'=>array(
 				'class'=>'nowrap',
 			),
@@ -79,8 +108,12 @@
 			'name'=>'type',
 			'value'=>'($types = SBOverride::getTypes()) ? $types[$data->type] : null',
 		),
-		'name',
 		array(
+			'footer'=>CHtml::textField('SBOverride[name]'),
+			'name'=>'name',
+		),
+		array(
+			'footer'=>CHtml::checkBoxList('SBOverride[flags]', null, SourceBans::app()->flags),
 			'name'=>'flags',
 			'type'=>'ntext',
 			'value'=>'($flags = SourceBans::app()->flags) ? $flags[$data->flags] : null',
@@ -149,3 +182,58 @@
 )) ?>
 
     </section>
+    
+<script id="admins-section" type="text/x-template">
+      <div class="row-fluid">
+        <div class="span6">
+          <h3><?php echo Yii::t('sourcebans', 'Server permissions') ?></h3>
+<% if(header.data("flags")) { %>
+          <ul>
+<% for(var flag in flags) { %>
+<% if(flag != "<?php echo SM_ROOT ?>" && (header.data("flags").indexOf("<?php echo SM_ROOT ?>") != -1 || header.data("flags").indexOf(flag) != -1)) { %>
+            <li><%=flags[flag] %></li>
+<% } %>
+<% } %>
+          </ul>
+<% } else { %>
+          <p><%=nullDisplay %></p>
+<% } %>
+        </div>
+        <div class="span6">
+          <h3><?php echo Yii::t('sourcebans', 'Web permissions') ?></h3>
+<% if(header.data("permissions")) { %>
+          <ul>
+<% for(var permission in permissions) { %>
+<% if(permission != "OWNER" && (header.data("permissions").indexOf("OWNER") != -1 || header.data("permissions").indexOf(permission) != -1)) { %>
+            <li><%=permissions[permission] %></li>
+<% } %>
+<% } %>
+          </ul>
+<% } else { %>
+          <p><%=nullDisplay %></p>
+<% } %>
+        </div>
+</script>
+
+<?php Yii::app()->clientScript->registerScript('admin_admins_createSections', '
+  var flags = ' . CJavaScript::encode(SourceBans::app()->flags) . ',
+      permissions = ' . CJavaScript::encode(SourceBans::app()->permissions) . ';
+  
+  function createSections() {
+    var nullDisplay = "' . addslashes($grid->nullDisplay) . '";
+    
+    $("#admins-grid tr[data-key]").each(function(i, header) {
+      $section = $("<tr class=\"section\"><td colspan=\"" + header.cells.length + "\"><div></div></td></tr>").insertAfter($(header));
+      
+      $section.find("div").html($("#admins-section").template({
+        header: $(header),
+        nullDisplay: nullDisplay
+      }));
+      $section.find("a").each(function() {
+        this.href = this.href.replace("__ID__", $(header).data("key"));
+      });
+    });
+  }
+  
+  createSections();
+') ?>

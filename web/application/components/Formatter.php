@@ -26,7 +26,7 @@ class Formatter extends CFormatter
 			$units = array(
 				'mo'	=> 60 * 60 * 24 * 30,
 				'wk'	=> 60 * 60 * 24 * 7,
-				'd'	  => 60 * 60 * 24,
+				'd'   => 60 * 60 * 24,
 				'hr'	=> 60 * 60,
 				'min' => 60,
 				'sec' => 1,

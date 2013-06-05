@@ -10,52 +10,48 @@
 /* @var $total_servers integer */
 /* @var $total_submissions integer */
 ?>
-          <h3><?php echo Yii::t('sourcebans', 'Please select an option to administer.') ?></h3>
+    <div class="row">
+      <div class="span8" style="float: none; margin: 0 auto;">
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'admin',
 	'items' => $this->menu,
+	'encodeLabel' => false,
+	'htmlOptions' => array(
+		'class' => 'nav',
+		'style' => 'overflow: auto',
+	),
 )) ?>
-          <table width="100%" cellpadding="3" cellspacing="0">
+      </div>
+      <div class="span8" style="float: none; margin: 0 auto;">
+        <table class="table table-stat">
+          <tbody>
             <tr>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Version Information') ?></h3></td>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Admin Information') ?></h3></td>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Ban Information') ?></h3></td>
+              <td class="value" width="20%"><?php echo $total_protests ?></td>
+              <td width="30%"><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.protests') ?></td>
+              <td class="value" width="20%"><?php echo $total_archived_protests ?></td>
+              <td width="30%"><?php echo Yii::t('sourcebans', 'Archived protests') ?></td>
             </tr>
             <tr>
-              <td><?php echo Yii::t('sourcebans', 'Latest release') ?>: <strong id="relver"><?php echo Yii::t('sourcebans', 'Please wait') ?>...</strong></td>
-              <td><?php echo Yii::t('sourcebans', 'Total admins') ?>: <strong><?php echo $total_admins ?></strong></td>
-              <td><?php echo Yii::t('sourcebans', 'Total bans') ?>: <strong><?php echo $total_bans ?></strong></td>
+              <td class="value"><?php echo $total_submissions ?></td>
+              <td><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.submissions') ?></td>
+              <td class="value"><?php echo $total_archived_submissions ?></td>
+              <td><?php echo Yii::t('sourcebans', 'Archived submissions') ?></td>
             </tr>
             <tr>
-              <td>&nbsp;</td>
-              <td>&nbsp;</td>
-              <td><?php echo Yii::t('sourcebans', 'Connection blocks') ?>: <strong><?php echo $total_blocks ?></strong></td>
+              <td class="value"><?php echo $demosize ?></td>
+              <td><?php echo Yii::t('sourcebans', 'Demos') ?></td>
+              <td class="value"><?php echo $total_blocks ?></td>
+              <td><?php echo Yii::t('sourcebans', 'Players blocked') ?></td>
             </tr>
             <tr>
-              <td id="versionmsg"><?php echo Yii::t('sourcebans', 'Please wait') ?>...</td>
-              <td>&nbsp;</td>
-              <td><?php echo Yii::t('sourcebans', 'Total demo size') ?>: <strong><?php echo $demosize ?></strong></td>
+              <td class="value"><span id="relver">...</span></td>
+              <td><?php echo Yii::t('sourcebans', 'Latest release') ?></td>
+              <td class="text-center" colspan="2"><span id="versionmsg"><?php echo Yii::t('sourcebans', 'Please wait') ?>...</span></td>
             </tr>
-            <tr>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Server Information') ?></h3></td>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Protest Information') ?></h3></td>
-              <td width="33%" align="center"><h3><?php echo Yii::t('sourcebans', 'Submission Information') ?></h3></td>
-            </tr>
-            <tr>
-              <td><?php echo Yii::t('sourcebans', 'Total servers') ?>: <strong><?php echo $total_servers ?></strong></td>
-              <td><?php echo Yii::t('sourcebans', 'Total protests') ?>: <strong><?php echo $total_protests ?></strong></td>
-              <td><?php echo Yii::t('sourcebans', 'Total submissions') ?>: <strong><?php echo $total_submissions ?></strong></td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td><?php echo Yii::t('sourcebans', 'Archived protests') ?>: <strong><?php echo $total_archived_protests ?></strong></td>
-              <td><?php echo Yii::t('sourcebans', 'Archived submissions') ?>: <strong><?php echo $total_archived_submissions ?></strong></td>
-            </tr>
-            <tr>
-              <td colspan="3">&nbsp;</td>
-            </tr>
-          </table>
-
+          </tbody>
+        </table>
+      </div>
+    </div>
 <?php Yii::app()->clientScript->registerScript('admin_index', '
   $.getJSON("' . $this->createUrl('admin/version') . '", function(data) {
     if(data.error) {

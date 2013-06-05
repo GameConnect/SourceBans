@@ -61,4 +61,10 @@
 )) ?>
 
     </section>
+    <section class="tab-pane fade" id="pane-map-image">
+<?php echo $this->renderPartial('/games/_map_image_form', array(
+	'model'=>$map_image,
+)) ?>
+
+    </section>
 <?php endif ?>

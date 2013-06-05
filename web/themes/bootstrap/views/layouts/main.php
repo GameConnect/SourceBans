@@ -15,43 +15,17 @@
     <meta name="description" content="Advanced admin and ban management for the Source engine" />
   </head>
   <body id="<?php echo (!empty($this->pageId) ? $this->pageId : $this->id . '_' . $this->action->id); ?>">
-    <div class="container">
-      <header>
+    <header>
+      <div class="container">
+        <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
+          <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
+          <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
+        </form>
+        
         <h1><?php echo CHtml::link(CHtml::encode(Yii::app()->name), array('site/index')) ?></h1>
-        <div class="user">
-<?php $this->widget('zii.widgets.CMenu', array(
-	'id' => 'user',
-	'items' => array(
-		array(
-			'active' => true,
-			'label' => Yii::app()->user->name,
-			'url' => array('site/account'),
-			'visible' => !Yii::app()->user->isGuest,
-		),
-		array(
-			'label' => Yii::t('sourcebans', 'controllers.site.logout.title'),
-			'url' => array('site/logout'),
-			'visible' => !Yii::app()->user->isGuest,
-		),
-		array(
-			'label' => Yii::t('sourcebans', 'controllers.site.login.title'),
-			'url' => array('site/login'),
-			'visible' => Yii::app()->user->isGuest,
-		),
-	),
-	'htmlOptions' => array(
-		'class' => 'nav nav-pills',
-	),
-)) ?>
-        </div>
-      </header>
-      
-      <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
-        <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
-        <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
-      </form>
-      
-      <nav>
+        
+        <div class="navbar">
+          <nav class="navbar-inner">
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'tabs',
 	'items' => array_merge(array(
@@ -96,26 +70,60 @@
 		),
 	), $this->tabs),
 	'htmlOptions' => array(
-		'class' => 'nav nav-tabs',
+		'class' => 'nav',
+	),
+)) ?>
+<?php $this->widget('zii.widgets.CMenu', array(
+	'id' => 'user',
+	'items' => array(
+		array(
+			'label' => Yii::app()->user->name,
+			'url' => array('site/account'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'controllers.site.logout.title'),
+			'url' => array('site/logout'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'controllers.site.login.title'),
+			'url' => array('site/login'),
+			'visible' => Yii::app()->user->isGuest,
+		),
+	),
+	'htmlOptions' => array(
+		'class' => 'nav pull-right',
 	),
 )) ?>
 
-      </nav>
-      
+          </nav>
+        </div>
+      </div>
+    </header>
+    
+    <div class="container">
       <header>
-        <h2><?php echo CHtml::encode($this->pageTitle) ?></h2>
 <?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+	'homeLink' => false,
 	'links' => $this->breadcrumbs,
 )) ?>
 
+        <h2><?php echo CHtml::encode($this->pageTitle) ?></h2>
       </header>
       
 <?php echo $content ?>
       
-      <footer>
-        <strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::getVersion() ?></strong>
-        <p>"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em></p>
-      </footer>
     </div>
+    
+    <footer>
+      <div class="container">
+        <p>
+          <a href="http://sourcebans.net" target="_blank"><img alt="SourceBans" src="<?php echo Yii::app()->theme->baseUrl ?>/images/logo_footer.png" /></a>
+          <br /><strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::getVersion() ?></strong>
+          <br />"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em>
+        </p>
+      </div>
+    </footer>
   </body>
 </html>

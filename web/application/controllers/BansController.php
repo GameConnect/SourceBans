@@ -71,7 +71,10 @@ class BansController extends Controller
 		{
 			$model->attributes=$_POST['SBBan'];
 			if($model->save())
+			{
+				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was added');
 				$this->redirect(array('site/bans','#'=>$model->id));
+			}
 		}
 	}
 
@@ -109,7 +112,10 @@ class BansController extends Controller
 		{
 			$model->attributes=$_POST['SBBan'];
 			if($model->save())
+			{
+				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was edited');
 				$this->redirect(array('site/bans','#'=>$model->id));
+			}
 		}
 
 		$this->render('edit',array(
@@ -124,7 +130,9 @@ class BansController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		SourceBans::log('Ban deleted', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was deleted', SBLog::WARNING_TYPE);
+		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -146,6 +154,7 @@ class BansController extends Controller
 		   && (Yii::app()->user->data->hasPermission('UNBAN_OWN_BANS') && Yii::app()->user->id) != $model->admin_id)
 			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 		
+		SourceBans::log('Ban unbanned', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was unbanned');
 		Yii::app()->end(CJSON::encode($model->unban($reason)));
 	}
 
@@ -182,6 +191,7 @@ class BansController extends Controller
 			}
 		}
 		
+		SourceBans::log('Bans imported', 'Bans imported from ' . $file['name']);
 		$this->redirect(array('site/bans'));
 	}
 	

@@ -54,7 +54,8 @@ class GroupsController extends Controller
 	 */
 	public function actionAdd()
 	{
-		$class=Yii::app()->request->getQuery('type') == 'web' ? 'SBGroup' : 'SBServerGroup';
+		$type=Yii::app()->request->getQuery('type');
+		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
 		$model=new $class;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -64,7 +65,10 @@ class GroupsController extends Controller
 		{
 			$model->attributes=$_POST[$class];
 			if($model->save())
+			{
+				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was added');
 				$this->redirect(array('admin/groups','#'=>$model->id));
+			}
 		}
 	}
 
@@ -98,7 +102,10 @@ class GroupsController extends Controller
 		{
 			$model->attributes=$_POST[$class];
 			if($model->save())
+			{
+				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was edited');
 				$this->redirect(array('admin/groups','#'=>$model->id));
+			}
 		}
 
 		$this->render($type.'_edit',array(
@@ -113,7 +120,10 @@ class GroupsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id, Yii::app()->request->getQuery('type'))->delete();
+		$type=Yii::app()->request->getQuery('type');
+		$model=$this->loadModel($id, $type);
+		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -158,6 +168,7 @@ class GroupsController extends Controller
 			}
 		}
 		
+		SourceBans::log('Groups imported', 'Groups imported from ' . $file['name']);
 		$this->redirect(array('admin/groups'));
 	}
 

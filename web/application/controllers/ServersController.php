@@ -120,7 +120,10 @@ class ServersController extends Controller
 			if(!isset($_POST['SBServer']['groups']))
 				$model->groups=array();
 			if($model->save())
+			{
+				SourceBans::log('Server added', 'Server "' . $model->ip . ':' . $model->port . '" was added');
 				$this->redirect(array('admin/servers','#'=>$model->id));
+			}
 		}
 	}
 
@@ -154,7 +157,10 @@ class ServersController extends Controller
 			if(!isset($_POST['SBServer']['groups']))
 				$model->groups=array();
 			if($model->save())
+			{
+				SourceBans::log('Server edited', 'Server "' . $model->ip . ':' . $model->port . '" was edited');
 				$this->redirect(array('admin/servers','#'=>$model->id));
+			}
 		}
 
 		$this->render('edit',array(
@@ -169,7 +175,9 @@ class ServersController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		SourceBans::log('Server deleted', 'Server "' . $model->ip . ':' . $model->port . '" was deleted', SBLog::WARNING_TYPE);
+		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))

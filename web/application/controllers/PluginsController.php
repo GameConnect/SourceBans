@@ -67,6 +67,7 @@ class PluginsController extends Controller
 				?SBPlugin::STATUS_ENABLED
 				:SBPlugin::STATUS_INSTALLED;
 			$plugin->save();
+			SourceBans::log('Plugin installed', 'Plugin "' . $plugin->name . '" was installed');
 		}
 		
 		Yii::app()->end(CJSON::encode($result));
@@ -103,6 +104,7 @@ class PluginsController extends Controller
 		{
 			$plugin->status=0;
 			$plugin->save();
+			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::WARNING_TYPE);
 		}
 		
 		Yii::app()->end(CJSON::encode($result));

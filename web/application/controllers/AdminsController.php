@@ -65,7 +65,10 @@ class AdminsController extends Controller
 			if(!isset($_POST['SBAdmin']['server_groups']))
 				$model->server_groups=array();
 			if($model->save())
+			{
+				SourceBans::log('Admin added', 'Admin "' . $model->name . '" was added');
 				$this->redirect(array('admin/admins','#'=>$model->id));
+			}
 		}
 	}
 
@@ -99,7 +102,10 @@ class AdminsController extends Controller
 			if(!isset($_POST['SBAdmin']['server_groups']))
 				$model->server_groups=array();
 			if($model->save())
+			{
+				SourceBans::log('Admin edited', 'Admin "' . $model->name . '" was edited');
 				$this->redirect(array('admin/admins','#'=>$model->id));
+			}
 		}
 
 		$this->render('edit',array(
@@ -114,7 +120,9 @@ class AdminsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model=$this->loadModel($id);
+		SourceBans::log('Admin deleted', 'Admin "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
@@ -228,6 +236,7 @@ class AdminsController extends Controller
 				throw new CHttpException(500, Yii::t('sourcebans', 'controllers.admins.import.error'));
 		}
 		
+		SourceBans::log('Admins imported', 'Admins imported from ' . $file['name']);
 		$this->redirect(array('admin/admins'));
 	}
 

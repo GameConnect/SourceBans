@@ -209,7 +209,7 @@ CREATE TABLE {prefix}logs (
   type enum('m','w','e') NOT NULL,
   title varchar(64) NOT NULL,
   message varchar(255) NOT NULL,
-  function varchar(500) NOT NULL,
+  function text NOT NULL,
   query varchar(255) NOT NULL,
   admin_id smallint(5) unsigned DEFAULT NULL,
   admin_ip varchar(15) NOT NULL,

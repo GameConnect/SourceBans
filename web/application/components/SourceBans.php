@@ -201,11 +201,11 @@ class SourceBans extends CApplicationComponent
 	
 	/**
 	 * Logs a message.
-	 * @param string $message message to be logged
 	 * @param string $title title of the message
+	 * @param string $message message to be logged
 	 * @param string $type type of the message ({@link SBLog}::ERROR_TYPE, {@link SBLog}::INFORMATION_TYPE, {@link SBLog}::WARNING_TYPE).
 	 */
-	public static function log($message, $title, $type = SBLog::INFORMATION_TYPE)
+	public static function log($title, $message, $type = SBLog::INFORMATION_TYPE)
 	{
 		$log          = new SBLog;
 		$log->type    = $type;

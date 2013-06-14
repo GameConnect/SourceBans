@@ -230,6 +230,9 @@ class SourceBans extends CApplicationComponent
 	 */
 	public static function onBeginRequest($event)
 	{
+		if(!YII_DEBUG && file_exists(Yii::getPathOfAlias('webroot.install')))
+			throw new CHttpException(403, 'Please delete the /install folder.');
+		
 		// Set timezone
 		if(!Yii::app()->user->isGuest && !empty(Yii::app()->user->data->timezone))
 			date_default_timezone_set(Yii::app()->user->data->timezone);

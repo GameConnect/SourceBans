@@ -22,7 +22,7 @@
  * @property string $unban_reason Unban reason
  * @property integer $unban_time Unbanned on
  * @property integer $create_time Date/Time
- * @property object $community Steam Community data for Steam Community ID
+ * @property object $community Steam Community data
  * @property integer $communityId Steam Community ID
  * @property object $country Country data for IP address
  * @property boolean $isActive Whether the ban is active
@@ -91,7 +91,7 @@ class SBBan extends CActiveRecord
 			array('id, type, steam, ip, name, reason, length, server_id, admin_id, admin_ip, unban_admin_id, unban_reason, unban_time, create_time', 'safe', 'on'=>'search'),
 		);
 		
-		if($this->isActive)
+		if($this->isNewRecord || $this->isActive)
 		{
 			$rules[] = array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
 				'condition'=>'type = :type',

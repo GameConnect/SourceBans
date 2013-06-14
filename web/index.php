@@ -4,6 +4,9 @@
 $yii=dirname(__FILE__).'/framework/yii.php';
 $config=dirname(__FILE__).'/application/config/web.php';
 
+if(!is_readable($config))
+	exit('Missing configuration file. Please run the <a href="./install">installation</a>.');
+
 // remove the following lines when in production mode
 defined('YII_DEBUG') or define('YII_DEBUG',true);
 // specify how many levels of call stack should be shown in each log message

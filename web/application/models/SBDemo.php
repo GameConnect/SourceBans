@@ -58,7 +58,7 @@ class SBDemo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('filename', 'file', 'types'=>array('dem', 'rar', 'zip')),
+			array('filename', 'file', 'types'=>array('7z', 'bz2', 'dem', 'gz', 'rar', 'zip')),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, object_type, object_id, filename', 'safe', 'on'=>'search'),

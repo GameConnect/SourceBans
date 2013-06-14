@@ -23,7 +23,7 @@
  * @property string $validation_key Validation key
  * @property integer $login_time Last login time
  * @property integer $create_time Date/Time
- * @property object $community Steam Community data for Steam Community ID
+ * @property object $community Steam Community data
  * @property integer $communityId Steam Community ID
  * @property string $flags Server permissions
  * @property integer $immunity Immunity level

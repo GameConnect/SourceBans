@@ -73,6 +73,7 @@ class BansController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was added');
+				SourceBans::app()->trigger('onAddBan', $model);
 				$this->redirect(array('site/bans','#'=>$model->id));
 			}
 		}
@@ -114,6 +115,7 @@ class BansController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was edited');
+				SourceBans::app()->trigger('onEditBan', $model);
 				$this->redirect(array('site/bans','#'=>$model->id));
 			}
 		}
@@ -132,6 +134,7 @@ class BansController extends Controller
 	{
 		$model=$this->loadModel($id);
 		SourceBans::log('Ban deleted', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::app()->trigger('onDeleteBan', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

@@ -67,6 +67,7 @@ class GroupsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was added');
+				SourceBans::app()->trigger($type == 'web' ? 'onAddWebGroup' : 'onAddServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
 		}
@@ -104,6 +105,7 @@ class GroupsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was edited');
+				SourceBans::app()->trigger($type == 'web' ? 'onEditWebGroup' : 'onEditServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
 		}
@@ -123,6 +125,7 @@ class GroupsController extends Controller
 		$type=Yii::app()->request->getQuery('type');
 		$model=$this->loadModel($id, $type);
 		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::app()->trigger($type == 'web' ? 'onDeleteWebGroup' : 'onDeleteServerGroup', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -182,8 +185,11 @@ class GroupsController extends Controller
 	 */
 	public function loadModel($id, $type)
 	{
-		$class=$type == 'web' ? 'SBGroup' : 'SBServerGroup';
-		$model=$class::model()->findByPk($id);
+		if($type == 'web')
+			$model=SBGroup::model()->findByPk($id);
+		else
+			$model=SBServerGroup::model()->findByPk($id);
+		
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

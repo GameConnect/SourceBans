@@ -183,6 +183,22 @@ class SourceBans extends CApplicationComponent
 		return $_data;
 	}
 	
+	/**
+	 * Triggers an event on the SourceBans plugins
+	 * 
+	 * @param string $name the event name
+	 * @param mixed $params the event parameters 
+	 */
+	public function trigger($name, $params = null)
+	{
+		$params = (array)$params;
+		foreach(SourceBans::app()->plugins as $plugin)
+		{
+			if(is_callable(array($plugin, $name)))
+				call_user_func_array(array($plugin, $name), $params);
+		}
+	}
+	
 	
 	/**
 	 * Returns the SourceBans application singleton
@@ -270,9 +286,7 @@ class SourceBans extends CApplicationComponent
 		
 		SteamCommunity::setApiKey(SourceBans::app()->settings->steam_web_api_key);
 		
-		// Call onBeginRequest on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onBeginRequest($event);
+		SourceBans::app()->trigger('onBeginRequest', $event);
 	}
 	
 	/**
@@ -281,8 +295,6 @@ class SourceBans extends CApplicationComponent
 	 */
 	public static function onEndRequest($event)
 	{
-		// Call onEndRequest on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onEndRequest($event);
+		SourceBans::app()->trigger('onEndRequest', $event);
 	}
 }

@@ -65,6 +65,7 @@ class GamesController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Game added', 'Game "' . $model->name . '" was added');
+				SourceBans::app()->trigger('onAddGame', $model);
 				$this->redirect(array('admin/games','#'=>$model->id));
 			}
 		}
@@ -100,6 +101,7 @@ class GamesController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Game edited', 'Game "' . $model->name . '" was edited');
+				SourceBans::app()->trigger('onEditGame', $model);
 				$this->redirect(array('admin/games','#'=>$model->id));
 			}
 		}
@@ -118,6 +120,7 @@ class GamesController extends Controller
 	{
 		$model=$this->loadModel($id);
 		SourceBans::log('Game deleted', 'Game "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::app()->trigger('onDeleteGame', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

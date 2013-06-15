@@ -68,9 +68,7 @@ class Controller extends CController
 	 */
 	protected function beforeAction($action)
 	{
-		// Call onBeforeAction on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onBeforeAction($action);
+		SourceBans::app()->trigger('onBeforeAction', $action);
 		
 		return parent::beforeAction($action);
 	}
@@ -82,9 +80,7 @@ class Controller extends CController
 	 */
 	protected function beforeRender($view)
 	{
-		// Call onBeforeRender on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onBeforeRender($view);
+		SourceBans::app()->trigger('onBeforeRender', $view);
 		
 		return parent::beforeRender($view);
 	}
@@ -96,9 +92,7 @@ class Controller extends CController
 	 */
 	protected function afterAction($action)
 	{
-		// Call onAfterAction on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onAfterAction($action);
+		SourceBans::app()->trigger('onAfterAction', $action);
 		
 		parent::afterAction($action);
 	}
@@ -113,9 +107,7 @@ class Controller extends CController
 	 */
 	protected function afterRender($view, &$output)
 	{
-		// Call onAfterRender on SourceBans plugins
-		foreach(SourceBans::app()->plugins as $plugin)
-			$plugin->onAfterRender($view, $output);
+		SourceBans::app()->trigger('onAfterRender', array($view, &$output));
 		
 		parent::afterRender($view, $output);
 	}

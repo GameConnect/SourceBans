@@ -371,6 +371,27 @@ class SBPlugin extends CActiveRecord
 	 */
 	public function onAfterRender($view, &$output) {}
 	
+	public function onAddAdmin(SBAdmin $admin) {}
+	public function onAddBan(SBBan $ban) {}
+	public function onAddGame(SBGame $game) {}
+	public function onAddServer(SBServer $server) {}
+	public function onAddServerGroup(SBServerGroup $group) {}
+	public function onAddWebGroup(SBGroup $group) {}
+	
+	public function onDeleteAdmin(SBAdmin $admin) {}
+	public function onDeleteBan(SBBan $ban) {}
+	public function onDeleteGame(SBGame $game) {}
+	public function onDeleteServer(SBServer $server) {}
+	public function onDeleteServerGroup(SBServerGroup $group) {}
+	public function onDeleteWebGroup(SBGroup $group) {}
+	
+	public function onEditAdmin(SBAdmin $admin) {}
+	public function onEditBan(SBBan $ban) {}
+	public function onEditGame(SBGame $game) {}
+	public function onEditServer(SBServer $server) {}
+	public function onEditServerGroup(SBServerGroup $group) {}
+	public function onEditWebGroup(SBGroup $group) {}
+	
 	
 	/**
 	 * Creates an active record instance.

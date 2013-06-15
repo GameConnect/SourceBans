@@ -14,8 +14,8 @@
  * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBBan $ban
- * @property SBServer $server
+ * @property SBBan $ban Ban
+ * @property SBServer $server Server
  *
  * @package sourcebans.models
  * @since 2.0

@@ -8,11 +8,11 @@
  * @link http://www.sourcebans.net
  *
  * The followings are the available columns in table '{{group_permissions}}':
- * @property integer $group_id Web Group ID
+ * @property integer $group_id Web group ID
  * @property string $name Name
  *
  * The followings are the available model relations:
- * @property SBGroup[] $groups
+ * @property SBGroup[] $groups Web groups
  *
  * @package sourcebans.models
  * @since 2.0

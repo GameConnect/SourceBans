@@ -12,9 +12,9 @@
  * @property string $name Name
  *
  * The followings are the available model relations:
- * @property SBAdmin[] $admins
- * @property integer $adminsCount
- * @property SBGroupPermission[] $permissions
+ * @property SBAdmin[] $admins Admins
+ * @property integer $adminsCount Admins count
+ * @property SBGroupPermission[] $permissions Permissions
  *
  * @package sourcebans.models
  * @since 2.0

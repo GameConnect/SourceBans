@@ -14,7 +14,7 @@
  * @property string $icon Icon
  *
  * The followings are the available model relations:
- * @property SBServer[] $servers
+ * @property SBServer[] $servers Servers
  *
  * @package sourcebans.models
  * @since 2.0

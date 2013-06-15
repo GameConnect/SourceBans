@@ -19,7 +19,7 @@
  * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBAdmin $admin
+ * @property SBAdmin $admin Admin
  *
  * @package sourcebans.models
  * @since 2.0

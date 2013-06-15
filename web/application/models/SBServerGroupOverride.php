@@ -8,13 +8,13 @@
  * @link http://www.sourcebans.net
  *
  * The followings are the available columns in table '{{server_group_overrides}}':
- * @property integer $group_id Server Group ID
+ * @property integer $group_id Group ID
  * @property string $type Type
  * @property string $name Name
  * @property string $access Access
  *
  * The followings are the available model relations:
- * @property SBServerGroup $group
+ * @property SBServerGroup $group Group
  *
  * @package sourcebans.models
  * @since 2.0

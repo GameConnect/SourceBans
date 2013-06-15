@@ -24,20 +24,20 @@
  * @property integer $create_time Date/Time
  * @property object $community Steam Community data
  * @property integer $communityId Steam Community ID
- * @property object $country Country data for IP address
+ * @property object $country Country data
  * @property boolean $isActive Whether the ban is active
  * @property boolean $isExpired Whether the ban is expired
  * @property boolean $isPermanent Whether the ban is permanent
  * @property boolean $isUnbanned Whether the ban is unbanned
  *
  * The followings are the available model relations:
- * @property SBAdmin $admin
- * @property SBBlock[] $blocks
- * @property SBComment[] $comments
- * @property SBDemo[] $demos
- * @property SBProtest[] $protests
- * @property SBServer $server
- * @property SBAdmin $unban_admin
+ * @property SBAdmin $admin Admin
+ * @property SBBlock[] $blocks Blocks
+ * @property SBComment[] $comments Comments
+ * @property SBDemo[] $demos Demos
+ * @property SBProtest[] $protests Protests
+ * @property SBServer $server Server
+ * @property SBAdmin $unban_admin Unban admin
  *
  * @package sourcebans.models
  * @since 2.0
@@ -242,9 +242,9 @@ class SBBan extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the Steam Community data for Steam Community ID
+	 * Returns the Steam Community data
 	 * 
-	 * @return object the Steam Community data for Steam Community ID
+	 * @return object the Steam Community data
 	 */
 	public function getCommunity()
 	{
@@ -271,9 +271,9 @@ class SBBan extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the country data for IP address
+	 * Returns the country data
 	 * 
-	 * @return object the country data for IP address
+	 * @return object the country data
 	 */
 	public function getCountry()
 	{

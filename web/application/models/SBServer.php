@@ -16,12 +16,12 @@
  * @property boolean $enabled Enabled
  *
  * The followings are the available model relations:
- * @property SBAction[] $actions
- * @property SBBan[] $bans
- * @property SBBlock[] $blocks
- * @property SBGame $game
- * @property SBServerGroup[] $groups
- * @property SBSubmission[] $submissions
+ * @property SBAction[] $actions Actions
+ * @property SBBan[] $bans Bans
+ * @property SBBlock[] $blocks Blocks
+ * @property SBGame $game Game
+ * @property SBServerGroup[] $groups Groups
+ * @property SBSubmission[] $submissions Submissions
  *
  * @package sourcebans.models
  * @since 2.0

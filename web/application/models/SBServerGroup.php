@@ -14,12 +14,12 @@
  * @property integer $immunity Immunity level
  *
  * The followings are the available model relations:
- * @property SBAdmin[] $admins
- * @property integer $adminsCount
- * @property SBServerGroup[] $groups_immune
- * @property SBServerGroupOverride[] $overrides
- * @property SBServer[] $servers
- * @property integer $serversCount
+ * @property SBAdmin[] $admins Admins
+ * @property integer $adminsCount Admins count
+ * @property SBServerGroup[] $groups_immune Immune groups
+ * @property SBServerGroupOverride[] $overrides Overrides
+ * @property SBServer[] $servers Servers
+ * @property integer $serversCount Servers count
  *
  * @package sourcebans.models
  * @since 2.0

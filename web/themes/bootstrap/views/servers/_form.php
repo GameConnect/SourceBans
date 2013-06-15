@@ -38,7 +38,7 @@
   <div class="control-group">
     <?php echo $form->labelEx($model,'rcon',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'rcon',array('size'=>32,'maxlength'=>32)); ?>
+      <?php echo $form->passwordField($model,'rcon',array('size'=>32,'maxlength'=>32)); ?>
       <?php echo $form->error($model,'rcon'); ?>
     </div>
   </div>

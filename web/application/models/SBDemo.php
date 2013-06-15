@@ -14,8 +14,8 @@
  * @property string $filename Filename
  *
  * The followings are the available model relations:
- * @property SBBan $ban
- * @property SBSubmission $submission
+ * @property SBBan $ban Ban
+ * @property SBSubmission $submission Submission
  *
  * @package sourcebans.models
  * @since 2.0

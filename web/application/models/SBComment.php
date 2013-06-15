@@ -18,11 +18,11 @@
  * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBAdmin $admin
- * @property SBBan $ban
- * @property SBProtest $protest
- * @property SBSubmission $submission
- * @property SBAdmin $update_admin
+ * @property SBAdmin $admin Admin
+ * @property SBBan $ban Ban
+ * @property SBProtest $protest Protest
+ * @property SBSubmission $submission Submission
+ * @property SBAdmin $update_admin Edit admin
  *
  * @package sourcebans.models
  * @since 2.0

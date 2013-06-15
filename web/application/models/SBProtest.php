@@ -17,8 +17,8 @@
  * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBBan $ban
- * @property SBComment[] $comments
+ * @property SBBan $ban Ban
+ * @property SBComment[] $comments Comments
  *
  * @package sourcebans.models
  * @since 2.0

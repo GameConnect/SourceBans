@@ -21,9 +21,9 @@
  * @property integer $create_time Date/Time
  *
  * The followings are the available model relations:
- * @property SBComment[] $comments
- * @property SBDemo $demo
- * @property SBServer $server
+ * @property SBComment[] $comments Comments
+ * @property SBDemo $demo Demo
+ * @property SBServer $server Server
  *
  * @package sourcebans.models
  * @since 2.0

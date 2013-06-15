@@ -14,7 +14,7 @@
  * @property string $identity Identity
  * @property string $password Password
  * @property string $password_key Password key
- * @property integer $group_id Web Group ID
+ * @property integer $group_id Web group ID
  * @property string $email Email address
  * @property string $language Language
  * @property string $theme Theme
@@ -29,14 +29,14 @@
  * @property integer $immunity Immunity level
  *
  * The followings are the available model relations:
- * @property SBAction[] $actions
- * @property SBBan[] $bans
- * @property SBComment[] $comments
- * @property SBGroup $group
- * @property SBLog[] $logs
- * @property SBServerGroup[] $server_groups
- * @property SBBan[] $unbanned_bans
- * @property SBComment[] $updated_comments
+ * @property SBAction[] $actions Actions
+ * @property SBBan[] $bans Bans
+ * @property SBComment[] $comments Comments
+ * @property SBGroup $group Web group
+ * @property SBLog[] $logs Logs
+ * @property SBServerGroup[] $server_groups Server groups
+ * @property SBBan[] $unbanned_bans Unbanned bans
+ * @property SBComment[] $updated_comments Edited comments
  *
  * @package sourcebans.models
  * @since 2.0
@@ -203,9 +203,9 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the Steam Community data for Steam Community ID
+	 * Returns the Steam Community data
 	 * 
-	 * @return object the Steam Community data for Steam Community ID
+	 * @return object the Steam Community data
 	 */
 	public function getCommunity()
 	{
@@ -232,9 +232,9 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the server flags of the admin
+	 * Returns the server permissions
 	 * 
-	 * @return string the server flags of the admin
+	 * @return string the server permissions
 	 */
 	public function getFlags()
 	{
@@ -248,9 +248,9 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Returns the immunity level of the admin
+	 * Returns the immunity level
 	 * 
-	 * @return string the immunity level of the admin
+	 * @return string the immunity level
 	 */
 	public function getImmunity()
 	{
@@ -265,10 +265,10 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Returns whether the admin has one of these server flags
+	 * Returns whether the admin has one of these server permissions
 	 * 
-	 * @param mixed $flag Flag(s) to check for
-	 * @return boolean
+	 * @param mixed $flag flag(s) to check for
+	 * @return boolean whether the admin has one of these server permissions
 	 */
 	public function hasFlag($flag)
 	{
@@ -295,10 +295,10 @@ class SBAdmin extends CActiveRecord
 	}
 	
 	/**
-	 * Returns whether the admin has all of these server flags
+	 * Returns whether the admin has all of these server permissions
 	 * 
-	 * @param mixed $flag Flag(s) to check for
-	 * @return boolean
+	 * @param mixed $flag flag(s) to check for
+	 * @return boolean whether the admin has all of these server permissions
 	 */
 	public function hasFlags($flag)
 	{
@@ -327,8 +327,8 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns whether the admin has one of these server groups
 	 * 
-	 * @param mixed $name Group name(s) to check for
-	 * @return boolean
+	 * @param mixed $name group name(s) to check for
+	 * @return boolean whether the admin has one of these server groups
 	 */
 	public function hasGroup($name)
 	{
@@ -341,8 +341,8 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns whether the admin has one of these web permissions
 	 * 
-	 * @param mixed $name Permission name(s) to check for
-	 * @return boolean
+	 * @param mixed $name permission name(s) to check for
+	 * @return boolean whether the admin has one of these web permissions
 	 */
 	public function hasPermission($name)
 	{
@@ -363,8 +363,8 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns whether the admin has all of these web permissions
 	 *
-	 * @param mixed $name Permission name(s) to check for
-	 * @return boolean
+	 * @param mixed $name permission name(s) to check for
+	 * @return boolean whether the admin has all of these web permissions
 	 */
 	public function hasPermissions($name)
 	{

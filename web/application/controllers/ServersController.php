@@ -287,7 +287,7 @@ class ServersController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='admin-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='server-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

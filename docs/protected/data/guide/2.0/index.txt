@@ -1,0 +1,5 @@
+# User Guide
+
+SourceBans provides advanced admin and ban management for the Source engine, through a web interface.
+
+This guide explains how to install and use it, as well as how to extend its functionality with third party plugins.

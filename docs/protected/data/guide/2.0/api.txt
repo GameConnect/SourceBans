@@ -1,0 +1,38 @@
+# API
+
+To access SourceBans functionality in an external PHP script, simply include `api.php`.
+~~~
+[php]
+include '/path/to/sourcebans/api.php';
+
+// Add web group
+$group = new SBGroup;
+$group->name = 'Owner';
+$group->permissions = array('OWNER');
+if(!$group->save())
+{
+	echo CHtml::errorSummary($group);
+}
+
+// Add server group
+$server_group = new SBServerGroup;
+$server_group->name = 'Root';
+$server_group->flags = SM_ROOT;
+$server_group->immunity = 100;
+if(!$server_group->save())
+{
+	echo CHtml::errorSummary($server_group);
+}
+
+if(!$group->hasErrors() && !$server_group->hasErrors())
+{
+	// Add admin
+	$admin = new SBAdmin;
+	$admin->name = 'Demo';
+	$admin->auth = SBAdmin::STEAM_AUTH;
+	$admin->identity = 'STEAM_0:1:2';
+	$admin->group = $group;
+	$admin->server_groups = array($server_group);
+	$admin->save();
+}
+~~~

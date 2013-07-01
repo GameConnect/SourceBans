@@ -95,7 +95,7 @@ class AccountForm extends CFormModel
 				Yii::app()->user->data->email = $this->new_email;
 				break;
 			case 'password':
-				Yii::app()->user->data->setPassword($this->new_password);
+				Yii::app()->user->data->new_password = $this->new_password;
 				break;
 			case 'server_password':
 				Yii::app()->user->data->server_password = $this->new_server_password;

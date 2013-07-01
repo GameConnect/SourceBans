@@ -158,7 +158,7 @@ class AdminsController extends Controller
 						
 						if(isset($data['password']))
 						{
-							$admin->setPassword($data['password']);
+							$admin->new_password = $data['password'];
 							$admin->server_password = $data['password'];
 						}
 						if(isset($data['group']))
@@ -207,7 +207,7 @@ class AdminsController extends Controller
 						
 						if(isset($password))
 						{
-							$admin->setPassword($password);
+							$admin->new_password = $password;
 							$admin->server_password = $password;
 						}
 						if(isset($group))

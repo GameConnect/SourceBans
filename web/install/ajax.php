@@ -36,9 +36,9 @@ if(!$group->save())
 
 // Setup admin
 $admin = new SBAdmin;
-$admin->attributes = $_POST['SBAdmin'];
-$admin->group_id   = $group->id;
-$admin->setPassword($admin->password);
+$admin->attributes   = $_POST['SBAdmin'];
+$admin->group_id     = $group->id;
+$admin->new_password = $admin->password;
 if(!$admin->save())
   exit(json_encode(false));
 

@@ -47,6 +47,8 @@ class SBAdmin extends CActiveRecord
 	const NAME_AUTH  = 'name';
 	const STEAM_AUTH = 'steam';
 	
+	public $new_password;
+	
 	/**
 	 * @var integer Steam Community ID
 	 */
@@ -90,14 +92,14 @@ class SBAdmin extends CActiveRecord
 			array('name, identity', 'length', 'max'=>64),
 			array('name', 'unique'),
 			array('identity', 'SBAdminIdentityValidator'),
-			array('password, server_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
+			array('new_password, server_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('email', 'email'),
 			array('email', 'length', 'max'=>128),
 			array('language, theme, timezone, server_password', 'default', 'setOnEmpty'=>true),
-			array('password_key, validation_key, login_time, server_groups', 'safe'),
+			array('password, password_key, validation_key, login_time, server_groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, auth, identity, password, group_id, email, language, theme, server_password, login_time, create_time', 'safe', 'on'=>'search'),
+			array('id, name, auth, identity, group_id, email, language, theme, login_time, create_time', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -139,6 +141,7 @@ class SBAdmin extends CActiveRecord
 			'server_password' => Yii::t('sourcebans', 'Server password'),
 			'login_time' => Yii::t('sourcebans', 'Last visit'),
 			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'new_password' => Yii::t('sourcebans', 'Password'),
 			'communityId' => Yii::t('sourcebans', 'Steam Community ID'),
 			'flags' => Yii::t('sourcebans', 'Server permissions'),
 			'group.name' => Yii::t('sourcebans', 'Web group'),
@@ -459,6 +462,10 @@ class SBAdmin extends CActiveRecord
 	
 	protected function beforeSave()
 	{
+		if(($this->new_password = trim($this->new_password)) != '')
+		{
+			$this->setPassword($this->new_password);
+		}
 		if($this->auth == self::STEAM_AUTH)
 		{
 			$this->identity = strtoupper($this->identity);

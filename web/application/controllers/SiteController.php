@@ -397,7 +397,7 @@ class SiteController extends Controller
 			if(!Yii::app()->mailer->Send())
 				throw new CHttpException(500, 'Please try again later or contact your system administrator.');
 			
-			$admin->setPassword($password);
+			$admin->new_password = $password;
 			$admin->validation_key = null;
 			$admin->save(false);
 			$this->redirect(Yii::app()->user->homeUrl);

@@ -52,10 +52,10 @@
   </div>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'password',array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model,'new_password',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->passwordField($model,'password',array('size'=>60,'maxlength'=>64)); ?>
-      <?php echo $form->error($model,'password'); ?>
+      <?php echo $form->passwordField($model,'new_password',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'new_password'); ?>
     </div>
   </div>
 

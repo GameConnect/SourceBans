@@ -174,4 +174,52 @@ class SBServer extends CActiveRecord
 	{
 		return $this->ip . ':' . $this->port;
 	}
+	
+	public function getInfo()
+	{
+		return $this->_getQuery()->getInfo();
+	}
+	
+	public function getPlayers()
+	{
+		return $this->_getQuery()->getPlayers();
+	}
+	
+	public function getRules()
+	{
+		return $this->_getQuery()->getRules();
+	}
+	
+	public function rcon($command)
+	{
+		if(($rcon = $this->_getRcon()) === false)
+			return false;
+		
+		return $rcon->execute($command);
+	}
+	
+	
+	private function _getQuery()
+	{
+		static $_query;
+		if(!isset($_query))
+		{
+			$_query = new ServerQuery($this->ip, $this->port);
+		}
+		
+		return $_query;
+	}
+	
+	private function _getRcon()
+	{
+		static $_rcon;
+		if(!isset($_rcon))
+		{
+			$_rcon = new ServerRcon($this->ip, $this->port, $this->rcon);
+			if(!$_rcon->auth())
+				return false;
+		}
+		
+		return $_rcon;
+	}
 }

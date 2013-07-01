@@ -1,4 +1,4 @@
-<h2><?php echo $class->name; ?></h2>
+<h1><?php echo $class->name; ?></h1>
 
 <div id="nav">
   {{index|All Packages}}

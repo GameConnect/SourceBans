@@ -70,7 +70,7 @@
       $.post("' . $this->createUrl('', array('id' => $model->id)) . '", {
         command: command
       }, function(data) {
-        $console.text($console.text() + (data || "' . Yii::t('sourcebans', 'Command executed') . '") + "\n");
+        $console.text($console.text() + (data.error || data.result || "' . Yii::t('sourcebans', 'Command executed') . '") + "\n");
         scrollConsole(200);
         
         $command.val("").prop("disabled", false);

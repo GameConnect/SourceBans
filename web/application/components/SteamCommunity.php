@@ -18,7 +18,7 @@ class SteamCommunity
 	/**
 	 * @var integer The request timeout in seconds
 	 */
-	public static $requestTimeout = 2;
+	public static $requestTimeout = 3;
 	
 	/**
 	 * @var string The Steam Web API Key

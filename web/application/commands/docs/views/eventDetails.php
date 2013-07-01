@@ -1,5 +1,5 @@
 <?php if(!$class->nativePropertyCount) return; ?>
-<h3>Event Details</h3>
+<h2>Event Details</h2>
 <?php foreach($class->events as $event): ?>
 <?php if($event->isInherited) continue; ?>
 <div class="detailHeader" id="<?php echo $event->name.'-detail'; ?>">

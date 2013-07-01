@@ -151,7 +151,7 @@
   });
 ') ?>
 
-<?php if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS')): ?>
+<?php if(!Yii::app()->user->isGuest): ?>
 <?php $this->widget('bootstrap.widgets.TbDropdown', array(
 	'id' => 'player-menu',
 	'items' => array_merge(array(
@@ -162,11 +162,21 @@
 			'label' => Yii::t('sourcebans', 'Kick player'),
 			'url' => '#',
 			'linkOptions' => array('id' => 'player-kick'),
+			'visible' => Yii::app()->user->data->hasFlag(SM_KICK),
 		),
 		array(
 			'label' => Yii::t('sourcebans', 'Ban player'),
 			'url' => '#',
 			'linkOptions' => array('id' => 'player-ban'),
+			'visible' => Yii::app()->user->data->hasPermission('ADD_BANS'),
+		),
+		array(
+			'divider' => true,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'View Steam Profile'),
+			'url' => '#',
+			'linkOptions' => array('id' => 'player-profile'),
 		),
 	), $this->menu),
 )) ?>
@@ -187,6 +197,16 @@
         left: event.pageX + 2
       })
       .show();
+  });
+  
+  $("#player-profile").click(function() {
+    var id = $("#servers-grid tr.selected").data("key");
+    
+    $.get("' . $this->createUrl('servers/getProfile', array('id' => '__ID__')) . '".replace("__ID__", id), {
+      name: $("#player-menu").data("name")
+    }, function(data) {
+      window.open("http://steamcommunity.com/profiles/" + data.id);
+    });
   });
   
   $("#player-kick").click(function() {

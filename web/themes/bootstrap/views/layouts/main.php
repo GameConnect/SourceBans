@@ -123,6 +123,9 @@
           <br /><strong><?php echo Yii::t('sourcebans', 'Version') ?> <?php echo SourceBans::getVersion() ?></strong>
           <br />"<?php echo SourceBans::app()->quote->text ?>" - <em><?php echo SourceBans::app()->quote->name ?></em>
         </p>
+<?php if(YII_DEBUG): ?>
+        <p><em><?php echo Yii::app()->db->stats[0] ?> database queries performed in <?php echo number_format(Yii::getLogger()->executionTime, 2) ?> seconds.</em></p>
+<?php endif ?>
       </div>
     </footer>
   </body>

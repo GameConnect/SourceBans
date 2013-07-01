@@ -26,7 +26,7 @@ class ServerQuery
 	const A2S_RULES                             = "\x56";
 	const A2S_RULES_RESPONSE                    = "\x45";
 	
-	private $_address;
+	private $_host;
 	private $_challenge = self::QUERY_HEADER;
 	private $_port;
 	private $_raw;
@@ -36,13 +36,13 @@ class ServerQuery
 	/**
 	 * Constructor
 	 * 
-	 * @param string $address IP address or domain name
+	 * @param string $host IP address or domain name
 	 * @param integer $port port number
 	 */
-	function __construct($address, $port)
+	function __construct($host, $port)
 	{
-		$this->_address = $address;
-		$this->_port    = $port;
+		$this->_host = $host;
+		$this->_port = $port;
 	}
 	
 	
@@ -177,7 +177,7 @@ class ServerQuery
 		if($this->_socket !== false)
 			return $this->_socket;
 		
-		$this->_socket = fsockopen('udp://' . $this->_address, $this->_port);
+		$this->_socket = fsockopen('udp://' . $this->_host, $this->_port);
 		if($this->_socket === false)
 			return false;
 		

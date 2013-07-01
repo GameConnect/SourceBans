@@ -16,10 +16,11 @@ class ServerRcon
 	const SERVERDATA_RESPONSE_VALUE = 00;
 	const SERVERDATA_AUTH_RESPONSE  = 02;
 	
-	private $_hl1  = false;
-	private $_id   = 0;
+	private $_fsock = false;
+	private $_hl1   = false;
+	private $_id    = 0;
 	private $_password;
-	private $_sock = null;
+	private $_sock  = null;
 	
 	
 	/**
@@ -32,16 +33,11 @@ class ServerRcon
 	function __construct($host, $port, $password)
 	{
 		$this->_password = $password;
-		$this->_sock     = @fsockopen($host, $port, $errno, $errstr, 2);
 		
-		// HL1
-		if(!$this->_sock)
+		if(!$this->_connect($host, $port) && $this->_connect($host, $port, SOL_UDP))
 		{
-			$this->_hl1  = true;
-			$this->_sock = @fsockopen('udp://' . $host, $port, $errno, $errstr, 2);
+			$this->_hl1 = true;
 		}
-		
-		stream_set_timeout($this->_sock, 2);
 	}
 	
 	
@@ -71,7 +67,7 @@ class ServerRcon
 	public function execute($command)
 	{
 		// HL2
-		if(!$this->hl1)
+		if(!$this->_hl1)
 		{
 			$this->_write(self::SERVERDATA_EXECCOMMAND, $command, '');
 			$ret = $this->_read();
@@ -82,17 +78,17 @@ class ServerRcon
 		fputs($this->_sock, $command, strlen($command));
 		
 		// Get results from server
-		$buffer  = fread($this->socket, 1);
-		$status  = socket_get_status($this->socket);
-		$buffer .= fread($this->socket, $status['unread_bytes']);
+		$buffer  = fread($this->_sock, 1);
+		$status  = socket_get_status($this->_sock);
+		$buffer .= fread($this->_sock, $status['unread_bytes']);
 		
 		// If there is another package waiting
 		if(substr($buffer, 0, 4) == "\xfe\xff\xff\xff")
 		{
 			// Get results from server
-			$buffer2  = fread($this->socket, 1);
-			$status   = socket_get_status($this->socket);
-			$buffer2 .= fread($this->socket, $status['unread_bytes']);
+			$buffer2  = fread($this->_sock, 1);
+			$status   = socket_get_status($this->_sock);
+			$buffer2 .= fread($this->_sock, $status['unread_bytes']);
 			
 			// If the second one came first
 			if(strlen($buffer) > strlen($buffer2))
@@ -115,23 +111,70 @@ class ServerRcon
 	}
 	
 	
+	private function _connect($host, $port, $protocol = SOL_TCP)
+	{
+		try
+		{
+			if(defined('BIND_IP') && function_exists('socket_create') && function_exists('socket_bind'))
+			{
+				if(!($this->_sock = socket_create(AF_INET, SOCK_STREAM, $protocol)))
+					return false;
+				
+				socket_set_option($this->_sock, SOL_SOCKET, SO_REUSEADDR, 1);
+				socket_bind($this->_sock, BIND_IP);
+				
+				if(!socket_connect($this->_sock, $host, $port))
+					return false;
+				
+				socket_set_option($this->_sock, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 2, 'usec' => 0));
+				socket_set_option($this->_sock, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 2, 'usec' => 0));
+			}
+			else
+			{
+				if($protocol == SOL_UDP)
+				{
+					$host = 'udp://' . $host;
+				}
+				
+				if(!($this->_sock = @fsockopen($host, $port, $errno, $errstr, 2)))
+					return false;
+				
+				stream_set_timeout($this->_sock, 2);
+			}
+		}
+		catch(Exception $e)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
 	private function _PacketRead()
 	{
-		$retarray = array();
-		while($size = @fread($this->_sock, 4)) 
+		$packets = array();
+		while($size = $this->_SocketRead(4)) 
 		{
 			$size = unpack('V1Size', $size);
 			if($size['Size'] > 4096)
 			{
-				$packet = "\x00\x00\x00\x00\x00\x00\x00\x00" . fread($this->_sock, 4096);
+				$packet = "\x00\x00\x00\x00\x00\x00\x00\x00" . $this->_SocketRead(4096);
 			}
 			else
 			{
-				$packet = fread($this->_sock, $size['Size']);
+				$packet = $this->_SocketRead($size['Size']);
 			}
-			$retarray[] = unpack("V1ID/V1Reponse/a*S1/a*S2", $packet);
+			$packets[] = unpack("V1ID/V1Reponse/a*S1/a*S2", $packet);
 		}
-		return $retarray;
+		return $packets;
+	}
+	
+	private function _SocketRead($size)
+	{
+		if($this->_fsock)
+			return @fread($this->_sock, $size);
+		
+		return socket_read($this->_sock, $size);
 	}
 	
 	private function _read()
@@ -161,7 +204,16 @@ class ServerRcon
 		$id   = ++$this->_id;
 		$data = pack('VV', $id, $cmd) . $s1 . chr(0) . $s2 . chr(0);
 		$data = pack('V',  strlen($data)) . $data;
-		fwrite($this->_sock, $data, strlen($data));
+		
+		if($this->_fsock)
+		{
+			fwrite($this->_sock, $data, strlen($data));
+		}
+		else
+		{
+			socket_write($this->_sock, $data, strlen($data));
+		}
+		
 		return $id;
 	}
 }

@@ -1,4 +1,4 @@
-<h2>Class Reference</h2>
+<h1>Class Reference</h1>
 
 <table class="table table-condensed">
   <colgroup>

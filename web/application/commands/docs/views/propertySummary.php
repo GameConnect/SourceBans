@@ -1,7 +1,7 @@
 <?php if($protected && !$class->protectedPropertyCount || !$protected && !$class->publicPropertyCount) return; ?>
 
 <div class="summary docProperty">
-<h3><?php echo $protected ? 'Protected Properties' : 'Public Properties'; ?></h3>
+<h2><?php echo $protected ? 'Protected Properties' : 'Public Properties'; ?></h2>
 
 <p><a href="#" class="toggle">Hide inherited properties</a></p>
 

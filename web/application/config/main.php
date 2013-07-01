@@ -27,6 +27,7 @@ return CMap::mergeArray(
 				'emulatePrepare'=>true,
 				'charset'=>'utf8',
 				'autoConnect'=>false,
+				'enableProfiling'=>YII_DEBUG,
 				'schemaCachingDuration'=>86400,
 			),
 			'format'=>array(
@@ -42,13 +43,10 @@ return CMap::mergeArray(
 					),
 				),
 			),
+			// extensions
 			'geoip'=>array(
 				'class'=>'ext.geoip.CGeoIP',
 				'filename'=>dirname(__FILE__).'/../extensions/geoip/data/GeoIP.dat',
-			),
-			'mailer'=>array(
-				'class'=>'ext.swiftMailer.SwiftMailer',
-				'From'=>'noreply@'.$_SERVER['HTTP_HOST'],
 			),
 		),
 	),

@@ -69,6 +69,10 @@ return CMap::mergeArray(
 			'bootstrap'=>array(
 				'class'=>'bootstrap.components.Bootstrap',
 			),
+			'mailer'=>array(
+				'class'=>'ext.swiftMailer.SwiftMailer',
+				'From'=>'noreply@'.$_SERVER['HTTP_HOST'],
+			),
 		),
 
 		// application-level parameters that can be accessed

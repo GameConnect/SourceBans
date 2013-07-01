@@ -101,7 +101,7 @@ class SBAction extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
-		$criteria->with='admin';
+		$criteria->with=array('admin','server');
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.name',$this->name,true);

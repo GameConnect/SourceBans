@@ -98,7 +98,7 @@
 	'dataProvider'=>$overrides->search(),
 	'columns'=>array(
 		array(
-			'footer'=>CHtml::dropDownList('SBOverride[type]', null, SBOverride::getTypes()),
+			//'footer'=>CHtml::dropDownList('SBOverride[type]', null, SBOverride::getTypes()),
 			'headerHtmlOptions'=>array(
 				'class'=>'nowrap',
 			),
@@ -109,11 +109,11 @@
 			'value'=>'($types = SBOverride::getTypes()) ? $types[$data->type] : null',
 		),
 		array(
-			'footer'=>CHtml::textField('SBOverride[name]'),
+			//'footer'=>CHtml::textField('SBOverride[name]'),
 			'name'=>'name',
 		),
 		array(
-			'footer'=>CHtml::checkBoxList('SBOverride[flags]', null, SourceBans::app()->flags),
+			//'footer'=>CHtml::checkBoxList('SBOverride[flags]', null, SourceBans::app()->flags),
 			'name'=>'flags',
 			'type'=>'ntext',
 			'value'=>'($flags = SourceBans::app()->flags) ? $flags[$data->flags] : null',

@@ -160,13 +160,7 @@ class KeyValues extends ArrayObject
 		
 		foreach($data as $key => $value)
 		{
-			// Write key value pair
-			if(is_string($value))
-			{
-				$ret .= sprintf("%s\"%s\"\t\"%s\"\n",
-					$indent, $key, $value);
-			}
-			else if(is_array($value))
+			if(is_array($value))
 			{
 				reset($value);
 				// If array is numerical, write key sub-value pairs
@@ -187,6 +181,12 @@ class KeyValues extends ArrayObject
 					$ret .= $this->_build($value, $level + 1);
 					$ret .= $indent . "}\n";
 				}
+			}
+			// Write key value pair
+			else
+			{
+				$ret .= sprintf("%s\"%s\"\t\"%s\"\n",
+					$indent, $key, $value);
 			}
 		}
 		

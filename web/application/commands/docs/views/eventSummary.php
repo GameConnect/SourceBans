@@ -1,7 +1,7 @@
 <?php if(empty($class->events)) return; ?>
 
 <div class="summary docEvent">
-<h3>Events</h3>
+<h2>Events</h2>
 
 <p><a href="#" class="toggle">Hide inherited events</a></p>
 

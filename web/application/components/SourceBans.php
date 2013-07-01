@@ -191,7 +191,9 @@ class SourceBans extends CApplicationComponent
 	 */
 	public function trigger($name, $params = null)
 	{
-		$params = (array)$params;
+		if($params !== null && !is_array($params))
+			$params = array($params);
+		
 		foreach(SourceBans::app()->plugins as $plugin)
 		{
 			if(is_callable(array($plugin, $name)))

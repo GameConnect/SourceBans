@@ -1,5 +1,5 @@
 <div class="summary docProperty">
-<h3><?php echo 'Uses Properties'; ?></h3>
+<h2><?php echo 'Uses Properties'; ?></h2>
 
 
 <table class="table table-bordered table-condensed">

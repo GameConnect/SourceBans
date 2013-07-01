@@ -93,12 +93,12 @@ class SBBan extends CActiveRecord
 		
 		if($this->isNewRecord || $this->isActive)
 		{
-			$rules[] = array('steam', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+			$rules[] = array('steam', 'unique', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'condition'=>'type = :type',
 				'params'=>array(':type'=>SBBan::STEAM_TYPE),
 				'scopes'=>'active',
 			));
-			$rules[] = array('ip', 'unique', 'message'=>Yii::t('sourcebans','{attribute} "{value}" has already been banned.'), 'criteria'=>array(
+			$rules[] = array('ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'condition'=>'type = :type',
 				'params'=>array(':type'=>SBBan::IP_TYPE),
 				'scopes'=>'active',
@@ -166,6 +166,7 @@ class SBBan extends CActiveRecord
 			unset($criteria['search']);
 		}
 		$criteria=new CDbCriteria($criteria);
+		$criteria->with=array('admin','server');
 
 		if(isset($search))
 		{

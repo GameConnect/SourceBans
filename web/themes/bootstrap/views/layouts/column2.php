@@ -6,7 +6,7 @@
 	'id' => 'menu',
 	'items' => $this->menu,
 	'htmlOptions' => array(
-		'class' => 'nav nav-stacked nav-tabs',
+		'class' => 'nav nav-list',
 	),
 )) ?>
 

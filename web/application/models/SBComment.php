@@ -111,6 +111,7 @@ class SBComment extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with='admin';
 
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.object_type',$this->object_type);

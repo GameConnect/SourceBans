@@ -236,7 +236,7 @@ class ServersController extends Controller
 			throw new CHttpException(403);
 		
 		if(isset($_POST['command']))
-			Yii::app()->end($this->_rconServer($_POST['command'], $id));
+			Yii::app()->end(CJSON::encode($this->_rconServer($_POST['command'], $id)));
 		
 		$this->render('rcon', array(
 			'model'=>$model,
@@ -250,6 +250,33 @@ class ServersController extends Controller
 		$response = $this->_rconServer('kick "' . addslashes($name) . '"', $id);
 		
 		Yii::app()->end(CJSON::encode($response));
+	}
+	
+	public function actionGetProfile()
+	{
+		$id       = Yii::app()->request->getQuery('id');
+		$name     = Yii::app()->request->getPost('name');
+		$response = $this->_rconServer('status', $id);
+		if(isset($response['error']))
+			Yii::app()->end(CJSON::encode($response));
+		
+		preg_match_all(SourceBans::STATUS_PATTERN, $response['result'], $players);
+		foreach($players as $player)
+		{
+			if($player[2] == $name)
+			{
+				Yii::app()->end(CJSON::encode(array(
+					'id' => Helpers::getCommunityId($player[3]),
+				)));
+			}
+		}
+		
+		Yii::app()->end(CJSON::encode(array(
+			'error' => array(
+				'code'    => 'ERR_INVALID_NAME',
+				'message' => Yii::t('sourcebans', 'controllers.servers.getProfile.err_invalid_name', array('{name}' => $name)),
+			),
+		)));
 	}
 	
 	public function actionConfig()

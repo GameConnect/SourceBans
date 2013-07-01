@@ -1,5 +1,5 @@
 <?php if(!$class->nativeMethodCount) return; ?>
-<h3>Method Details</h3>
+<h2>Method Details</h2>
 
 <?php foreach($class->methods as $method): ?>
 <?php if($method->isInherited) continue; ?>
@@ -15,7 +15,7 @@ method
 
 <table class="table table-bordered table-condensed">
 <tr><td colspan="3">
-<pre class="signature2">
+<pre class="signature2 alert">
 <?php echo preg_replace('/\{\{([^\{\}]*?)\|([^\{\}]*?)\}\}\(/','$2(',$method->signature); ?>
 </pre>
 </td></tr>

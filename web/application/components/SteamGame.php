@@ -55,7 +55,7 @@ class SteamGame
 	 * ISteamUserStats/GetSchemaForGame/v0002
 	 * 
 	 * @param string $lang Localized language to return 
-	 * @return array An array of available game stats
+	 * @return array An array of game schema information
 	 */
 	public function getSchema($lang = 'en')
 	{

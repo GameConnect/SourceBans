@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"sv"			"Du är bannlyst ifrån denna server, besök {1} för mer information"
+	}
+	"DB Connect Fail"
+	{
+		"sv"			"Databas anslutningen misslyckades. Vänligen kontakta ägaren."
+	}
+	"Not In Game"
+	{
+		"sv"			"Spelaren är inte ansluten, besök webbpaneln för att bannlysa dom."
+	}
+	"Ban Not Verified"
+	{
+		"sv"			"Spelarens bannlysning har inte verifierats. Vänligen vänta 30 sekunder innan du försöker igen."
+	}
+	"Can Not Unban"
+	{
+		"sv"			"Du kan inte ta bort en bannlysning ifrån servern, besök {1}."
+	}
+	"Can Not Add Ban"
+	{
+		"sv"			"Du kan inte lägga till en bannlysning ifrån servern, besök {1} för att lägga en bannlysning."
+	}
+	"Check Menu"
+	{
+		"sv"			"Vänligen kolla menyn för att välja en anledning."
+	}
+	"Include Reason"
+	{
+		"sv"			"Vänligen inkludera en anledning för bannlysningen på spelaren."
+	}
+	"Ban Fail"
+	{
+		"sv"			"Misslyckades att bannlysa spelaren , försök igen."
+	}
+	"Chat Reason"
+	{
+		"sv"			"Vänligen skriv in orsaken till bannlysningen i chatten och tryck enter. Skriv "! Noreason" för att avbryta."
+	}
+	"Chat Reason Aborted"
+	{
+		"sv"			"Bannlysnings processen har avbrutits framgångsrikt."
+	}
+	"Select player"
+	{
+		"sv"			"Välj spelare:"
+	}
+}

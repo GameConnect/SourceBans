@@ -169,7 +169,7 @@ class SBLog extends CActiveRecord
 	
 	private function _getTraces($level = 5)
 	{
-		$traces = debug_backtrace();
+		$traces = array_slice(debug_backtrace(), 3); // Strip first 3 traces
 		$count  = 0;
 		$ret    = '';
 		

@@ -1,4 +1,4 @@
-<h3>Uses Details</h3>
+<h2>Uses Details</h2>
 <?php foreach($view->uses as $property): ?>
 <div class="detailHeader" id="<?php echo $property->name.'-detail'; ?>">
 <?php echo $property->name; ?>

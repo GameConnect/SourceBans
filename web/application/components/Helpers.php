@@ -31,6 +31,20 @@ class Helpers
 	
 	
 	/**
+	 * Converts a Steam ID to a Community ID
+	 *
+	 * @param string $steam the Steam ID
+	 * @return string the Community ID
+	 */
+	public static function getCommunityId($steam)
+	{
+		return Yii::app()->db
+			->createCommand('SELECT 76561197960265728 + CAST(MID(:id, 9, 1) AS UNSIGNED) + CAST(MID(:id, 11) * 2 AS UNSIGNED)')
+			->queryScalar(array(':id' => $steam));
+	}
+	
+	
+	/**
 	 * Get the size of a directory
 	 *
 	 * @param string $path The path to the directory
@@ -70,6 +84,20 @@ class Helpers
 			'count' => $count,
 			'dirs'  => $dirs,
 		);
+	}
+	
+	
+	/**
+	 * Converts a Community ID to a Steam ID
+	 *
+	 * @param string $community_id the Community ID
+	 * @return string the Steam ID
+	 */
+	public static function getSteamId($community_id)
+	{
+		return Yii::app()->db
+			->createCommand('SELECT CONCAT("STEAM_0:", (CAST(:id AS UNSIGNED) - 76561197960265728) % 2, ":", CAST(((CAST(:id AS UNSIGNED) - 76561197960265728) - ((CAST(:id AS UNSIGNED) - 76561197960265728) % 2)) / 2 AS UNSIGNED))')
+			->queryScalar(array(':id' => $community_id));
 	}
 	
 	

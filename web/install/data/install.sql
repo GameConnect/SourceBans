@@ -137,7 +137,6 @@ CREATE TABLE {prefix}comments (
   KEY object_id (object_id),
   KEY update_admin_id (update_admin_id),
   CONSTRAINT comment_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
-  CONSTRAINT comment_ban FOREIGN KEY (object_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE,
   CONSTRAINT comment_update_admin FOREIGN KEY (update_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -395,7 +394,6 @@ INSERT INTO {prefix}games (name, folder, icon) VALUES
 ('E.Y.E: Divine Cybermancy', 'eye', 'eye.png'),
 ('Fortress Forever', 'FortressForever', 'fortressforever.gif'),
 ('Garry''s Mod', 'garrysmod', 'gmod.png'),
-('GoldenEye: Source', 'gesource', 'gesource.png'),
 ('Half-Life 2 Capture the Flag', 'hl2ctf', 'hl2ctf.png'),
 ('Half-Life 2 Deathmatch', 'hl2mp', 'hl2dm.png'),
 ('Hidden: Source', 'hidden', 'hidden.png'),
@@ -403,11 +401,9 @@ INSERT INTO {prefix}games (name, folder, icon) VALUES
 ('Left 4 Dead', 'left4dead', 'l4d.png'),
 ('Left 4 Dead 2', 'left4dead2', 'l4d2.png'),
 ('Nuclear Dawn', 'nucleardawn', 'nucleardawn.png'),
-('Obsidian Conflict', 'obsidian', 'obsidian.gif'),
 ('Perfect Dark: Source', 'pdark', 'pdark.gif'),
 ('Pirates Vikings and Knights II', 'pvkii', 'pvkii.gif'),
 ('SourceForts', 'sourceforts', 'sourceforts.gif'),
-('Synergy', 'synergy', 'synergy.gif'),
 ('Team Fortress 2', 'tf', 'tf2.gif'),
 ('The Ship', 'ship', 'ship.gif'),
 ('Zombie Panic: Source', 'zps', 'zps.gif');

@@ -18,7 +18,7 @@ class WebUser extends CWebUser
 		static $_data;
 		if(!isset($_data) && !$this->isGuest)
 		{
-			$_data = SBAdmin::model()->findByPk($this->id);
+			$_data = SBAdmin::model()->with('group')->findByPk($this->id);
 		}
 		
 		return $_data;

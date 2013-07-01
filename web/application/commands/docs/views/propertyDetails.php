@@ -1,5 +1,5 @@
 <?php if(!$class->nativePropertyCount) return; ?>
-<h3>Property Details</h3>
+<h2>Property Details</h2>
 <?php foreach($class->properties as $property): ?>
 <?php if($property->isInherited) continue; ?>
 <div class="detailHeader" id="<?php echo $property->name.'-detail'; ?>">

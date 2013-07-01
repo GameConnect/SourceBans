@@ -95,6 +95,7 @@ class SBBlock extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->with=array('ban','server');
 
 		$criteria->compare('t.ban_id',$this->ban_id);
 		$criteria->compare('t.name',$this->name,true);

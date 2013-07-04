@@ -167,7 +167,7 @@ class BansController extends Controller
 		
 		foreach(file($file['tmp_name']) as $line)
 		{
-			list(, $length, $identity) = explode(' ', $line);
+			list(, $length, $identity) = explode(' ', rtrim($line));
 			// If this is not a permanent ban, ignore
 			if($length)
 				continue;

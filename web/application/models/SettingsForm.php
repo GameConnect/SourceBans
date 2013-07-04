@@ -42,7 +42,7 @@ class SettingsForm extends CFormModel
 			array('default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
 			array('dashboard_blocks_popup, bans_hide_admin, bans_hide_ip, bans_public_export, enable_protest, enable_smtp, enable_submit', 'boolean'),
 			array('items_per_page, password_min_length, smtp_port', 'numerical', 'integerOnly'=>true, 'min'=>1),
-			array('dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure, steam_web_api_key', 'safe'),
+			array('date_format, dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure, steam_web_api_key', 'safe'),
 		);
 	}
 

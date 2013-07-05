@@ -230,6 +230,7 @@ return array(
 	'controllers.admin.settings.title' => 'Settings',
 	'controllers.admin.version.error' => 'Error retrieving latest release.',
 	'controllers.admins.import.error' => 'Unsupported format.',
+	'controllers.bans.import.error' => 'Unsupported format.',
 	'controllers.servers.admins.title' => 'Server admins',
 	'controllers.servers.config.title' => 'Server configuration',
 	'controllers.servers.getProfile.err_invalid_name' => 'Player "{name}" could not be found.',

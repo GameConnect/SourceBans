@@ -228,6 +228,7 @@ return array(
 	'controllers.admin.settings.title' => 'Einstellungen',
 	'controllers.admin.version.error' => '',
 	'controllers.admins.import.error' => '',
+	'controllers.bans.import.error' => '',
 	'controllers.servers.config.title' => '',
 	'controllers.servers.getProfile.err_invalid_name' => 'Player "{name}" could not be found.',
 	'controllers.servers.rcon.title' => '',

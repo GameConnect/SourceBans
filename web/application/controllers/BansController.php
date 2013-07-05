@@ -165,33 +165,62 @@ class BansController extends Controller
 	{
 		$file = $_FILES['file'];
 		
-		foreach(file($file['tmp_name']) as $line)
+		switch($file['name'])
 		{
-			list(, $length, $identity) = explode(' ', rtrim($line));
-			// If this is not a permanent ban, ignore
-			if($length)
-				continue;
-			
-			// Steam ID
-			if(preg_match(SourceBans::STEAM_PATTERN, $identity))
-			{
-				$ban         = new SBBan;
-				$ban->type   = SBBan::STEAM_TYPE;
-				$ban->steam  = $identity;
-				$ban->reason = 'Imported from banned_user.cfg';
-				$ban->length = 0;
-				$ban->save();
-			}
-			// IP address
-			else if(preg_match(SourceBans::IP_PATTERN, $identity))
-			{
-				$ban         = new SBBan;
-				$ban->type   = SBBan::IP_TYPE;
-				$ban->ip     = $identity;
-				$ban->reason = 'Imported from banned_ip.cfg';
-				$ban->length = 0;
-				$ban->save();
-			}
+			// Source Dedicated Server
+			case 'banned_ip.cfg':
+			case 'banned_user.cfg':
+				foreach(file($file['tmp_name']) as $line)
+				{
+					list(, $length, $identity) = explode(' ', rtrim($line));
+					// If this is not a permanent ban, ignore
+					if($length)
+						continue;
+					
+					// Steam ID
+					if(preg_match(SourceBans::STEAM_PATTERN, $identity))
+					{
+						$ban         = new SBBan;
+						$ban->type   = SBBan::STEAM_TYPE;
+						$ban->steam  = $identity;
+						$ban->reason = 'Imported from banned_user.cfg';
+						$ban->length = 0;
+						$ban->save();
+					}
+					// IP address
+					else if(preg_match(SourceBans::IP_PATTERN, $identity))
+					{
+						$ban         = new SBBan;
+						$ban->type   = SBBan::IP_TYPE;
+						$ban->ip     = $identity;
+						$ban->reason = 'Imported from banned_ip.cfg';
+						$ban->length = 0;
+						$ban->save();
+					}
+				}
+				break;
+			// ESEA Ban List
+			case 'esea_ban_list.csv':
+				$handle = fopen($file['tmp_name'], 'r');
+				while(list($steam, $name) = fgetcsv($handle, 4096))
+				{
+					$steam = 'STEAM_' . trim($steam);
+					if(!preg_match(SourceBans::STEAM_PATTERN, $steam))
+						continue;
+					
+					$ban         = new SBBan;
+					$ban->type   = SBBan::STEAM_TYPE;
+					$ban->steam  = $steam;
+					$ban->name   = $name;
+					$ban->reason = 'Imported from esea_ban_list.csv';
+					$ban->length = 0;
+					$ban->save();
+				}
+				
+				fclose($handle);
+				break;
+			default:
+				throw new CHttpException(500, Yii::t('sourcebans', 'controllers.bans.import.error'));
 		}
 		
 		SourceBans::log('Bans imported', 'Bans imported from ' . $file['name']);

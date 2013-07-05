@@ -230,6 +230,7 @@ return array(
 	'controllers.admin.settings.title' => 'Instellingen',
 	'controllers.admin.version.error' => 'Fout bij ophalen laatste release.',
 	'controllers.admins.import.error' => 'Formaat niet ondersteund.',
+	'controllers.bans.import.error' => 'Formaat niet ondersteund.',
 	'controllers.servers.admins.title' => 'Server admins',
 	'controllers.servers.config.title' => 'Serverconfiguratie',
 	'controllers.servers.getProfile.err_invalid_name' => 'Speler "{name}" kon niet gevonden worden.',

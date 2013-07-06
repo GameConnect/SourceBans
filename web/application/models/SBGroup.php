@@ -133,5 +133,7 @@ class SBGroup extends CActiveRecord
 			$permission->name     = $name;
 			$permission->save();
 		}
+		
+		parent::afterSave();
 	}
 }

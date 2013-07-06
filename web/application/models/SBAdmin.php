@@ -199,9 +199,6 @@ class SBAdmin extends CActiveRecord
 				'class'=>'zii.behaviors.CTimestampBehavior',
 				'updateAttribute'=>null,
 			),
-			'EActiveRecordRelationBehavior'=>array(
-				'class'=>'ext.EActiveRecordRelationBehavior',
-			),
 		);
 	}
 	
@@ -440,6 +437,31 @@ class SBAdmin extends CActiveRecord
 		return sprintf('%08x%08x%08x%08x', mt_rand(), mt_rand(), mt_rand(), mt_rand());
 	}
 	
+	
+	protected function afterSave()
+	{
+		if($this->server_groups !== null)
+		{
+			// Delete old server groups
+			$criteria = new CDbCriteria();
+			$criteria->condition = 'admin_id = :admin_id';
+			$criteria->params = array(':admin_id' => $this->id);
+			$this->commandBuilder->createDeleteCommand('{{admins_server_groups}}', $criteria)->execute();
+			
+			// Insert new server groups, order by inherit_order
+			$i = 0;
+			foreach((array)$this->server_groups as $group)
+			{
+				$this->commandBuilder->createInsertCommand('{{admins_server_groups}}', array(
+					'admin_id' => $this->id,
+					'group_id' => $group instanceof SBServerGroup ? $group->id : $group,
+					'inherit_order' => ++$i,
+				))->execute();
+			}
+		}
+		
+		parent::afterSave();
+	}
 	
 	protected function beforeFind()
 	{

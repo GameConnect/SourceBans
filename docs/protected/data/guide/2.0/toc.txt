@@ -1,18 +1,21 @@
 * Getting Started
     - [Installation](installation)
-    - [Updating](update)
+    - [Updating](updating)
 
 * Usage
     - [Overview](usage.overview)
     - [Bans](usage.bans)
-    - [Admins and Groups](usage.admins)
-    - [Servers and Games](usage.servers)
-    - [Settings and Plugins](usage.settings)
+    - [Admins and Groups](usage.admins-and-groups)
+    - [Servers and Games](usage.servers-and-games)
+    - [Settings and Plugins](usage.settings-and-plugins)
+
+* Contributing
+    - [Translation](contributing.translation)
 
 * Development
-    - [Overview](api)
-    - [Game Plugins](game-plugins)
-    - [Web Plugins](web-plugins)
-    - [KeyValues](keyvalues)
-    - [Servers](servers)
-    - [Steam API](steam)
+    - [Overview](development.overview)
+    - [Game Plugins](development.game-plugins)
+    - [Web Plugins](development.web-plugins)
+    - [KeyValues](development.keyvalues)
+    - [Servers](development.servers)
+    - [Steam API](development.steam-api)

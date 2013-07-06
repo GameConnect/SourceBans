@@ -22,6 +22,9 @@ $('.sourceCode a.show').click(function(e) {
 });
 
 $(function() {
+  if(!$('#search').length)
+    return;
+  
   $('#search')
     .autocomplete({
       delay: 250,

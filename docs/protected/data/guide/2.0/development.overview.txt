@@ -1,0 +1,42 @@
+# Overview
+
+SourceBans 2 is based on the Yii PHP framework. With features such as MVC, DAO/ActiveRecord, I18N/L10N,
+caching, testing and much more, you can quickly extend functionality without modifying the SourceBans code.
+To learn about the basics of Yii, visit their [guide](http://www.yiiframework.com/doc/guide/quickstart.what-is-yii).
+For information about classes, methods, properties or events, see our [API documentation](/doc/api).
+
+## PHP scripts
+
+To access SourceBans functionality in an external PHP script, simply include `api.php` like so:
+~~~
+[php]
+include '/path/to/sourcebans/api.php';
+
+// Find web group with name "Owner"
+$group = SBGroup::model()->findByAttributes(array('name' => 'Owner'));
+
+// Add admin
+$admin = new SBAdmin;
+$admin->name = 'Demo';
+$admin->auth = SBAdmin::STEAM_AUTH;
+$admin->identity = 'STEAM_0:1:2';
+$admin->group_id = $group->id;
+
+if($admin->save() == false)
+{
+	// Saving failed, output errors
+	echo CHtml::errorSummary($admin);
+}
+~~~
+
+## Web plugins
+
+Web plugins are integrated with SourceBans and are loaded for every page. They can add or modify behavior,
+and have their own installation and uninstallation procedures, as well as a settings page.
+Please refer to the [Web Plugins](/doc/guide/development.web-plugins) section for in-depth information and examples.
+
+## Game plugins
+
+Game plugins are [SourceMod](http://sourcemod.net) plugins that include `sourcebans.inc` to access the SourceBans database from a game server.
+The database connection is managed by the core plugin, which greatly reduces the codebase for third-party plugins.
+Please refer to the [Game Plugins](/doc/guide/development.game-plugins) section for in-depth information and examples.

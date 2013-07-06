@@ -57,7 +57,7 @@ class MarkdownParser extends CMarkdownParser
 		# Do blockquote tips/notes
 		$bq = preg_replace_callback('/^(\s*<p>\s*)([^:]+):\s*/sxi',
 			array($this, 'doBlockquoteTypes'), $bq);
-		$attr = ($this->_blockquoteType ? ' class="' . $this->_blockquoteType . '}"' : '');
+		$attr = ($this->_blockquoteType ? ' class="' . $this->_blockquoteType . '"' : '');
 		return "\n" . $this->hashBlock('<blockquote' . $attr . ">\n" . $bq . "\n</blockquote>") . "\n\n";
 	}
 	

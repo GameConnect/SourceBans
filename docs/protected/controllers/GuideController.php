@@ -54,7 +54,7 @@ class GuideController extends CController
 		}
 		else
 			$anchor = '';
-		return 'href="' . $this->createUrl('view', array('lang' => $this->language, 'page' => $matches[1])) . $anchor . '"';
+		return 'href="' . $this->createUrl('view', array('lang' => $this->language, 'page' => $matches[1], 'version' => $this->version)) . $anchor . '"';
 	}
 	
 	public function replaceSection($matches)

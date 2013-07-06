@@ -5,28 +5,27 @@ SourceBans consists of a game plugin that runs on your Source game server, and a
 ## Requirements
 
 SourceBans requires PHP 5.2 and MySQL 5.0 or above. It has been tested with [Apache HTTP server](http://httpd.apache.org/),  
-but it may also run on other Web servers and platforms, provided PHP 5.2 is supported.
+but it may also run on other Web servers and platforms, provided PHP 5.2 is supported. For [Nginx](http://wiki.nginx.org),  
+refer to this [sample host configuration](http://yiiframework.com/doc/guide/quickstart.apache-nginx-config#nginx).
 
 Your game server requires [Metamod:Source](http://metamodsource.net) and [SourceMod](http://sourcemod.net).
 To install these, refer to the [Game Plugin](#game-plugin) section.
 
 ## Web Application
 
-1. Download SourceBans from [GitHub](http://github.com/GameConnect/SourceBans).
-2. Copy the contents of the *web* folder to a Web-accessible folder.
-3. Visit <http://hostname/sourcebans/install> to start the installation.
+Follow these three steps to get started with the SourceBans web application:
 
-> Tip: The *application* and *framework* directories do not need to be installed under a
-Web-accessible directory. The application has one entry script which is usually the only
-file that needs to be exposed to Web users. Other PHP scripts, including those
-from Yii, should be protected from Web access; otherwise they might be exploited 
-by hackers.
+1. Download SourceBans from [GitHub](http://github.com/GameConnect/SourceBans).
+2. Copy the contents of the **web** folder to a Web-accessible folder.
+3. Visit <http://hostname/sourcebans/install> to start the installation.
 
 ## Game Plugin
 
 In this section, we will refer to the folder where your game server is installed as the "game folder".  
-For example, for Counter-Strike: Source, this folder would be called **cstrike**.  
-For Day of Defeat: Source and Team Fortress 2, it would be **dod** or **tf** respectively.
+For example, for Counter-Strike: Source, this folder is called **cstrike**.  
+For Day of Defeat: Source and Team Fortress 2, it is **dod** or **tf** respectively.
+
+A complete list of supported games can be found on <http://hostname/sourcebans/index.php/admin/games>.
 
 Metamod:Source
 
@@ -40,7 +39,7 @@ Metamod:Source
 SourceMod
 
 :   Download the release for your game server's operating system from [sourcemod.net](http://sourcemod.net/downloads.php),  
-    and unpack the file to the *game folder* on your server. It will merge with the **addons** and **cfg** folders.
+    and unpack the file to the *game folder* on your server. It should merge with the **addons** and **cfg** folders.
 
 > Note: The stable releases of Metamod:Source and SourceMod may not always support your game.
 Development snapshots can be found [here](http://metamodsource.net/snapshots) and [here](http://sourcemod.net/snapshots.php).
@@ -48,4 +47,9 @@ Development snapshots can be found [here](http://metamodsource.net/snapshots) an
 SourceBans Game Plugin
 
 :   Copy the contents of the **game** folder in the SourceBans package, to the *game folder* on your server.  
-    It will merge with the **addons/sourcemod** folder.
+    It should merge with the **addons/sourcemod** folder.
+
+:   Visit <http://hostname/sourcebans/index.php/servers/config> and follow the instructions. It consists of opening
+    **addons/sourcemod/configs/databases.cfg** on your server and copy-pasting the "sourcebans" section.
+
+:   Lastly, open **addons/sourcemod/configs/sourcebans.cfg** and edit it for your needs.

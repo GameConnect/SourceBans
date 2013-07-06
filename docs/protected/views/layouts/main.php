@@ -14,9 +14,9 @@
 
     </div>
     <script>window.baseUrl = '<?php echo Yii::app()->baseUrl ?>';</script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-    <script src="<?php echo Yii::app()->baseUrl ?>/js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="<?php echo Yii::app()->baseUrl ?>/js/jquery.mousewheel.js"></script>
     <script src="<?php echo Yii::app()->baseUrl ?>/js/application.js"></script>
   </body>

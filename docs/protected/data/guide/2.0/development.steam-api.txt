@@ -1,0 +1,80 @@
+# Steam API
+
+> Note: The Steam APIs are fairly slow. Please consider caching the data for at least a minute.
+
+To access the Steam Community Data and Web API, we can use the [SteamProfile], [SteamGroup] and [SteamGame] classes.
+
+> Note: Some of the functionality provided in these classes requires a Steam Web API Key. Since each user must register
+> their own API key, make sure to warn the user that your code requires an API key, or make that functionality optional.
+
+When working with Steam Community IDs, note that not all versions of PHP support these large numbers.  
+To be safe, pass them as strings, as shown in the first example.
+
+## Steam Profile
+
+To retrieve a player's Steam profile, pass their Steam Community ID or custom URL to the constructor:
+~~~
+[php]
+$profile = new SteamProfile('76561197990304788');
+
+echo $profile->steamID; // will output "Tsunami"
+
+foreach($profile->getFriends() as $friend)
+{
+	echo $friend['steamid'], "\n";
+}
+~~~
+This information is accessible for admins and bans through [SBAdmin::community] and [SBBan::community].
+
+## Steam Group
+
+The same method as above applies to Steam groups:
+~~~
+[php]
+$group = new SteamGroup('GameConnect');
+
+echo $group->headline; // will output "GameConnect - Serious Gaming"
+
+foreach($group->members as $steamid)
+{
+	echo $steamid, "\n";
+}
+~~~
+
+## Steam Game
+
+Lastly, to retrieve information about a game and its news on Steam:
+~~~
+[php]
+$game   = new SteamGame(440);
+$schema = $game->getSchema();
+
+echo $schema['gameName']; // will output "Team Fortress 2"
+
+foreach($game->getNews(5, 500) as $news)
+{
+	echo $news['title'], "\n";
+}
+~~~
+
+**This snippet doesn't belong here, but I didn't feel like throwing it away.**  
+It retrieves the Steam Community name of all the members of the GameConnect group.
+~~~
+[php]
+$group   = new SteamGroup('GameConnect');
+$members = $group->members;
+
+do
+{
+	// SteamProfile::getSummaries is limited to 100 Steam IDs,
+	// so repeatedly remove the first 100 until the array is empty.
+	$steamids = array_splice($members, 0, 100);
+	$profiles = SteamProfile::getSummaries($steamids);
+	
+	foreach($profiles as $profile)
+	{
+		echo $profile['personaname'], "\n";
+	}
+}
+while(!empty($members));
+~~~

@@ -59,7 +59,7 @@ class PluginsController extends Controller
 	public function actionInstall($id)
 	{
 		$plugin=$this->loadModel($id);
-		$result=$plugin->runInstall();
+		$result=$plugin->runInstall()!==false;
 		
 		if($result)
 		{
@@ -98,7 +98,7 @@ class PluginsController extends Controller
 	public function actionUninstall($id)
 	{
 		$plugin=$this->loadModel($id);
-		$result=$plugin->runUninstall();
+		$result=$plugin->runUninstall()!==false;
 		
 		if($result)
 		{

@@ -1191,7 +1191,7 @@ stock SB_FetchAdmin(iClient)
 	// Construct the query using the information the client gave us.
 	decl String:sCondition[1024] = "", String:sEscapedName[MAX_NAME_LENGTH * 2 + 1], String:sQuery[1024];
 	if(g_bRequireSiteLogin)
-		StrCat(sCondition, sizeof(sCondition), " AND ad.lastvisit IS NOT NULL");
+		StrCat(sCondition, sizeof(sCondition), " AND ad.login_time IS NOT NULL");
 	
 	SB_Escape(sName, sEscapedName, sizeof(sEscapedName));
 	Format(sQuery, sizeof(sQuery), "SELECT    ad.id, ad.name, ad.auth, ad.identity, ad.server_password, COUNT(ag.group_id) \

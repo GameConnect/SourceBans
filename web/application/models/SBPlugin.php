@@ -162,7 +162,13 @@ class SBPlugin extends CActiveRecord
 		
 		return !$this->hasInstall();
 	}
-
+	
+	/**
+	 * Finds a single plugin with the specified unique identifier.
+	 * 
+	 * @param string $id the unique identifier
+	 * @return SBPlugin the plugin found. Null if none is found.
+	 */
 	public function findById($id)
 	{
 		static $_plugins;
@@ -171,7 +177,10 @@ class SBPlugin extends CActiveRecord
 			$_plugins = SBPlugin::model()->findAll(array('index' => 'id'));
 		}
 		
-		return $_plugins[$id];
+		if(isset($_plugins[$id]))
+			return $_plugins[$id];
+		
+		return null;
 	}
 	
 	public function getAction()
@@ -185,6 +194,11 @@ class SBPlugin extends CActiveRecord
 		return $this->hasInstall() ? 'Install' : 'Enable';
 	}
 	
+	/**
+	 * Returns the unique identifier for the plugin.
+	 * 
+	 * @return string the unique identifier for the application.
+	 */
 	public function getId()
 	{
 		return strtok($this->class, '.');

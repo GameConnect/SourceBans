@@ -108,15 +108,19 @@ public Action:OnLogAction(Handle:source, Identity:ident, client, target, const S
 		return Plugin_Continue;
 	
 	decl String:sAdminIp[16] = "", String:sAuth[20] = "", String:sEscapedMessage[256], String:sEscapedName[MAX_NAME_LENGTH * 2 + 1], String:sIp[16] = "", String:sName[MAX_NAME_LENGTH + 1] = "", String:sQuery[1024];
-	new iAdminId = SB_GetAdminId(client);
 	if(target > 0 && IsClientInGame(target))
 	{
 		GetClientAuthString(target, sAuth, sizeof(sAuth));
 		GetClientIP(target,         sIp,   sizeof(sIp));
 		GetClientName(target,       sName, sizeof(sName));
 	}
+	
+	new iAdminId;
 	if(client > 0 && IsClientInGame(client))
+	{
+		iAdminId = SB_GetAdminId(client);
 		GetClientIP(client, sAdminIp, sizeof(sAdminIp));
+	}
 	else
 		sAdminIp = g_sServerIp;
 	

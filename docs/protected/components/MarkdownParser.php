@@ -95,7 +95,7 @@ class MarkdownParser extends CMarkdownParser
 		$segs = explode('::', rtrim($api, '()'));
 		$class = $segs[0];
 		$anchor = (isset($segs[1]) ? '#' . $segs[1] : '');
-		$url = '/doc/api/' . $class . $anchor;
+		$url = '/api/' . $class . $anchor;
 		$link = '<a href="' . $url . '">' . $text . '</a>';
 		return $this->hashPart($link);
 	}

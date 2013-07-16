@@ -443,16 +443,16 @@ EOD;
 			$className=substr($matches[1],0,$pos);
 			$method=substr($matches[1],$pos+2);
 			if($className==='index')
-				return "<a href=\"/doc/api/#{$method}\">{$matches[2]}</a>";
+				return "<a href=\"/api/#{$method}\">{$matches[2]}</a>";
 			else
-				return "<a href=\"/doc/api/{$className}#{$method}\">{$matches[2]}</a>";
+				return "<a href=\"/api/{$className}#{$method}\">{$matches[2]}</a>";
 		}
 		else
 		{
 			if($matches[1]==='index')
-				return "<a href=\"/doc/api/\">{$matches[2]}</a>";
+				return "<a href=\"/api/\">{$matches[2]}</a>";
 			else
-				return "<a href=\"/doc/api/{$matches[1]}\">{$matches[2]}</a>";
+				return "<a href=\"/api/{$matches[1]}\">{$matches[2]}</a>";
 		}
 	}
 }

@@ -30,8 +30,8 @@ class GuideController extends CController
 		$content = preg_replace('/<p>\s*<img(.*?)src="(.*?)"\s+alt="(.*?)"\s*\/>\s*<\/p>/',
 			'<div class="image"><p>\\3</p><img\\1src="' . $imageUrl . '/\\2" alt="\\3" /></div>', $content);
 		
-		$content = preg_replace_callback('/href="\/doc\/guide\/(.*?)\/?"/', array($this, 'replaceGuideLink'), $content);
-		$content = preg_replace('/href="(\/doc\/api\/.*?)"/', 'href="http://sourcebans.net$1"', $content);
+		$content = preg_replace_callback('/href="\/guide\/(.*?)\/?"/', array($this, 'replaceGuideLink'), $content);
+		$content = preg_replace('/href="(\/api\/.*?)"/', 'href="http://sourcebans.net$1"', $content);
 		
 		$content = preg_replace_callback('/<h2([^>]*)>(.*?)<\/h2>/', array($this, 'replaceSection'), $content);
 		$content = preg_replace_callback('/<h1([^>]*)>(.*?)<\/h1>/', array($this, 'replaceTitle'), $content, 1);

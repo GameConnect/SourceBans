@@ -295,7 +295,7 @@ return array(
 	'models.LoginForm.rememberMe' => 'Remember me',
 	'models.LoginForm.username' => 'Username',
 	'models.LostPasswordForm.email' => 'Email address',
-	'models.LostPasswordForm.reset.body' => "Hello {name},\nyou have requested to have your password reset for your SourceBans account.\nTo complete this process, please click the following link.\n\n{link}\n\nNOTE: If you did not request this reset, then simply ignore this email.",
+	'models.LostPasswordForm.reset.body' => "Hello {name},\n\nyou have requested to have your password reset for your SourceBans account.\nTo complete this process, please click the following link.\n\n{link}\n\nNOTE: If you did not request this reset, then simply ignore this email.",
 	'models.LostPasswordForm.reset.subject' => 'SourceBans password reset',
 	'models.SBBan.rules.err_unique' => '{attribute} "{value}" has already been banned.',
 	'models.SBProtest.rules.err_not_banned' => '{attribute} "{value}" is currently not banned.',

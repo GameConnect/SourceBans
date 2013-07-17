@@ -233,7 +233,7 @@ public MenuHandler_BanList(Handle:menu, MenuAction:action, param1, param2)
 	GetMenuItem(menu, param2, sBanID, sizeof(sBanID));
 	// TODO: Deal with passing the target id
 	new iTarget;
-	new Handle:hPanel = BuildPlayerBanInfoPanel(iTarget, StringToInt(sBanID));
+	new Handle:hPanel = BuildPlayerBanInfoPanel(iTarget, StringToInt(sBanID), param1);
 	SendPanelToClient(hPanel, param1, PanelHandler_BanInfo, MENU_TIME_FOREVER);
 	CloseHandle(hPanel);
 }
@@ -307,7 +307,7 @@ stock Handle:BuildPlayerMenu(iClient)
 {
 	decl String:sTitle[128];
 	new Handle:hMenu = CreateMenu(MenuHandler_SelectPlayer);
-	Format(sTitle, sizeof(sTitle), "%t:", "Select player");
+	Format(sTitle, sizeof(sTitle), "%T:", "Select player", iClient);
 	SetMenuTitle(hMenu, sTitle);
 	SetMenuExitBackButton(hMenu, true);
 	AddTargetsToMenu2(hMenu, iClient, COMMAND_FILTER_NO_BOTS|COMMAND_FILTER_CONNECTED);
@@ -320,7 +320,7 @@ stock Handle:BuildPlayerBanListMenu(iTarget)
 	new Handle:hMenu = CreateMenu(MenuHandler_BanList);
 	decl String:sTargetName[64], String:sTitle[128];
 	GetClientName(iTarget, sTargetName, sizeof(sTargetName));
-	Format(sTitle, sizeof(sTitle), "%t:", "Player ban list", sTargetName);
+	Format(sTitle, sizeof(sTitle), "%T:", "Player ban list", iTarget, sTargetName);
 	SetMenuTitle(hMenu, sTitle);
 	SetMenuExitBackButton(hMenu, true);
 	
@@ -336,13 +336,13 @@ stock Handle:BuildPlayerBanListMenu(iTarget)
 	return hMenu;
 }
 
-stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID)
+stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID, client = 0)
 {
 	// Create the panel and set the panel options.
 	new Handle:hPanel = CreatePanel();
 	decl String:sTargetName[64], String:sTitle[128];
 	GetClientName(iTarget, sTargetName, sizeof(sTargetName));
-	Format(sTitle, sizeof(sTitle), "%t:", "Player ban info", sTargetName);
+	Format(sTitle, sizeof(sTitle), "%T:", "Player ban info", client, sTargetName);
 	SetPanelTitle(hPanel, sTitle);
 
 	// Create all the string variables we will need
@@ -438,9 +438,8 @@ stock SendChatToAdmins(iTarget)
 
 stock PrintBans(iClient, iTarget)
 {
-	decl String:sAuth[64], String:sTargetName[64], String:sReplyBuffer[256];
+	decl String:sAuth[64], String:sTargetName[64];
 	GetClientAuthString(iTarget, sAuth, sizeof(sAuth));
 	GetClientName(iTarget, sTargetName, sizeof(sTargetName));
-	Format(sReplyBuffer, sizeof(sReplyBuffer), "%t", "Player bans", sTargetName, sAuth, g_iPlayerBans[iTarget]);
-	PrintToChat(iClient, "[SM] %s", sReplyBuffer);
+	PrintToChat(iClient, "[SM] %t", "Player bans", sTargetName, sAuth, g_iPlayerBans[iTarget]);
 }

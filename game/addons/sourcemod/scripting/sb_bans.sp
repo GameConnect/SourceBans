@@ -741,7 +741,7 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 	if(g_iBanTarget[param1] != -1)
 	{
 		decl String:sKickMessage[128];
-		Format(sKickMessage, sizeof(sKickMessage), "%t", "Banned Check Site", g_sWebsite);
+		Format(sKickMessage, sizeof(sKickMessage), "%T", "Banned Check Site", g_iBanTarget[param1], g_sWebsite);
 		BanClient(g_iBanTarget[param1], g_iBanTime[param1], BANFLAG_AUTO, sInfo, sKickMessage, "sm_ban", param1);
 	}
 	

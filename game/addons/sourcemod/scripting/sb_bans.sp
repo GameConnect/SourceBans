@@ -447,14 +447,13 @@ public Action:Command_BanIp(client, args)
 		client,
 		iTargets,
 		1,
-		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_MULTI,
+		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_NO_BOTS,
 		sTargets,
 		sizeof(sTargets),
 		tn_is_ml) > 0)
 	{
 		iTarget = iTargets[0];
-		if(!IsFakeClient(iTarget) && CanUserTarget(client, iTarget))
-			GetClientIP(iTarget, sIp, sizeof(sIp));
+		GetClientIP(iTarget, sIp, sizeof(sIp));
 	}
 	
 	BanIdentity(sIp, iTime, BANFLAG_IP, sArg[iLen], "sm_banip",  client);
@@ -484,15 +483,13 @@ public Action:Command_AddBan(client, args)
 		client,
 		iTargets,
 		1,
-		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_MULTI,
+		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_NO_BOTS,
 		sTargets,
 		sizeof(sTargets),
 		tn_is_ml) > 0)
 	{
 		iTarget = iTargets[0];
-		
-		if(!IsFakeClient(iTarget) && CanUserTarget(client, iTarget))
-			GetClientAuthString(iTarget, sAuth, sizeof(sAuth));
+		GetClientAuthString(iTarget, sAuth, sizeof(sAuth), false);
 	}
 	
 	BanIdentity(sAuth, iTime, BANFLAG_AUTHID, sArg[iLen], "sm_addban", client);

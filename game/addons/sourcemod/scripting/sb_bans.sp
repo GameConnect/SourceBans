@@ -473,24 +473,12 @@ public Action:Command_AddBan(client, args)
 		return Plugin_Handled;
 	}
 	
-	decl iLen, iTargets[1], bool:tn_is_ml, String:sArg[256], String:sAuth[20], String:sTargets[MAX_TARGET_LENGTH], String:sTime[20];
+	decl iLen, String:sArg[256], String:sAuth[20], String:sTime[20];
 	GetCmdArgString(sArg, sizeof(sArg));
 	iLen  = BreakString(sArg,       sTime, sizeof(sTime));
 	iLen += BreakString(sArg[iLen], sAuth, sizeof(sAuth));
 	
-	new iTarget = -1, iTime = StringToInt(sTime);
-	if(ProcessTargetString(sAuth,
-		client,
-		iTargets,
-		1,
-		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_NO_BOTS,
-		sTargets,
-		sizeof(sTargets),
-		tn_is_ml) > 0)
-	{
-		iTarget = iTargets[0];
-		GetClientAuthString(iTarget, sAuth, sizeof(sAuth), false);
-	}
+	new iTime = StringToInt(sTime);
 	
 	BanIdentity(sAuth, iTime, BANFLAG_AUTHID, sArg[iLen], "sm_addban", client);
 	return Plugin_Handled;
@@ -1172,9 +1160,9 @@ bool:HasLocalBan(const String:sAuth[], const String:sIp[] = "", bool:bType = tru
 	
 	new Handle:hQuery = SQL_Query(g_hSQLiteDB, sQuery);
 	new bool:bResult = false;
-	if (hQuery != INVALID_HANDLE)
+	if(hQuery)
 	{
-		bResult = SQL_GetRowCount(hQuery);
+		bResult = SQL_GetRowCount(hQuery) > 0;
 		CloseHandle(hQuery);
 	}
 	

@@ -512,6 +512,7 @@ public Action:Command_Unban(client, args)
 	decl String:sArg[24];
 	GetCmdArgString(sArg, sizeof(sArg));
 	ReplaceString(sArg,   sizeof(sArg), "\"", "");
+	TrimString(sArg);
 	
 	RemoveBan(sArg, strncmp(sArg, "STEAM_", 6) == 0 ? BANFLAG_AUTHID : BANFLAG_IP, "sm_unban", client);
 	return Plugin_Handled;

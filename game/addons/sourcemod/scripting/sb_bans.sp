@@ -640,6 +640,8 @@ public Action:Timer_ProcessQueue(Handle:timer, any:data)
 		                                iType, sAuth, sIp, sEscapedName, sEscapedReason, iLength, g_iServerId, iAdminId, sAdminIp, iTime);
 		SB_Query(Query_AddedFromQueue, sQuery, hPack);
 	}
+	
+	CloseHandle(hQuery);
 }
 
 public Action:Timer_ProcessTemp(Handle:timer)
@@ -1171,7 +1173,14 @@ bool:HasLocalBan(const String:sAuth[], const String:sIp[] = "", bool:bType = tru
 		                                sAuth[0] ? sAuth : "none", sIp[0] ? sIp : "none", GetTime(), GetTime());
 	
 	new Handle:hQuery = SQL_Query(g_hSQLiteDB, sQuery);
-	return hQuery && SQL_GetRowCount(hQuery);
+	new bool:bResult = false;
+	if (hQuery != INVALID_HANDLE)
+	{
+		bResult = SQL_GetRowCount(hQuery);
+		CloseHandle(hQuery);
+	}
+	
+	return bResult;
 }
 
 InsertLocalBan(iType, const String:sAuth[], const String:sIp[], const String:sName[], const String:sReason[], iLength, iAdminId, const String:sAdminIp[], iTime, bool:bQueued = false)

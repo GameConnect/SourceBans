@@ -536,22 +536,21 @@ public Action:Command_Unban(client, args)
 public Action:Command_Say(client, const String:command[], argc)
 {
 	// If this client is not typing their own reason to ban someone, ignore
-	if(!g_bOwnReason[client])
+	if(argc < 1 || !g_bOwnReason[client])
 		return Plugin_Continue;
 	
 	g_bOwnReason[client] = false;
 	
 	decl String:sText[192];
-	new iStart = 0;
 	if(GetCmdArgString(sText, sizeof(sText)) < 1)
 		return Plugin_Continue;
 	
-	if(sText[strlen(sText) - 1] == '"')
+	if(StripQuotes(sText))
 	{
-		sText[strlen(sText) - 1] = '\0';
-		iStart = 1;
+		TrimString(sText);
 	}
-	if(StrEqual(sText[iStart], "!noreason"))
+	
+	if(sText[0] == '\0' || StrEqual(sText[1], "noreason", false))
 	{
 		ReplyToCommand(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
 		return Plugin_Handled;
@@ -560,7 +559,7 @@ public Action:Command_Say(client, const String:command[], argc)
 	{
 		decl String:sKickMessage[128];
 		Format(sKickMessage, sizeof(sKickMessage), "%T", "Banned Check Site", g_iBanTarget[client], g_sWebsite);
-		BanClient(g_iBanTarget[client], g_iBanTime[client], BANFLAG_AUTO, sText[iStart], sKickMessage, "sm_ban", client);
+		BanClient(g_iBanTarget[client], g_iBanTime[client], BANFLAG_AUTO, sText, sKickMessage, "sm_ban", client);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;

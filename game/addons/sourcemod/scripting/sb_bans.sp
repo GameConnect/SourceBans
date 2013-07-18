@@ -1252,7 +1252,7 @@ bool:VerifyIPAddressInput(String:sIdentity[], length)
 		return false;
 	}
 	
-	return GetRegexSubString(hRegex, 0, sIdentity, length);
+	return (!length || GetRegexSubString(hRegex, 0, sIdentity, length));
 }
 
 bool:VerifySteamIDInput(String:sIdentity[], length)
@@ -1268,5 +1268,5 @@ bool:VerifySteamIDInput(String:sIdentity[], length)
 		return false;
 	}
 	
-	return GetRegexSubString(hRegex, 0, sIdentity, length);
+	return (!length || GetRegexSubString(hRegex, 0, sIdentity, length));
 }

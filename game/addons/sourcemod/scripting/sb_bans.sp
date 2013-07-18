@@ -10,6 +10,7 @@
 
 #pragma semicolon 1
 
+#include <regex>
 #include <sourcemod>
 #include <sourcebans>
 #include <sb_bans>
@@ -456,6 +457,12 @@ public Action:Command_BanIp(client, args)
 		GetClientIP(iTarget, sIp, sizeof(sIp));
 	}
 	
+	if (!VerifyIPAddressInput(sIp, sizeof(sIp)))
+	{
+		ReplyToCommand(client, "%s%t %s", SB_PREFIX, "Invalid Input", sIp);
+		return Plugin_Handled;
+	}
+	
 	BanIdentity(sIp, iTime, BANFLAG_IP, sArg[iLen], "sm_banip",  client);
 	return Plugin_Handled;
 }
@@ -480,6 +487,12 @@ public Action:Command_AddBan(client, args)
 	
 	new iTime = StringToInt(sTime);
 	
+	if (!VerifySteamIDInput(sAuth, sizeof(sAuth)))
+	{
+		ReplyToCommand(client, "%s%t %s", SB_PREFIX, "Invalid Input", sAuth);
+		return Plugin_Handled;
+	}
+	
 	BanIdentity(sAuth, iTime, BANFLAG_AUTHID, sArg[iLen], "sm_addban", client);
 	return Plugin_Handled;
 }
@@ -499,10 +512,24 @@ public Action:Command_Unban(client, args)
 	
 	decl String:sArg[24];
 	GetCmdArgString(sArg, sizeof(sArg));
-	ReplaceString(sArg,   sizeof(sArg), "\"", "");
-	TrimString(sArg);
 	
-	RemoveBan(sArg, strncmp(sArg, "STEAM_", 6) == 0 ? BANFLAG_AUTHID : BANFLAG_IP, "sm_unban", client);
+	new flags;
+	
+	if (VerifySteamIDInput(sArg, sizeof(sArg)))
+	{
+		flags = BANFLAG_AUTHID;
+	}
+	else if (VerifyIPAddressInput(sArg, sizeof(sArg)))
+	{
+		flags = BANFLAG_IP;
+	}
+	else
+	{
+		ReplyToCommand(client, "%s%t %s", SB_PREFIX, "Invalid Input", sArg);
+		return Plugin_Handled;
+	}
+	
+	RemoveBan(sArg, flags, "sm_unban", client);
 	return Plugin_Handled;
 }
 
@@ -1211,4 +1238,36 @@ SecondsToString(String:sBuffer[], iLength, iSecs, bool:bTextual = true)
 		iSecs     %= 60;
 		Format(sBuffer, iLength, "%i:%i:%i", iHours, iMins, iSecs);
 	}
+}
+
+bool:VerifyIPAddressInput(String:sIdentity[], length)
+{
+	static Handle:hRegex = INVALID_HANDLE;
+	if (hRegex == INVALID_HANDLE)
+	{
+		hRegex = CompileRegex("\\d+\\.\\d+\\.\\d+\\.\\d+");
+	}
+	
+	if (MatchRegex(hRegex, sIdentity) < 1)
+	{
+		return false;
+	}
+	
+	return GetRegexSubString(hRegex, 0, sIdentity, length);
+}
+
+bool:VerifySteamIDInput(String:sIdentity[], length)
+{
+	static Handle:hRegex = INVALID_HANDLE;
+	if (hRegex == INVALID_HANDLE)
+	{
+		hRegex = CompileRegex("STEAM_\\d:\\d:\\d+");
+	}
+	
+	if (MatchRegex(hRegex, sIdentity) < 1)
+	{
+		return false;
+	}
+	
+	return GetRegexSubString(hRegex, 0, sIdentity, length);
 }

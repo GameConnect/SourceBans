@@ -206,29 +206,28 @@ public Action:Command_SubmitBan(client, args)
 public Action:Command_Say(client, const String:command[], argc)
 {
 	// If this client is not typing their own reason to ban someone, ignore
-	if(!g_aPlayers[client][bOwnReason])
+	if(argc < 1 || !g_aPlayers[client][bOwnReason])
 		return Plugin_Continue;
 	
 	g_aPlayers[client][bOwnReason] = false;
 	
 	decl String:sText[192];
-	new iStart = 0;
 	if(GetCmdArgString(sText, sizeof(sText)) < 1)
 		return Plugin_Continue;
 	
-	if(sText[strlen(sText) - 1] == '"')
+	if(StripQuotes(sText))
 	{
-		sText[strlen(sText) - 1] = '\0';
-		iStart = 1;
+		TrimString(sText);
 	}
-	if(StrEqual(sText[iStart], "!noreason"))
+	
+	if(sText[0] == '\0' || StrEqual(sText[1], "noreason"))
 	{
 		ReplyToCommand(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
 		return Plugin_Handled;
 	}
 	if(g_aPlayers[client][iSubmissionTarget] != -1)
 	{
-		SubmitBan(client, g_aPlayers[client][iSubmissionTarget], sText[iStart]);
+		SubmitBan(client, g_aPlayers[client][iSubmissionTarget], sText);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;

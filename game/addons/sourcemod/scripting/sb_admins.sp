@@ -359,17 +359,24 @@ public Query_AddAdmin(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	ReadPackString(pack, sGroups,   sizeof(sGroups));
 	CloseHandle(pack);
 	
+	new bool:bPrint = true;
+	if(iAdmin)
+	{
+		iAdmin = GetClientFromSerial(iAdmin);
+		bPrint = (iAdmin > 0);
+	}
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the admin from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to retrieve the admin.", SB_PREFIX);
 		return;
 	}
 	if(SQL_GetRowCount(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin already exists");
 		return;
 	}
@@ -383,7 +390,7 @@ public Query_AddAdmin(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	                                sEscapedName, sType, sEscapedIdentity, sEscapedPassword);
 	SB_Execute(sQuery);
 	
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 		ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin added");
 	
 	SB_SetAdminGroups(iAdmin, sType, sIdentity, sGroups);
@@ -396,17 +403,24 @@ public Query_DelAdmin(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	new iAdmin = ReadPackCell(pack);
 	CloseHandle(pack);
 	
+	new bool:bPrint = true;
+	if(iAdmin)
+	{
+		iAdmin = GetClientFromSerial(iAdmin);
+		bPrint = (iAdmin > 0);
+	}
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the admin from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to retrieve the admin.", SB_PREFIX);
 		return;
 	}
 	if(!SQL_FetchRow(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin not found");
 		return;
 	}
@@ -425,7 +439,7 @@ public Query_DelAdmin(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	                                iAdminId);
 	SB_Execute(sQuery);
 	
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 		ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin deleted");
 }
 
@@ -440,17 +454,24 @@ public Query_AddGroup(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	new iImmunity = ReadPackCell(pack);
 	CloseHandle(pack);
 	
+	new bool:bPrint = true;
+	if(iAdmin)
+	{
+		iAdmin = GetClientFromSerial(iAdmin);
+		bPrint = (iAdmin > 0);
+	}
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the group from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to retrieve the group.", SB_PREFIX);
 		return;
 	}
 	if(SQL_GetRowCount(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Group already exists");
 		return;
 	}
@@ -463,7 +484,7 @@ public Query_AddGroup(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	                                sEscapedName, sEscapedFlags, iImmunity);
 	SB_Execute(sQuery);
 	
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 		ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Group added");
 }
 
@@ -475,17 +496,24 @@ public Query_DelGroup(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	new iAdmin = ReadPackCell(pack);
 	CloseHandle(pack);
 	
+	new bool:bPrint = true;
+	if(iAdmin)
+	{
+		iAdmin = GetClientFromSerial(iAdmin);
+		bPrint = (iAdmin > 0);
+	}
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the group from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to retrieve the group.", SB_PREFIX);
 		return;
 	}
 	if(!SQL_FetchRow(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Group not found");
 		return;
 	}
@@ -517,7 +545,7 @@ public Query_DelGroup(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	                                iGroupId);
 	SB_Execute(sQuery);
 	
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 		ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Group deleted");
 }
 
@@ -527,11 +555,18 @@ public Query_SetAdminGroups(Handle:owner, Handle:hndl, const String:error[], any
 	
 	new iAdmin = ReadPackCell(pack);
 	
+	new bool:bPrint = true;
+	if(iAdmin)
+	{
+		iAdmin = GetClientFromSerial(iAdmin);
+		bPrint = (iAdmin > 0);
+	}
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the admin from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to retrieve the admin.", SB_PREFIX);
 		
 		CloseHandle(pack);
@@ -539,7 +574,7 @@ public Query_SetAdminGroups(Handle:owner, Handle:hndl, const String:error[], any
 	}
 	if(!SQL_FetchRow(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin not found");
 		
 		CloseHandle(pack);
@@ -558,7 +593,7 @@ public Query_SetAdminGroups(Handle:owner, Handle:hndl, const String:error[], any
 	new iCount = ReadPackCell(pack);
 	if(!iCount)
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "SQL Admin groups reset");
 		
 		CloseHandle(pack);
@@ -578,7 +613,7 @@ public Query_SetAdminGroups(Handle:owner, Handle:hndl, const String:error[], any
 	
 	CloseHandle(pack);
 	
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 	{
 		if(iOrder     == 1)
 			ReplyToCommand(iAdmin, "%s%t", SB_PREFIX, "Added group to user");
@@ -594,6 +629,17 @@ public Query_SelectAdmin(Handle:owner, Handle:hndl, const String:error[], any:pa
 	// Check if this is the latest result request.
 	new iClient   = ReadPackCell(pack),
 	    iSequence = ReadPackCell(pack);
+	
+	if(iClient)
+	{
+		iClient = GetClientFromSerial(iClient);
+		if (!iClient)
+		{
+			CloseHandle(pack);
+			return;
+		}
+	}
+	
 	if(g_iPlayerSeq[iClient] != iSequence)
 	{
 		// Discard everything, since we're out of sequence.
@@ -703,7 +749,7 @@ public Query_SelectAdmin(Handle:owner, Handle:hndl, const String:error[], any:pa
 	                                iAdminId, g_iServerId);
 	
 	ResetPack(pack);
-	WritePackCell(pack,   iClient);
+	WritePackCell(pack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackCell(pack,   iSequence);
 	WritePackCell(pack,   _:iAdmin);
 	WritePackString(pack, sQuery);
@@ -717,6 +763,17 @@ public Query_SelectAdminGroups(Handle:owner, Handle:hndl, const String:error[], 
 	
 	// Make sure it's the same client.
 	new iClient = ReadPackCell(pack), iSequence = ReadPackCell(pack);
+	
+	if(iClient)
+	{
+		iClient = GetClientFromSerial(iClient);
+		if (!iClient)
+		{
+			CloseHandle(pack);
+			return;
+		}
+	}
+	
 	if(g_iPlayerSeq[iClient] != iSequence)
 	{
 		CloseHandle(pack);
@@ -1022,7 +1079,7 @@ public Native_AddAdmin(Handle:plugin, numParams)
 		return ThrowNativeError(SP_ERROR_NATIVE, "%s%T", SB_PREFIX, "Invalid authtype", iClient);
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
+	WritePackCell(hPack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackString(hPack, sName);
 	WritePackString(hPack, sType);
 	WritePackString(hPack, sIdentity);
@@ -1054,7 +1111,7 @@ public Native_DeleteAdmin(Handle:plugin, numParams)
 		return ThrowNativeError(SP_ERROR_NATIVE, "%s%T", SB_PREFIX, "Invalid authtype", iClient);
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
+	WritePackCell(hPack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackString(hPack, sType);
 	WritePackString(hPack, sIdentity);
 	
@@ -1081,7 +1138,7 @@ public Native_AddGroup(Handle:plugin, numParams)
 	new iImmunity = GetNativeCell(4);
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
+	WritePackCell(hPack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackString(hPack, sName);
 	WritePackString(hPack, sFlags);
 	WritePackCell(hPack,   iImmunity);
@@ -1104,7 +1161,7 @@ public Native_DeleteGroup(Handle:plugin, numParams)
 	GetNativeString(2, sName, sizeof(sName));
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
+	WritePackCell(hPack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackString(hPack, sName);
 	
 	decl String:sEscapedName[MAX_NAME_LENGTH * 2 + 1], String:sQuery[1024];
@@ -1131,7 +1188,7 @@ public Native_SetAdminGroups(Handle:plugin, numParams)
 		return ThrowNativeError(SP_ERROR_NATIVE, "%s%T", SB_PREFIX, "Invalid authtype", iClient);
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, iClient);
+	WritePackCell(hPack, (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	
 	// If groups were passed
 	if(sGroups[0])
@@ -1210,7 +1267,7 @@ stock SB_FetchAdmin(iClient)
 	g_iPlayerSeq[iClient] = ++g_iSequence;
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
+	WritePackCell(hPack,   (iClient > 0) ? GetClientSerial(iClient) : iClient);
 	WritePackCell(hPack,   g_iPlayerSeq[iClient]);
 	WritePackString(hPack, sQuery);
 	

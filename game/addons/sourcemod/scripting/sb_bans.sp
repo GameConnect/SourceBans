@@ -696,9 +696,9 @@ public MenuHandler_Target(Handle:menu, MenuAction:action, param1, param2)
 		decl iTarget, String:sInfo[32];
 		GetMenuItem(menu, param2, sInfo, sizeof(sInfo));
 		if(!(iTarget = GetClientOfUserId(StringToInt(sInfo))))
-			PrintToChat(param1, "%s%t", "Player no longer available", SB_PREFIX);
+			PrintToChat(param1, "%s%t", SB_PREFIX , "Player no longer available");
 		else if(!CanUserTarget(param1, iTarget))
-			PrintToChat(param1, "%s%t", "Unable to target",           SB_PREFIX);
+			PrintToChat(param1, "%s%t", SB_PREFIX, "Unable to target");
 		else
 		{
 			g_iBanTarget[param1] = iTarget;

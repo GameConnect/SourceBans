@@ -262,13 +262,8 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	// We're done with you now.
 	CloseHandle(pack);
 	
-	if (iTarget)
-	{
-		iTarget = GetClientFromSerial(iTarget);
-	}
-	
 	// If the target is no longer connected we can bug out.
-	if(!iTarget)
+	if(!IsClientInGame(iTarget))
 		return;
 	
 	// Make sure we succeeded.
@@ -294,17 +289,13 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 			return;
 		}
 		
-		if(iClient)
-		{
-			iClient = GetClientFromSerial(iClient);
-			if(!iClient)
-				return;
-		}
-		
 		// This query was sent by the sm_viewbans command.
 		// Let's tell the client we succeeded. 
-		PrintToChat(iClient, "[SM] %t", "Processed client");
-		PrintBans(iClient, iTarget);
+		if(IsClientInGame(iClient))
+		{
+			PrintToChat(iClient, "[SM] %t", "Processed client");
+			PrintBans(iClient, iTarget);
+		}
 	}
 }
 
@@ -429,8 +420,8 @@ stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 	
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, (iClient > 0) ? GetClientSerial(iClient) : iClient);
-	WritePackCell(hPack, (iTarget > 0) ? GetClientSerial(iTarget) : iTarget);
+	WritePackCell(hPack, iClient);
+	WritePackCell(hPack, iTarget);
 	WritePackCell(hPack, bOnConnect);
 	WritePackString(hPack, sQuery);
 	SB_Query(OnReceiveBans, sQuery, hPack);

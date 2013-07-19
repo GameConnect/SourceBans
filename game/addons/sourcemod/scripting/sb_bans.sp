@@ -193,7 +193,7 @@ public OnClientPostAdminCheck(client)
 	                                  AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
 	                                  AND  unban_time IS NULL",
 	                                STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp);
-	SB_Query(Query_BanVerify, sQuery, GetClientUserId(client), DBPrio_High);
+	SB_Query(Query_BanVerify, sQuery, SB_ConvertClientToStorage(client), DBPrio_High);
 }
 
 
@@ -242,7 +242,7 @@ public Action:OnBanClient(client, time, flags, const String:reason[], const Stri
 	}
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   admin);
+	WritePackCell(hPack,  SB_ConvertClientToStorage(admin));
 	WritePackCell(hPack,   time);
 	WritePackString(hPack, sAuth);
 	WritePackString(hPack, sIp);
@@ -283,7 +283,7 @@ public Action:OnBanIdentity(const String:identity[], time, flags, const String:r
 	}
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   admin);
+	WritePackCell(hPack,   SB_ConvertClientToStorage(admin));
 	WritePackCell(hPack,   time);
 	WritePackString(hPack, identity);
 	WritePackString(hPack, reason);
@@ -323,7 +323,7 @@ public Action:OnRemoveBan(const String:identity[], flags, const String:command[]
 {
 	decl String:sQuery[1024];
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   admin);
+	WritePackCell(hPack,   SB_ConvertClientToStorage(admin));
 	WritePackString(hPack, identity);
 	
 	if(flags      & BANFLAG_AUTHID)
@@ -785,8 +785,10 @@ public Query_BanInsert(Handle:owner, Handle:hndl, const String:error[], any:pack
 	{
 		LogError("Failed to insert the ban into the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
-			ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sAuth);
+		if(!SB_ConvertClientFromStorage(iAdmin))
+			return;
+
+		ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sAuth);
 	}
 }
 
@@ -802,11 +804,13 @@ public Query_BanIpSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 	new iAdminId = ReadPackCell(pack);
 	ReadPackString(pack, sAdminIp, sizeof(sAdminIp));
 	
+	new bool:bPrint = SB_ConvertClientFromStorage(iAdmin);
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the IP ban from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to ban %s.",     SB_PREFIX, sIp);
 		
 		CloseHandle(pack);
@@ -814,7 +818,7 @@ public Query_BanIpSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 	}
 	if(SQL_GetRowCount(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%s is already banned.", SB_PREFIX, sIp);
 		
 		CloseHandle(pack);
@@ -846,8 +850,10 @@ public Query_BanIpInsert(Handle:owner, Handle:hndl, const String:error[], any:pa
 	{
 		LogError("Failed to insert the IP ban into the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
-			ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sIp);
+		if(!SB_ConvertClientFromStorage(iAdmin))
+			return;
+		
+		ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sIp);
 	}
 }
 
@@ -863,11 +869,13 @@ public Query_AddBanSelect(Handle:owner, Handle:hndl, const String:error[], any:p
 	new iAdminId = ReadPackCell(pack);
 	ReadPackString(pack, sAdminIp,   sizeof(sAdminIp));
 	
+	new bool:bPrint = SB_ConvertClientFromStorage(iAdmin);
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the ID ban from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to ban %s.",     SB_PREFIX, sAuth);
 		
 		CloseHandle(pack);
@@ -875,7 +883,7 @@ public Query_AddBanSelect(Handle:owner, Handle:hndl, const String:error[], any:p
 	}
 	if(SQL_GetRowCount(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%s%s is already banned.", SB_PREFIX, sAuth);
 		
 		CloseHandle(pack);
@@ -906,9 +914,11 @@ public Query_AddBanInsert(Handle:owner, Handle:hndl, const String:error[], any:p
 	if(error[0])
 	{
 		LogError("Failed to insert the ID ban into the database: %s", error);
-		
-		if(!iAdmin || IsClientInGame(iAdmin))
-			ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sAuth);
+
+		if(!SB_ConvertClientFromStorage(iAdmin))
+			return;
+	
+		ReplyToCommand(iAdmin, "%sFailed to ban %s.", SB_PREFIX, sAuth);
 	}
 }
 
@@ -920,11 +930,13 @@ public Query_UnbanSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 	new iAdmin = ReadPackCell(pack);
 	ReadPackString(pack, sIdentity, sizeof(sIdentity));
 	
+	new bool:bPrint = SB_ConvertClientFromStorage(iAdmin);
+	
 	if(error[0])
 	{
 		LogError("Failed to retrieve the ban from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sFailed to unban %s.",          SB_PREFIX, sIdentity);
 		
 		CloseHandle(pack);
@@ -932,7 +944,7 @@ public Query_UnbanSelect(Handle:owner, Handle:hndl, const String:error[], any:pa
 	}
 	if(!SQL_GetRowCount(hndl))
 	{
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(bPrint)
 			ReplyToCommand(iAdmin, "%sNo active bans found for %s.", SB_PREFIX, sIdentity);
 		
 		CloseHandle(pack);
@@ -976,8 +988,10 @@ public Query_UnbanUpdate(Handle:owner, Handle:hndl, const String:error[], any:pa
 	{
 		LogError("Failed to unban the ban from the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
-			ReplyToCommand(iAdmin, "%sFailed to unban %s.", SB_PREFIX, sIdentity);
+		if (!SB_ConvertClientFromStorage(iAdmin))
+			return;
+		
+		ReplyToCommand(iAdmin, "%sFailed to unban %s.", SB_PREFIX, sIdentity);
 	}
 }
 
@@ -989,32 +1003,35 @@ public Query_SubmitBan(Handle:owner, Handle:hndl, const String:error[], any:pack
 	new iTarget = ReadPackCell(pack);
 	CloseHandle(pack);
 	
+	new bool:bPrint = SB_ConvertClientFromStorage(iAdmin);
+	
 	if(error[0]) 
 	{
 		LogError("Failed to submit the ban to the database: %s", error);
 		
-		if(!iAdmin || IsClientInGame(iAdmin))
+		if(!SB_ConvertClientFromStorage(iTarget, false))
 			ReplyToCommand(iAdmin, "%sFailed to submit %N.", SB_PREFIX, iTarget);
+		else
+			ReplyToCommand(iAdmin, "%sFailed to submit.", SB_PREFIX);
 		return;
 	}
-	if(!iAdmin || IsClientInGame(iAdmin))
+	if(bPrint)
 	{
 		ReplyToCommand(iAdmin, "[SM] %t", "Submission succeeded");
 		ReplyToCommand(iAdmin, "[SM] %t", "Upload demo", g_sWebsite);
 	}
 }
 
-public Query_BanVerify(Handle:owner, Handle:hndl, const String:error[], any:userid)
+public Query_BanVerify(Handle:owner, Handle:hndl, const String:error[], any:iClient)
 {
-	new iClient = GetClientOfUserId(userid);
-	if(!iClient)
+	if(!SB_ConvertClientFromStorage(iClient, false))
 		return;
 	
 	if(error[0])
 	{
 		LogError("Failed to verify the ban: %s", error);
 		
-		g_hPlayerRecheck[iClient] = CreateTimer(g_flRetryTime, Timer_PlayerRecheck, userid);
+		g_hPlayerRecheck[iClient] = CreateTimer(g_flRetryTime, Timer_PlayerRecheck, SB_ConvertClientToStorage(iClient));
 		return;
 	}
 	if(!SQL_FetchRow(hndl))
@@ -1059,7 +1076,7 @@ public Query_BanVerify(Handle:owner, Handle:hndl, const String:error[], any:user
 	
 	InsertLocalBan(iType, sAuth, sIp, sName, sReason, iLength, iAdminId, sAdminIp, iTime);
 	// Delay kick, otherwise ban information will not be printed to console
-	CreateTimer(1.0, Timer_KickClient, userid);
+	CreateTimer(1.0, Timer_KickClient, GetClientUserId(iClient));
 }
 
 public Query_AddedFromQueue(Handle:owner, Handle:hndl, const String:error[], any:pack)
@@ -1093,8 +1110,8 @@ public Native_SubmitBan(Handle:plugin, numParams)
 	GetClientName(iTarget,       sTargetName, sizeof(sTargetName));
 	
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack,   iClient);
-	WritePackCell(hPack,   iTarget);
+	WritePackCell(hPack,   SB_ConvertClientToStorage(iClient));
+	WritePackCell(hPack,   SB_ConvertClientToStorage(iTarget));
 	WritePackString(hPack, sReason);
 	
 	SB_Escape(sName,       sEscapedName,       sizeof(sEscapedName));
@@ -1252,7 +1269,7 @@ bool:VerifyIPAddressInput(String:sIdentity[], length)
 		return false;
 	}
 	
-	return (!length || GetRegexSubString(hRegex, 0, sIdentity, length));
+	return (length && GetRegexSubString(hRegex, 0, sIdentity, length));
 }
 
 bool:VerifySteamIDInput(String:sIdentity[], length)
@@ -1268,5 +1285,5 @@ bool:VerifySteamIDInput(String:sIdentity[], length)
 		return false;
 	}
 	
-	return (!length || GetRegexSubString(hRegex, 0, sIdentity, length));
+	return (length && GetRegexSubString(hRegex, 0, sIdentity, length));
 }

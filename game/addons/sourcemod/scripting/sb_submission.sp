@@ -101,7 +101,7 @@ public OnClientPostAdminCheck(client)
 	
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, client);
+	WritePackCell(hPack, SB_ConvertClientToStorage(client));
 	WritePackString(hPack, sQuery);
 	SB_Query(Query_RecieveSubmissions, sQuery, hPack, DBPrio_High);
 }
@@ -295,7 +295,7 @@ public Query_RecieveSubmissions(Handle:owner, Handle:hndl, const String:error[],
 	
 	// If the client is no longer connected we can bug out.
 	new iClient = ReadPackCell(pack);
-	if(!IsClientInGame(iClient))
+	if(!SB_ConvertClientFromStorage(iClient, false))
 	{
 		CloseHandle(pack);
 		return;

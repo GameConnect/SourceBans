@@ -113,7 +113,7 @@
         <td><%=header.data("name") || nullDisplay %></td>
         <td class="ban-menu" rowspan="7">
 <?php $this->widget('zii.widgets.CMenu', array(
-	'items' => array(
+	'items' => array_merge(array(
 		array(
 			'label' => Yii::t('sourcebans', 'Edit'),
 			'url' => array('bans/edit', 'id'=>'__ID__'),
@@ -131,7 +131,7 @@
 			'itemOptions' => array('class' => 'ban-menu-delete'),
 			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
 		),
-	),
+	), $this->menu),
 	'htmlOptions' => array(
 		'class' => 'nav nav-stacked nav-tabs',
 	),

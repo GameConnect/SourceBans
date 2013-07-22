@@ -13,6 +13,17 @@
 	'id'=>'plugins-grid',
 	'dataProvider'=>new CArrayDataProvider($plugins, array(
 		'keyField'=>'class',
+		'sort'=>array(
+			'attributes'=>array(
+				'author',
+				'name',
+				'version',
+				'*',
+			),
+			'defaultOrder'=>array(
+				'name'=>CSort::SORT_ASC,
+			),
+		),
 	)),
 	'columns'=>array(
 		array(

@@ -178,6 +178,9 @@ class SteamProfile
 			'vacBanned' => (int)$data->vacBanned,
 			'tradeBanState' => (string)$data->tradeBanState,
 			'isLimitedAccount' => (int)$data->isLimitedAccount,
+			'mostPlayedGames' => array(),
+			'webLinks' => array(),
+			'groups' => array(),
 		);
 		
 		if($this->privacyState == 'public')
@@ -204,7 +207,6 @@ class SteamProfile
 		
 		if(isset($data->mostPlayedGames))
 		{
-			$this->_data['mostPlayedGames'] = array();
 			foreach($data->mostPlayedGames->mostPlayedGame as $mostPlayedGame)
 			{
 				$this->_data['mostPlayedGames'][] = (object)array(
@@ -221,18 +223,16 @@ class SteamProfile
 		}
 		if(isset($data->webLinks))
 		{
-			$this->_data['webLinks'] = array();
-			foreach($data->webLinks as $webLink)
+			foreach($data->webLinks->webLink as $webLink)
 			{
 				$this->_data['webLinks'][] = (object)array(
-					'title' => (string)$mostPlayedGame->title,
-					'link' => (string)$mostPlayedGame->link,
+					'title' => (string)$webLink->title,
+					'link' => (string)$w->link,
 				);
 			}
 		}
 		if(isset($data->groups))
 		{
-			$this->_data['groups'] = array();
 			foreach($data->groups->group as $group)
 			{
 				$this->_data['groups'][] = (object)array(

@@ -43,6 +43,9 @@ return CMap::mergeArray(
 					),
 				),
 			),
+			'request'=>array(
+				'class'=>'HttpRequest',
+			),
 			// extensions
 			'geoip'=>array(
 				'class'=>'ext.geoip.CGeoIP',

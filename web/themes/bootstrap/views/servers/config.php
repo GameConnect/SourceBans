@@ -18,7 +18,7 @@ $db = array_combine($dsn[1], $dsn[2]);
 	"sourcebans"
 	{
 		"driver"			"mysql"
-		"host"			"<?php echo $db['host'] == 'localhost' ? $_SERVER['SERVER_ADDR'] : $db['host'] ?>"
+		"host"			"<?php echo $db['host'] == 'localhost' ? Yii::app()->request->serverHostAddress : $db['host'] ?>"
 		"database"		"<?php echo $db['dbname'] ?>"
 		"user"			"<?php echo Yii::app()->db->username ?>"
 		"pass"			"<?php echo Yii::app()->db->password ?>"

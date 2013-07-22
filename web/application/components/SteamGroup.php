@@ -98,11 +98,11 @@ class SteamGroup
 			'totalPages' => (int)$data->totalPages,
 			'currentPage' => (int)$data->currentPage,
 			'startingMember' => (int)$data->startingMember,
+			'members' => array(),
 		);
 		
 		if(isset($data->members))
 		{
-			$this->_data['members'] = array();
 			foreach($data->members->steamID64 as $steamID64)
 			{
 				$this->_data['members'][] = (string)$steamID64;

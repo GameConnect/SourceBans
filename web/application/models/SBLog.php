@@ -158,7 +158,7 @@ class SBLog extends CActiveRecord
 				$this->admin_id = Yii::app()->user->id;
 			}
 			
-			$this->admin_ip = $_SERVER['SERVER_ADDR'];
+			$this->admin_ip = Yii::app()->request->serverHostAddress;
 			$this->function = $this->_getTraces();
 			$this->query    = Yii::app()->request->queryString;
 		}

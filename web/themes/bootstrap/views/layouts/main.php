@@ -99,6 +99,13 @@
 
           </nav>
         </div>
+<?php $this->widget('bootstrap.widgets.TbAlert', array(
+	'block' => false,
+	'htmlOptions' => array(
+		'class' => 'page-alert',
+	),
+)) ?>
+
       </div>
     </header>
     

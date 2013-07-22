@@ -73,6 +73,8 @@ class BansController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was added');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onAddBan', $model);
 				$this->redirect(array('site/bans','#'=>$model->id));
 			}
@@ -115,6 +117,8 @@ class BansController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was edited');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onEditBan', $model);
 				$this->redirect(array('site/bans','#'=>$model->id));
 			}
@@ -224,6 +228,8 @@ class BansController extends Controller
 		}
 		
 		SourceBans::log('Bans imported', 'Bans imported from ' . $file['name']);
+		Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Imported successfully'));
+		
 		$this->redirect(array('site/bans'));
 	}
 	

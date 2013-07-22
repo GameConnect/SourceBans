@@ -135,6 +135,7 @@ return array(
 	'Remove' => 'Verwijder',
 	'Restore' => '@@Herstellen@@',
 	'Save' => 'Opslaan',
+	'Saved successfully' => 'Succesvol opgeslagen',
 	'Score' => 'Punten',
 	'Search' => 'Zoeken',
 	'Search bans' => 'Bans doorzoeken',

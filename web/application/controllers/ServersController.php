@@ -58,8 +58,8 @@ class ServersController extends Controller
 				'actions'=>array('rcon'),
 				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasFlag(SM_RCON)',
 			),
-			array('allow', // allow all users to perform 'info', 'players', 'query' and 'rules' actions
-				'actions'=>array('info','players','query','rules'),
+			array('allow', // allow all users to perform 'getProfile', 'info', 'players', 'query' and 'rules' actions
+				'actions'=>array('getProfile','info','players','query','rules'),
 				'users'=>array('*'),
 			),
 			array('allow',
@@ -122,6 +122,8 @@ class ServersController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Server added', 'Server "' . $model->ip . ':' . $model->port . '" was added');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onAddServer', $model);
 				$this->redirect(array('admin/servers','#'=>$model->id));
 			}
@@ -160,6 +162,8 @@ class ServersController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Server edited', 'Server "' . $model->ip . ':' . $model->port . '" was edited');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onEditServer', $model);
 				$this->redirect(array('admin/servers','#'=>$model->id));
 			}

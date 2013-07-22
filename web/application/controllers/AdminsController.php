@@ -67,6 +67,8 @@ class AdminsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Admin added', 'Admin "' . $model->name . '" was added');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onAddAdmin', $model);
 				$this->redirect(array('admin/admins','#'=>$model->id));
 			}
@@ -105,6 +107,8 @@ class AdminsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Admin edited', 'Admin "' . $model->name . '" was edited');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onEditAdmin', $model);
 				$this->redirect(array('admin/admins','#'=>$model->id));
 			}
@@ -240,6 +244,8 @@ class AdminsController extends Controller
 		}
 		
 		SourceBans::log('Admins imported', 'Admins imported from ' . $file['name']);
+		Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Imported successfully'));
+		
 		$this->redirect(array('admin/admins'));
 	}
 

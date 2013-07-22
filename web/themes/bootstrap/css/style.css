@@ -65,6 +65,12 @@ textarea {
 .navbar-inner {
   padding: 0;
 }
+.page-alert {
+  position: relative;
+}
+.page-alert .alert {
+  margin-top: -20px;	
+}
 .search-form {
   margin-top: .5em;
 }

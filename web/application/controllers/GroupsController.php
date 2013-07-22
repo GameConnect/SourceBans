@@ -67,6 +67,8 @@ class GroupsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was added');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger($type == 'web' ? 'onAddWebGroup' : 'onAddServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
@@ -105,6 +107,8 @@ class GroupsController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was edited');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger($type == 'web' ? 'onEditWebGroup' : 'onEditServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
@@ -172,6 +176,8 @@ class GroupsController extends Controller
 		}
 		
 		SourceBans::log('Groups imported', 'Groups imported from ' . $file['name']);
+		Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Imported successfully'));
+		
 		$this->redirect(array('admin/groups'));
 	}
 

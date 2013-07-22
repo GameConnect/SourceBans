@@ -65,6 +65,8 @@ class GamesController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Game added', 'Game "' . $model->name . '" was added');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onAddGame', $model);
 				$this->redirect(array('admin/games','#'=>$model->id));
 			}
@@ -101,6 +103,8 @@ class GamesController extends Controller
 			if($model->save())
 			{
 				SourceBans::log('Game edited', 'Game "' . $model->name . '" was edited');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				SourceBans::app()->trigger('onEditGame', $model);
 				$this->redirect(array('admin/games','#'=>$model->id));
 			}

@@ -56,25 +56,3 @@ foreach($game->getNews(5, 500) as $news)
 	echo $news['title'], "\n";
 }
 ~~~
-
-**This snippet doesn't belong here, but I didn't feel like throwing it away.**  
-It retrieves the Steam Community name of all the members of the GameConnect group.
-~~~
-[php]
-$group   = new SteamGroup('GameConnect');
-$members = $group->members;
-
-do
-{
-	// SteamProfile::getSummaries is limited to 100 Steam IDs,
-	// so repeatedly remove the first 100 until the array is empty.
-	$steamids = array_splice($members, 0, 100);
-	$profiles = SteamProfile::getSummaries($steamids);
-	
-	foreach($profiles as $profile)
-	{
-		echo $profile['personaname'], "\n";
-	}
-}
-while(!empty($members));
-~~~

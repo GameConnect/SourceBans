@@ -57,7 +57,7 @@ textarea {
   background: none;
 }
 .grid-view-loading th.button-column {
-  background: url(../images/loading.gif) no-repeat 45px center;
+  background: url(../images/loading.gif) no-repeat center;
 }
 .modal-body textarea {
   width: 516px;

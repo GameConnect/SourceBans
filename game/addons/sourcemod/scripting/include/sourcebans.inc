@@ -143,3 +143,21 @@ stock bool:DisablePlugin(const String:file[])
 	LogMessage("plugins/%s.smx was unloaded and moved to plugins/disabled/%s.smx", file, file);
 	return true;
 }
+
+stock SB_ConvertClientToStorage(client)
+{
+	if (client)
+		client = GetClientSerial(client);
+	
+	return client;
+}
+
+stock bool:SB_ConvertClientFromStorage(&client, bool:defaultprint = true)
+{
+	if (!client)
+		return defaultprint;
+	
+	client = GetClientFromSerial(client);
+	
+	return (client > 0);
+}

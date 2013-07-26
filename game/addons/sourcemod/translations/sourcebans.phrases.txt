@@ -51,4 +51,8 @@
 	{
 		"en"			"Select Player:"
 	}
+	"Invalid Input"
+	{
+		"en"			"Invalid Input:"
+	}
 }

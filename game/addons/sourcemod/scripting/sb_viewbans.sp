@@ -256,14 +256,14 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	decl String:sQuery[256];
 	new iClient = ReadPackCell(pack),
 			iTarget = ReadPackCell(pack),
-			iOnConnect = ReadPackCell(pack);
+			bool:bOnConnect = bool:ReadPackCell(pack);
 	ReadPackString(pack, sQuery, sizeof(sQuery));
 	
 	// We're done with you now.
 	CloseHandle(pack);
 	
 	// If the target is no longer connected we can bug out.
-	if(!IsClientInGame(iTarget))
+	if(!ParseClientFromSerial(iTarget))
 		return;
 	
 	// Make sure we succeeded.
@@ -283,15 +283,15 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 		CloneHandle(g_hPlayerResults[iTarget], hndl);
 		
 		// If we the query was from a client connection announce bans to admins.
-		if(iOnConnect)
+		if(bOnConnect)
 		{
 			SendChatToAdmins(iTarget);
 			return;
 		}
 		
 		// This query was sent by the sm_viewbans command.
-		// Let's tell the client we succeeded. 
-		if(IsClientInGame(iClient))
+		// Let's tell the client we succeeded.
+		if(ParseClientFromSerial(iClient))
 		{
 			PrintToChat(iClient, "[SM] %t", "Processed client");
 			PrintBans(iClient, iTarget);
@@ -420,8 +420,8 @@ stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 	
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, iClient);
-	WritePackCell(hPack, iTarget);
+	WritePackCell(hPack, ParseClientSerial(iClient));
+	WritePackCell(hPack, ParseClientSerial(iTarget));
 	WritePackCell(hPack, bOnConnect);
 	WritePackString(hPack, sQuery);
 	SB_Query(OnReceiveBans, sQuery, hPack);

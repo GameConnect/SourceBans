@@ -101,9 +101,9 @@ public OnClientPostAdminCheck(client)
 	
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, client);
+	WritePackCell(hPack, ParseClientSerial(client));
 	WritePackString(hPack, sQuery);
-	SB_Query(Query_RecieveSubmissions, sQuery, hPack, DBPrio_High);
+	SB_Query(Query_ReceiveSubmissions, sQuery, hPack, DBPrio_High);
 }
 
 public OnClientDisconnect(client)
@@ -206,29 +206,24 @@ public Action:Command_SubmitBan(client, args)
 public Action:Command_Say(client, const String:command[], argc)
 {
 	// If this client is not typing their own reason to ban someone, ignore
-	if(!g_aPlayers[client][bOwnReason])
+	if(argc < 1 || !g_aPlayers[client][bOwnReason])
 		return Plugin_Continue;
 	
 	g_aPlayers[client][bOwnReason] = false;
 	
 	decl String:sText[192];
-	new iStart = 0;
-	if(GetCmdArgString(sText, sizeof(sText)) < 1)
-		return Plugin_Continue;
+	GetCmdArgString(sText, sizeof(sText));
+	StripQuotes(sText);
+	TrimString(sText);
 	
-	if(sText[strlen(sText) - 1] == '"')
-	{
-		sText[strlen(sText) - 1] = '\0';
-		iStart = 1;
-	}
-	if(StrEqual(sText[iStart], "!noreason"))
+	if(!sText[0] || StrEqual(sText[1], "noreason", false))
 	{
 		ReplyToCommand(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
 		return Plugin_Handled;
 	}
 	if(g_aPlayers[client][iSubmissionTarget] != -1)
 	{
-		SubmitBan(client, g_aPlayers[client][iSubmissionTarget], sText[iStart]);
+		SubmitBan(client, g_aPlayers[client][iSubmissionTarget], sText);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -290,13 +285,13 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 /**
  * Query Callbacks
  */
-public Query_RecieveSubmissions(Handle:owner, Handle:hndl, const String:error[], any:pack)
+public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
 	ResetPack(pack);
 	
 	// If the client is no longer connected we can bug out.
 	new iClient = ReadPackCell(pack);
-	if(!IsClientInGame(iClient))
+	if(!ParseClientFromSerial(iClient))
 	{
 		CloseHandle(pack);
 		return;

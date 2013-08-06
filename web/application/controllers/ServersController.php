@@ -369,7 +369,7 @@ class ServersController extends Controller
 				{
 					$map_image = '/images/maps/' . $server->game->folder . '/' . $info['map'] . '.jpg';
 					
-					$result['hostname']   = preg_replace('/[\x00-\x1F\x7F-\x9F]/', null, $info['hostname']); // Strip UTF-8 characters
+					$result['hostname']   = preg_replace('/[\x00-\x1F]/', null, $info['hostname']); // Strip UTF-8 characters
 					$result['numplayers'] = $info['numplayers'];
 					$result['maxplayers'] = $info['maxplayers'];
 					$result['map']        = basename($info['map']); // Strip Steam Workshop folder

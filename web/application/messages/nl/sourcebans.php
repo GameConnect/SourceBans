@@ -94,6 +94,7 @@ return array(
 	'Identity' => 'Identiteit',
 	'Immunity level' => 'Immuniteitsgehalte',
 	'Import' => 'Importeren',
+	'Imported successfully' => 'Succesvol geïmporteerd',
 	'Information' => 'Informatie',
 	'Install' => 'Installeren',
 	'Invoked on' => 'Ingeroepen op',

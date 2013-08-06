@@ -238,13 +238,17 @@ class SBAdmin extends CActiveRecord
 	 */
 	public function getFlags()
 	{
-		$flags = '';
-		foreach($this->server_groups as $server_group)
+		static $flags;
+		if(!isset($flags))
 		{
-			$flags .= $server_group->flags;
+			foreach($this->server_groups as $server_group)
+			{
+				$flags .= $server_group->flags;
+			}
+			$flags = count_chars($flags, 3);
 		}
 		
-		return count_chars($flags, 3);
+		return $flags;
 	}
 	
 	/**
@@ -254,11 +258,15 @@ class SBAdmin extends CActiveRecord
 	 */
 	public function getImmunity()
 	{
-		$immunity = 0;
-		foreach($this->server_groups as $server_group)
+		static $immunity;
+		if(!isset($immunity))
 		{
-			if($server_group->immunity > $immunity)
-				$immunity = $server_group->immunity;
+			$immunity = 0;
+			foreach($this->server_groups as $server_group)
+			{
+				if($server_group->immunity > $immunity)
+					$immunity = $server_group->immunity;
+			}
 		}
 		
 		return $immunity;
@@ -279,16 +287,13 @@ class SBAdmin extends CActiveRecord
 		else
 			$flags = str_split($flag);
 		
-		foreach($this->server_groups as $server_group)
+		if(strpos($this->getFlags(), SM_ROOT) !== false)
+			return true;
+		
+		foreach($flags as $flag)
 		{
-			if(strpos($server_group->flags, SM_ROOT) !== false)
+			if(strpos($this->getFlags(), $flag) !== false)
 				return true;
-			
-			foreach($flags as $flag)
-			{
-				if(strpos($server_group->flags, $flag) !== false)
-					return true;
-			}
 		}
 		
 		return false;
@@ -309,16 +314,13 @@ class SBAdmin extends CActiveRecord
 		else
 			$flags = str_split($flag);
 		
-		foreach($this->server_groups as $server_group)
+		if(strpos($this->getFlags(), SM_ROOT) !== false)
+			return true;
+		
+		foreach($flags as $flag)
 		{
-			if(strpos($server_group->flags, SM_ROOT) !== false)
-				return true;
-			
-			foreach($flags as $flag)
-			{
-				if(strpos($server_group->flags, $flag) === false)
-					return false;
-			}
+			if(strpos($this->getFlags(), $flag) === false)
+				return false;
 		}
 		
 		return true;

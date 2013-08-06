@@ -102,6 +102,65 @@ class Helpers
 	
 	
 	/**
+	 * Parses the Community ID from a Steam ID, custom URL or profile URL
+	 * 
+	 * For example,
+	 * <pre>
+	 * Helpers::parseCommunityId('STEAM_0:1:16');
+	 * Helpers::parseCommunityId('76561197960265761');
+	 * Helpers::parseCommunityId('BAILOPAN');
+	 * Helpers::parseCommunityId('http://steamcommunity.com/id/BAILOPAN');
+	 * Helpers::parseCommunityId('http://steamcommunity.com/profiles/76561197960265761');
+	 * </pre>
+	 * 
+	 * @param string $url the Steam ID, Custom URL or profile URL
+	 * @return string the Community ID
+	 */
+	public static function parseCommunityId($url)
+	{
+		if(preg_match(SourceBans::STEAM_PATTERN, $url))
+			return self::getCommunityId($url);
+		
+		if(preg_match('/steamcommunity\.com\/(id|profiles)\/([^\/?&])/i', $url, $matches))
+		{
+			$url     = $matches[2];
+		}
+		if(!is_numeric($url))
+		{
+			$profile = new SteamProfile($url);
+			$url     = $profile->steamID64;
+		}
+		
+		return $url;
+	}
+	
+	
+	/**
+	 * Parses the Steam ID from a Community ID, custom URL or profile URL
+	 * 
+	 * For example,
+	 * <pre>
+	 * Helpers::parseSteamId('STEAM_0:1:16');
+	 * Helpers::parseSteamId('76561197960265761');
+	 * Helpers::parseSteamId('BAILOPAN');
+	 * Helpers::parseSteamId('http://steamcommunity.com/id/BAILOPAN');
+	 * Helpers::parseSteamId('http://steamcommunity.com/profiles/76561197960265761');
+	 * </pre>
+	 * 
+	 * @param string $url the Community ID, custom URL or profile URL
+	 * @return string the Steam ID
+	 */
+	public static function parseSteamId($url)
+	{
+		if(preg_match(SourceBans::STEAM_PATTERN, $url))
+			return strtoupper($url);
+		
+		$url = self::parseCommunityId($url);
+		return self::getSteamId($url);
+	}
+	
+	
+	/**
 	 * Parses an INI file with no interpretation of value content
 	 * 
 	 * @param  string $file The INI file to parse

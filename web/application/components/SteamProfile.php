@@ -55,11 +55,14 @@ class SteamProfile
 	/**
 	 * Constructor
 	 * 
-	 * @param string $id The Steam Community ID or custom URL
+	 * @param string $id The Steam Community ID, custom URL or profile URL
 	 */
 	function __construct($id)
 	{
-		$this->_id = $id;
+		if(preg_match('/steamcommunity\.com\/(id|profiles)\/([^\/?&])/i', $id, $matches))
+			$this->_id = $matches[2];
+		else
+			$this->_id = $id;
 	}
 	
 	/**

@@ -312,6 +312,7 @@ return array(
 	'models.SettingsForm.enable_submit' => 'Enable Submit ban',
 	'models.SettingsForm.items_per_page' => 'Items per page',
 	'models.SettingsForm.language' => 'Language',
+	'models.SettingsForm.mailer_from' => 'Sender',
 	'models.SettingsForm.password_min_length' => 'Min password length',
 	'models.SettingsForm.smtp_host' => 'SMTP host',
 	'models.SettingsForm.smtp_password' => 'SMTP password',

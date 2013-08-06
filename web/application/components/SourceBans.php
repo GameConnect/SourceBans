@@ -285,6 +285,8 @@ class SourceBans extends CApplicationComponent
 			Yii::app()->mailer->password = SourceBans::app()->settings->smtp_password;
 			Yii::app()->mailer->security = SourceBans::app()->settings->smtp_secure;
 		}
+		if(!empty(SourceBans::app()->settings->mailer_from))
+			Yii::app()->mailer->From     = SourceBans::app()->settings->mailer_from;
 		
 		SteamCommunity::setApiKey(SourceBans::app()->settings->steam_web_api_key);
 		

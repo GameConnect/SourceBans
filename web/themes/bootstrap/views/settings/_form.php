@@ -6,6 +6,7 @@
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'settings-form',
+	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'inputContainer'=>'.control-group',
@@ -162,6 +163,14 @@
 
 <fieldset>
   <legend><?php echo Yii::t('sourcebans', 'Email') ?></legend>
+  <div class="control-group">
+    <?php echo $form->label($model,'mailer_from',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php echo $form->textField($model,'mailer_from',array('size'=>60,'maxlength'=>256,'placeholder'=>'noreply@'.$_SERVER['HTTP_HOST'])); ?>
+      <?php echo $form->error($model,'mailer_from'); ?>
+    </div>
+  </div>
+
   <div class="control-group">
     <div class="controls">
       <?php $checkbox = $form->checkBox($model,'enable_smtp') . $model->getAttributeLabel('enable_smtp'); ?>

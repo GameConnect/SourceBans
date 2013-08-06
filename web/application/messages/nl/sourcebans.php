@@ -314,6 +314,7 @@ return array(
 	'models.SettingsForm.enable_submit' => 'Ban indienen inschakelen',
 	'models.SettingsForm.items_per_page' => 'Items per pagina',
 	'models.SettingsForm.language' => 'Taal',
+	'models.SettingsForm.mailer_from' => 'Afzender',
 	'models.SettingsForm.password_min_length' => 'Min wachtwoord lengte',
 	'models.SettingsForm.smtp_host' => 'SMTP-host',
 	'models.SettingsForm.smtp_password' => 'SMTP-wachtwoord',

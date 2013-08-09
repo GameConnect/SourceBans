@@ -202,11 +202,14 @@
   $("#player-profile").click(function() {
     var id = $("#servers-grid tr.selected").data("key");
     
-    $.get("' . $this->createUrl('servers/getProfile', array('id' => '__ID__')) . '".replace("__ID__", id), {
+    $.post("' . $this->createUrl('servers/getProfile', array('id' => '__ID__')) . '".replace("__ID__", id), {
       name: $("#player-menu").data("name")
     }, function(data) {
-      window.open("http://steamcommunity.com/profiles/" + data.id);
-    });
+      if(data.error)
+        return;
+      
+      location.href = "http://steamcommunity.com/profiles/" + data.id;
+    }, "json");
   });
   
   $("#player-kick").click(function() {

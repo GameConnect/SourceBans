@@ -11,6 +11,10 @@
 	'dataProvider'=>$servers->search(),
 	'columns'=>array(
 		array(
+			'class'=>'CCheckBoxColumn',
+			'selectableRows'=>2,
+		),
+		array(
 			'headerHtmlOptions'=>array(
 				'class'=>'icon',
 			),
@@ -70,6 +74,7 @@
 			'visible'=>Yii::app()->user->data->hasFlag(SM_RCON) || Yii::app()->user->data->hasPermission('DELETE_SERVERS', 'EDIT_SERVERS'),
 		),
 	),
+	'afterAjaxUpdate'=>'js:queryServers',
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
 	'pager'=>array(
@@ -125,10 +130,13 @@
       }
     });
   }
+  function queryServers() {
+    $("#servers-grid tr[data-key]").each(function() {
+      var id = $(this).data("key");
+      
+      queryServer(id);
+    });
+  }
   
-  $("#servers-grid tr[data-key]").each(function() {
-    var id = $(this).data("key");
-    
-    queryServer(id);
-  });
+  queryServers();
 ') ?>

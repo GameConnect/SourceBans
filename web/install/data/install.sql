@@ -429,6 +429,7 @@ INSERT INTO {prefix}settings (name, value) VALUES
 ('enable_submit', '1'),
 ('items_per_page', '10'),
 ('language', 'en'),
+('mailer_from', ''),
 ('password_min_length', '4'),
 ('smtp_host', ''),
 ('smtp_password', ''),

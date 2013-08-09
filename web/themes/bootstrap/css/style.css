@@ -179,6 +179,8 @@ td.icon img {
 }
 #servers_rcon #console {
   height: 340px;
+  white-space: pre;
+  word-wrap: normal;
 }
 #servers_rcon #command {
   width: 587px;

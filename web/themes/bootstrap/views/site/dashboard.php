@@ -9,9 +9,9 @@
     <div class="row">
     <section class="span12 intro">
 <?php if(!empty(SourceBans::app()->settings->dashboard_title)): ?>
-      <h3><?php echo CHtml::encode(SourceBans::app()->settings->dashboard_title) ?></h3><!-- intro title -->
+      <h3><?php echo CHtml::encode(SourceBans::app()->settings->dashboard_title) ?></h3>
 <?php endif ?>
-      <?php echo SourceBans::app()->settings->dashboard_text ?><!-- intro text -->
+      <?php echo SourceBans::app()->settings->dashboard_text ?>
     </section>
     </div>
     

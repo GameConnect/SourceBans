@@ -140,6 +140,7 @@ class ServerRcon
 					return false;
 				
 				stream_set_timeout($this->_sock, 2);
+				$this->_fsock = true;
 			}
 		}
 		catch(Exception $e)

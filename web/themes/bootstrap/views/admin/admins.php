@@ -11,6 +11,10 @@
 	'id'=>'admins-grid',
 	'dataProvider'=>$admins->search(),
 	'columns'=>array(
+		array(
+			'class'=>'CCheckBoxColumn',
+			'selectableRows'=>2,
+		),
 		'name',
 		array(
 			'headerHtmlOptions'=>array(

@@ -209,7 +209,7 @@ class AdminsController extends Controller
 						$admin->auth     = $auth;
 						$admin->identity = $identity;
 						
-						if(isset($password))
+						if(!empty($password))
 						{
 							$admin->new_password = $password;
 							$admin->server_password = $password;

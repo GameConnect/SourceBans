@@ -74,7 +74,7 @@
         scrollConsole(200);
         
         $command.val("").prop("disabled", false);
-      });
+      }, "json");
     }
   });
   $("#command").keyup(function(e) {

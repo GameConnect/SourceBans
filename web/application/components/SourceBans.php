@@ -56,14 +56,14 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * Returns the supported SourceMod flags
 	 * 
-	 * @return array the supported SourceMod flags
+	 * @return CMap the supported SourceMod flags
 	 */
 	public function getFlags()
 	{
 		static $_data;
 		if(!isset($_data))
 		{
-			$_data = include Yii::getPathOfAlias('application.data') . '/flags.php';
+			$_data = new CMap(include Yii::getPathOfAlias('application.data') . '/flags.php', true);
 		}
 		
 		return $_data;
@@ -100,14 +100,14 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * Returns the supported SourceBans permissions
 	 * 
-	 * @return array the supported SourceBans permissions
+	 * @return CMap the supported SourceBans permissions
 	 */
 	public function getPermissions()
 	{
 		static $_data;
 		if(!isset($_data))
 		{
-			$_data = include Yii::getPathOfAlias('application.data') . '/permissions.php';
+			$_data = new CMap(include Yii::getPathOfAlias('application.data') . '/permissions.php');
 		}
 		
 		return $_data;
@@ -149,14 +149,14 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * Returns the SourceBans settings
 	 * 
-	 * @return object the SourceBans settings
+	 * @return CAttributeCollection the SourceBans settings
 	 */
 	public function getSettings()
 	{
 		static $_data;
 		if(!isset($_data))
 		{
-			$_data = (object)CHtml::listData(SBSetting::model()->findAll(), 'name', 'value');
+			$_data = new CAttributeCollection(CHtml::listData(SBSetting::model()->findAll(), 'name', 'value'), true);
 		}
 		
 		return $_data;

@@ -38,6 +38,10 @@ class CommunityBansPlugin extends SBPlugin
 	{
 		// Register controller
 		Yii::app()->controllerMap['communityBans'] = $this->getPathAlias('controllers.CommunityBansController');
+		
+		// Add permissions
+		SourceBans::app()->permissions->add('BAN_COMMUNITY_FRIENDS', Yii::t('CommunityBansPlugin.main', 'Ban Community friends'));
+		SourceBans::app()->permissions->add('BAN_COMMUNITY_GROUPS',  Yii::t('CommunityBansPlugin.main', 'Ban Community groups'));
 	}
 	
 	public function onBeforeRender($view)
@@ -45,7 +49,7 @@ class CommunityBansPlugin extends SBPlugin
 		switch(Yii::app()->controller->route)
 		{
 			case 'admin/bans':
-				if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS'))
+				if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('BAN_COMMUNITY_FRIENDS', 'BAN_COMMUNITY_GROUPS'))
 				{
 					// Add items to admin/bans menu
 					Yii::app()->controller->menu[] = array(
@@ -54,15 +58,17 @@ class CommunityBansPlugin extends SBPlugin
 					Yii::app()->controller->menu[] = array(
 						'label' => Yii::t('CommunityBansPlugin.main', 'Ban Community friends'),
 						'url' => array('communityBans/friends'),
+						'visible' => 'Yii::app()->user->data->hasPermission("BAN_COMMUNITY_FRIENDS")',
 					);
 					Yii::app()->controller->menu[] = array(
 						'label' => Yii::t('CommunityBansPlugin.main', 'Ban Community groups'),
 						'url' => array('communityBans/groups'),
+						'visible' => 'Yii::app()->user->data->hasPermission("BAN_COMMUNITY_GROUPS")',
 					);
 				}
 				break;
 			case 'site/bans':
-				if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS'))
+				if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('BAN_COMMUNITY_FRIENDS', 'BAN_COMMUNITY_GROUPS'))
 				{
 					// Add items to site/bans menu
 					Yii::app()->controller->menu[] = array(
@@ -72,11 +78,13 @@ class CommunityBansPlugin extends SBPlugin
 						'label' => Yii::t('CommunityBansPlugin.main', 'Ban Community friends'),
 						'url' => '#',
 						'itemOptions' => array('class' => 'ban-menu-community-friends'),
+						'visible' => 'Yii::app()->user->data->hasPermission("BAN_COMMUNITY_FRIENDS")',
 					);
 					Yii::app()->controller->menu[] = array(
 						'label' => Yii::t('CommunityBansPlugin.main', 'Ban Community groups'),
 						'url' => '#',
 						'itemOptions' => array('class' => 'ban-menu-community-groups'),
+						'visible' => 'Yii::app()->user->data->hasPermission("BAN_COMMUNITY_GROUPS")',
 					);
 					
 					// Register script

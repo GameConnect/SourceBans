@@ -8,6 +8,8 @@ return CMap::mergeArray(
 		'name'=>'SourceBans',
 		'language'=>'en',
 		'sourceLanguage'=>'00',
+		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
+		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
 		
 		// preloading 'log' component
 		'preload'=>array('log'),
@@ -50,6 +52,9 @@ return CMap::mergeArray(
 			'geoip'=>array(
 				'class'=>'ext.geoip.CGeoIP',
 				'filename'=>dirname(__FILE__).'/../extensions/geoip/data/GeoIP.dat',
+			),
+			'mailer'=>array(
+				'class'=>'ext.swiftMailer.SwiftMailer',
 			),
 		),
 	),

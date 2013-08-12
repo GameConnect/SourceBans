@@ -1218,13 +1218,15 @@ InsertLocalBan(iType, const String:sAuth[], const String:sIp[], const String:sNa
 
 PrintBan(iClient, const String:sAuth[20], const String:sIp[16], const String:sName[MAX_NAME_LENGTH + 1], const String:sReason[128], iLength, iTime)
 {
-	decl String:sLength[64];
-	SecondsToString(sLength, sizeof(sLength), iTime + (iLength * 60) - GetTime());
-	
 	PrintToConsole(iClient, "===============================================");
 	PrintToConsole(iClient, "%sYou are banned from this server.", SB_PREFIX);
-	PrintToConsole(iClient, "%sYou have %s left on your ban.",    SB_PREFIX, sLength);
 	
+	if(iLength)
+	{
+		decl String:sLength[64];
+		SecondsToString(sLength, sizeof(sLength), iTime + (iLength * 60) - GetTime());
+		PrintToConsole(iClient, "%sYou have %s left on your ban.",    SB_PREFIX, sLength);
+	}
 	if(sName[0])
 		PrintToConsole(iClient, "%sName:\t\t%s",                    SB_PREFIX, sName);
 	if(sAuth[0])

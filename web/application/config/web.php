@@ -8,8 +8,6 @@ $parent=require(dirname(__FILE__).'/main.php');
 // CWebApplication properties can be configured here.
 return CMap::mergeArray(
 	array(
-		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
-		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
 		'theme'=>'bootstrap',
 
 		'modules'=>array(
@@ -70,7 +68,6 @@ return CMap::mergeArray(
 				'class'=>'bootstrap.components.Bootstrap',
 			),
 			'mailer'=>array(
-				'class'=>'ext.swiftMailer.SwiftMailer',
 				'From'=>'noreply@'.$_SERVER['HTTP_HOST'],
 			),
 		),

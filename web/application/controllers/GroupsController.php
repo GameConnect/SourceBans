@@ -69,7 +69,6 @@ class GroupsController extends Controller
 				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger($type == 'web' ? 'onAddWebGroup' : 'onAddServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
 		}
@@ -109,7 +108,6 @@ class GroupsController extends Controller
 				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger($type == 'web' ? 'onEditWebGroup' : 'onEditServerGroup', $model);
 				$this->redirect(array('admin/groups','#'=>$model->id));
 			}
 		}
@@ -129,7 +127,6 @@ class GroupsController extends Controller
 		$type=Yii::app()->request->getQuery('type');
 		$model=$this->loadModel($id, $type);
 		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
-		SourceBans::app()->trigger($type == 'web' ? 'onDeleteWebGroup' : 'onDeleteServerGroup', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

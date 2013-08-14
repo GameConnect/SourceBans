@@ -8,8 +8,6 @@ return CMap::mergeArray(
 		'name'=>'SourceBans',
 		'language'=>'en',
 		'sourceLanguage'=>'00',
-		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
-		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
 		
 		// preloading 'log' component
 		'preload'=>array('log'),

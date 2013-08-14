@@ -69,7 +69,6 @@ class AdminsController extends Controller
 				SourceBans::log('Admin added', 'Admin "' . $model->name . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger('onAddAdmin', $model);
 				$this->redirect(array('admin/admins','#'=>$model->id));
 			}
 		}
@@ -109,7 +108,6 @@ class AdminsController extends Controller
 				SourceBans::log('Admin edited', 'Admin "' . $model->name . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger('onEditAdmin', $model);
 				$this->redirect(array('admin/admins','#'=>$model->id));
 			}
 		}
@@ -128,7 +126,6 @@ class AdminsController extends Controller
 	{
 		$model=$this->loadModel($id);
 		SourceBans::log('Admin deleted', 'Admin "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
-		SourceBans::app()->trigger('onDeleteAdmin', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

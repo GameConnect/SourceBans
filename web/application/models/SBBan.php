@@ -245,7 +245,7 @@ class SBBan extends CActiveRecord
 	/**
 	 * Returns the Steam Community data
 	 * 
-	 * @return object the Steam Community data
+	 * @return SteamProfile the Steam Community data
 	 */
 	public function getCommunity()
 	{
@@ -264,7 +264,7 @@ class SBBan extends CActiveRecord
 	/**
 	 * Returns the Steam Community ID
 	 * 
-	 * @return object the Steam Community ID
+	 * @return integer the Steam Community ID
 	 */
 	public function getCommunityId()
 	{
@@ -350,6 +350,17 @@ class SBBan extends CActiveRecord
 		$this->unban_time     = time();
 		
 		return $this->save(false);
+	}
+	
+	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('bans.deleteBan', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('bans.saveBan', $event);
 	}
 	
 	

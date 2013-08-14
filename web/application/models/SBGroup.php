@@ -117,6 +117,17 @@ class SBGroup extends CActiveRecord
 	}
 	
 	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('groups.deleteWebGroup', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('groups.saveWebGroup', $event);
+	}
+	
+	
 	protected function afterSave()
 	{
 		SBGroupPermission::model()->deleteAllByAttributes(array('group_id'=>$this->id));

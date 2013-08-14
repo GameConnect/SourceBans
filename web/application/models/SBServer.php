@@ -199,6 +199,17 @@ class SBServer extends CActiveRecord
 	}
 	
 	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('servers.deleteServer', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('servers.saveServer', $event);
+	}
+	
+	
 	private function _getQuery()
 	{
 		static $_query;

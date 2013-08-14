@@ -8,6 +8,8 @@ $parent=require(dirname(__FILE__).'/main.php');
 // CWebApplication properties can be configured here.
 return CMap::mergeArray(
 	array(
+		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
+		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
 		'theme'=>'bootstrap',
 
 		'modules'=>array(

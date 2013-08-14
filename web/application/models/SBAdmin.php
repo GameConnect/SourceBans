@@ -205,7 +205,7 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns the Steam Community data
 	 * 
-	 * @return object the Steam Community data
+	 * @return SteamProfile the Steam Community data
 	 */
 	public function getCommunity()
 	{
@@ -224,7 +224,7 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns the Steam Community ID
 	 * 
-	 * @return object the Steam Community ID
+	 * @return integer the Steam Community ID
 	 */
 	public function getCommunityId()
 	{
@@ -254,7 +254,7 @@ class SBAdmin extends CActiveRecord
 	/**
 	 * Returns the immunity level
 	 * 
-	 * @return string the immunity level
+	 * @return integer the immunity level
 	 */
 	public function getImmunity()
 	{
@@ -393,6 +393,17 @@ class SBAdmin extends CActiveRecord
 	public function validatePassword($password)
 	{
 		return $this->password == self::getPasswordHash($password, $this->password_key);
+	}
+	
+	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('admins.deleteAdmin', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('admins.saveAdmin', $event);
 	}
 	
 	

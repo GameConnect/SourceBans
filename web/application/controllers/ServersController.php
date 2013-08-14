@@ -124,7 +124,6 @@ class ServersController extends Controller
 				SourceBans::log('Server added', 'Server "' . $model->ip . ':' . $model->port . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger('onAddServer', $model);
 				$this->redirect(array('admin/servers','#'=>$model->id));
 			}
 		}
@@ -164,7 +163,6 @@ class ServersController extends Controller
 				SourceBans::log('Server edited', 'Server "' . $model->ip . ':' . $model->port . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				SourceBans::app()->trigger('onEditServer', $model);
 				$this->redirect(array('admin/servers','#'=>$model->id));
 			}
 		}
@@ -183,7 +181,6 @@ class ServersController extends Controller
 	{
 		$model=$this->loadModel($id);
 		SourceBans::log('Server deleted', 'Server "' . $model->ip . ':' . $model->port . '" was deleted', SBLog::WARNING_TYPE);
-		SourceBans::app()->trigger('onDeleteServer', $model);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

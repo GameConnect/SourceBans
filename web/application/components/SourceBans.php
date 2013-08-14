@@ -6,12 +6,12 @@
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  * 
- * @property array $flags The supported SourceMod flags
+ * @property CMap $flags The supported SourceMod flags
  * @property array $languages The supported SourceBans languages
- * @property array $permissions The supported SourceBans permissions
+ * @property CMap $permissions The supported SourceBans permissions
  * @property array $plugins The enabled SourceBans plugins
  * @property object $quote A random SourceBans quote
- * @property object $settings The SourceBans settings
+ * @property CAttributeCollection $settings The SourceBans settings
  * @property array $themes The installed SourceBans themes
  * 
  * @package sourcebans.components
@@ -44,6 +44,11 @@ class SourceBans extends CApplicationComponent
 	const IP_PATTERN     = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
 	const STATUS_PATTERN = '/# +([0-9]+) +"(.+)" +(STEAM_[0-9]:[0-9]:[0-9]+) +([0-9:]+) +([0-9]+) +([0-9]+) +([a-zA-Z]+) +([0-9.:]+)/';
 	const STEAM_PATTERN  = '/^STEAM_[0-9]:[0-9]:[0-9]+$/i';
+	
+	/**
+	 * @var array the attached event handlers (event name => handlers)
+	 */
+	private $_events;
 	
 	private static $_app;
 	
@@ -184,20 +189,92 @@ class SourceBans extends CApplicationComponent
 	}
 	
 	/**
-	 * Triggers an event on the SourceBans plugins
+	 * Attaches an event handler to an event.
+	 * 
+	 * An event handler must be a valid PHP callback. The followings are
+	 * some examples:
+	 * <pre>
+	 * function($event) { ... }         // PHP 5.3: anonymous function
+	 * array($object, 'handleClick')    // $object->handleClick()
+	 * array('Page', 'handleClick')     // Page::handleClick()
+	 * 'handleClick'                    // global function handleClick()
+	 * </pre>
+	 * An event handler must be defined with the following signature,
+	 * <pre>
+	 * function($event)
+	 * </pre>
+	 * where $event is a {@link CEvent} object which includes parameters associated with the event.
 	 * 
 	 * @param string $name the event name
-	 * @param mixed $params the event parameters 
+	 * @param callback $handler the event handler
+	 * @see off()
 	 */
-	public function trigger($name, $params = null)
+	public function on($name, $handler)
 	{
-		if(!is_array($params))
-			$params = array($params);
+		$this->_events[$name][] = $handler;
+	}
+	
+	/**
+	 * Detaches an existing event handler from this component.
+	 * This method is the opposite of {@link on()}.
+	 * 
+	 * @param string $name event name
+	 * @param callback $handler the event handler to be removed.
+	 * If it is null, all handlers attached to the named event will be removed.
+	 * @return boolean if a handler is found and detached
+	 * @see on()
+	 */
+	public function off($name, $handler = null)
+	{
+		if(!isset($this->_events[$name]))
+			return false;
 		
-		foreach(SourceBans::app()->plugins as $plugin)
+		if($handler === null)
 		{
-			if(is_callable(array($plugin, $name)))
-				call_user_func_array(array($plugin, $name), $params);
+			$this->_events[$name] = array();
+			return false;
+		}
+		
+		$removed = false;
+		foreach($this->_events[$name] as $i => $event)
+		{
+			if($event !== $handler)
+				continue;
+			
+			unset($this->_events[$name][$i]);
+			$removed = true;
+		}
+		if($removed)
+			$this->_events[$name] = array_values($this->_events[$name]);
+		
+		return $removed;
+	}
+	
+	/**
+	 * Triggers an event.
+	 * This method represents the happening of an event. It invokes
+	 * all attached handlers for the event.
+	 * 
+	 * @param string $name the event name
+	 * @param CEvent $event the event parameter. If not set, a default {@link CEvent} object will be created.
+	 */
+	public function trigger($name, $event = null)
+	{
+		if(empty($this->_events[$name]))
+			return;
+		
+		if($event === null)
+			$event = new CEvent;
+		if($event->sender === null)
+			$event->sender = $this;
+		
+		$event->handled = false;
+		foreach($this->_events[$name] as $handler)
+		{
+			call_user_func($handler, $event);
+			// stop further handling if the event is handled
+			if($event instanceof CEvent && $event->handled)
+				return;
 		}
 	}
 	
@@ -290,7 +367,8 @@ class SourceBans extends CApplicationComponent
 		
 		SteamCommunity::setApiKey(SourceBans::app()->settings->steam_web_api_key);
 		
-		SourceBans::app()->trigger('onBeginRequest', $event);
+		SourceBans::app()->getPlugins();
+		SourceBans::app()->trigger('app.beginRequest', $event);
 	}
 	
 	/**
@@ -299,6 +377,6 @@ class SourceBans extends CApplicationComponent
 	 */
 	public static function onEndRequest($event)
 	{
-		SourceBans::app()->trigger('onEndRequest', $event);
+		SourceBans::app()->trigger('app.endRequest', $event);
 	}
 }

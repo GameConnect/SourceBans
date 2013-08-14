@@ -119,6 +119,17 @@ class SBGame extends CActiveRecord
 	}
 	
 	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('games.deleteGame', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('games.saveGame', $event);
+	}
+	
+	
 	protected function afterSave()
 	{
 		// Save icon

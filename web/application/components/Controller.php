@@ -68,7 +68,9 @@ class Controller extends CController
 	 */
 	protected function beforeAction($action)
 	{
-		SourceBans::app()->trigger('onBeforeAction', $action);
+		SourceBans::app()->trigger('app.beforeAction', new CEvent($this, array(
+			'action' => $action,
+		)));
 		
 		return parent::beforeAction($action);
 	}
@@ -80,7 +82,9 @@ class Controller extends CController
 	 */
 	protected function beforeRender($view)
 	{
-		SourceBans::app()->trigger('onBeforeRender', $view);
+		SourceBans::app()->trigger('app.beforeRender', new CEvent($this, array(
+			'view' => $view,
+		)));
 		
 		return parent::beforeRender($view);
 	}
@@ -92,7 +96,9 @@ class Controller extends CController
 	 */
 	protected function afterAction($action)
 	{
-		SourceBans::app()->trigger('onAfterAction', $action);
+		SourceBans::app()->trigger('app.afterAction', new CEvent($this, array(
+			'action' => $action,
+		)));
 		
 		parent::afterAction($action);
 	}
@@ -107,7 +113,10 @@ class Controller extends CController
 	 */
 	protected function afterRender($view, &$output)
 	{
-		SourceBans::app()->trigger('onAfterRender', array($view, &$output));
+		SourceBans::app()->trigger('app.afterRender', new CEvent($this, array(
+			'view' => $view,
+			'output' => &$output,
+		)));
 		
 		parent::afterRender($view, $output);
 	}

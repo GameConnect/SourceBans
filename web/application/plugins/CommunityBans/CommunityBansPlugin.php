@@ -27,6 +27,12 @@ class CommunityBansPlugin extends SBPlugin
 	}
 	
 	
+	public function init()
+	{
+		SourceBans::app()->on('app.beginRequest', array($this, 'onBeginRequest'));
+		SourceBans::app()->on('app.beforeRender', array($this, 'onBeforeRender'));
+	}
+	
 	public function runInstall()
 	{
 		// If Steam Web API Key is not set, disable installation
@@ -44,7 +50,7 @@ class CommunityBansPlugin extends SBPlugin
 		SourceBans::app()->permissions->add('BAN_COMMUNITY_GROUPS',  Yii::t('CommunityBansPlugin.main', 'Ban Community groups'));
 	}
 	
-	public function onBeforeRender($view)
+	public function onBeforeRender($event)
 	{
 		switch(Yii::app()->controller->route)
 		{

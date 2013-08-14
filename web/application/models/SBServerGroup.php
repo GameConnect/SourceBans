@@ -131,6 +131,17 @@ class SBServerGroup extends CActiveRecord
 	}
 	
 	
+	public function onAfterDelete($event)
+	{
+		SourceBans::app()->trigger('groups.deleteServerGroup', $event);
+	}
+	
+	public function onAfterSave($event)
+	{
+		SourceBans::app()->trigger('groups.saveServerGroup', $event);
+	}
+	
+	
 	protected function beforeSave()
 	{
 		if(strpos($this->flags, SM_ROOT) !== false)

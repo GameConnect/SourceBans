@@ -106,37 +106,11 @@
     </section>
     
 <script id="bans-section" type="text/x-template">
-  <table class="table table-bordered table-condensed">
+  <table class="table table-condensed pull-left">
     <tbody>
       <tr>
         <th style="white-space: nowrap; width: 150px;"><?php echo Yii::t('sourcebans', 'Name') ?></th>
         <td><%=header.data("name") || nullDisplay %></td>
-        <td class="ban-menu" rowspan="7">
-<?php $this->widget('zii.widgets.CMenu', array(
-	'items' => array_merge(array(
-		array(
-			'label' => Yii::t('sourcebans', 'Edit'),
-			'url' => array('bans/edit', 'id'=>'__ID__'),
-			'visible' => !Yii::app()->user->isGuest,
-		),
-		array(
-			'label' => Yii::t('sourcebans', 'Unban'),
-			'url' => '#',
-			'itemOptions' => array('class' => 'ban-menu-unban'),
-			'visible' => !Yii::app()->user->isGuest,
-		),
-		array(
-			'label' => Yii::t('sourcebans', 'Delete'),
-			'url' => array('bans/delete', 'id'=>'__ID__'),
-			'itemOptions' => array('class' => 'ban-menu-delete'),
-			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
-		),
-	), $this->menu),
-	'htmlOptions' => array(
-		'class' => 'nav nav-stacked nav-tabs',
-	),
-)) ?>
-        </td>
       </tr>
       <tr>
         <th>Steam ID</th>
@@ -181,6 +155,33 @@
 <% } %>
     </tbody>
   </table>
+  <div class="ban-menu pull-right">
+<?php $this->widget('zii.widgets.CMenu', array(
+	'items' => array_merge(array(
+		array(
+			'label' => Yii::t('sourcebans', 'Edit'),
+			'url' => array('bans/edit', 'id'=>'__ID__'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Unban'),
+			'url' => '#',
+			'itemOptions' => array('class' => 'ban-menu-unban'),
+			'visible' => !Yii::app()->user->isGuest,
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Delete'),
+			'url' => array('bans/delete', 'id'=>'__ID__'),
+			'itemOptions' => array('class' => 'ban-menu-delete'),
+			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
+		),
+	), $this->menu),
+	'htmlOptions' => array(
+		'class' => 'nav nav-stacked nav-pills',
+	),
+)) ?>
+
+  </div>
 </script>
 
 <?php Yii::app()->clientScript->registerScript('search', "
@@ -200,10 +201,10 @@
   $(window).bind("hashchange", function(e) {
     var id       = $.param.fragment();
     var $header  = $("#bans-grid tr[data-key=\"" + id + "\"]");
-    var $section = $header.next("tr.section").find("div");
+    var $section = $header.next("tr.section").find("div:first-child");
     
     $("#bans-grid > table.table-accordion > tbody > tr.selected").removeClass("selected");
-    $("#bans-grid tr.section div").not($section).slideUp(200, "linear");
+    $("#bans-grid tr.section div:first-child").not($section).slideUp(200, "linear");
     if(!$header.length)
       return;
     

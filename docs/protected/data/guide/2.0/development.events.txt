@@ -1,6 +1,7 @@
 # Events
 
 Application
+
 * app.beginRequest
 * app.beforeAction
 * app.beforeRender
@@ -9,6 +10,7 @@ Application
 * app.endRequest
 
 Models
+
 * admins.deleteAdmin
 * admins.saveAdmin
 * bans.deleteBan

@@ -15,7 +15,7 @@ class Formatter extends CFormatter
 	 * Format seconds as "1mo 2wk 3d 4hr 5min 6sec" or "1132:05:06"
 	 *
 	 * @param integer $secs
-	 * @param boolean $textual Whether to output  as "1mo 2wk 3d 4hr 5min 6sec" or "1132:05:06"
+	 * @param boolean $textual Whether to output as "1mo 2wk 3d 4hr 5min 6sec" or "1132:05:06"
 	 * @return string
 	 */
 	public function formatLength($secs, $textual = true)
@@ -24,10 +24,10 @@ class Formatter extends CFormatter
 		{
 			$ret	 = '';
 			$units = array(
-				'mo'	=> 60 * 60 * 24 * 30,
-				'wk'	=> 60 * 60 * 24 * 7,
+				'mo'  => 60 * 60 * 24 * 30,
+				'wk'  => 60 * 60 * 24 * 7,
 				'd'   => 60 * 60 * 24,
-				'hr'	=> 60 * 60,
+				'hr'  => 60 * 60,
 				'min' => 60,
 				'sec' => 1,
 			);
@@ -37,7 +37,7 @@ class Formatter extends CFormatter
 				if(!($value = (int)($secs / $div)))
 					continue;
 				
-				$ret	.= ', ' . $value . ' ' . $name;
+				$ret  .= ', ' . $value . ' ' . $name;
 				$secs %= $div;
 			}
 			
@@ -47,7 +47,7 @@ class Formatter extends CFormatter
 		{
 			$hours = (int)($secs / 60 / 60);
 			$secs -= $hours * 60 * 60;
-			$mins	= (int)($secs / 60);
+			$mins  = (int)($secs / 60);
 			$secs %= 60;
 			
 			return $hours . ':' . $mins . ':' . $secs;

@@ -9,21 +9,26 @@ a.sort-link.asc {
 a.sort-link.desc {
   background-image: url(../images/sort_desc.png);
 }
-h1 a {
-  background-image: url(../images/logo.png);
-  display: block;
-  height: 42px;
-  text-indent: -9999px;
-  width: 320px;
+header > hr {
+  margin: 0 auto;
+  width: 960px;
+}
+h1 {
+  font-size: 30px;
+  line-height: 30px;
+  margin-bottom: 2px;
 }
 footer {
   clear: both;
   margin-top: 1em;
   text-align: center;
 }
+footer > hr {
+  margin: 10px auto;
+  width: 480px;
+}
 table.table-stat td {
-  border-bottom: 1px solid #ddd;
-  border-top: 0;
+  border-top: 1px solid #ddd;
   color: #666;
 }
 table.table-stat td.value {
@@ -35,6 +40,15 @@ table.table-stat td.value {
 }
 textarea {
   height: 100px;
+}
+.breadcrumb {
+  background-color: transparent;
+  font-size: 12px;
+  padding: 0;
+  text-transform: uppercase;
+}
+.breadcrumb > li {
+  text-shadow: none;
 }
 .help-block {
   margin-top: 6px;
@@ -62,21 +76,80 @@ textarea {
 .modal-body textarea {
   width: 516px;
 }
+.navbar {
+  margin: 0;
+}
+.navbar .brand {
+  margin: 0;
+  padding: 10px 0;
+}
+.navbar .nav > li > a {
+  font-size: 12px;
+  margin-left: 20px;
+  padding: 21px 0;
+  text-shadow: none;
+}
+.navbar .nav > li > a:hover,
+.navbar .nav > li > a:focus {
+  color: #b80202;
+}
+.navbar .nav > .active > a,
+.navbar .nav > .active > a:hover,
+.navbar .nav > .active > a:focus {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  background: none;
+  box-shadow: none;
+  color: #b80202;
+}
 .navbar-inner {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  background: none;
+  border: 0;
+  box-shadow: none;
   padding: 0;
 }
 .page-alert {
   position: relative;
 }
 .page-alert .alert {
-  margin-top: -20px;	
+  margin-bottom: 0;
+  margin-top: -1px;
 }
 .search-form {
   margin-top: .5em;
 }
 
 #search {
-  margin: 20px 0 0;
+  margin: 10px 0 2px;
+}
+#user {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+#user > li {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+#user > li > a {
+  display: inline;
+}
+#user > li > a:focus,
+#user > li > a:hover {
+  background-color: transparent;
+  text-decoration: underline;
+}
+#user > li > .divider {
+  color: #ccc;
+  padding: 0 2px 0 5px;
+}
+#user > li.last > .divider {
+  display: none;
+}
+#user > .active > a {
+  color: #999;
 }
 #content.tab-content {
   overflow: visible;
@@ -101,6 +174,16 @@ textarea {
   margin: 10px auto 0;
   width: 585px;
 }
+#bans-grid tr.section > td > div table {
+  width: 570px;
+}
+#bans-grid tr.section > td > div .ban-menu ul {
+  margin-bottom: 0;
+  width: 200px;
+}
+#servers-grid tr.section > td > div .map-image {
+  margin-bottom: 10px;
+}
 
 .table-accordion tbody tr.header {
   cursor: pointer;
@@ -123,9 +206,6 @@ textarea {
   cursor: pointer;
 }
 
-td.ban-menu {
-  width: 200px;
-}
 td.button-column img {
   vertical-align: text-bottom;
   width: 16px;

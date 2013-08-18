@@ -96,7 +96,7 @@
 
 <?php if(!isset($isDashboard)): ?>
 <script id="servers-section" type="text/x-template">
-  <table class="table table-bordered table-condensed table-hover pull-left" style="width: 380px">
+  <table class="table table-condensed table-hover pull-left" style="width: 430px">
     <thead>
       <tr>
         <th><?php echo Yii::t('sourcebans', 'Name') ?></th>
@@ -120,9 +120,9 @@
 <% } %>
     </tbody>
   </table>
-  <div class="well pull-right">
-    <img alt="<%=(server.error ? "<?php echo Yii::t('sourcebans', 'Unknown') ?>" : server.map) %>" src="<%=(server.error || !server.map_image ? "<?php echo Yii::app()->baseUrl ?>/images/maps/unknown.jpg" : server.map_image) %>" />
-    <div class="text-center" style="margin-top: 10px">
+  <div class="pull-right">
+    <img alt="<%=(server.error ? "<?php echo Yii::t('sourcebans', 'Unknown') ?>" : server.map) %>" class="map-image img-rounded" src="<%=(server.error || !server.map_image ? "<?php echo Yii::app()->baseUrl ?>/images/maps/unknown.jpg" : server.map_image) %>" />
+    <div class="well text-center">
       <p><%=server.ip %>:<%=server.port %></p>
       <a class="btn btn-success" href="steam://connect/<%=server.ip %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Join game') ?></a>
       <a class="btn btn-info" href="javascript:queryServer(<%=server.id %>)"><?php echo Yii::t('sourcebans', 'Refresh') ?></a>
@@ -133,7 +133,7 @@
 <?php Yii::app()->clientScript->registerScript('site_servers_hashchange', '
   $(window).bind("hashchange", function(e) {
     $("#servers-grid > table.table-accordion > tbody > tr.selected").removeClass("selected");
-    $("#servers-grid tr.section div").slideUp(200, "linear");
+    $("#servers-grid tr.section div:first-child").slideUp(200, "linear");
     
     var id      = $.param.fragment();
     var $header = $("#servers-grid tr[data-key=\"" + id + "\"]");
@@ -142,7 +142,7 @@
     
     var $section = $header.next("tr.section");
     $header.addClass("selected");
-    $section.find("div").slideDown(200, "linear");
+    $section.find("div:first-child").slideDown(200, "linear");
   });
   
   $(document).on("click.yiiGridView", "#servers-grid tr.header", function(e) {

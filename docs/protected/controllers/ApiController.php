@@ -14,7 +14,7 @@ class ApiController extends CController
 		$content = file_get_contents($file);
 		
 		$this->pageTitle = 'API « SourceBans';
-		if($topic !== 'index' && preg_match('/<h2[^>]*>(.*?)</', $content, $matches, 1))
+		if($topic !== 'index' && preg_match('/<h1[^>]*>(.*?)</', $content, $matches))
 			$this->pageTitle = CHtml::encode($matches[1]) . ' « ' . $this->pageTitle;
 		
 		$this->render('view', array(

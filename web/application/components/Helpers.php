@@ -12,6 +12,25 @@
 class Helpers
 {
 	/**
+	 * Returns the values from a single column of the input array, identified by $column.
+	 *
+	 * @param array $array  The input array
+	 * @param mixed $column The column of values to return
+	 * @return array
+	 */
+	public static function array_column($array, $column = 0)
+	{
+		$data = array();
+		foreach($array as $key => $value)
+		{
+			$data[$key] = $value[$column];
+		}
+		
+		return $data;
+	}
+	
+	
+	/**
 	 * This will sort a collection based on the collection(array()) values
 	 *
 	 * @param array   $array  The array to sort
@@ -20,11 +39,7 @@ class Helpers
 	 */
 	public static function array_qsort(&$array, $column = 0, $order = SORT_ASC)
 	{
-		$data = array();
-		foreach($array as $key => $value)
-		{
-			$data[$key] = $value[$column];
-		}
+		$data = self::array_column($array, $column);
 		
 		array_multisort($data, $order, $array);
 	}

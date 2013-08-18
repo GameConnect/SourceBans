@@ -482,7 +482,7 @@ class SBAdmin extends CActiveRecord
 		
 		// Select community ID
 		$select=array(
-			'(CASE '.$t.'.auth WHEN "'.self::STEAM_AUTH.'" THEN CAST("76561197960265728" AS UNSIGNED) + CAST(MID('.$t.'.identity, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.identity, 11, 10) * 2 AS UNSIGNED) END) AS admin_community_id',
+			'(CASE '.$t.'.auth WHEN "'.self::STEAM_AUTH.'" THEN 76561197960265728 + CAST(MID('.$t.'.identity, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.identity, 11, 10) * 2 AS UNSIGNED) END) AS admin_community_id',
 		);
 		if($this->dbCriteria->select==='*')
 		{

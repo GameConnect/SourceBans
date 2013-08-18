@@ -65,10 +65,10 @@
 		"data-permissions"=>isset($data->group) ? CJavaScript::encode(array_values(CHtml::listData($data->group->permissions,"name","name"))) : null,
 	)',
 	'selectionChanged'=>'js:function(grid) {
-		var $header = $("#" + grid + " tr.selected");
-		var $section = $header.next("tr.section").find("div");
+		var $header  = $("#" + grid + " tr.selected");
+		var $section = $header.next("tr.section").find("div:first-child");
 		
-		$("#" + grid + " tr.section div").not($section).slideUp(200, "linear");
+		$("#" + grid + " tr.section div:first-child").not($section).slideUp(200, "linear");
 		if(!$header.length)
 			return;
 		

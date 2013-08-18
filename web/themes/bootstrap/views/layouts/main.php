@@ -17,15 +17,10 @@
   <body id="<?php echo (!empty($this->pageId) ? $this->pageId : $this->id . '_' . $this->action->id); ?>">
     <header>
       <div class="container">
-        <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
-          <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
-          <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
-        </form>
-        
-        <h1><?php echo CHtml::link(CHtml::encode(Yii::app()->name), array('site/index')) ?></h1>
-        
         <div class="navbar">
-          <nav class="navbar-inner">
+          <div class="navbar-inner">
+            <?php echo CHtml::link(CHtml::image(Yii::app()->theme->baseUrl . '/images/logo.png', CHtml::encode(Yii::app()->name)), array('site/index'), array('class' => 'brand')) ?>
+
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'tabs',
 	'items' => array_merge(array(
@@ -70,9 +65,38 @@
 		),
 	), $this->tabs),
 	'htmlOptions' => array(
-		'class' => 'nav',
+		'class' => 'nav pull-right',
 	),
 )) ?>
+
+          </div>
+        </div>
+      </div>
+      <hr />
+<?php $this->widget('bootstrap.widgets.TbAlert', array(
+	'block' => false,
+	'htmlOptions' => array(
+		'class' => 'page-alert',
+	),
+)) ?>
+
+    </header>
+    
+    <div class="container">
+      <header class="clearfix">
+        <div class="pull-left">
+          <h1><?php echo CHtml::encode($this->pageTitle) ?></h1>
+<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
+	'links' => $this->breadcrumbs,
+)) ?>
+
+        </div>
+        <div class="pull-right">
+          <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
+            <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
+            <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
+          </form>
+          <nav>
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'user',
 	'items' => array(
@@ -95,28 +119,12 @@
 	'htmlOptions' => array(
 		'class' => 'nav pull-right',
 	),
+	'itemTemplate' => '{menu}<span class="divider">|</span>',
+	'lastItemCssClass' => 'last',
 )) ?>
 
           </nav>
         </div>
-<?php $this->widget('bootstrap.widgets.TbAlert', array(
-	'block' => false,
-	'htmlOptions' => array(
-		'class' => 'page-alert',
-	),
-)) ?>
-
-      </div>
-    </header>
-    
-    <div class="container">
-      <header>
-<?php $this->widget('bootstrap.widgets.TbBreadcrumbs', array(
-	'homeLink' => false,
-	'links' => $this->breadcrumbs,
-)) ?>
-
-        <h2><?php echo CHtml::encode($this->pageTitle) ?></h2>
       </header>
       
 <?php echo $content ?>
@@ -124,6 +132,7 @@
     </div>
     
     <footer>
+      <hr />
       <div class="container">
         <p>
           <a href="http://sourcebans.net" target="_blank"><img alt="SourceBans" src="<?php echo Yii::app()->theme->baseUrl ?>/images/logo_footer.png" /></a>

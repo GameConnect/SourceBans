@@ -10,9 +10,8 @@
 	'id'=>'games-grid',
 	'dataProvider'=>$games->search(),
 	'columns'=>array(
-		'name',
-		'folder',
 		array(
+			'header'=>false,
 			'headerHtmlOptions'=>array(
 				'class'=>'icon',
 			),
@@ -20,9 +19,18 @@
 				'class'=>'icon',
 			),
 			'name'=>'icon',
-			'sortable'=>false,
 			'type'=>'html',
 			'value'=>'CHtml::image(Yii::app()->baseUrl . "/images/games/" . $data->icon, $data->name)',
+		),
+		'name',
+		array(
+			'headerHtmlOptions'=>array(
+				'class'=>'SBGame_folder',
+			),
+			'htmlOptions'=>array(
+				'class'=>'SBGame_folder',
+			),
+			'name'=>'folder',
 		),
 		array(
 			'class'=>'CButtonColumn',

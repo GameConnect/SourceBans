@@ -207,6 +207,7 @@ textarea {
 }
 
 td.button-column img {
+  max-width: none;
   vertical-align: text-bottom;
   width: 16px;
 }
@@ -245,6 +246,9 @@ th.icon {
 }
 td.icon img {
   vertical-align: text-bottom;
+}
+th.SBGame_folder {
+  width: 20%;
 }
 
 #admin_index #admin li a {

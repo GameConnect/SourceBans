@@ -234,7 +234,7 @@ class ServersController extends Controller
 		);
 		
 		if(empty($model->rcon) || (!$model->enabled && !Yii::app()->user->data->hasPermission('OWNER')))
-			throw new CHttpException(403);
+			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 		
 		if(isset($_POST['command']))
 			Yii::app()->end(CJSON::encode($this->_rconServer($_POST['command'], $id)));
@@ -306,7 +306,7 @@ class ServersController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=SBServer::model()->findByPk($id);
+		$model=SBServer::model()->with('game')->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -331,7 +331,7 @@ class ServersController extends Controller
 		if(empty($id))
 			$servers = SBServer::model()->findAll();
 		else if(is_array($id))
-			$servers = SBServer::model()->findByPk($id);
+			$servers = SBServer::model()->findAllByPk($id);
 		else
 			$servers = array(SBServer::model()->findByPk($id));
 		
@@ -383,7 +383,7 @@ class ServersController extends Controller
 				foreach($result['players'] as &$player)
 				{
 					if($player['time'] > 60)
-						$player['time'] = floor($player['time'] / 60) * 60;
+						$player['time'] = floor($player['time'] / 60) * 60; // Round off to minutes
 					
 					$player['time'] = Yii::app()->format->formatLength($player['time']);
 				}
@@ -396,7 +396,7 @@ class ServersController extends Controller
 			$results[] = $result;
 		}
 		
-		return empty($id)
+		return empty($id) || is_array($id)
 			? $results
 			: $results[0];
 	}
@@ -406,7 +406,7 @@ class ServersController extends Controller
 		if(empty($id))
 			$servers = SBServer::model()->findAll();
 		else if(is_array($id))
-			$servers = SBServer::model()->findByPk($id);
+			$servers = SBServer::model()->findAllByPk($id);
 		else
 			$servers = array(SBServer::model()->findByPk($id));
 		
@@ -435,7 +435,7 @@ class ServersController extends Controller
 			$results[] = $result;
 		}
 		
-		return empty($id)
+		return empty($id) || is_array($id)
 			? $results
 			: $results[0];
 	}

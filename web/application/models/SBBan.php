@@ -64,6 +64,12 @@ class SBBan extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function init()
+	{
+		$this->attachEventHandler('onAfterDelete', array($this, '_onAfterDelete'));
+		$this->attachEventHandler('onAfterSave',   array($this, '_onAfterSave'));
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -119,6 +125,7 @@ class SBBan extends CActiveRecord
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
 			'blocks' => array(self::HAS_MANY, 'SBBlock', 'ban_id'),
 			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::BAN_TYPE)),
+			'commentsCount' => array(self::STAT, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::BAN_TYPE)),
 			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::BAN_TYPE)),
 			'protests' => array(self::HAS_MANY, 'SBProtest', 'ban_id'),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
@@ -353,12 +360,12 @@ class SBBan extends CActiveRecord
 	}
 	
 	
-	public function onAfterDelete($event)
+	protected function _onAfterDelete($event)
 	{
 		SourceBans::app()->trigger('bans.deleteBan', $event);
 	}
 	
-	public function onAfterSave($event)
+	protected function _onAfterSave($event)
 	{
 		SourceBans::app()->trigger('bans.saveBan', $event);
 	}

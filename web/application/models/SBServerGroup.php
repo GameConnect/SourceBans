@@ -42,6 +42,12 @@ class SBServerGroup extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function init()
+	{
+		$this->attachEventHandler('onAfterDelete', array($this, '_onAfterDelete'));
+		$this->attachEventHandler('onAfterSave',   array($this, '_onAfterSave'));
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -131,12 +137,12 @@ class SBServerGroup extends CActiveRecord
 	}
 	
 	
-	public function onAfterDelete($event)
+	protected function _onAfterDelete($event)
 	{
 		SourceBans::app()->trigger('groups.deleteServerGroup', $event);
 	}
 	
-	public function onAfterSave($event)
+	protected function _onAfterSave($event)
 	{
 		SourceBans::app()->trigger('groups.saveServerGroup', $event);
 	}

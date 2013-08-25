@@ -44,6 +44,12 @@ class SBServer extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function init()
+	{
+		$this->attachEventHandler('onAfterDelete', array($this, '_onAfterDelete'));
+		$this->attachEventHandler('onAfterSave',   array($this, '_onAfterSave'));
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -199,12 +205,12 @@ class SBServer extends CActiveRecord
 	}
 	
 	
-	public function onAfterDelete($event)
+	protected function _onAfterDelete($event)
 	{
 		SourceBans::app()->trigger('servers.deleteServer', $event);
 	}
 	
-	public function onAfterSave($event)
+	protected function _onAfterSave($event)
 	{
 		SourceBans::app()->trigger('servers.saveServer', $event);
 	}

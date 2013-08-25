@@ -8,6 +8,7 @@ return CMap::mergeArray(
 		'name'=>'SourceBans',
 		'language'=>'en',
 		'sourceLanguage'=>'00',
+		'timeZone'=>'Europe/London',
 		
 		// preloading 'log' component
 		'preload'=>array('log'),

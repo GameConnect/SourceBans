@@ -330,11 +330,9 @@ class SourceBans extends CApplicationComponent
 		
 		// Set timezone
 		if(!Yii::app()->user->isGuest && !empty(Yii::app()->user->data->timezone))
-			date_default_timezone_set(Yii::app()->user->data->timezone);
+			Yii::app()->setTimeZone(Yii::app()->user->data->timezone);
 		else if(!empty(SourceBans::app()->settings->timezone))
-			date_default_timezone_set(SourceBans::app()->settings->timezone);
-		else
-			date_default_timezone_set('Europe/London');
+			Yii::app()->setTimeZone(SourceBans::app()->settings->timezone);
 		
 		// Set date/time format
 		if(!empty(SourceBans::app()->settings->date_format))

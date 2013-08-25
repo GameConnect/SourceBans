@@ -92,12 +92,13 @@ class SBComment extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'type' => Yii::t('sourcebans', 'Type'),
-			'ban_id' => Yii::t('sourcebans', 'Ban'),
+			'object_id' => 'Object',
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'message' => Yii::t('sourcebans', 'Message'),
 			'update_admin_id' => 'Edited by',
 			'update_time' => 'Edited on',
 			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
+			'admin.name' => Yii::t('sourcebans', 'Admin'),
 		);
 	}
 

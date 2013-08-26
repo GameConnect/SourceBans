@@ -59,18 +59,27 @@ class PluginsController extends Controller
 	public function actionInstall($id)
 	{
 		$plugin=$this->loadModel($id);
-		$result=$plugin->runInstall()!==false;
 		
-		if($result)
+		try
 		{
+			$plugin->runInstall();
 			$plugin->status=!$plugin->canDisable()
 				?SBPlugin::STATUS_ENABLED
 				:SBPlugin::STATUS_INSTALLED;
 			$plugin->save();
 			SourceBans::log('Plugin installed', 'Plugin "' . $plugin->name . '" was installed');
 		}
+		catch(Exception $e)
+		{
+			Yii::app()->end(CJSON::encode(array(
+				'error' => array(
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				),
+			)));
+		}
 		
-		Yii::app()->end(CJSON::encode($result));
+		Yii::app()->end(CJSON::encode(true));
 	}
 
 	public function actionSettings($id)
@@ -98,16 +107,25 @@ class PluginsController extends Controller
 	public function actionUninstall($id)
 	{
 		$plugin=$this->loadModel($id);
-		$result=$plugin->runUninstall()!==false;
 		
-		if($result)
+		try
 		{
+			$plugin->runUninstall();
 			$plugin->status=0;
 			$plugin->save();
 			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::WARNING_TYPE);
 		}
+		catch(Exception $e)
+		{
+			Yii::app()->end(CJSON::encode(array(
+				'error' => array(
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				),
+			)));
+		}
 		
-		Yii::app()->end(CJSON::encode($result));
+		Yii::app()->end(CJSON::encode(true));
 	}
 
 	/**

@@ -23,7 +23,7 @@
  * @property string $validation_key Validation key
  * @property integer $login_time Last login time
  * @property integer $create_time Date/Time
- * @property object $community Steam Community data
+ * @property SteamProfile $community Steam Community data
  * @property integer $communityId Steam Community ID
  * @property string $flags Server permissions
  * @property integer $immunity Immunity level
@@ -53,6 +53,10 @@ class SBAdmin extends CActiveRecord
 	 * @var integer Steam Community ID
 	 */
 	protected $admin_community_id;
+	
+	private $_community;
+	private $_flags;
+	private $_immunity;
 	
 	
 	public function __toString()
@@ -218,13 +222,12 @@ class SBAdmin extends CActiveRecord
 		if(empty($this->communityId))
 			return null;
 		
-		static $_data;
-		if(!isset($_data))
+		if(!isset($this->_community))
 		{
-			$_data = new SteamProfile($this-communityId);
+			$this->_community = new SteamProfile($this-communityId);
 		}
 		
-		return $_data;
+		return $this->_community;
 	}
 	
 	/**
@@ -244,17 +247,16 @@ class SBAdmin extends CActiveRecord
 	 */
 	public function getFlags()
 	{
-		static $flags;
-		if(!isset($flags))
+		if(!isset($this->_flags))
 		{
 			foreach($this->server_groups as $server_group)
 			{
-				$flags .= $server_group->flags;
+				$this->_flags .= $server_group->flags;
 			}
-			$flags = count_chars($flags, 3);
+			$this->_flags = count_chars($this->_flags, 3);
 		}
 		
-		return $flags;
+		return $this->_flags;
 	}
 	
 	/**
@@ -264,18 +266,17 @@ class SBAdmin extends CActiveRecord
 	 */
 	public function getImmunity()
 	{
-		static $immunity;
-		if(!isset($immunity))
+		if(!isset($this->_immunity))
 		{
-			$immunity = 0;
+			$this->_immunity = 0;
 			foreach($this->server_groups as $server_group)
 			{
-				if($server_group->immunity > $immunity)
-					$immunity = $server_group->immunity;
+				if($server_group->immunity > $this->_immunity)
+					$this->_immunity = $server_group->immunity;
 			}
 		}
 		
-		return $immunity;
+		return $this->_immunity;
 	}
 	
 	/**

@@ -36,7 +36,8 @@ class CommunityBansPlugin extends SBPlugin
 	public function runInstall()
 	{
 		// If Steam Web API Key is not set, disable installation
-		return !empty(SourceBans::app()->settings->steam_web_api_key);
+		if(empty(SourceBans::app()->settings->steam_web_api_key))
+			throw new CException(Yii::t('sourcebans', 'controllers.plugins.install.errors.steam_web_api_key'));
 	}
 	
 	

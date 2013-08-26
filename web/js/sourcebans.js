@@ -9,6 +9,13 @@
     return !!selector && this.filter(selector).length == this.length;
   };
   
+  $.alert = function(message, type) {
+    $('<div class="alert' + (type ? ' alert-' + type : '') + ' fade in">' + message + '</div>')
+      .prepend('<button type="button" class="close" data-dismiss="alert">&times;</button>')
+      .appendTo($('.page-alert').html(''))
+      .alert();
+  }
+  
   // Disable links with href ending with "#"
   $(document).on('click', 'a[href$="#"]', function(e) {
     e.preventDefault();

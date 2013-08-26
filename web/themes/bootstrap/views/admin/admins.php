@@ -220,8 +220,8 @@
 </script>
 
 <?php Yii::app()->clientScript->registerScript('admin_admins_createSections', '
-  var flags = ' . CJavaScript::encode(SourceBans::app()->flags) . ',
-      permissions = ' . CJavaScript::encode(SourceBans::app()->permissions) . ';
+  var flags = ' . CJavaScript::encode(SourceBans::app()->flags->toArray()) . ',
+      permissions = ' . CJavaScript::encode(SourceBans::app()->permissions->toArray()) . ';
   
   function createSections() {
     var nullDisplay = "' . addslashes($grid->nullDisplay) . '";

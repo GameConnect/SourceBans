@@ -128,7 +128,7 @@ CREATE TABLE {prefix}comments (
   object_type enum('B','P','S') NOT NULL,
   object_id mediumint(8) unsigned NOT NULL,
   admin_id smallint(5) unsigned NULL,
-  message varchar(255) NOT NULL,
+  message text NOT NULL,
   update_admin_id smallint(5) unsigned DEFAULT NULL,
   update_time int(10) unsigned DEFAULT NULL,
   create_time int(10) unsigned NOT NULL,

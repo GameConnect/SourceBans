@@ -54,24 +54,21 @@
 			'value'=>'!empty($data->url) ? CHtml::link(CHtml::encode($data->author), $data->url, array("target"=>"_blank")) : CHtml::encode($data->author)',
 		),
 		array(
-			'header'=>false,
-			'headerHtmlOptions'=>array(
-				'class'=>'nowrap text-right',
+			'class'=>'CButtonColumn',
+			'buttons'=>array(
+				'settings'=>array(
+					'imageUrl'=>false,
+					'label'=>Yii::t('sourcebans', 'views.admin.settings.plugins.grid.settings'),
+					'url'=>'Yii::app()->createUrl("plugins/settings", array("id" => $data->id))',
+					'visible'=>'$data->status && $data->getViewFile("settings")',
+				),
 			),
-			'htmlOptions'=>array(
-				'class'=>'nowrap text-right',
-			),
-			'name'=>'settings',
-			'type'=>'raw',
-			'value'=>'$data->status && $data->getViewFile("settings") ? CHtml::link(Yii::t("sourcebans", "views.admin.settings.plugins.grid.settings"), array("plugins/settings", "id"=>$data->id)) : ""',
+			'template'=>'{settings}',
 		),
 		array(
 			'header'=>false,
-			'headerHtmlOptions'=>array(
-				'class'=>'nowrap text-right',
-			),
 			'htmlOptions'=>array(
-				'class'=>'nowrap text-right',
+				'class'=>'nowrap',
 			),
 			'name'=>'status',
 			'type'=>'raw',
@@ -152,10 +149,13 @@
     $.post("' . $this->createUrl('plugins/__ACTION__', array('id' => '__ID__')) . '".replace(/__(\w+)__/g, function(str, key) {
       return data[key.toLowerCase()] || str;
     }), function(result) {
-      if(!result)
+      if(result.error)
+      {
+        $.alert(result.error.message, "error");
         return;
+      }
       
-      $.fn.yiiGridView.update("plugins-grid");
-    });
+      $("#plugins-grid").yiiGridView("update");
+    }, "json");
   });
 ') ?>

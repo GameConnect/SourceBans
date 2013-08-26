@@ -28,6 +28,10 @@
  */
 class SBServer extends CActiveRecord
 {
+	private $_query;
+	private $_rcon;
+	
+	
 	public function __toString()
 	{
 		return $this->address;
@@ -218,25 +222,23 @@ class SBServer extends CActiveRecord
 	
 	private function _getQuery()
 	{
-		static $_query;
-		if(!isset($_query))
+		if(!isset($this->_query))
 		{
-			$_query = new ServerQuery($this->ip, $this->port);
+			$this->_query = new ServerQuery($this->ip, $this->port);
 		}
 		
-		return $_query;
+		return $this->_query;
 	}
 	
 	private function _getRcon()
 	{
-		static $_rcon;
-		if(!isset($_rcon))
+		if(!isset($this->_rcon))
 		{
-			$_rcon = new ServerRcon($this->ip, $this->port, $this->rcon);
-			if(!$_rcon->auth())
+			$this->_rcon = new ServerRcon($this->ip, $this->port, $this->rcon);
+			if(!$this->_rcon->auth())
 				return false;
 		}
 		
-		return $_rcon;
+		return $this->_rcon;
 	}
 }

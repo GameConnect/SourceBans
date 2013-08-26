@@ -101,10 +101,7 @@ class BansController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('site/bans')),
 		);
 		
-		$groups = CHtml::listData($model->admin->server_groups, 'id', 'name');
-		if(!Yii::app()->user->data->hasPermission('EDIT_ALL_BANS')
-		   && (Yii::app()->user->data->hasPermission('EDIT_GROUP_BANS') && !Yii::app()->user->data->hasGroup($groups))
-		   && (Yii::app()->user->data->hasPermission('EDIT_OWN_BANS') && Yii::app()->user->id != $model->admin_id))
+		if(!$this->canUpdate('EDIT', $model))
 			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 
 		// Uncomment the following line if AJAX validation is needed
@@ -152,10 +149,7 @@ class BansController extends Controller
 		$reason=Yii::app()->request->getPost('reason');
 		$model=$this->loadModel($id);
 		
-		$groups = CHtml::listData($model->admin->server_groups, 'id', 'name');
-		if(!Yii::app()->user->data->hasPermission('UNBAN_ALL_BANS')
-		   && (Yii::app()->user->data->hasPermission('UNBAN_GROUP_BANS') && !Yii::app()->user->data->hasGroup($groups))
-		   && (Yii::app()->user->data->hasPermission('UNBAN_OWN_BANS') && Yii::app()->user->id) != $model->admin_id)
+		if(!$this->canUpdate('UNBAN', $model))
 			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 		
 		SourceBans::log('Ban unbanned', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was unbanned');
@@ -245,6 +239,21 @@ class BansController extends Controller
 			printf("ban%s 0 %s\n", $type == SBBan::IP_TYPE ? 'ip' : 'id', $type == SBBan::IP_TYPE ? $ban->ip : $ban->steam);
 	}
 
+	public function canUpdate($type, $model)
+	{
+		if(Yii::app()->user->data->hasPermission($type . '_ALL_BANS'))
+			return true;
+		
+		if(Yii::app()->user->data->hasPermission($type . '_GROUP_BANS') && isset($model->admin))
+		{
+			$groups = CHtml::listData($model->admin->server_groups, 'id', 'name');
+			if(Yii::app()->user->data->hasGroup($groups))
+				return true;
+		}
+		
+		return Yii::app()->user->data->hasPermission($type . '_OWN_BANS') && Yii::app()->user->id == $model->admin_id;
+	}
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -254,7 +263,7 @@ class BansController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=SBBan::model()->findByPk($id);
+		$model=SBBan::model()->with('admin')->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;

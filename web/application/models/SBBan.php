@@ -22,7 +22,7 @@
  * @property string $unban_reason Unban reason
  * @property integer $unban_time Unbanned on
  * @property integer $create_time Date/Time
- * @property object $community Steam Community data
+ * @property SteamProfile $community Steam Community data
  * @property integer $communityId Steam Community ID
  * @property object $country Country data
  * @property boolean $isActive Whether the ban is active
@@ -52,6 +52,8 @@ class SBBan extends CActiveRecord
 	 * @var integer Steam Community ID
 	 */
 	protected $ban_community_id;
+	
+	private $_community;
 	
 	
 	/**
@@ -259,13 +261,12 @@ class SBBan extends CActiveRecord
 		if(empty($this->communityId))
 			return null;
 		
-		static $_data;
-		if(!isset($_data))
+		if(!isset($this->_community))
 		{
-			$_data = new SteamProfile($this->communityId);
+			$this->_community = new SteamProfile($this->communityId);
 		}
 		
-		return $_data;
+		return $this->_community;
 	}
 	
 	/**

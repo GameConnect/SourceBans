@@ -94,7 +94,7 @@
               <span class="btn btn-file">
                 <span class="fileupload-new"><?php echo Yii::t('sourcebans', 'Select') ?></span>
                 <span class="fileupload-exists"><?php echo Yii::t('sourcebans', 'Change') ?></span>
-                <?php echo CHtml::fileField('SBDemo[filename]') ?>
+                <?php echo $form->fileField($model->demo,'filename') ?>
               </span>
               <a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><?php echo Yii::t('sourcebans', 'Remove') ?></a>
             </div>

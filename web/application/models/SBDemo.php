@@ -85,8 +85,8 @@ class SBDemo extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'object_id' => Yii::t('sourcebans', 'Object'),
 			'object_type' => Yii::t('sourcebans', 'Type'),
+			'object_id' => 'Object',
 			'filename' => Yii::t('sourcebans', 'Filename'),
 		);
 	}
@@ -102,9 +102,9 @@ class SBDemo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.id',$this->id,true);
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.object_type',$this->object_type);
 		$criteria->compare('t.object_id',$this->object_id);
-		$criteria->compare('t.object_type',$this->object_type,true);
 		$criteria->compare('t.filename',$this->filename,true);
 
 		return new CActiveDataProvider($this, array(
@@ -116,12 +116,18 @@ class SBDemo extends CActiveRecord
 	protected function afterSave()
 	{
 		// Save file
-		$file = CUploadedFile::getInstance($this, 'filename');
-		if(!empty($file))
+		if($this->filename instanceof CUploadedFile)
 		{
-			$file->saveAs(Yii::getPathOfAlias('webroot.demos') . '/' . $file);
+			$this->filename->saveAs(Yii::getPathOfAlias('webroot.demos') . '/' . $this->filename);
 		}
 		
 		parent::afterSave();
+	}
+	
+	protected function beforeValidate()
+	{
+		$this->filename = CUploadedFile::getInstance($this, 'filename');
+		
+		return parent::beforeValidate();
 	}
 }

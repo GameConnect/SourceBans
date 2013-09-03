@@ -73,7 +73,7 @@ return array(
 	'Error' => 'Error',
 	'Execute' => 'Execute',
 	'Expired' => '@@Expired@@',
-	'Expires on' => '@@Expires on@@',
+	'Expires on' => 'Expires on',
 	'Export permanent IP address bans' => 'Export permanent IP address bans',
 	'Export permanent Steam ID bans' => 'Export permanent Steam ID bans',
 	'File' => 'File',

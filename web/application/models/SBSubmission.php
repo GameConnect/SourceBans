@@ -40,6 +40,14 @@ class SBSubmission extends CActiveRecord
 		return parent::model($className);
 	}
 
+	public function init()
+	{
+		if($this->isNewRecord)
+		{
+			$this->demo = new SBDemo;
+		}
+	}
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -171,6 +179,19 @@ class SBSubmission extends CActiveRecord
 				'updateAttribute' => null,
 			),
 		);
+	}
+	
+	
+	protected function afterSave()
+	{
+		if($this->demo instanceof SBDemo)
+		{
+			$this->demo->object_type = SBDemo::SUBMISSION_TYPE;
+			$this->demo->object_id = $this->id;
+			$this->demo->save();
+		}
+		
+		parent::afterSave();
 	}
 	
 	protected function beforeSave()

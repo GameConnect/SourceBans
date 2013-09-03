@@ -44,14 +44,14 @@ class MapImageForm extends CFormModel
 	 */
 	public function save()
 	{
-		$file = CUploadedFile::getInstance($this, 'filename');
-		if(empty($file))
+		$this->filename = CUploadedFile::getInstance($this, 'filename');
+		if(!$this->validate())
 			return false;
 		
 		$game = SBGame::model()->findByPk($this->game_id);
 		if($game === null)
 			return false;
 		
-		return $file->saveAs(Yii::getPathOfAlias('images.maps') . '/' . $game->folder . '/' . $file);
+		return $this->filename->saveAs(Yii::getPathOfAlias('images.maps') . '/' . $game->folder . '/' . $this->filename);
 	}
 }

@@ -139,12 +139,18 @@ class SBGame extends CActiveRecord
 	protected function afterSave()
 	{
 		// Save icon
-		$icon = CUploadedFile::getInstance($this, 'icon');
-		if(!empty($icon))
+		if($this->icon instanceof CUploadedFile)
 		{
-			$icon->saveAs(Yii::getPathOfAlias('webroot.images.games') . '/' . $icon);
+			$this->icon->saveAs(Yii::getPathOfAlias('webroot.images.games') . '/' . $this->icon);
 		}
 		
 		parent::afterSave();
+	}
+	
+	protected function beforeValidate()
+	{
+		$this->icon = CUploadedFile::getInstance($this, 'icon');
+		
+		return parent::beforeValidate();
 	}
 }

@@ -72,7 +72,7 @@ return array(
 	'Error' => 'Chyba',
 	'Execute' => '',
 	'Expired' => '@@Vypršel@@',
-	'Expires on' => '@@Vyprší dne@@',
+	'Expires on' => 'Vyprší dne',
 	'Export permanent IP address bans' => '',
 	'Export permanent Steam ID bans' => '',
 	'File' => 'Soubor',

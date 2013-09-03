@@ -77,6 +77,7 @@ return CMap::mergeArray(
 		// application-level parameters that can be accessed
 		// using Yii::app()->params['paramName']
 		'params'=>array(
+			'consoleName'=>'CONSOLE',
 			'titleSeparator'=>' « ',
 		),
 	),

@@ -159,6 +159,7 @@
 				'class'=>'nowrap',
 			),
 			'name'=>'admin.name',
+			'value'=>'isset($data->admin) ? $data->admin->name : Yii::app()->params["consoleName"]',
 		),
 		array(
 			'headerHtmlOptions'=>array(
@@ -173,6 +174,7 @@
 	),
 	'cssFile'=>false,
 	'itemsCssClass'=>'items table table-accordion table-condensed table-hover',
+	'nullDisplay'=>CHtml::tag('span',array('class'=>'null'),Yii::t('sourcebans', 'None')),
 	'pager'=>array(
 		'class'=>'bootstrap.widgets.TbPager',
 	),

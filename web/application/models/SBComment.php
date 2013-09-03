@@ -60,8 +60,7 @@ class SBComment extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('message', 'required'),
-			array('message', 'length', 'max'=>255),
+			array('object_type, object_id, message', 'required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, object_type, object_id, admin_id, message, update_admin_id, update_time, create_time', 'safe', 'on'=>'search'),
@@ -91,7 +90,7 @@ class SBComment extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'type' => Yii::t('sourcebans', 'Type'),
+			'object_type' => Yii::t('sourcebans', 'Type'),
 			'object_id' => 'Object',
 			'admin_id' => Yii::t('sourcebans', 'Admin'),
 			'message' => Yii::t('sourcebans', 'Message'),
@@ -140,5 +139,18 @@ class SBComment extends CActiveRecord
 				'class'=>'zii.behaviors.CTimestampBehavior',
 			),
 		);
+	}
+	
+	protected function beforeSave()
+	{
+		if($this->isNewRecord)
+		{
+			if(!Yii::app()->user->isGuest)
+			{
+				$this->admin_id = Yii::app()->user->id;
+			}
+		}
+		
+		return parent::beforeSave();
 	}
 }

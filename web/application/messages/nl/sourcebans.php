@@ -73,7 +73,7 @@ return array(
 	'Error' => 'Foutmelding',
 	'Execute' => 'Uitvoeren',
 	'Expired' => '@@Verlopen@@',
-	'Expires on' => '@@Vervalt op@@',
+	'Expires on' => 'Vervalt op',
 	'Export permanent IP address bans' => 'Exporteer permanente IP adres bans',
 	'Export permanent Steam ID bans' => 'Exporteer permanente Steam ID bans',
 	'File' => 'Bestand',

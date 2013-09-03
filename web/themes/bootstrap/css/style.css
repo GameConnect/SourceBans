@@ -155,11 +155,6 @@ textarea {
   overflow: visible;
   padding: 0;
 }
-#flash-alert {
-  border-radius: 0;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-}
 #bans-grid tr.expired td.length,
 #bans-grid tr.unbanned td.length {
   background-color: #dbf4d7;
@@ -177,12 +172,25 @@ textarea {
 #bans-grid tr.section > td > div table {
   width: 570px;
 }
+#bans-grid tr.section > td > div table th {
+  white-space: nowrap;
+  width: 150px;
+}
 #bans-grid tr.section > td > div .ban-menu ul {
-  margin-bottom: 0;
   width: 200px;
 }
 #servers-grid tr.section > td > div .map-image {
   margin-bottom: 10px;
+}
+#comments-dialog .list-view {
+  padding-top: 0;
+}
+#comments-dialog .list-view .media-heading {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2px;
+}
+#comments-dialog #comment-form {
+  margin-bottom: 0;
 }
 
 .table-accordion tbody tr.header {
@@ -208,7 +216,6 @@ textarea {
 
 td.button-column img {
   max-width: none;
-  vertical-align: text-bottom;
   width: 16px;
 }
 td.nowrap,
@@ -243,9 +250,6 @@ td.icon,
 th.icon {
   text-align: center !important;
   width: 16px;
-}
-td.icon img {
-  vertical-align: text-bottom;
 }
 th.SBGame_folder {
   width: 20%;

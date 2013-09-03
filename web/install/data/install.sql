@@ -125,7 +125,7 @@ CREATE TABLE {prefix}blocks (
 
 CREATE TABLE {prefix}comments (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  object_type enum('B','P','S') NOT NULL,
+  object_type varchar(1) NOT NULL,
   object_id mediumint(8) unsigned NOT NULL,
   admin_id smallint(5) unsigned NULL,
   message text NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE {prefix}comments (
   create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY admin_id (admin_id),
-  KEY object_id (object_id),
+  KEY object (object_type,object_id),
   KEY update_admin_id (update_admin_id),
   CONSTRAINT comment_admin FOREIGN KEY (admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL,
   CONSTRAINT comment_update_admin FOREIGN KEY (update_admin_id) REFERENCES {prefix}admins (id) ON DELETE SET NULL
@@ -148,11 +148,11 @@ CREATE TABLE {prefix}comments (
 
 CREATE TABLE {prefix}demos (
   id int(10) unsigned NOT NULL AUTO_INCREMENT,
-  object_type enum('B','S') NOT NULL,
+  object_type varchar(1) NOT NULL,
   object_id mediumint(8) unsigned NOT NULL,
   filename varchar(255) NOT NULL,
   PRIMARY KEY (id),
-  KEY object (object_id,object_type) USING BTREE
+  KEY object (object_type,object_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -180,7 +180,7 @@ CREATE TABLE {prefix}group_permissions (
   group_id tinyint(3) unsigned NOT NULL,
   name varchar(32) NOT NULL,
   PRIMARY KEY (group_id,name),
-  KEY group_id (group_id) USING BTREE,
+  KEY group_id (group_id),
   CONSTRAINT permission_group FOREIGN KEY (group_id) REFERENCES {prefix}groups (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -323,7 +323,7 @@ CREATE TABLE {prefix}servers (
   game_id tinyint(3) unsigned NULL,
   enabled tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (id),
-  KEY game_id (game_id) USING BTREE,
+  KEY game_id (game_id),
   CONSTRAINT server_game FOREIGN KEY (game_id) REFERENCES {prefix}games (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

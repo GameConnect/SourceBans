@@ -156,6 +156,7 @@ class SBBan extends CActiveRecord
 			'unban_time' => 'Unbanned on',
 			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 			'communityId' => Yii::t('sourcebans', 'Steam Community ID'),
+			'admin.name' => Yii::t('sourcebans', 'Admin'),
 			'demo.filename' => Yii::t('sourcebans', 'Demo'),
 		);
 	}

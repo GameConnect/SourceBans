@@ -1,6 +1,8 @@
 <?php
 /* @var $this SiteController */
+/* @var $ban SBBan */
 /* @var $bans SBBan */
+/* @var $comment SBComment */
 /* @var $hideInactive string */
 /* @var $search string */
 /* @var $total_bans integer */
@@ -26,7 +28,7 @@
 	'dataProvider'=>$bans->search(array(
 		'scopes' => $hideInactive ? 'active' : null,
 		'search' => $search,
-		'with' => array('admin', 'server', 'server.game'),
+		'with' => array('admin', 'commentsCount', 'server', 'server.game'),
 	)),
 	'columns'=>array(
 		array(
@@ -57,7 +59,6 @@
 		),
 		'name',
 		array(
-			'header'=>Yii::t('sourcebans', 'Admin'),
 			'headerHtmlOptions'=>array(
 				'class'=>'SBAdmin_name span3',
 			),
@@ -65,7 +66,7 @@
 				'class'=>'SBAdmin_name span3',
 			),
 			'name'=>'admin.name',
-			'value'=>'isset($data->admin) ? $data->admin->name : "CONSOLE"',
+			'value'=>'isset($data->admin) ? $data->admin->name : Yii::app()->params["consoleName"]',
 			'visible'=>!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_admin),
 		),
 		array(
@@ -94,11 +95,13 @@
 		"data-steam"=>$data->steam,
 		"data-ip"=>$data->ip,
 		"data-datetime"=>Yii::app()->format->formatDatetime($data->create_time),
+		"data-datetime-expired"=>$data->isPermanent ? null : Yii::app()->format->formatDatetime($data->create_time+$data->length*60),
 		"data-length"=>$data->isPermanent ? Yii::t("sourcebans", "Permanent") : Yii::app()->format->formatLength($data->length*60),
 		"data-reason"=>$data->reason,
-		"data-admin-name"=>isset($data->admin) ? $data->admin->name : "CONSOLE",
+		"data-admin-name"=>isset($data->admin) ? $data->admin->name : Yii::app()->params["consoleName"],
 		"data-server-id"=>$data->server_id,
 		"data-community-id"=>$data->communityId,
+		"data-comments-count"=>$data->commentsCount,
 	)',
 	'selectableRows'=>0,
 	'summaryText'=>$summaryText,
@@ -109,11 +112,11 @@
   <table class="table table-condensed pull-left">
     <tbody>
       <tr>
-        <th style="white-space: nowrap; width: 150px;"><?php echo Yii::t('sourcebans', 'Name') ?></th>
+        <th><?php echo $ban->getAttributeLabel('name') ?></th>
         <td><%=header.data("name") || nullDisplay %></td>
       </tr>
       <tr>
-        <th>Steam ID</th>
+        <th><?php echo $ban->getAttributeLabel('steam') ?></th>
         <td>
           <%=header.data("steam") || nullDisplay %>
 <% if(header.data("communityId")) { %>
@@ -125,7 +128,7 @@
       </tr>
 <?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_ip)): ?>
       <tr>
-        <th><?php echo Yii::t('sourcebans', 'IP address') ?></th>
+        <th><?php echo $ban->getAttributeLabel('ip') ?></th>
         <td><%=header.data("ip") || nullDisplay %></td>
       </tr>
 <?php endif ?>
@@ -133,23 +136,29 @@
         <th><?php echo Yii::t('sourcebans', 'Invoked on') ?></th>
         <td><%=header.data("datetime") %></td>
       </tr>
+<% if(header.data("datetimeExpired")) { %>
       <tr>
-        <th><?php echo Yii::t('sourcebans', 'Length') ?></th>
+        <th><?php echo Yii::t('sourcebans', 'Expires on') ?></th>
+        <td><%=header.data("datetimeExpired") %></td>
+      </tr>
+<% } %>
+      <tr>
+        <th><?php echo $ban->getAttributeLabel('length') ?></th>
         <td><%=header.data("length") %></td>
       </tr>
       <tr>
-        <th><?php echo Yii::t('sourcebans', 'Reason') ?></th>
+        <th><?php echo $ban->getAttributeLabel('reason') ?></th>
         <td><%=header.data("reason") || nullDisplay %></td>
       </tr>
-      <tr>
 <?php if(!(Yii::app()->user->isGuest && SourceBans::app()->settings->bans_hide_admin)): ?>
-        <th><?php echo Yii::t('sourcebans', 'Admin') ?></th>
+      <tr>
+        <th><?php echo $ban->getAttributeLabel('admin.name') ?></th>
         <td><%=header.data("adminName") %></td>
       </tr>
 <?php endif ?>
 <% if(header.data("serverId")) { %>
       <tr>
-        <th><?php echo Yii::t('sourcebans', 'Server') ?></th>
+        <th><?php echo $ban->getAttributeLabel('server_id') ?></th>
         <td class="ServerQuery_hostname"><?php echo Yii::t('sourcebans', 'components.ServerQuery.loading') ?></td>
       </tr>
 <% } %>
@@ -174,6 +183,12 @@
 			'url' => array('bans/delete', 'id'=>'__ID__'),
 			'itemOptions' => array('class' => 'ban-menu-delete'),
 			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('DELETE_BANS'),
+		),
+		array(
+			'label' => Yii::t('sourcebans', 'Comments'),
+			'url' => array('comments/index', 'object_type'=>SBComment::BAN_TYPE, 'object_id'=>'__ID__'),
+			'itemOptions' => array('class' => 'ban-menu-comments'),
+			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS'),
 		),
 	), $this->menu),
 	'htmlOptions' => array(
@@ -210,6 +225,7 @@
     
     $header.addClass("selected");
     $section.slideDown(200, "linear");
+    $("#SBComment_object_id").val(id);
   });
   
   $(document).on("click.yiiGridView", "#bans-grid tr.header", function(e) {
@@ -241,6 +257,7 @@
       else {
         $section.find(".ban-menu-unban a").prop("rel", $(header).data("key"));
       }
+      $section.find(".ban-menu-comments a").append(" (" + $(header).data("commentsCount") + ")");
     });
     
     updateSections();
@@ -289,3 +306,47 @@
     updateSections();
   });
 ') ?>
+
+<?php if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS')): ?>
+<div aria-hidden="true" class="modal fade hide" id="comments-dialog" role="dialog">
+  <div class="modal-header">
+    <button aria-hidden="true" class="close" data-dismiss="modal" type="button">&times;</button>
+    <h3><?php echo Yii::t('sourcebans', 'Comments') ?></h3>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+<?php $this->renderPartial('/comments/_form', array('model' => $comment)) ?>
+
+  </div>
+</div>
+
+<?php Yii::app()->clientScript->registerScript('site_bans_commentsDialog', '
+  $(document).on("click", ".ban-menu-comments a", function(e) {
+    e.preventDefault();
+    $("#comments-dialog .modal-body").load($(this).attr("href"), function(data) {
+      this.scrollTop = this.scrollHeight - $(this).height();
+      tinyMCE.execCommand("mceFocus", false, "SBComment_message");
+      
+      $("#comments-dialog").modal({
+        backdrop: "static"
+      });
+    });
+  });
+  $("#comment-form").submit(function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    
+    $.post($this.attr("action"), $this.serialize(), function(result) {
+      if(!result)
+        return;
+      
+      $this.find(":submit").attr("disabled", true);
+      tinyMCE.activeEditor.setContent("");
+      
+      $("#bans-grid tr.selected").next("tr.section").find(".ban-menu-comments a").trigger("click");
+      $("#' . $grid->id . '").yiiGridView("update");
+    }, "json");
+  });
+') ?>
+<?php endif ?>

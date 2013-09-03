@@ -125,13 +125,20 @@ class SiteController extends Controller
 		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
 		$search = Yii::app()->request->getQuery('q');
 		
+		$ban = new SBBan;
+		
 		$bans = new SBBan('search');
 		$bans->unsetAttributes();  // clear any default values
 		if(isset($_GET['SBBan']))
 			$bans->attributes=$_GET['SBBan'];
 		
+		$comment = new SBComment;
+		$comment->object_type = SBComment::BAN_TYPE;
+		
 		$this->render('bans', array(
+			'ban' => $ban,
 			'bans' => $bans,
+			'comment' => $comment,
 			'hideInactive' => $hideInactive,
 			'search' => $search,
 			'total_bans' => SBBan::model()->count(array(

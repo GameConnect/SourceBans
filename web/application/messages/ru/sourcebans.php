@@ -72,7 +72,7 @@ return array(
 	'Error' => 'Ошибка',
 	'Execute' => 'Выполнить',
 	'Expired' => '@@Истекло@@',
-	'Expires on' => '@@Истекает@@',
+	'Expires on' => 'Истекает',
 	'Export permanent IP address bans' => 'Экспорт постоянных банов по IP',
 	'Export permanent Steam ID bans' => 'Экспорт постоянных банов по SteamID',
 	'File' => 'Файл',

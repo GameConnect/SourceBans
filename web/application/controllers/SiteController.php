@@ -180,7 +180,6 @@ class SiteController extends Controller
 		
 		$model = new SBSubmission;
 		$model->steam = 'STEAM_';
-		$model->demo = new SBDemo;
 		
 		// if it is ajax validation request
 		if(isset($_POST['ajax']) && $_POST['ajax']==='submitban-form')
@@ -193,7 +192,12 @@ class SiteController extends Controller
 		{
 			$model->attributes=$_POST['SBSubmission'];
 			if($model->save())
-				$this->redirect(array('site/index'));
+			{
+				SourceBans::log('Ban submission added', 'Ban against "' . $model->name . '" was submitted');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
+				$this->refresh();
+			}
 		}
 		
 		$games = SBGame::model()->with('servers:enabled')->findAll(array(
@@ -233,7 +237,12 @@ class SiteController extends Controller
 		{
 			$model->attributes=$_POST['SBProtest'];
 			if($model->save())
-				$this->redirect(array('site/index'));
+			{
+				SourceBans::log('Ban protest added', 'Ban against "' . $model->user_email . '" was protested');
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
+				$this->refresh();
+			}
 		}
 		
 		$this->render('protestban', array(

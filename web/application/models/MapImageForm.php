@@ -52,6 +52,6 @@ class MapImageForm extends CFormModel
 		if($game === null)
 			return false;
 		
-		return $this->filename->saveAs(Yii::getPathOfAlias('images.maps') . '/' . $game->folder . '/' . $this->filename);
+		return $this->filename->saveAs(Yii::getPathOfAlias('webroot.images.maps') . '/' . $game->folder . '/' . $this->filename);
 	}
 }

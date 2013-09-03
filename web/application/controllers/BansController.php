@@ -72,6 +72,11 @@ class BansController extends Controller
 			$model->attributes=$_POST['SBBan'];
 			if($model->save())
 			{
+				$demo=new SBDemo;
+				$demo->object_type=SBDemo::BAN_TYPE;
+				$demo->object_id=$model->id;
+				$demo->save();
+				
 				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				

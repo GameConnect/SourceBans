@@ -15,6 +15,7 @@
 	'errorMessageCssClass'=>'help-inline',
 	'htmlOptions'=>array(
 		'class'=>'form-horizontal',
+		'enctype'=>'multipart/form-data',
 	),
 )) ?>
 

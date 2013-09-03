@@ -68,6 +68,26 @@
     </div>
   </div>
 
+<?php if($model->isNewRecord): ?>
+  <div class="control-group">
+    <?php echo CHtml::label($model->getAttributeLabel('demo.filename'),'SBDemo_filename',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <div class="fileupload fileupload-new" data-provides="fileupload">
+        <div class="input-append">
+          <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
+          <span class="btn btn-file">
+            <span class="fileupload-new"><?php echo Yii::t('sourcebans', 'Select') ?></span>
+            <span class="fileupload-exists"><?php echo Yii::t('sourcebans', 'Change') ?></span>
+            <?php echo $form->fileField($demo,'filename') ?>
+          </span>
+          <a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><?php echo Yii::t('sourcebans', 'Remove') ?></a>
+        </div>
+      </div>
+      <?php echo $form->error($demo,'filename',null,true,false); ?>
+    </div>
+  </div>
+<?php endif ?>
+
   <div class="control-group buttons">
     <div class="controls">
       <?php echo CHtml::submitButton(Yii::t('sourcebans', 'Save'),array('class' => 'btn')); ?>

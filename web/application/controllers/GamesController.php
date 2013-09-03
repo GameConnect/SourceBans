@@ -140,7 +140,11 @@ class GamesController extends Controller
 		{
 			$model->attributes=$_POST['MapImageForm'];
 			if($model->save())
+			{
+				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
+				
 				$this->redirect(array('admin/games','#'=>'map-image'));
+			}
 		}
 	}
 

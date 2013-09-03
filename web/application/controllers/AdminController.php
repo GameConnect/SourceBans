@@ -170,6 +170,7 @@ class AdminController extends Controller
 		);
 		
 		$ban=new SBBan;
+		$demo=new SBDemo;
 		
 		$protests=new SBProtest('search');
 		$protests->unsetAttributes();  // clear any default values
@@ -179,6 +180,7 @@ class AdminController extends Controller
 		
 		$this->render('bans',array(
 			'ban'=>$ban,
+			'demo'=>$demo,
 			'protests'=>$protests,
 			'submissions'=>$submissions,
 		));

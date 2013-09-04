@@ -48,14 +48,25 @@ class Helpers
 	/**
 	 * Converts a Steam ID to a Community ID
 	 *
-	 * @param string $steam the Steam ID
-	 * @return string the Community ID
+	 * @param mixed $steam the Steam ID
+	 * @return mixed the Community ID
 	 */
 	public static function getCommunityId($steam)
 	{
-		return Yii::app()->db
-			->createCommand('SELECT 76561197960265728 + CAST(MID(:id, 9, 1) AS UNSIGNED) + CAST(MID(:id, 11) * 2 AS UNSIGNED)')
-			->queryScalar(array(':id' => $steam));
+		$params = $select = array();
+		foreach((array)$steam as $i => $id)
+		{
+			$params[':id'.$i] = $id;
+			$select[] = '76561197960265728 + CAST(MID(:id'.$i.', 9, 1) AS UNSIGNED) + CAST(MID(:id'.$i.', 11) * 2 AS UNSIGNED)';
+		}
+		
+		$command = Yii::app()->db->createCommand();
+		$command->select($select);
+		$results = $command->queryRow(false, $params);
+		
+		return is_array($steam)
+			? $results
+			: $results[0];
 	}
 	
 	
@@ -105,14 +116,25 @@ class Helpers
 	/**
 	 * Converts a Community ID to a Steam ID
 	 *
-	 * @param string $community_id the Community ID
-	 * @return string the Steam ID
+	 * @param mixed $community_id the Community ID
+	 * @return mixed the Steam ID
 	 */
 	public static function getSteamId($community_id)
 	{
-		return Yii::app()->db
-			->createCommand('SELECT CONCAT("STEAM_0:", (CAST(:id AS UNSIGNED) - 76561197960265728) % 2, ":", CAST(((CAST(:id AS UNSIGNED) - 76561197960265728) - ((CAST(:id AS UNSIGNED) - 76561197960265728) % 2)) / 2 AS UNSIGNED))')
-			->queryScalar(array(':id' => $community_id));
+		$params = $select = array();
+		foreach((array)$community_id as $i => $id)
+		{
+			$params[':id'.$i] = $id;
+			$select[] = 'CONCAT("STEAM_0:", (CAST(:id'.$i.' AS UNSIGNED) - 76561197960265728) % 2, ":", CAST(((CAST(:id'.$i.' AS UNSIGNED) - 76561197960265728) - ((CAST(:id'.$i.' AS UNSIGNED) - 76561197960265728) % 2)) / 2 AS UNSIGNED))';
+		}
+		
+		$command = Yii::app()->db->createCommand();
+		$command->select($select);
+		$results = $command->queryRow(false, $params);
+		
+		return is_array($community_id)
+			? $results
+			: $results[0];
 	}
 	
 	

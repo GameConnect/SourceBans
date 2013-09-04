@@ -310,8 +310,8 @@ UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING AND TO THE FULLEST
         </div>
       </div>
       <div class="buttons">
-        <input id="back" type="button" value="&lt;&lt; Back" />
-        <input id="next" type="button" value="Next &gt;&gt;" />
+        <input id="back" type="button" value="« Back" />
+        <input id="next" type="button" value="Next »" />
       </div>
 <?php if(false): ?>
       <div class="languages">
@@ -325,6 +325,28 @@ UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING AND TO THE FULLEST
     <script type="text/javascript">
       var step = 1;
       
+      function nextStep() {
+      	$('.steps').animate({
+          'margin-left': '-=714px'
+        }, 250);
+        $('#back').prop('disabled', false);
+        
+        if(!$('#step-' + (++step + 1)).length) {
+          $('#next').prop('disabled', true);
+        }
+        if(step == 4) {
+          $('#next').val('Finish');
+        }
+<?php if(version_compare(PHP_VERSION, PHP_VERSION_REQ, '<') || version_compare(MYSQL_VERSION, MYSQL_VERSION_REQ, '<')
+       || !FILE_UPLOADS || REGISTER_GLOBALS || SAFE_MODE
+       || !WRITABLE_ASSETS || !WRITABLE_CONFIG || !WRITABLE_DEMOS
+       || !WRITABLE_GAMES || !WRITABLE_MAPS || !WRITABLE_RUNTIME): ?>
+        if(step == 2) {
+          $('#next').prop('disabled', true);
+        }
+<?php endif ?>
+      }
+      
       $(function() {
         $('#back').click(function() {
           $('.steps').animate({
@@ -333,45 +355,32 @@ UNLESS OTHERWISE MUTUALLY AGREED TO BY THE PARTIES IN WRITING AND TO THE FULLEST
           $('#next').prop('disabled', false);
           
           if(!$('#step-' + (--step - 1)).length) {
-            $(this).prop('disabled',    true);
+            $(this).prop('disabled', true);
           }
           if(step != 4) {
             $('#next').val('Next >>');
           }
         }).prop('disabled', true);
         $('#next').click(function() {
-          if($(this).val() == 'Finish')
-          {
-            $.post("ajax.php", $("#database-form").serialize() + '&' + $("#admin-form").serialize(), function(data) {
-              console.log(data);
-            });
+          if($(this).val() == 'Finish') {
+            $.post('ajax.php', $('#database-form').serialize() + '&' + $('#admin-form').serialize(), function(result) {
+              if(result.error) {
+                alert(result.error);
+              }
+              else {
+                nextStep();
+              }
+            }, 'json');
           }
-          
-          $('.steps').animate({
-            'margin-left': '-=714px'
-          }, 250);
-          $('#back').prop('disabled', false);
-          
-          if(!$('#step-' + (++step + 1)).length) {
-            $(this).prop('disabled',    true);
+          else {
+            nextStep();
           }
-          if(step == 4) {
-            $(this).val('Finish');
-          }
-<?php if(version_compare(PHP_VERSION, PHP_VERSION_REQ, '<') || version_compare(MYSQL_VERSION, MYSQL_VERSION_REQ, '<')
-         || !FILE_UPLOADS || REGISTER_GLOBALS || SAFE_MODE
-         || !WRITABLE_ASSETS || !WRITABLE_CONFIG || !WRITABLE_DEMOS
-         || !WRITABLE_GAMES || !WRITABLE_MAPS || !WRITABLE_RUNTIME): ?>
-          if(step == 2) {
-            $(this).prop('disabled', true);
-          }
-<?php endif ?>
         }).prop('disabled', false);
         
-        $("#SBAdmin_auth").change(function() {
-          if($("#SBAdmin_identity").val() == "" || $("#SBAdmin_identity").val() == "STEAM_")
-            $("#SBAdmin_identity").val($(this).val() == "steam" ? "STEAM_" : "");
-        }).trigger("change");
+        $('#SBAdmin_auth').change(function() {
+          if($('#SBAdmin_identity').val() == '' || $('#SBAdmin_identity').val() == 'STEAM_')
+            $('#SBAdmin_identity').val($(this).val() == 'steam' ? 'STEAM_' : '');
+        }).trigger('change');
       });
     </script>
   </body>

@@ -96,7 +96,7 @@ class SourceBans extends CApplicationComponent
 					$_data[$file] .= ' (' . Yii::app()->locale->getLocaleDisplayName($file) . ')';
 			}
 			closedir($folder);
-			ksort($_data);
+			asort($_data);
 		}
 		
 		return $_data;
@@ -182,7 +182,7 @@ class SourceBans extends CApplicationComponent
 			{
 				$_data[$themeName] = ucfirst($themeName);
 			}
-			sort($_data);
+			asort($_data);
 		}
 		
 		return $_data;

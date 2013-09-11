@@ -34,7 +34,7 @@
 </pre>
       <form class="form-inline" id="command-form" method="post">
         <div class="input-append">
-          <?php echo CHtml::textField('command', null, array('placeholder'=>Yii::t('sourcebans', 'Command'))) ?>
+          <?php echo CHtml::textField('command', null, array('autofocus'=>true,'placeholder'=>Yii::t('sourcebans', 'Command'))) ?>
           <?php echo CHtml::submitButton(Yii::t('sourcebans', 'Execute'), array('class'=>'btn btn-primary', 'disabled'=>true, 'id'=>'submit')) ?>
         </div>
       </form>

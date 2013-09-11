@@ -6,7 +6,7 @@
 	}
 	"DB Connect Fail"
 	{
-		"da"			"Database tilslutningen fejlede. Kontakt venligst server bestyrren."
+		"da"			"Database tilslutningen fejlede. Kontakt venligst server-administatoren"
 	}
 	"Not In Game"
 	{

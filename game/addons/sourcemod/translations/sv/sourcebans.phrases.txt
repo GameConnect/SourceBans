@@ -38,7 +38,7 @@
 	}
 	"Chat Reason"
 	{
-		"sv"			"Vänligen skriv in orsaken till bannlysningen i chatten och tryck enter. Skriv "! Noreason" för att avbryta."
+		"sv"			"Vänligen skriv in orsaken till bannlysningen i chatten och tryck enter. Skriv '!noreason' för att avbryta."
 	}
 	"Chat Reason Aborted"
 	{

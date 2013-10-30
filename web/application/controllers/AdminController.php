@@ -328,24 +328,34 @@ class AdminController extends Controller
 		{
 			$id=substr(pathinfo($file, PATHINFO_DIRNAME), strlen(Yii::getPathOfAlias('application.plugins')) + 1);
 			$class=(!empty($id)?$id.'.':'').pathinfo($file, PATHINFO_FILENAME);
-			
-			$plugin=new SBPlugin;
-			$plugin->class=$class;
-			
-			try
+			$pluginsList[$class]=NULL;
+		}
+
+		// Load already saved plugins
+		$plugins=SBPlugin::model()->findAll();
+		foreach($plugins as $plugin)
+		{
+			if(array_key_exists($plugin->class, $pluginsList))
 			{
-				$plugin->save();
-			}
-			catch(CDbException $e)
-			{
-				// Ignore duplicate keys
-				if($e->errorInfo[1] != 1062)
-					throw $e;
+				# Plugin already saved in DB
+				unset($pluginsList[$plugin->class]);
 			}
 		}
-		
-		$plugins=SBPlugin::model()->findAll();
-		
+		$needReload=false;
+
+		// Save new plugins into db
+		foreach (array_keys($pluginsList) as $class) {
+			$needReload=true;
+
+			$plugin=new SBPlugin;
+			$plugin->class=$class;
+			$plugin->save();
+		}
+
+		if($needReload)
+			$plugins=SBPlugin::model()->findAll();
+
+
 		$logs=new SBLog('search');
 		$logs->unsetAttributes();  // clear any default values
 		if(isset($_GET['SBLog']))

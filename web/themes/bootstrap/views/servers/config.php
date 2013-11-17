@@ -1,8 +1,5 @@
 <?php
 /* @var $this ServersController */
-
-preg_match_all('/([a-z_]+)=([^;]+)/i', Yii::app()->db->connectionString, $dsn);
-$db = array_combine($dsn[1], $dsn[2]);
 ?>
 
     <section class="tab-pane" id="pane-config">

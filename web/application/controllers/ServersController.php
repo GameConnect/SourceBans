@@ -294,7 +294,12 @@ class ServersController extends Controller
 			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('admin/servers')),
 		);
 		
-		$this->render('config');
+		preg_match_all('/([a-z_]+)=([^;]+)/i', Yii::app()->db->connectionString, $dsn);
+		$db = array_combine($dsn[1], $dsn[2]);
+		
+		$this->render('config', array(
+			'db'=>$db,
+		));
 	}
 
 	/**

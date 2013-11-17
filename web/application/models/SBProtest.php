@@ -62,7 +62,7 @@ class SBProtest extends CActiveRecord
 			array('ban_steam, ban_ip', 'default', 'setOnEmpty'=>true),
 			array('ban_steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
 			array('ban_ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
-			array('ban_steam, ban_ip', 'SBProtestBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBProtest.rules.err_not_banned'), 'criteria'=>array(
+			array('ban_steam, ban_ip', 'application.validators.SBProtestBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBProtest.rules.err_not_banned'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
 			array('ban_id', 'safe'),

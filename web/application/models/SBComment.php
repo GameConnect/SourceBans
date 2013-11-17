@@ -138,19 +138,15 @@ class SBComment extends CActiveRecord
 			'CTimestampBehavior'=>array(
 				'class'=>'zii.behaviors.CTimestampBehavior',
 			),
+			'UserIdBehavior' => array(
+				'class' => 'application.behaviors.UserIdBehavior',
+				'attributes' => 'admin_id',
+			),
 		);
 	}
 	
 	protected function beforeSave()
 	{
-		if($this->isNewRecord)
-		{
-			if(!Yii::app()->user->isGuest)
-			{
-				$this->admin_id = Yii::app()->user->id;
-			}
-		}
-		
 		return parent::beforeSave();
 	}
 }

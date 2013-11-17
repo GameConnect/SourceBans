@@ -101,7 +101,7 @@ class SBAdmin extends CActiveRecord
 			array('group_id', 'numerical', 'integerOnly'=>true),
 			array('name, identity', 'length', 'max'=>64),
 			array('name', 'unique'),
-			array('identity', 'SBAdminIdentityValidator'),
+			array('identity', 'application.validators.SBAdminIdentityValidator'),
 			array('new_password, server_password', 'length', 'max'=>64, 'min'=>SourceBans::app()->settings->password_min_length),
 			array('email', 'email'),
 			array('email', 'length', 'max'=>128),

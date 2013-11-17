@@ -82,7 +82,7 @@ class SBOverride extends CActiveRecord
 		return array(
 			'type' => Yii::t('sourcebans', 'Type'),
 			'name' => Yii::t('sourcebans', 'Name'),
-			'flags' => Yii::t('sourcebans', 'Flags'),
+			'flags' => Yii::t('sourcebans', 'Server permissions'),
 		);
 	}
 

@@ -135,6 +135,14 @@ class SBLog extends CActiveRecord
 				'class' => 'zii.behaviors.CTimestampBehavior',
 				'updateAttribute' => null,
 			),
+			'UserIdBehavior' => array(
+				'class' => 'application.behaviors.UserIdBehavior',
+				'attributes' => 'admin_id',
+			),
+			'UserIpBehavior' => array(
+				'class' => 'application.behaviors.UserIpBehavior',
+				'attributes' => 'admin_ip',
+			),
 		);
 	}
 	
@@ -153,12 +161,6 @@ class SBLog extends CActiveRecord
 	{
 		if($this->isNewRecord)
 		{
-			if(!Yii::app()->user->isGuest)
-			{
-				$this->admin_id = Yii::app()->user->id;
-			}
-			
-			$this->admin_ip = Yii::app()->request->serverHostAddress;
 			$this->function = $this->_getTraces();
 			$this->query    = Yii::app()->request->queryString;
 		}

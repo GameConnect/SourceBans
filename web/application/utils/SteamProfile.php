@@ -230,7 +230,7 @@ class SteamProfile
 			{
 				$this->_data['webLinks'][] = (object)array(
 					'title' => (string)$webLink->title,
-					'link' => (string)$w->link,
+					'link' => (string)$webLink->link,
 				);
 			}
 		}

@@ -74,7 +74,7 @@ class SBSubmission extends CActiveRecord
 			array('steam, ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBSubmission.rules.err_unique'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
-			array('steam, ip', 'SBSubmitBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
+			array('steam, ip', 'application.validators.SBSubmitBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
 			array('reason', 'length', 'max'=>255),

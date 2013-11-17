@@ -9,7 +9,7 @@
  * @package sourcebans.components
  * @since 2.0
  */
-class LocaleData extends CApplicationComponent
+class LocaleData
 {
 	public static function getCountries()
 	{

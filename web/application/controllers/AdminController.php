@@ -331,20 +331,23 @@ class AdminController extends Controller
 			
 			$plugin=new SBPlugin;
 			$plugin->class=$class;
-			
-			try
-			{
-				$plugin->save();
-			}
-			catch(CDbException $e)
-			{
-				// Ignore duplicate keys
-				if($e->errorInfo[1] != 1062)
-					throw $e;
-			}
+			$plugin->save();
 		}
 		
-		$plugins=SBPlugin::model()->findAll();
+		$plugins=new CArrayDataProvider(SBPlugin::model()->findAll(), array(
+			'keyField'=>'class',
+			'sort'=>array(
+				'attributes'=>array(
+					'author',
+					'name',
+					'version',
+					'*',
+				),
+				'defaultOrder'=>array(
+					'name'=>CSort::SORT_ASC,
+				),
+			),
+		));
 		
 		$logs=new SBLog('search');
 		$logs->unsetAttributes();  // clear any default values

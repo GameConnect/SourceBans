@@ -297,6 +297,9 @@ class SBBan extends CActiveRecord
 	{
 		try
 		{
+			if(empty($this->ip))
+				throw new CException;
+			
 			$code = Yii::app()->geoip->lookupCountryCode($this->ip);
 			$name = Yii::app()->geoip->lookupCountryName($this->ip);
 			
@@ -459,7 +462,7 @@ class SBBan extends CActiveRecord
 			'select'=>$select,
 		));
 		
-		return parent::beforeFind();
+		parent::beforeFind();
 	}
 	
 	protected function beforeSave()

@@ -81,6 +81,7 @@
 		"class"=>"header",
 		"data-key"=>$data->primaryKey,
 		"data-game-folder"=>$data->game->folder,
+		"data-rcon"=>!empty($data->rcon),
 	)',
 	'selectableRows'=>isset($isDashboard) ? 1 : 0,
 	'selectionChanged'=>'js:function(grid) {
@@ -176,6 +177,7 @@
 		array(
 			'label' => Yii::t('sourcebans', 'View Steam Profile'),
 			'url' => '#',
+			'itemOptions' => array('class' => 'rcon'),
 			'linkOptions' => array('id' => 'player-profile'),
 		),
 	), $this->menu),
@@ -188,8 +190,10 @@
   $(document).on("contextmenu", "#servers-grid .player", function(e) {
     e.preventDefault();
     var name = $(this).data("name");
+    var rcon = $("#servers-grid tr.selected").data("rcon");
     
     $("#player-menu .player-name").text(name);
+    $("#player-menu li.rcon").toggleClass("disabled", !rcon);
     $("#player-menu")
       .data("name", name)
       .css({
@@ -200,6 +204,9 @@
   });
   
   $("#player-profile").click(function() {
+    if($(this).parents("li").hasClass("disabled"))
+      return;
+    
     var id = $("#servers-grid tr.selected").data("key");
     
     $.post("' . $this->createUrl('servers/getProfile', array('id' => '__ID__')) . '".replace("__ID__", id), {

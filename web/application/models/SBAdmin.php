@@ -224,7 +224,7 @@ class SBAdmin extends CActiveRecord
 		
 		if(!isset($this->_community))
 		{
-			$this->_community = new SteamProfile($this-communityId);
+			$this->_community = new SteamProfile($this->communityId);
 		}
 		
 		return $this->_community;
@@ -499,7 +499,7 @@ class SBAdmin extends CActiveRecord
 			'select'=>$select,
 		));
 		
-		return parent::beforeFind();
+		parent::beforeFind();
 	}
 	
 	protected function beforeSave()

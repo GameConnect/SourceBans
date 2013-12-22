@@ -350,7 +350,7 @@ return array(
 	'permissions.overrides' => 'Toegang tot commando\'s',
 	'permissions.owner' => 'Eigenaar',
 	'permissions.settings' => 'Instellingen',
-	'permissions.unban_all_bans' => 'All bans unbannen',
+	'permissions.unban_all_bans' => 'Alle bans unbannen',
 	'permissions.unban_group_bans' => 'Groep bans unbannen',
 	'permissions.unban_own_bans' => 'Eigen bans unbannen',
 	'views.admin.bans.protests.active.title' => 'Actief',

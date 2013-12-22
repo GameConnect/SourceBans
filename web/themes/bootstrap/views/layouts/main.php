@@ -19,7 +19,7 @@
       <div class="container">
         <div class="navbar">
           <div class="navbar-inner">
-            <?php echo CHtml::link(CHtml::image(Yii::app()->theme->baseUrl . '/images/logo.png', CHtml::encode(Yii::app()->name)), array('site/index'), array('class' => 'brand')) ?>
+            <?php echo CHtml::link(CHtml::image(Yii::app()->theme->baseUrl . '/images/logo.png', CHtml::encode(Yii::app()->name)), Yii::app()->homeUrl, array('class' => 'brand')) ?>
 
 <?php $this->widget('zii.widgets.CMenu', array(
 	'id' => 'tabs',

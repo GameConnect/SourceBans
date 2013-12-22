@@ -285,7 +285,9 @@
     });
   });
   $(document).on("click", ".ban-menu-delete a", function(e) {
-    if(!confirm("' . Yii::t('zii', 'Are you sure you want to delete this item?') . '")) return false;
+    if(!confirm("' . Yii::t('zii', 'Are you sure you want to delete this item?') . '"))
+      return false;
+    
     $("#' . $grid->id . '").yiiGridView("update", {
       type: "POST",
       url: $(this).attr("href"),

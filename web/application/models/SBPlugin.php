@@ -76,7 +76,7 @@ class SBPlugin extends CActiveRecord
 			array('class', 'required'),
 			array('status', 'numerical', 'integerOnly'=>true),
 			array('class', 'length', 'max'=>255),
-			array('class', 'unique'),
+			array('class', 'unique', 'on'=>'insert'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('class, status', 'safe', 'on'=>'search'),

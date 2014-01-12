@@ -197,8 +197,8 @@
     $("#player-menu")
       .data("name", name)
       .css({
-        top: event.pageY - 12,
-        left: event.pageX + 2
+        top: e.pageY - 12,
+        left: e.pageX + 2
       })
       .show();
   });

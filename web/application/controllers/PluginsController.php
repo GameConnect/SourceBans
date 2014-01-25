@@ -62,24 +62,35 @@ class PluginsController extends Controller
 		
 		try
 		{
-			$plugin->runInstall();
-			$plugin->status=!$plugin->canDisable()
-				?SBPlugin::STATUS_ENABLED
-				:SBPlugin::STATUS_INSTALLED;
-			$plugin->save();
-			SourceBans::log('Plugin installed', 'Plugin "' . $plugin->name . '" was installed');
+			if($plugin->runInstall()!==false)
+			{
+				$result=true;
+				$plugin->status=!$plugin->canDisable()
+					?SBPlugin::STATUS_ENABLED
+					:SBPlugin::STATUS_INSTALLED;
+				$plugin->save();
+				SourceBans::log('Plugin installed', 'Plugin "' . $plugin->name . '" was installed');
+			}
+			else
+			{
+				$result=array(
+					'error' => array(
+						'message' => Yii::t('sourcebans', 'Installation failed'),
+					),
+				);
+			}
 		}
 		catch(Exception $e)
 		{
-			Yii::app()->end(CJSON::encode(array(
+			$result=array(
 				'error' => array(
 					'code'    => $e->getCode(),
 					'message' => $e->getMessage(),
 				),
-			)));
+			);
 		}
 		
-		Yii::app()->end(CJSON::encode(true));
+		Yii::app()->end(CJSON::encode($result));
 	}
 
 	public function actionSettings($id)
@@ -110,22 +121,33 @@ class PluginsController extends Controller
 		
 		try
 		{
-			$plugin->runUninstall();
-			$plugin->status=0;
-			$plugin->save();
-			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::WARNING_TYPE);
+			if($plugin->runUninstall()!==false)
+			{
+				$result=true;
+				$plugin->status=0;
+				$plugin->save();
+				SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::WARNING_TYPE);
+			}
+			else
+			{
+				$result=array(
+					'error' => array(
+						'message' => Yii::t('sourcebans', 'Uninstallation failed'),
+					),
+				);
+			}
 		}
 		catch(Exception $e)
 		{
-			Yii::app()->end(CJSON::encode(array(
+			$result=array(
 				'error' => array(
 					'code'    => $e->getCode(),
 					'message' => $e->getMessage(),
 				),
-			)));
+			);
 		}
 		
-		Yii::app()->end(CJSON::encode(true));
+		Yii::app()->end(CJSON::encode($result));
 	}
 
 	/**

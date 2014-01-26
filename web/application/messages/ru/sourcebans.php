@@ -178,7 +178,7 @@ return array (
 	'Unban' => 'Разбанить',
 	'Unban reason' => 'Причина разбана',
 	'Unbanned by' => '@@Разбанил(а)@@',
-	'Uninstall' => '@@Удалить@@',
+	'Uninstall' => 'Удалить',
 	'Unknown' => 'Неизвестно',
 	'Version' => 'Версия',
 	'View Steam Profile' => 'Посмотреть профиль Steam',

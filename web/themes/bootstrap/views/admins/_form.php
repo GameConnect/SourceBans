@@ -97,6 +97,6 @@
 <?php Yii::app()->clientScript->registerScript('auth_change', '
   $("#SBAdmin_auth").change(function() {
     if($("#SBAdmin_identity").val() == "" || $("#SBAdmin_identity").val() == "STEAM_")
-      $("#SBAdmin_identity").val($(this).val() == "' . SBAdmin::STEAM_AUTH . '" ? "STEAM_" : "");
+      $("#SBAdmin_identity").val($(this).val() == "' . SBAdmin::AUTH_STEAM . '" ? "STEAM_" : "");
   }).trigger("change");
 ') ?>

@@ -58,7 +58,7 @@ class SBProtestBanValidator extends CValidator
 			$attributeName = 'steam';
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::STEAM_TYPE),
+				'params'=>array(':type'=>SBBan::TYPE_STEAM),
 				'with'=>array('protests'=>array('select'=>false)),
 			));
 		}
@@ -67,7 +67,7 @@ class SBProtestBanValidator extends CValidator
 			$attributeName = 'ip';
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::IP_TYPE),
+				'params'=>array(':type'=>SBBan::TYPE_IP),
 				'with'=>array('protests'=>array('select'=>false)),
 			));
 		}

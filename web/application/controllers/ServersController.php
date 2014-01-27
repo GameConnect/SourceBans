@@ -180,7 +180,7 @@ class ServersController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Server deleted', 'Server "' . $model->ip . ':' . $model->port . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::log('Server deleted', 'Server "' . $model->ip . ':' . $model->port . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -261,7 +261,7 @@ class ServersController extends Controller
 		if(isset($response['error']))
 			Yii::app()->end(CJSON::encode($response));
 		
-		preg_match_all(SourceBans::STATUS_PATTERN, $response['result'], $players);
+		preg_match_all(SourceBans::PATTERN_STATUS, $response['result'], $players);
 		for($i = 0; $i < count($players[0]); $i++)
 		{
 			if($players[2][$i] == $name)
@@ -306,7 +306,7 @@ class ServersController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return SBAdmin the loaded model
+	 * @return SBServer the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)

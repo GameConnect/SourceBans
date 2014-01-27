@@ -16,12 +16,12 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 		switch($attribute)
 		{
 			case 'ip':
-				$this->allowEmpty = ($object->type != SBBan::IP_TYPE);
-				$this->pattern    = SourceBans::IP_PATTERN;
+				$this->allowEmpty = ($object->type != SBBan::TYPE_IP);
+				$this->pattern    = SourceBans::PATTERN_IP;
 				break;
 			case 'steam':
-				$this->allowEmpty = ($object->type != SBBan::STEAM_TYPE);
-				$this->pattern    = SourceBans::STEAM_PATTERN;
+				$this->allowEmpty = ($object->type != SBBan::TYPE_STEAM);
+				$this->pattern    = SourceBans::PATTERN_STEAM;
 				break;
 		}
 		
@@ -34,12 +34,12 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 		switch($attribute)
 		{
 			case 'ip':
-				$this->allowEmpty = ($object->type != SBBan::IP_TYPE);
-				$this->pattern    = SourceBans::IP_PATTERN;
+				$this->allowEmpty = ($object->type != SBBan::TYPE_IP);
+				$this->pattern    = SourceBans::PATTERN_IP;
 				break;
 			case 'steam':
-				$this->allowEmpty = ($object->type != SBBan::STEAM_TYPE);
-				$this->pattern    = SourceBans::STEAM_PATTERN;
+				$this->allowEmpty = ($object->type != SBBan::TYPE_STEAM);
+				$this->pattern    = SourceBans::PATTERN_STEAM;
 				break;
 		}
 		

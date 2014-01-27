@@ -26,9 +26,9 @@
  */
 class SBLog extends CActiveRecord
 {
-	const ERROR_TYPE       = 'e';
-	const INFORMATION_TYPE = 'm';
-	const WARNING_TYPE     = 'w';
+	const TYPE_ERROR       = 'e';
+	const TYPE_INFORMATION = 'm';
+	const TYPE_WARNING     = 'w';
 	
 	/**
 	 * Returns the static model of the specified AR class.
@@ -105,15 +105,15 @@ class SBLog extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='admin';
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.type',$this->type);
-		$criteria->compare('t.title',$this->title,true);
-		$criteria->compare('t.message',$this->message,true);
-		$criteria->compare('t.function',$this->function,true);
-		$criteria->compare('t.query',$this->query,true);
-		$criteria->compare('t.admin_id',$this->admin_id);
-		$criteria->compare('t.admin_ip',$this->admin_ip,true);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.type', $this->type);
+		$criteria->compare('t.title', $this->title, true);
+		$criteria->compare('t.message', $this->message, true);
+		$criteria->compare('t.function', $this->function, true);
+		$criteria->compare('t.query', $this->query, true);
+		$criteria->compare('t.admin_id', $this->admin_id);
+		$criteria->compare('t.admin_ip', $this->admin_ip, true);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -150,9 +150,9 @@ class SBLog extends CActiveRecord
 	public static function getTypes()
 	{
 		return array(
-			self::ERROR_TYPE       => Yii::t('sourcebans', 'Error'),
-			self::INFORMATION_TYPE => Yii::t('sourcebans', 'Information'),
-			self::WARNING_TYPE     => Yii::t('sourcebans', 'Warning'),
+			self::TYPE_ERROR       => Yii::t('sourcebans', 'Error'),
+			self::TYPE_INFORMATION => Yii::t('sourcebans', 'Information'),
+			self::TYPE_WARNING     => Yii::t('sourcebans', 'Warning'),
 		);
 	}
 	

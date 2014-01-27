@@ -21,10 +21,10 @@
  */
 class SBServerGroupOverride extends CActiveRecord
 {
-	const ALLOW_ACCESS = 'allow';
-	const DENY_ACCESS  = 'deny';
-	const COMMAND_TYPE = 'command';
-	const GROUP_TYPE   = 'group';
+	const ACCESS_ALLOW = 'allow';
+	const ACCESS_DENY  = 'deny';
+	const TYPE_COMMAND = 'command';
+	const TYPE_GROUP   = 'group';
 	
 	
 	public function __toString()
@@ -106,10 +106,10 @@ class SBServerGroupOverride extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.group_id',$this->group_id);
-		$criteria->compare('t.type',$this->type,true);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.access',$this->access,true);
+		$criteria->compare('t.group_id', $this->group_id);
+		$criteria->compare('t.type', $this->type, true);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.access', $this->access, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -125,8 +125,8 @@ class SBServerGroupOverride extends CActiveRecord
 	public static function getAccessTypes()
 	{
 		return array(
-			self::ALLOW_ACCESS => Yii::t('sourcebans', 'Allow'),
-			self::DENY_ACCESS  => Yii::t('sourcebans', 'Deny'),
+			self::ACCESS_ALLOW => Yii::t('sourcebans', 'Allow'),
+			self::ACCESS_DENY  => Yii::t('sourcebans', 'Deny'),
 		);
 	}
 	
@@ -138,8 +138,8 @@ class SBServerGroupOverride extends CActiveRecord
 	public static function getTypes()
 	{
 		return array(
-			self::COMMAND_TYPE => Yii::t('sourcebans', 'Command'),
-			self::GROUP_TYPE   => Yii::t('sourcebans', 'Group'),
+			self::TYPE_COMMAND => Yii::t('sourcebans', 'Command'),
+			self::TYPE_GROUP   => Yii::t('sourcebans', 'Group'),
 		);
 	}
 }

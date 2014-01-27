@@ -133,7 +133,7 @@ class SiteController extends Controller
 			$bans->attributes=$_GET['SBBan'];
 		
 		$comment = new SBComment;
-		$comment->object_type = SBComment::BAN_TYPE;
+		$comment->object_type = SBComment::TYPE_BAN;
 		
 		$this->render('bans', array(
 			'ban' => $ban,

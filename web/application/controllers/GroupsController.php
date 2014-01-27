@@ -126,7 +126,7 @@ class GroupsController extends Controller
 	{
 		$type=Yii::app()->request->getQuery('type');
 		$model=$this->loadModel($id, $type);
-		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

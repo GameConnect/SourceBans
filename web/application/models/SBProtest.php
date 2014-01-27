@@ -60,8 +60,8 @@ class SBProtest extends CActiveRecord
 			array('user_email', 'length', 'max'=>128),
 			array('user_email', 'email'),
 			array('ban_steam, ban_ip', 'default', 'setOnEmpty'=>true),
-			array('ban_steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
-			array('ban_ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
+			array('ban_steam', 'match', 'pattern'=>SourceBans::PATTERN_STEAM),
+			array('ban_ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
 			array('ban_steam, ban_ip', 'application.validators.SBProtestBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBProtest.rules.err_not_banned'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
@@ -81,7 +81,7 @@ class SBProtest extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'ban_id'),
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::PROTEST_TYPE)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_PROTEST)),
 		);
 	}
 
@@ -98,7 +98,7 @@ class SBProtest extends CActiveRecord
 			'reason' => Yii::t('sourcebans', 'Reason'),
 			'user_email' => Yii::t('sourcebans', 'Your email address'),
 			'user_ip' => 'User IP address',
-			'archived' => Yii::t('sourcebans','Archived'),
+			'archived' => Yii::t('sourcebans', 'Archived'),
 			'create_time' => Yii::t('sourcebans', 'Date') . '/' . Yii::t('sourcebans', 'Time'),
 		);
 	}
@@ -115,13 +115,13 @@ class SBProtest extends CActiveRecord
 		$criteria=new CDbCriteria($criteria);
 		$criteria->with='ban';
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.ban_id',$this->ban_id);
-		$criteria->compare('t.reason',$this->reason,true);
-		$criteria->compare('t.user_email',$this->user_email,true);
-		$criteria->compare('t.user_ip',$this->user_ip,true);
-		$criteria->compare('t.archived',$this->archived);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.ban_id', $this->ban_id);
+		$criteria->compare('t.reason', $this->reason, true);
+		$criteria->compare('t.user_email', $this->user_email, true);
+		$criteria->compare('t.user_ip', $this->user_ip, true);
+		$criteria->compare('t.archived', $this->archived);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

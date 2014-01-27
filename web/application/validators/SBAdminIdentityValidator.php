@@ -15,11 +15,11 @@ class SBAdminIdentityValidator extends CRegularExpressionValidator
 	{
 		switch($object->auth)
 		{
-			case SBAdmin::STEAM_AUTH:
-				$this->pattern = SourceBans::STEAM_PATTERN;
+			case SBAdmin::AUTH_STEAM:
+				$this->pattern = SourceBans::PATTERN_STEAM;
 				break;
-			case SBAdmin::IP_AUTH:
-				$this->pattern = SourceBans::IP_PATTERN;
+			case SBAdmin::AUTH_IP:
+				$this->pattern = SourceBans::PATTERN_IP;
 				break;
 			default:
 				return;
@@ -33,11 +33,11 @@ class SBAdminIdentityValidator extends CRegularExpressionValidator
 	{
 		switch($object->auth)
 		{
-			case SBAdmin::STEAM_AUTH:
-				$this->pattern = SourceBans::STEAM_PATTERN;
+			case SBAdmin::AUTH_STEAM:
+				$this->pattern = SourceBans::PATTERN_STEAM;
 				break;
-			case SBAdmin::IP_AUTH:
-				$this->pattern = SourceBans::IP_PATTERN;
+			case SBAdmin::AUTH_IP:
+				$this->pattern = SourceBans::PATTERN_IP;
 				break;
 			default:
 				return;

@@ -5,7 +5,7 @@ class AdminTest extends CDbTestCase
 	{
 		$model = new SBAdmin;
 		$model->name = 'Test';
-		$model->auth = SBAdmin::STEAM_AUTH;
+		$model->auth = SBAdmin::AUTH_STEAM;
 		$model->identity = 'STEAM_0:1:2';
 		$model->new_password = 'test';
 		$this->assertTrue($model->save());

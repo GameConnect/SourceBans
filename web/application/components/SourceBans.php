@@ -1,22 +1,4 @@
 <?php
-/**
- * SourceBans global data and functionality
- * 
- * @author GameConnect
- * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
- * @link http://www.sourcebans.net
- * 
- * @property CMap $flags The supported SourceMod flags
- * @property array $languages The supported SourceBans languages
- * @property CMap $permissions The supported SourceBans permissions
- * @property array $plugins The enabled SourceBans plugins
- * @property object $quote A random SourceBans quote
- * @property CAttributeCollection $settings The SourceBans settings
- * @property array $themes The installed SourceBans themes
- * 
- * @package sourcebans.components
- * @since 2.0
- */
 define('SM_RESERVATION', 'a');
 define('SM_GENERIC',     'b');
 define('SM_KICK',        'c');
@@ -39,11 +21,29 @@ define('SM_CUSTOM5',     's');
 define('SM_CUSTOM6',     't');
 define('SM_ROOT',        'z');
 
+/**
+ * SourceBans global data and functionality
+ * 
+ * @author GameConnect
+ * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @link http://www.sourcebans.net
+ * 
+ * @property CMap $flags The supported SourceMod flags
+ * @property array $languages The supported SourceBans languages
+ * @property CMap $permissions The supported SourceBans permissions
+ * @property array $plugins The enabled SourceBans plugins
+ * @property object $quote A random SourceBans quote
+ * @property CAttributeCollection $settings The SourceBans settings
+ * @property array $themes The installed SourceBans themes
+ * 
+ * @package sourcebans.components
+ * @since 2.0
+ */
 class SourceBans extends CApplicationComponent
 {
-	const IP_PATTERN     = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
-	const STATUS_PATTERN = '/# +([0-9]+) +"(.+)" +(STEAM_[0-9]:[0-9]:[0-9]+) +([0-9:]+) +([0-9]+) +([0-9]+) +([a-zA-Z]+) +([0-9.:]+)/';
-	const STEAM_PATTERN  = '/^STEAM_[0-9]:[0-9]:[0-9]+$/i';
+	const PATTERN_IP     = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
+	const PATTERN_STATUS = '/# +([0-9]+) +"(.+)" +(STEAM_[0-9]:[0-9]:[0-9]+) +([0-9:]+) +([0-9]+) +([0-9]+) +([a-zA-Z]+) +([0-9.:]+)/';
+	const PATTERN_STEAM  = '/^STEAM_[0-9]:[0-9]:[0-9]+$/i';
 	
 	/**
 	 * @var array the attached event handlers (event name => handlers)
@@ -322,6 +322,7 @@ class SourceBans extends CApplicationComponent
 	/**
 	 * Raised right BEFORE the application processes the request.
 	 * @param CEvent $event the event parameter
+	 * @throws CHttpException if the /install folder exists
 	 */
 	public static function onBeginRequest($event)
 	{

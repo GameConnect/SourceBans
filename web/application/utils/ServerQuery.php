@@ -39,7 +39,7 @@ class ServerQuery
 	 * @param string $host IP address or domain name
 	 * @param integer $port port number
 	 */
-	function __construct($host, $port)
+	public function __construct($host, $port)
 	{
 		$this->_host = $host;
 		$this->_port = $port;
@@ -156,7 +156,7 @@ class ServerQuery
 			return array();
 		
 		$this->_raw = $packet;
-		$count      = $this->_getushort(); 
+		$count      = $this->_getushort();
 		$rules      = array();
 		for($i = 0; $i < $count; $i++)
 		{
@@ -345,19 +345,19 @@ class ServerQuery
 		return $data;
 	}
 	
-	private function _getbyte() 
+	private function _getbyte()
 	{
 		$byte = $this->_getraw(1);
 		return ord($byte);
 	}
 	
-	private function _getfloat() 
+	private function _getfloat()
 	{
 		$f = @unpack('f1float', $this->_getraw(4));
 		return $f['float'];
 	}
 	
-	private function _getlong() 
+	private function _getlong()
 	{
 		$lo   = $this->_getushort();
 		$hi   = $this->_getushort();
@@ -368,9 +368,9 @@ class ServerQuery
 			return $long;                       // 32-bit handles negative values implicitly
 	}
 	
-	private function _getnullstr() 
+	private function _getnullstr()
 	{
-		if(empty($this->_raw)) 
+		if(empty($this->_raw))
 			return '';
 		
 		$end = strpos($this->_raw, "\0");
@@ -379,7 +379,7 @@ class ServerQuery
 		return $str;
 	}
 	
-	private function _getushort() 
+	private function _getushort()
 	{
 		$lo    = $this->_getbyte();
 		$hi    = $this->_getbyte();
@@ -387,7 +387,7 @@ class ServerQuery
 		return $short;
 	}
 	
-	private function _getshort() 
+	private function _getshort()
 	{
 		$short = $this->_getushort();
 		if($short & 0x8000)

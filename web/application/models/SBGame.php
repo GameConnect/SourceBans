@@ -106,10 +106,10 @@ class SBGame extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.folder',$this->folder,true);
-		$criteria->compare('t.icon',$this->icon,true);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.folder', $this->folder, true);
+		$criteria->compare('t.icon', $this->icon, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

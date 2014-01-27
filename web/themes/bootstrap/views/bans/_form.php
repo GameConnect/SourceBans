@@ -99,9 +99,9 @@
 <?php Yii::app()->clientScript->registerScript('type_change', '
   $("#SBBan_type").change(function() {
     if($("#SBBan_steam").val() == "" || $("#SBBan_steam").val() == "STEAM_")
-      $("#SBBan_steam").val($(this).val() == ' . SBBan::STEAM_TYPE . ' ? "STEAM_" : "");
+      $("#SBBan_steam").val($(this).val() == ' . SBBan::TYPE_STEAM . ' ? "STEAM_" : "");
     
-    $("label[for=\"SBBan_steam\"] .required").toggle($(this).val() == ' . SBBan::STEAM_TYPE . ');
-    $("label[for=\"SBBan_ip\"] .required").toggle($(this).val() == ' . SBBan::IP_TYPE . ');
+    $("label[for=\"SBBan_steam\"] .required").toggle($(this).val() == ' . SBBan::TYPE_STEAM . ');
+    $("label[for=\"SBBan_ip\"] .required").toggle($(this).val() == ' . SBBan::TYPE_IP . ');
   }).trigger("change");
 ') ?>

@@ -121,8 +121,8 @@ class SBPlugin extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.class',$this->class,true);
-		$criteria->compare('t.status',$this->status);
+		$criteria->compare('t.class', $this->class, true);
+		$criteria->compare('t.status', $this->status);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -320,12 +320,9 @@ class SBPlugin extends CActiveRecord
 	/**
 	 * This method is invoked when installing the plugin.
 	 * 
-	 * @return boolean Whether the installation was successful
+	 * @throws Exception If the installation was not successful
 	 */
-	public function runInstall()
-	{
-		return true;
-	}
+	public function runInstall() {}
 	
 	/**
 	 * This method is invoked right before the settings action is to be executed (after all possible filters.)
@@ -336,12 +333,9 @@ class SBPlugin extends CActiveRecord
 	/**
 	 * This method is invoked when uninstalling the plugin.
 	 * 
-	 * @return boolean Whether the uninstallation was successful
+	 * @throws Exception If the uninstallation was not successful
 	 */
-	public function runUninstall()
-	{
-		return true;
-	}
+	public function runUninstall() {}
 	
 	
 	/**

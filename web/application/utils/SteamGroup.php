@@ -46,7 +46,7 @@ class SteamGroup
 	 * 
 	 * @param string $id The Steam Community ID, custom URL or group URL
 	 */
-	function __construct($id)
+	public function __construct($id)
 	{
 		if(preg_match('/steamcommunity\.com\/(gid|groups)\/([^\/?&])/i', $id, $matches))
 			$this->_id = $matches[2];

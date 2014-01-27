@@ -18,7 +18,7 @@ $group = SBGroup::model()->findByAttributes(array('name' => 'Owner'));
 // Add admin
 $admin = new SBAdmin;
 $admin->name = 'Demo';
-$admin->auth = SBAdmin::STEAM_AUTH;
+$admin->auth = SBAdmin::AUTH_STEAM;
 $admin->identity = 'STEAM_0:1:2';
 $admin->group_id = $group->id;
 

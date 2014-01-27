@@ -103,15 +103,15 @@ class SBAction extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with=array('admin','server');
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.steam',$this->steam,true);
-		$criteria->compare('t.ip',$this->ip,true);
-		$criteria->compare('t.message',$this->message,true);
-		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.admin_id',$this->admin_id);
-		$criteria->compare('t.admin_ip',$this->admin_ip,true);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.steam', $this->steam, true);
+		$criteria->compare('t.ip', $this->ip, true);
+		$criteria->compare('t.message', $this->message, true);
+		$criteria->compare('t.server_id', $this->server_id);
+		$criteria->compare('t.admin_id', $this->admin_id);
+		$criteria->compare('t.admin_ip', $this->admin_ip, true);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

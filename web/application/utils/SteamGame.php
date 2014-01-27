@@ -24,7 +24,7 @@ class SteamGame
 	 * 
 	 * @param integer $id The game application ID
 	 */
-	function __construct($id)
+	public function __construct($id)
 	{
 		$this->_id = $id;
 	}
@@ -54,7 +54,7 @@ class SteamGame
 	/**
 	 * ISteamUserStats/GetSchemaForGame/v0002
 	 * 
-	 * @param string $lang Localized language to return 
+	 * @param string $lang Localized language to return
 	 * @return array An array of game schema information
 	 */
 	public function getSchema($lang = 'en')

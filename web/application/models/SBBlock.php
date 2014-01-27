@@ -97,10 +97,10 @@ class SBBlock extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with=array('ban','server');
 
-		$criteria->compare('t.ban_id',$this->ban_id);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.ban_id', $this->ban_id);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.server_id', $this->server_id);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

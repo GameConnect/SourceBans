@@ -43,9 +43,9 @@
  */
 class SBAdmin extends CActiveRecord
 {
-	const IP_AUTH    = 'ip';
-	const NAME_AUTH  = 'name';
-	const STEAM_AUTH = 'steam';
+	const AUTH_IP    = 'ip';
+	const AUTH_NAME  = 'name';
+	const AUTH_STEAM = 'steam';
 	
 	public $new_password;
 	
@@ -171,16 +171,16 @@ class SBAdmin extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='group';
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.auth',$this->auth,true);
-		$criteria->compare('t.identity',$this->identity,true);
-		$criteria->compare('t.group_id',$this->group_id);
-		$criteria->compare('t.email',$this->email,true);
-		$criteria->compare('t.language',$this->language,true);
-		$criteria->compare('t.theme',$this->theme,true);
-		$criteria->compare('t.login_time',$this->login_time);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.auth', $this->auth, true);
+		$criteria->compare('t.identity', $this->identity, true);
+		$criteria->compare('t.group_id', $this->group_id);
+		$criteria->compare('t.email', $this->email, true);
+		$criteria->compare('t.language', $this->language, true);
+		$criteria->compare('t.theme', $this->theme, true);
+		$criteria->compare('t.login_time', $this->login_time);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -422,9 +422,9 @@ class SBAdmin extends CActiveRecord
 	public static function getAuthTypes()
 	{
 		return array(
-			self::STEAM_AUTH => Yii::t('sourcebans', 'Steam ID'),
-			self::IP_AUTH    => Yii::t('sourcebans', 'IP address'),
-			self::NAME_AUTH  => Yii::t('sourcebans', 'Name'),
+			self::AUTH_STEAM => Yii::t('sourcebans', 'Steam ID'),
+			self::AUTH_IP    => Yii::t('sourcebans', 'IP address'),
+			self::AUTH_NAME  => Yii::t('sourcebans', 'Name'),
 		);
 	}
 	
@@ -489,7 +489,7 @@ class SBAdmin extends CActiveRecord
 		
 		// Select community ID
 		$select=array(
-			'(CASE '.$t.'.auth WHEN "'.self::STEAM_AUTH.'" THEN 76561197960265728 + CAST(MID('.$t.'.identity, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.identity, 11, 10) * 2 AS UNSIGNED) END) AS admin_community_id',
+			'(CASE '.$t.'.auth WHEN "'.self::AUTH_STEAM.'" THEN 76561197960265728 + CAST(MID('.$t.'.identity, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.identity, 11, 10) * 2 AS UNSIGNED) END) AS admin_community_id',
 		);
 		if($this->dbCriteria->select==='*')
 		{
@@ -508,7 +508,7 @@ class SBAdmin extends CActiveRecord
 		{
 			$this->setPassword($this->new_password);
 		}
-		if($this->auth == self::STEAM_AUTH)
+		if($this->auth == self::AUTH_STEAM)
 		{
 			$this->identity = strtoupper($this->identity);
 		}

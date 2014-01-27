@@ -22,8 +22,8 @@
  */
 class SBDemo extends CActiveRecord
 {
-	const BAN_TYPE        = 'B';
-	const SUBMISSION_TYPE = 'S';
+	const TYPE_BAN        = 'B';
+	const TYPE_SUBMISSION = 'S';
 	
 	
 	public function __toString()
@@ -73,8 +73,8 @@ class SBDemo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::BAN_TYPE)),
-			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::SUBMISSION_TYPE)),
+			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_BAN)),
+			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_SUBMISSION)),
 		);
 	}
 
@@ -102,10 +102,10 @@ class SBDemo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.object_type',$this->object_type);
-		$criteria->compare('t.object_id',$this->object_id);
-		$criteria->compare('t.filename',$this->filename,true);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.object_type', $this->object_type);
+		$criteria->compare('t.object_id', $this->object_id);
+		$criteria->compare('t.filename', $this->filename, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

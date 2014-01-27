@@ -74,14 +74,14 @@ class SBSubmitBanValidator extends CValidator
 		{
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::STEAM_TYPE),
+				'params'=>array(':type'=>SBBan::TYPE_STEAM),
 			));
 		}
 		else if($attribute == 'ip')
 		{
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>SBBan::IP_TYPE),
+				'params'=>array(':type'=>SBBan::TYPE_IP),
 			));
 		}
 		else

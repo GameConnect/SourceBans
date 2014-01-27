@@ -6,7 +6,7 @@
     <section class="tab-pane fade" id="pane-permissions">
       <div class="row-fluid">
         <div class="span6">
-          <h3><?php echo Yii::t('sourcebans', 'Server permissions') ?></h3>
+          <h3><?php echo Yii::app()->user->data->getAttributeLabel('flags') ?></h3>
           <ul>
 <?php foreach(SourceBans::app()->flags as $flag => $description): ?>
 <?php if($flag != SM_ROOT && Yii::app()->user->data->hasFlag($flag)): ?>

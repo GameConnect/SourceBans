@@ -30,7 +30,7 @@ class ServerRcon
 	 * @param integer $port port number
 	 * @param string $password RCON password
 	 */
-	function __construct($host, $port, $password)
+	public function __construct($host, $port, $password)
 	{
 		$this->_password = $password;
 		
@@ -154,7 +154,7 @@ class ServerRcon
 	private function _PacketRead()
 	{
 		$packets = array();
-		while($size = $this->_SocketRead(4)) 
+		while($size = $this->_SocketRead(4))
 		{
 			$size = unpack('V1Size', $size);
 			if($size['Size'] > 4096)
@@ -183,7 +183,7 @@ class ServerRcon
 		$packets = $this->_PacketRead();
 		foreach($packets as $pack)
 		{
-			if(isset($ret[$pack['ID']])) 
+			if(isset($ret[$pack['ID']]))
 			{
 				$ret[$pack['ID']]['S1'] .= $pack['S1'];
 				$ret[$pack['ID']]['S2'] .= $pack['S1'];

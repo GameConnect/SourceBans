@@ -17,11 +17,11 @@
  */
 class SBOverride extends CActiveRecord
 {
-	const COMMAND_TYPE = 'command';
-	const GROUP_TYPE   = 'group';
+	const TYPE_COMMAND = 'command';
+	const TYPE_GROUP   = 'group';
 	
 	
-  public function __toString()
+	public function __toString()
 	{
 		return $this->name;
 	}
@@ -97,9 +97,9 @@ class SBOverride extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.type',$this->type,true);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.flags',$this->flags,true);
+		$criteria->compare('t.type', $this->type, true);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.flags', $this->flags, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -124,8 +124,8 @@ class SBOverride extends CActiveRecord
 	public static function getTypes()
 	{
 		return array(
-			self::COMMAND_TYPE => Yii::t('sourcebans', 'Command'),
-			self::GROUP_TYPE   => Yii::t('sourcebans', 'Group'),
+			self::TYPE_COMMAND => Yii::t('sourcebans', 'Command'),
+			self::TYPE_GROUP   => Yii::t('sourcebans', 'Group'),
 		);
 	}
 }

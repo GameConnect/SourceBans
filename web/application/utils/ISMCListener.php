@@ -11,27 +11,27 @@
  */
 interface ISMCListener
 {
-  /**
-   * Called when a section ends
-   *
-   * @return boolean Whether to continue parsing
-   */
-  public function EndSection();
-  
-  /**
-   * Called when a key value pair is parsed
-   *
-   * @param string $key Key
-   * @param string $value Value
-   * @return boolean Whether to continue parsing
-   */
-  public function KeyValue($key, $value);
-  
-  /**
-   * Called when a new section begins
-   *
-   * @param string $name Section name
-   * @return boolean Whether to continue parsing
-   */
-  public function NewSection($name);
+	/**
+	 * Called when a section ends
+	 *
+	 * @return boolean Whether to continue parsing
+	 */
+	public function EndSection();
+
+	/**
+	 * Called when a key value pair is parsed
+	 *
+	 * @param string $key Key
+	 * @param string $value Value
+	 * @return boolean Whether to continue parsing
+	 */
+	public function KeyValue($key, $value);
+
+	/**
+	 * Called when a new section begins
+	 *
+	 * @param string $name Section name
+	 * @return boolean Whether to continue parsing
+	 */
+	public function NewSection($name);
 }

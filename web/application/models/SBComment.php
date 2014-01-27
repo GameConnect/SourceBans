@@ -29,9 +29,9 @@
  */
 class SBComment extends CActiveRecord
 {
-	const BAN_TYPE        = 'B';
-	const PROTEST_TYPE    = 'P';
-	const SUBMISSION_TYPE = 'S';
+	const TYPE_BAN        = 'B';
+	const TYPE_PROTEST    = 'P';
+	const TYPE_SUBMISSION = 'S';
 	
 	
 	/**
@@ -76,9 +76,9 @@ class SBComment extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
-			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::BAN_TYPE)),
-			'protest' => array(self::BELONGS_TO, 'SBProtest', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::PROTEST_TYPE)),
-			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::SUBMISSION_TYPE)),
+			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_BAN)),
+			'protest' => array(self::BELONGS_TO, 'SBProtest', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_PROTEST)),
+			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_SUBMISSION)),
 			'update_admin' => array(self::BELONGS_TO, 'SBAdmin', 'update_admin_id'),
 		);
 	}
@@ -113,14 +113,14 @@ class SBComment extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='admin';
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.object_type',$this->object_type);
-		$criteria->compare('t.object_id',$this->object_id);
-		$criteria->compare('t.admin_id',$this->admin_id);
-		$criteria->compare('t.message',$this->message,true);
-		$criteria->compare('t.update_admin_id',$this->update_admin_id);
-		$criteria->compare('t.update_time',$this->update_time);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.object_type', $this->object_type);
+		$criteria->compare('t.object_id', $this->object_id);
+		$criteria->compare('t.admin_id', $this->admin_id);
+		$criteria->compare('t.message', $this->message, true);
+		$criteria->compare('t.update_admin_id', $this->update_admin_id);
+		$criteria->compare('t.update_time', $this->update_time);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -23,7 +23,7 @@ class KeyValues extends ArrayObject
 	 * @param string $name Root section name
 	 * @param array $data Optional key values data
 	 */
-	function __construct($name = null, $data = null)
+	public function __construct($name = null, $data = null)
 	{
 		$this->_name = $name;
 		

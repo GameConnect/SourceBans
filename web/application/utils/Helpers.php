@@ -155,7 +155,7 @@ class Helpers
 	 */
 	public static function parseCommunityId($url)
 	{
-		if(preg_match(SourceBans::STEAM_PATTERN, $url))
+		if(preg_match(SourceBans::PATTERN_STEAM, $url))
 			return self::getCommunityId($url);
 		
 		if(preg_match('/steamcommunity\.com\/(id|profiles)\/([^\/?&])/i', $url, $matches))
@@ -189,7 +189,7 @@ class Helpers
 	 */
 	public static function parseSteamId($url)
 	{
-		if(preg_match(SourceBans::STEAM_PATTERN, $url))
+		if(preg_match(SourceBans::PATTERN_STEAM, $url))
 			return strtoupper($url);
 		
 		$url = self::parseCommunityId($url);
@@ -201,6 +201,7 @@ class Helpers
 	 * Parses an INI file with no interpretation of value content
 	 * 
 	 * @param  string $file The INI file to parse
+	 * @return array The parsed INI file
 	 * @author Jean-Jacques Guegan (http://mach13.com/loose-and-multiline-parse_ini_file-function-in-php)
 	 */
 	public static function parse_ini_file($file)

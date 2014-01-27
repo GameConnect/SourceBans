@@ -121,7 +121,7 @@ class GamesController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Game deleted', 'Game "' . $model->name . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::log('Game deleted', 'Game "' . $model->name . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

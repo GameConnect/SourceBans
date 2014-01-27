@@ -101,7 +101,7 @@ class PluginsController extends Controller
 		$data = (array)$plugin->runSettings();
 		$data['plugin'] = $plugin;
 		
-		$this->render($plugin->getViewFile('settings'),$data);
+		$this->render($plugin->getViewFile('settings'), $data);
 	}
 
 	public function actionUninstall($id)
@@ -113,7 +113,7 @@ class PluginsController extends Controller
 			$plugin->runUninstall();
 			$plugin->status=0;
 			$plugin->save();
-			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::WARNING_TYPE);
+			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::TYPE_WARNING);
 		}
 		catch(Exception $e)
 		{
@@ -131,15 +131,15 @@ class PluginsController extends Controller
 	/**
 	 * Returns the data model based on the id given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer $id the ID of the model to be loaded
-	 * @return SBGame the loaded model
+	 * @param string $id the ID of the model to be loaded
+	 * @return SBPlugin the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
 		$model=SBPlugin::model()->findById($id);
 		if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+			throw new CHttpException(404, 'The requested page does not exist.');
 		return $model;
 	}
 }

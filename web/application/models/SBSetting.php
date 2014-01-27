@@ -89,8 +89,8 @@ class SBSetting extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.value',$this->value,true);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.value', $this->value, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

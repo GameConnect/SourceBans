@@ -73,7 +73,7 @@ class SBServer extends CActiveRecord
 			array('ip, game_id', 'required'),
 			array('port, game_id', 'numerical', 'integerOnly'=>true),
 			array('enabled', 'boolean'),
-			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
+			array('ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
 			array('rcon', 'length', 'max'=>32),
 			array('groups', 'safe'),
 			// The following rule is used by search().
@@ -128,12 +128,12 @@ class SBServer extends CActiveRecord
 		$criteria=new CDbCriteria;
 		$criteria->with='game';
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.ip',$this->ip,true);
-		$criteria->compare('t.port',$this->port);
-		$criteria->compare('t.rcon',$this->rcon,true);
-		$criteria->compare('t.game_id',$this->game_id);
-		$criteria->compare('t.enabled',$this->enabled);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.ip', $this->ip, true);
+		$criteria->compare('t.port', $this->port);
+		$criteria->compare('t.rcon', $this->rcon, true);
+		$criteria->compare('t.game_id', $this->game_id);
+		$criteria->compare('t.enabled', $this->enabled);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

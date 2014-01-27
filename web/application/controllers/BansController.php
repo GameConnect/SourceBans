@@ -73,11 +73,11 @@ class BansController extends Controller
 			if($model->save())
 			{
 				$demo=new SBDemo;
-				$demo->object_type=SBDemo::BAN_TYPE;
+				$demo->object_type=SBDemo::TYPE_BAN;
 				$demo->object_id=$model->id;
 				$demo->save();
 				
-				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was added');
+				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('site/bans','#'=>$model->id));
@@ -117,7 +117,7 @@ class BansController extends Controller
 			$model->attributes=$_POST['SBBan'];
 			if($model->save())
 			{
-				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was edited');
+				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('site/bans','#'=>$model->id));
@@ -137,7 +137,7 @@ class BansController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Ban deleted', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was deleted', SBLog::WARNING_TYPE);
+		SourceBans::log('Ban deleted', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -148,6 +148,7 @@ class BansController extends Controller
 	/**
 	 * Unbans a particular model.
 	 * @param integer $id the ID of the model to be unbanned
+	 * @throws CHttpException If the user is not authorized to perform this action
 	 */
 	public function actionUnban($id)
 	{
@@ -157,7 +158,7 @@ class BansController extends Controller
 		if(!$this->canUpdate('UNBAN', $model))
 			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 		
-		SourceBans::log('Ban unbanned', 'Ban against "' . ($model->type == SBBan::IP_TYPE ? $model->ip : $model->steam) . '" was unbanned');
+		SourceBans::log('Ban unbanned', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was unbanned');
 		Yii::app()->end(CJSON::encode($model->unban($reason)));
 	}
 
@@ -178,20 +179,20 @@ class BansController extends Controller
 						continue;
 					
 					// Steam ID
-					if(preg_match(SourceBans::STEAM_PATTERN, $identity))
+					if(preg_match(SourceBans::PATTERN_STEAM, $identity))
 					{
 						$ban         = new SBBan;
-						$ban->type   = SBBan::STEAM_TYPE;
+						$ban->type   = SBBan::TYPE_STEAM;
 						$ban->steam  = $identity;
 						$ban->reason = 'Imported from banned_user.cfg';
 						$ban->length = 0;
 						$ban->save();
 					}
 					// IP address
-					else if(preg_match(SourceBans::IP_PATTERN, $identity))
+					else if(preg_match(SourceBans::PATTERN_IP, $identity))
 					{
 						$ban         = new SBBan;
-						$ban->type   = SBBan::IP_TYPE;
+						$ban->type   = SBBan::TYPE_IP;
 						$ban->ip     = $identity;
 						$ban->reason = 'Imported from banned_ip.cfg';
 						$ban->length = 0;
@@ -205,11 +206,11 @@ class BansController extends Controller
 				while(list($steam, $name) = fgetcsv($handle, 4096))
 				{
 					$steam = 'STEAM_' . trim($steam);
-					if(!preg_match(SourceBans::STEAM_PATTERN, $steam))
+					if(!preg_match(SourceBans::PATTERN_STEAM, $steam))
 						continue;
 					
 					$ban         = new SBBan;
-					$ban->type   = SBBan::STEAM_TYPE;
+					$ban->type   = SBBan::TYPE_STEAM;
 					$ban->steam  = $steam;
 					$ban->name   = $name;
 					$ban->reason = 'Imported from esea_ban_list.csv';
@@ -234,14 +235,14 @@ class BansController extends Controller
 	 */
 	public function actionExport()
 	{
-		$type = Yii::app()->request->getQuery('type') == 'ip' ? SBBan::IP_TYPE : SBBan::STEAM_TYPE;
+		$type = Yii::app()->request->getQuery('type') == 'ip' ? SBBan::TYPE_IP : SBBan::TYPE_STEAM;
 		$bans = SBBan::model()->permanent()->findAllByAttributes(array('type' => $type));
 		
 		header('Content-Type: application/x-httpd-php php');
-		header('Content-Disposition: attachment; filename="banned_' . ($type == SBBan::IP_TYPE ? 'ip' : 'user') . '.cfg"');
+		header('Content-Disposition: attachment; filename="banned_' . ($type == SBBan::TYPE_IP ? 'ip' : 'user') . '.cfg"');
 		
 		foreach($bans as $ban)
-			printf("ban%s 0 %s\n", $type == SBBan::IP_TYPE ? 'ip' : 'id', $type == SBBan::IP_TYPE ? $ban->ip : $ban->steam);
+			printf("ban%s 0 %s\n", $type == SBBan::TYPE_IP ? 'ip' : 'id', $type == SBBan::TYPE_IP ? $ban->ip : $ban->steam);
 	}
 
 	public function canUpdate($type, $model)

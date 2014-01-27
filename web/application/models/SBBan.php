@@ -44,9 +44,9 @@
  */
 class SBBan extends CActiveRecord
 {
-	const STEAM_TYPE   = 0;
-	const IP_TYPE      = 1;
-	const DEFAULT_TYPE = 0;
+	const TYPE_STEAM   = 0;
+	const TYPE_IP      = 1;
+	const TYPE_DEFAULT = 0;
 	
 	/**
 	 * @var integer Steam Community ID
@@ -103,12 +103,12 @@ class SBBan extends CActiveRecord
 		{
 			$rules[] = array('steam', 'unique', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>self::STEAM_TYPE),
+				'params'=>array(':type'=>self::TYPE_STEAM),
 				'scopes'=>'active',
 			));
 			$rules[] = array('ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'condition'=>'type = :type',
-				'params'=>array(':type'=>self::IP_TYPE),
+				'params'=>array(':type'=>self::TYPE_IP),
 				'scopes'=>'active',
 			));
 		}
@@ -126,9 +126,9 @@ class SBBan extends CActiveRecord
 		return array(
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
 			'blocks' => array(self::HAS_MANY, 'SBBlock', 'ban_id'),
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::BAN_TYPE)),
-			'commentsCount' => array(self::STAT, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::BAN_TYPE)),
-			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::BAN_TYPE)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_BAN)),
+			'commentsCount' => array(self::STAT, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_BAN)),
+			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::TYPE_BAN)),
 			'protests' => array(self::HAS_MANY, 'SBProtest', 'ban_id'),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 			'unban_admin' => array(self::BELONGS_TO, 'SBAdmin', 'unban_admin_id'),
@@ -180,24 +180,24 @@ class SBBan extends CActiveRecord
 
 		if(isset($search))
 		{
-			$criteria->compare('t.steam',$search,true,'OR');
-			$criteria->compare('t.ip',$search,true,'OR');
-			$criteria->compare('t.name',$search,true,'OR');
+			$criteria->compare('t.steam', $search, true, 'OR');
+			$criteria->compare('t.ip', $search, true, 'OR');
+			$criteria->compare('t.name', $search, true, 'OR');
 		}
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.type',$this->type);
-		$criteria->compare('t.steam',$this->steam,true);
-		$criteria->compare('t.ip',$this->ip,true);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.reason',$this->reason,true);
-		$criteria->compare('t.length',$this->length);
-		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.admin_id',$this->admin_id);
-		$criteria->compare('t.admin_ip',$this->admin_ip,true);
-		$criteria->compare('t.unban_admin_id',$this->unban_admin_id);
-		$criteria->compare('t.unban_reason',$this->unban_reason,true);
-		$criteria->compare('t.unban_time',$this->unban_time);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.type', $this->type);
+		$criteria->compare('t.steam', $this->steam, true);
+		$criteria->compare('t.ip', $this->ip, true);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.reason', $this->reason, true);
+		$criteria->compare('t.length', $this->length);
+		$criteria->compare('t.server_id', $this->server_id);
+		$criteria->compare('t.admin_id', $this->admin_id);
+		$criteria->compare('t.admin_ip', $this->admin_ip, true);
+		$criteria->compare('t.unban_admin_id', $this->unban_admin_id);
+		$criteria->compare('t.unban_reason', $this->unban_reason, true);
+		$criteria->compare('t.unban_time', $this->unban_time);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -440,8 +440,8 @@ class SBBan extends CActiveRecord
 	public static function getTypes()
 	{
 		return array(
-			self::STEAM_TYPE => Yii::t('sourcebans', 'Steam ID'),
-			self::IP_TYPE    => Yii::t('sourcebans', 'IP address'),
+			self::TYPE_STEAM => Yii::t('sourcebans', 'Steam ID'),
+			self::TYPE_IP    => Yii::t('sourcebans', 'IP address'),
 		);
 	}
 	

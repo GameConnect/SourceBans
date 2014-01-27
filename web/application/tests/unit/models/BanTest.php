@@ -5,7 +5,7 @@ class BanTest extends CDbTestCase
 	{
 		$model = new SBBan;
 		$model->name = 'Test';
-		$model->type = SBBan::STEAM_TYPE;
+		$model->type = SBBan::TYPE_STEAM;
 		$model->steam = 'STEAM_0:1:2';
 		$model->reason = 'Testing';
 		$model->length = 5;

@@ -186,7 +186,7 @@
 		),
 		array(
 			'label' => Yii::t('sourcebans', 'Comments'),
-			'url' => array('comments/index', 'object_type'=>SBComment::BAN_TYPE, 'object_id'=>'__ID__'),
+			'url' => array('comments/index', 'object_type'=>SBComment::TYPE_BAN, 'object_id'=>'__ID__'),
 			'itemOptions' => array('class' => 'ban-menu-comments'),
 			'visible' => !Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('ADD_BANS'),
 		),

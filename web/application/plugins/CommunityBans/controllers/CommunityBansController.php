@@ -132,7 +132,7 @@ class CommunityBansController extends Controller
 			foreach($profiles as $i => $friend)
 			{
 				$ban         = new SBBan;
-				$ban->type   = SBBan::STEAM_TYPE;
+				$ban->type   = SBBan::TYPE_STEAM;
 				$ban->steam  = $steamids[$i];
 				$ban->name   = $friend['personaname'];
 				$ban->reason = 'Friend of Steam Community profile "' . $profile->steamID . '"';
@@ -159,7 +159,7 @@ class CommunityBansController extends Controller
 			foreach($profiles as $i => $member)
 			{
 				$ban         = new SBBan;
-				$ban->type   = SBBan::STEAM_TYPE;
+				$ban->type   = SBBan::TYPE_STEAM;
 				$ban->steam  = $steamids[$i];
 				$ban->name   = $member['personaname'];
 				$ban->reason = 'Member of Steam Community group "' . $group->groupName . '"';

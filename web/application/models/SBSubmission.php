@@ -69,8 +69,8 @@ class SBSubmission extends CActiveRecord
 			array('archived', 'boolean'),
 			array('name, user_name', 'length', 'max'=>64),
 			array('steam, ip', 'default', 'setOnEmpty'=>true),
-			array('steam', 'match', 'pattern'=>SourceBans::STEAM_PATTERN),
-			array('ip', 'match', 'pattern'=>SourceBans::IP_PATTERN),
+			array('steam', 'match', 'pattern'=>SourceBans::PATTERN_STEAM),
+			array('ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
 			array('steam, ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBSubmission.rules.err_unique'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
@@ -94,8 +94,8 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::SUBMISSION_TYPE)),
-			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::SUBMISSION_TYPE)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_SUBMISSION)),
+			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::TYPE_SUBMISSION)),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 		);
 	}
@@ -132,17 +132,17 @@ class SBSubmission extends CActiveRecord
 
 		$criteria=new CDbCriteria($criteria);
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.name',$this->name,true);
-		$criteria->compare('t.steam',$this->steam,true);
-		$criteria->compare('t.ip',$this->ip,true);
-		$criteria->compare('t.reason',$this->reason,true);
-		$criteria->compare('t.server_id',$this->server_id);
-		$criteria->compare('t.user_name',$this->user_name,true);
-		$criteria->compare('t.user_email',$this->user_email,true);
-		$criteria->compare('t.user_ip',$this->user_ip,true);
-		$criteria->compare('t.archived',$this->archived);
-		$criteria->compare('t.create_time',$this->create_time);
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.name', $this->name, true);
+		$criteria->compare('t.steam', $this->steam, true);
+		$criteria->compare('t.ip', $this->ip, true);
+		$criteria->compare('t.reason', $this->reason, true);
+		$criteria->compare('t.server_id', $this->server_id);
+		$criteria->compare('t.user_name', $this->user_name, true);
+		$criteria->compare('t.user_email', $this->user_email, true);
+		$criteria->compare('t.user_ip', $this->user_ip, true);
+		$criteria->compare('t.archived', $this->archived);
+		$criteria->compare('t.create_time', $this->create_time);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -186,7 +186,7 @@ class SBSubmission extends CActiveRecord
 	{
 		if($this->demo instanceof SBDemo)
 		{
-			$this->demo->object_type = SBDemo::SUBMISSION_TYPE;
+			$this->demo->object_type = SBDemo::TYPE_SUBMISSION;
 			$this->demo->object_id = $this->id;
 			$this->demo->save();
 		}

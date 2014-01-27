@@ -4,12 +4,13 @@ Thumbs.db
 # Eclipse
 .buildpath
 .project
-.settings
+.settings/
 
-# Yii
-web/assets/
-web/application/runtime/
-web/themes/classic/views/
+# PhpStorm
+.idea/
+
+# Sublime Text
+*.sublime-*
 
 # SourceBans
 web/application/config/sourcebans.php

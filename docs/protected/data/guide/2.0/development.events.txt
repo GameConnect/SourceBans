@@ -30,7 +30,7 @@ Models
 [php]
 class DemoObserver
 {
-	function __construct()
+	public function __construct()
 	{
 		SourceBans::app()->on('admins.saveAdmin', array($this, 'onSaveAdmin'));
 		SourceBans::app()->on('event', array($this, 'onEvent'));

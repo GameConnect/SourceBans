@@ -16,13 +16,13 @@
  *
  * NOTE, this file must be saved in UTF-8 encoding.
  */
-return array(
+return array (
 	'<h4>What happens if someone gets banned?</h4><p>If someone gets banned, the specific Steam ID will be included in this SourceBans database and everytime this player tries to connect to one of our servers he/she will be blocked and will receive a message that they are blocked by SourceBans.</p>' => '@@<h4>Что случается, когда кого-то банят?</h4><p>Если кто-то будет забанен, его или её SteamID будет записан в базу данных SourceBans и каждый раз, когда этот игрок будет пытаться подключиться к серверу, он или она будет видеть ошибку и получать сообщение с уведомлением, что его или её забанили системой SourceBans.</p>@@',
 	'<p>Here you will be able to submit a ban for a player who is breaking the rules of the gameserver. When submitting a ban we request you to fill out all the fields to be as descriptive as possible in your comments. This will ensure that your ban submission is processed much faster.</p><p>For a short explanation on how to create a demo, click <a id="demo_howto" href="#">here</a>.</p>' => '@@<p>Здесь Вы можете отправить заявку на блокировку игрока, который нарушает правила Вашего сервера. При заполнении заявки, излагайте наиболее точные и объективные причины. В таком случае Ваша заявка будет рассмотрена намного быстрее.</p><p>Чтобы получить помощь по созданию демо-записи, нажмите <a id="demo_howto" href="#">сюда</a>.</p>@@',
 	'A new release is available.' => 'Доступен новый релиз.',
 	'Access' => 'Доступ',
 	'Add comment' => 'Добавить комментарий',
-	'Add to group' => '',
+	'Add to group' => '@@@@',
 	'Admin' => 'Администратор',
 	'Admins in group' => 'Администраторов в группе',
 	'Advanced search' => 'Расширенный поиск',
@@ -32,9 +32,9 @@ return array(
 	'Archived' => 'Перемещено в архив',
 	'Archived protests' => 'Архив протестов',
 	'Archived submissions' => 'Архив заявок',
-	'Are you sure you want to add these items to {name}?' => '',
+	'Are you sure you want to add these items to {name}?' => '@@@@',
 	'Are you sure you want to kick {name}?' => 'Вы уверены, что хотите отключить {name}?',
-	'Are you sure you want to remove these items from {name}?' => '',
+	'Are you sure you want to remove these items from {name}?' => '@@@@',
 	'Are you sure you want to uninstall this plugin?\nThis will delete all its data!' => 'Вы уверены, что хотите удалить плагин?\nУдаление сотрёт все данные!',
 	'Authentication type' => 'Тип аутентификации',
 	'Author' => 'Автор',
@@ -132,7 +132,7 @@ return array(
 	'Reban' => '@@Забанить снова@@',
 	'Refresh' => 'Обновить',
 	'Remove' => 'Удалить',
-	'Remove from group' => '',
+	'Remove from group' => '@@@@',
 	'Restore' => '@@Восстановить@@',
 	'Save' => 'Сохранить',
 	'Saved successfully' => 'Успешно сохранено',

@@ -286,7 +286,7 @@ return array(
 	'models.AccountForm.new_server_password' => 'Neues Passwort',
 	'models.AccountForm.theme' => 'Thema',
 	'models.AccountForm.timezone' => 'Zeitzone',
-	'models.LoginForm.authenticate.error' => '',
+	'models.LoginForm.authenticate.error' => 'Benutzername oder Passwort ist nicht korrekt.',
 	'models.LoginForm.password' => 'Passwort',
 	'models.LoginForm.rememberMe' => 'Eingeloggt bleiben',
 	'models.LoginForm.username' => 'Benutzername',

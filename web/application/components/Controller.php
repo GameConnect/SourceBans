@@ -65,6 +65,7 @@ class Controller extends CController
 	 * This method is invoked right before an action is to be executed (after all possible filters.)
 	 * You may override this method to do last-minute preparation for the action.
 	 * @param CAction $action the action to be executed.
+	 * @return boolean whether the action should be executed.
 	 */
 	protected function beforeAction($action)
 	{
@@ -79,6 +80,7 @@ class Controller extends CController
 	 * This method is invoked at the beginning of {@link CController::render()}.
 	 * You may override this method to do some preprocessing when rendering a view.
 	 * @param string $view the view to be rendered
+	 * @return boolean whether the view should be rendered.
 	 */
 	protected function beforeRender($view)
 	{

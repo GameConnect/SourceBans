@@ -1,0 +1,21 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+# run build against hhvm but allow them to fail
+# http://docs.travis-ci.com/user/build-configuration/#Rows-That-are-Allowed-To-Fail
+matrix:
+  allow_failures:
+    - php: hhvm
+
+before_script:
+  - mysql -uroot -e 'CREATE DATABASE sourcebans_test CHARACTER SET utf8 COLLATE utf8_general_ci;'
+  - cat web/install/data/install.sql | sed 's/{prefix}//' | mysql -uroot -D sourcebans_test
+  - cd web/application/tests
+
+script: phpunit --colors --no-globals-backup unit

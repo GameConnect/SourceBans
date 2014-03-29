@@ -4,8 +4,8 @@ SourceBans consists of a game plugin that runs on your Source game server, and a
 
 ## Requirements
 
-SourceBans requires PHP 5.2 and MySQL 5.0 or above. It has been tested with [Apache HTTP server](http://httpd.apache.org/),  
-but it may also run on other Web servers and platforms, provided PHP 5.2 is supported. For [Nginx](http://wiki.nginx.org),  
+SourceBans requires PHP 5.3 and MySQL 5.0 or above. It has been tested with [Apache HTTP server](http://httpd.apache.org/),
+but it may also run on other Web servers and platforms, provided PHP 5.3 is supported. For [Nginx](http://wiki.nginx.org),
 refer to this [sample host configuration](http://yiiframework.com/doc/guide/quickstart.apache-nginx-config#nginx).
 
 Your game server requires [Metamod:Source](http://metamodsource.net) and [SourceMod](http://sourcemod.net).

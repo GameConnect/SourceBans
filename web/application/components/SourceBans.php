@@ -89,7 +89,7 @@ class SourceBans extends CApplicationComponent
 			while(($file = @readdir($folder)) !== false)
 			{
 				if($file{0} === '.' || !is_dir($basePath . DIRECTORY_SEPARATOR .  $file))
-				  continue;
+					continue;
 				
 				$_data[$file] = CLocale::getInstance($file)->getLocaleDisplayName($file);
 				if($file !== Yii::app()->language)

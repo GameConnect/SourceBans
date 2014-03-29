@@ -468,15 +468,20 @@ class SBAdmin extends CActiveRecord
 			$criteria->params = array(':admin_id' => $this->id);
 			$this->commandBuilder->createDeleteCommand('{{admins_server_groups}}', $criteria)->execute();
 			
-			// Insert new server groups, order by inherit_order
-			$i = 0;
-			foreach((array)$this->server_groups as $group)
+			if($this->server_groups !== array())
 			{
-				$this->commandBuilder->createInsertCommand('{{admins_server_groups}}', array(
-					'admin_id' => $this->id,
-					'group_id' => $group instanceof SBServerGroup ? $group->id : $group,
-					'inherit_order' => ++$i,
-				))->execute();
+				// Insert new server groups, order by inherit_order
+				$i = 0;
+				$server_groups = array();
+				foreach((array)$this->server_groups as $group)
+				{
+					$server_groups[] = array(
+						'admin_id' => $this->id,
+						'group_id' => $group instanceof SBServerGroup ? $group->id : $group,
+						'inherit_order' => ++$i,
+					);
+				}
+				$this->commandBuilder->createMultipleInsertCommand('{{admins_server_groups}}', $server_groups)->execute();
 			}
 		}
 		

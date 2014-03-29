@@ -21,7 +21,7 @@ foreach($paths as $path)
 define('FILE_UPLOADS',      ini_get('file_uploads'));
 define('MYSQL_VERSION',     preg_replace('/.+([0-9]+?\.[0-9]+?\.[0-9]+?).+/', '$1', mysql_get_client_info()));
 define('MYSQL_VERSION_REQ', '5.0');
-define('PHP_VERSION_REQ',   '5.2');
+define('PHP_VERSION_REQ',   '5.3');
 define('REGISTER_GLOBALS',  ini_get('register_globals'));
 define('SAFE_MODE',         ini_get('safe_mode'));
 define('WRITABLE_ASSETS',   is_writable($paths['assets']));

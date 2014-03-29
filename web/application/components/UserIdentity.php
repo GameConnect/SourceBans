@@ -29,6 +29,7 @@ class UserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
+		/** @var SBAdmin $admin */
 		$admin = SBAdmin::model()->find(array(
 			'condition' => 'name = :username OR email = :username',
 			'params' => array(':username' => $this->username),

@@ -1,22 +1,33 @@
 <?php
-class ServerTest extends CDbTestCase
+class ServerTest extends DbTestCase
 {
-	public function testCrud()
+	public $fixtures = array(
+		'games'   => 'SBGame',
+		'servers' => 'SBServer',
+	);
+	
+	public function testCreate()
 	{
-		$game = SBGame::model()->findByAttributes(array('folder' => 'tf'));
-		$this->assertTrue($game !== null);
-		
+		$game  = $this->games('tf');
 		$model = new SBServer;
-		$model->ip = '1.2.3.4';
+		
+		$model->ip      = '1.2.3.4';
 		$model->game_id = $game->id;
 		$this->assertTrue($model->save());
+	}
+	
+	public function testUpdate()
+	{
+		$model = $this->servers('192.168.1.2');
 		
-		$model = SBServer::model()->findByAttributes(array('ip' => '1.2.3.4'));
-		$this->assertTrue($model !== null);
-		
-		$model->port = 27016;
-		$model->enabled = false;
+		$model->port    = 27017;
+		$model->enabled = true;
 		$this->assertTrue($model->save());
+	}
+	
+	public function testDelete()
+	{
+		$model = $this->servers('192.168.1.2');
 		$this->assertTrue($model->delete());
 	}
 }

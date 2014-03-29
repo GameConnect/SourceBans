@@ -42,6 +42,7 @@ class LostPasswordForm extends CFormModel
 	 */
 	public function reset()
 	{
+		/** @var SBAdmin $admin */
 		$admin = SBAdmin::model()->findByAttributes(array(
 			'email' => $this->email,
 		));

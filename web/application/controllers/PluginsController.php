@@ -67,7 +67,7 @@ class PluginsController extends Controller
 				?SBPlugin::STATUS_ENABLED
 				:SBPlugin::STATUS_INSTALLED;
 			$plugin->save();
-			SourceBans::log('Plugin installed', 'Plugin "' . $plugin->name . '" was installed');
+			SourceBans::log('Plugin installed', 'Plugin "' . $plugin . '" was installed');
 		}
 		catch(Exception $e)
 		{
@@ -86,12 +86,12 @@ class PluginsController extends Controller
 	{
 		$plugin=$this->loadModel($id);
 		
-		$this->pageTitle=$plugin->name;
+		$this->pageTitle=$plugin;
 		
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.settings.menu.plugins') => array('admin/settings', '#'=>'plugins'),
-			$plugin->name,
+			$plugin,
 		);
 		
 		$this->menu=array(
@@ -113,7 +113,7 @@ class PluginsController extends Controller
 			$plugin->runUninstall();
 			$plugin->status=0;
 			$plugin->save();
-			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin->name . '" was uninstalled', SBLog::TYPE_WARNING);
+			SourceBans::log('Plugin uninstalled', 'Plugin "' . $plugin . '" was uninstalled', SBLog::TYPE_WARNING);
 		}
 		catch(Exception $e)
 		{

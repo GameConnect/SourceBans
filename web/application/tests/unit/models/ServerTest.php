@@ -11,7 +11,7 @@ class ServerTest extends DbTestCase
 		$game  = $this->games('tf');
 		$model = new SBServer;
 		
-		$model->ip      = '1.2.3.4';
+		$model->host    = '1.2.3.4';
 		$model->game_id = $game->id;
 		$this->assertTrue($model->save());
 	}

@@ -66,7 +66,7 @@ class GroupsController extends Controller
 			$model->attributes=$_POST[$class];
 			if($model->save())
 			{
-				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was added');
+				SourceBans::log('Group added', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/groups','#'=>$model->id));
@@ -90,7 +90,7 @@ class GroupsController extends Controller
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.groups.title') => array('admin/groups'),
-			$model->name,
+			$model,
 		);
 		
 		$this->menu=array(
@@ -105,7 +105,7 @@ class GroupsController extends Controller
 			$model->attributes=$_POST[$class];
 			if($model->save())
 			{
-				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was edited');
+				SourceBans::log('Group edited', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/groups','#'=>$model->id));
@@ -126,7 +126,7 @@ class GroupsController extends Controller
 	{
 		$type=Yii::app()->request->getQuery('type');
 		$model=$this->loadModel($id, $type);
-		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model->name . '" was deleted', SBLog::TYPE_WARNING);
+		SourceBans::log('Group deleted', ($type == 'web' ? 'Web' : 'Server') . ' group "' . $model . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

@@ -33,7 +33,7 @@
 			'htmlOptions'=>array(
 				'class'=>'ServerQuery_hostname',
 			),
-			'value'=>'Yii::t("sourcebans", "components.ServerQuery.loading") . " (" . $data->ip . ":" . $data->port . ")"',
+			'value'=>'Yii::t("sourcebans", "components.ServerQuery.loading") . " (" . $data . ")"',
 		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Players'),

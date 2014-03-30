@@ -20,10 +20,10 @@
 )) ?>
 
   <div class="control-group">
-    <?php echo $form->labelEx($model,'ip',array('class' => 'control-label')); ?>
+    <?php echo $form->labelEx($model,'host',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'ip',array('size'=>15,'maxlength'=>15)); ?>
-      <?php echo $form->error($model,'ip'); ?>
+      <?php echo $form->textField($model,'host',array('size'=>15,'maxlength'=>255)); ?>
+      <?php echo $form->error($model,'host'); ?>
     </div>
   </div>
 

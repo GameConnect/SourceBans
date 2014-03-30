@@ -64,7 +64,7 @@ class GamesController extends Controller
 			$model->attributes=$_POST['SBGame'];
 			if($model->save())
 			{
-				SourceBans::log('Game added', 'Game "' . $model->name . '" was added');
+				SourceBans::log('Game added', 'Game "' . $model . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/games','#'=>$model->id));
@@ -86,7 +86,7 @@ class GamesController extends Controller
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.games.title') => array('admin/games'),
-			$model->name,
+			$model,
 		);
 		
 		$this->menu=array(
@@ -101,7 +101,7 @@ class GamesController extends Controller
 			$model->attributes=$_POST['SBGame'];
 			if($model->save())
 			{
-				SourceBans::log('Game edited', 'Game "' . $model->name . '" was edited');
+				SourceBans::log('Game edited', 'Game "' . $model . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/games','#'=>$model->id));
@@ -121,7 +121,7 @@ class GamesController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Game deleted', 'Game "' . $model->name . '" was deleted', SBLog::TYPE_WARNING);
+		SourceBans::log('Game deleted', 'Game "' . $model . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser

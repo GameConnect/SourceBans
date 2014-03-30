@@ -202,7 +202,7 @@ class SiteController extends Controller
 		
 		$games = SBGame::model()->with('servers:enabled')->findAll(array(
 			'condition' => 'servers.id IS NOT NULL',
-			'order' => 'name, servers.ip, servers.port',
+			'order' => 'name, servers.host, servers.port',
 		));
 		
 		$this->render('submitban', array(

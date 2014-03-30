@@ -121,7 +121,7 @@ class ServersController extends Controller
 				$model->groups=array();
 			if($model->save())
 			{
-				SourceBans::log('Server added', 'Server "' . $model->ip . ':' . $model->port . '" was added');
+				SourceBans::log('Server added', 'Server "' . $model . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/servers','#'=>$model->id));
@@ -143,7 +143,7 @@ class ServersController extends Controller
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
-			$model->address,
+			$model,
 		);
 		
 		$this->menu=array(
@@ -160,7 +160,7 @@ class ServersController extends Controller
 				$model->groups=array();
 			if($model->save())
 			{
-				SourceBans::log('Server edited', 'Server "' . $model->ip . ':' . $model->port . '" was edited');
+				SourceBans::log('Server edited', 'Server "' . $model . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('admin/servers','#'=>$model->id));
@@ -180,7 +180,7 @@ class ServersController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Server deleted', 'Server "' . $model->ip . ':' . $model->port . '" was deleted', SBLog::TYPE_WARNING);
+		SourceBans::log('Server deleted', 'Server "' . $model . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -226,7 +226,7 @@ class ServersController extends Controller
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.servers.title') => array('admin/servers'),
-			$model->address,
+			$model,
 		);
 		
 		$this->menu=array(
@@ -343,28 +343,28 @@ class ServersController extends Controller
 		$results = array();
 		foreach($servers as $server)
 		{
-			$query  = new ServerQuery($server->ip, $server->port);
+			$query  = new ServerQuery($server->host, $server->port);
 			$result = array(
 				'id'   => $server->id,
-				'ip'   => $server->ip,
+				'host' => $server->host,
 				'port' => $server->port,
 			);
 			
 			if($queries & self::QUERY_INFO)
 			{
-				$info   = $query->getInfo();
+				$info = $query->getInfo();
 				if(empty($info))
 				{
 					$result['error'] = array(
 						'code'    => 'ERR_TIMEOUT',
-						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_timeout') . ' (' . $server->ip . ':' . $server->port . ')',
+						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_timeout') . ' (' . $server . ')',
 					);
 				}
 				else if($info['hostname'] == "anned by server\n")
 				{
 					$result['error'] = array(
 						'code'    => 'ERR_BLOCKED',
-						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_blocked') . ' (' . $server->ip . ':' . $server->port . ')',
+						'message' => Yii::t('sourcebans', 'components.ServerQuery.err_blocked') . ' (' . $server . ')',
 					);
 				}
 				else
@@ -418,10 +418,10 @@ class ServersController extends Controller
 		$results = array();
 		foreach($servers as $server)
 		{
-			$rcon   = new ServerRcon($server->ip, $server->port, $server->rcon);
+			$rcon   = new ServerRcon($server->host, $server->port, $server->rcon);
 			$result = array(
 				'id'   => $server->id,
-				'ip'   => $server->ip,
+				'host' => $server->host,
 				'port' => $server->port,
 			);
 			

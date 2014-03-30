@@ -9,7 +9,7 @@
  *
  * The followings are the available columns in table '{{servers}}':
  * @property integer $id ID
- * @property string $ip IP address
+ * @property string $host Hostname or IP address
  * @property integer $port Port
  * @property string $rcon RCON password
  * @property integer $game_id Game ID
@@ -34,7 +34,7 @@ class SBServer extends CActiveRecord
 	
 	public function __toString()
 	{
-		return $this->address;
+		return $this->host . ':' . $this->port;
 	}
 	
 	
@@ -70,15 +70,15 @@ class SBServer extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ip, game_id', 'required'),
+			array('host, game_id', 'required'),
 			array('port, game_id', 'numerical', 'integerOnly'=>true),
 			array('enabled', 'boolean'),
-			array('ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
+			array('host', 'application.validators.HostValidator'),
 			array('rcon', 'length', 'max'=>32),
 			array('groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, ip, port, rcon, game_id, enabled', 'safe', 'on'=>'search'),
+			array('id, host, port, rcon, game_id, enabled', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -106,7 +106,7 @@ class SBServer extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'ip' => Yii::t('sourcebans', 'IP address'),
+			'host' => Yii::t('sourcebans', 'IP address'),
 			'port' => Yii::t('sourcebans', 'Port'),
 			'rcon' => Yii::t('sourcebans', 'RCON password'),
 			'game_id' => Yii::t('sourcebans', 'Game'),
@@ -129,7 +129,7 @@ class SBServer extends CActiveRecord
 		$criteria->with='game';
 
 		$criteria->compare('t.id', $this->id);
-		$criteria->compare('t.ip', $this->ip, true);
+		$criteria->compare('t.host', $this->host, true);
 		$criteria->compare('t.port', $this->port);
 		$criteria->compare('t.rcon', $this->rcon, true);
 		$criteria->compare('t.game_id', $this->game_id);
@@ -150,7 +150,7 @@ class SBServer extends CActiveRecord
 				),
 				'defaultOrder'=>array(
 					'game.name'=>CSort::SORT_ASC,
-					'ip'=>CSort::SORT_ASC,
+					'host'=>CSort::SORT_ASC,
 					'port'=>CSort::SORT_ASC,
 				),
 			),
@@ -178,11 +178,6 @@ class SBServer extends CActiveRecord
 				'class'=>'ext.EActiveRecordRelationBehavior',
 			),
 		);
-	}
-	
-	public function getAddress()
-	{
-		return $this->ip . ':' . $this->port;
 	}
 	
 	public function getInfo()
@@ -224,7 +219,7 @@ class SBServer extends CActiveRecord
 	{
 		if(!isset($this->_query))
 		{
-			$this->_query = new ServerQuery($this->ip, $this->port);
+			$this->_query = new ServerQuery($this->host, $this->port);
 		}
 		
 		return $this->_query;
@@ -234,7 +229,7 @@ class SBServer extends CActiveRecord
 	{
 		if(!isset($this->_rcon))
 		{
-			$this->_rcon = new ServerRcon($this->ip, $this->port, $this->rcon);
+			$this->_rcon = new ServerRcon($this->host, $this->port, $this->rcon);
 			if(!$this->_rcon->auth())
 				return false;
 		}

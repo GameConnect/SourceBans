@@ -50,7 +50,7 @@
 			'htmlOptions'=>array(
 				'class'=>'ServerQuery_hostname',
 			),
-			'value'=>'Yii::t("sourcebans", "components.ServerQuery.loading") . " (" . $data->ip . ":" . $data->port . ")"',
+			'value'=>'Yii::t("sourcebans", "components.ServerQuery.loading") . " (" . $data . ")"',
 		),
 		array(
 			'header'=>Yii::t('sourcebans', 'Players'),
@@ -124,8 +124,8 @@
   <div class="pull-right">
     <img alt="<%=(server.error ? "<?php echo Yii::t('sourcebans', 'Unknown') ?>" : server.map) %>" class="map-image img-rounded" src="<%=(server.error || !server.map_image ? "<?php echo Yii::app()->baseUrl ?>/images/maps/unknown.jpg" : server.map_image) %>" />
     <div class="well text-center">
-      <p><%=server.ip %>:<%=server.port %></p>
-      <a class="btn btn-success" href="steam://connect/<%=server.ip %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Join game') ?></a>
+      <p><%=server.host %>:<%=server.port %></p>
+      <a class="btn btn-success" href="steam://connect/<%=server.host %>:<%=server.port %>"><?php echo Yii::t('sourcebans', 'Join game') ?></a>
       <a class="btn btn-info" href="javascript:queryServer(<%=server.id %>)"><?php echo Yii::t('sourcebans', 'Refresh') ?></a>
     </div>
   </div>

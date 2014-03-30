@@ -77,7 +77,7 @@ class BansController extends Controller
 				$demo->object_id=$model->id;
 				$demo->save();
 				
-				SourceBans::log('Ban added', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was added');
+				SourceBans::log('Ban added', 'Ban against "' . $model . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('site/bans','#'=>$model->id));
@@ -99,7 +99,7 @@ class BansController extends Controller
 		$this->breadcrumbs=array(
 			Yii::t('sourcebans', 'controllers.admin.index.title') => array('admin/index'),
 			Yii::t('sourcebans', 'controllers.admin.bans.title') => array('admin/bans'),
-			$model->name,
+			$model,
 		);
 		
 		$this->menu=array(
@@ -117,7 +117,7 @@ class BansController extends Controller
 			$model->attributes=$_POST['SBBan'];
 			if($model->save())
 			{
-				SourceBans::log('Ban edited', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was edited');
+				SourceBans::log('Ban edited', 'Ban against "' . $model . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->redirect(array('site/bans','#'=>$model->id));
@@ -137,7 +137,7 @@ class BansController extends Controller
 	public function actionDelete($id)
 	{
 		$model=$this->loadModel($id);
-		SourceBans::log('Ban deleted', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was deleted', SBLog::TYPE_WARNING);
+		SourceBans::log('Ban deleted', 'Ban against "' . $model . '" was deleted', SBLog::TYPE_WARNING);
 		$model->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -158,7 +158,7 @@ class BansController extends Controller
 		if(!$this->canUpdate('UNBAN', $model))
 			throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
 		
-		SourceBans::log('Ban unbanned', 'Ban against "' . ($model->type == SBBan::TYPE_IP ? $model->ip : $model->steam) . '" was unbanned');
+		SourceBans::log('Ban unbanned', 'Ban against "' . $model . '" was unbanned');
 		Yii::app()->end(CJSON::encode($model->unban($reason)));
 	}
 

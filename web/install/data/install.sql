@@ -317,7 +317,7 @@ CREATE TABLE {prefix}server_groups_immunity (
 
 CREATE TABLE {prefix}servers (
   id smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  ip varchar(15) NOT NULL,
+  host varchar(255) NOT NULL,
   port smallint(5) unsigned NOT NULL DEFAULT '27015',
   rcon varchar(32) DEFAULT NULL,
   game_id tinyint(3) unsigned NULL,

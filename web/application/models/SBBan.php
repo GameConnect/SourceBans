@@ -56,6 +56,14 @@ class SBBan extends CActiveRecord
 	private $_community;
 	
 	
+	public function __toString()
+	{
+		return $this->type == self::TYPE_IP
+			? $this->ip
+			: $this->steam;
+	}
+	
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.

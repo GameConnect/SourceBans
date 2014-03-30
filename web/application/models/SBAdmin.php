@@ -13,7 +13,6 @@
  * @property string $auth Authentication type
  * @property string $identity Identity
  * @property string $password Password
- * @property string $password_key Password key
  * @property integer $group_id Web group ID
  * @property string $email Email address
  * @property string $language Language
@@ -106,7 +105,7 @@ class SBAdmin extends CActiveRecord
 			array('email', 'email'),
 			array('email', 'length', 'max'=>128),
 			array('language, theme, timezone, server_password', 'default', 'setOnEmpty'=>true),
-			array('password, password_key, validation_key, login_time, server_groups', 'safe'),
+			array('password, validation_key, login_time, server_groups', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, auth, identity, group_id, email, language, theme, login_time, create_time', 'safe', 'on'=>'search'),
@@ -393,13 +392,16 @@ class SBAdmin extends CActiveRecord
 	
 	public function setPassword($password)
 	{
-		$this->password_key = self::getPasswordKey();
-		$this->password = self::getPasswordHash($password, $this->password_key);
+		$this->password = CPasswordHelper::hashPassword($password);
 	}
 	
 	public function validatePassword($password)
 	{
-		return $this->password == self::getPasswordHash($password, $this->password_key);
+		// Backwards compatibility with old password format
+		if(strlen($this->password) == 40)
+			return $this->password == sha1(sha1('SourceBans' . $password));
+		
+		return CPasswordHelper::verifyPassword($password, $this->password);
 	}
 	
 	
@@ -426,35 +428,6 @@ class SBAdmin extends CActiveRecord
 			self::AUTH_IP    => Yii::t('sourcebans', 'IP address'),
 			self::AUTH_NAME  => Yii::t('sourcebans', 'Name'),
 		);
-	}
-	
-	/**
-	 * Returns a random hash based on a password and a password key
-	 * 
-	 * @param string $password the password
-	 * @param string $key the password key
-	 * @return string a random hash
-	 */
-	public static function getPasswordHash($password, $key = null)
-	{
-		if(empty($password))
-			return null;
-		
-		// Backwards compatibility with old password format
-		if(empty($key))
-			return sha1(sha1('SourceBans' . $password));
-		
-		return sha1((str_repeat(chr(0x5C), 64) ^ $key) . pack('H40', sha1((str_repeat(chr(0x36), 64) ^ $key) . $password)));
-	}
-	
-	/**
-	 * Returns a random password key
-	 * 
-	 * @return string a random password key
-	 */
-	public static function getPasswordKey()
-	{
-		return sprintf('%08x%08x%08x%08x', mt_rand(), mt_rand(), mt_rand(), mt_rand());
 	}
 	
 	

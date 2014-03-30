@@ -36,7 +36,6 @@ CREATE TABLE {prefix}admins (
   auth enum('steam','name','ip') NOT NULL,
   identity varchar(64) NOT NULL,
   password varchar(64) DEFAULT NULL,
-  password_key varchar(64) DEFAULT NULL,
   group_id tinyint(3) unsigned DEFAULT NULL,
   email varchar(128) DEFAULT NULL,
   language varchar(2) DEFAULT NULL,

@@ -349,8 +349,11 @@ class SiteController extends Controller
 			if($model->validate() && $model->login())
 				$this->redirect(Yii::app()->user->returnUrl);
 		}
+
 		// display the login form
-		$this->render('login',array('model'=>$model));
+		$this->render('login', array(
+			'model' => $model,
+		));
 	}
 
 	/**
@@ -395,6 +398,7 @@ class SiteController extends Controller
 		$validationKey = Yii::app()->request->getQuery('key');
 		if(!empty($email) && !empty($validationKey))
 		{
+			/** @var SBAdmin $admin */
 			$admin = SBAdmin::model()->findByAttributes(array(
 				'email' => $email,
 				'validation_key' => $validationKey,
@@ -402,7 +406,7 @@ class SiteController extends Controller
 			if($admin === null)
 				throw new CHttpException(403, 'The validation key does not match the email address for this reset request.');
 			
-			$password = substr(str_shuffle('qwertyuiopasdfghjklmnbvcxz0987612345'), 0, 8);
+			$password = Yii::app()->securityManager->generateRandomString(8, false);
 			Yii::app()->mailer->AddAddress($admin->email);
 			Yii::app()->mailer->Subject = Yii::t('sourcebans', 'controllers.site.lostPassword.subject');
 			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'controllers.site.lostPassword.body', array(
@@ -420,6 +424,8 @@ class SiteController extends Controller
 		}
 
 		// display the lost password form
-		$this->render('lostpassword',array('model'=>$model));
+		$this->render('lostpassword', array(
+			'model' => $model,
+		));
 	}
 }

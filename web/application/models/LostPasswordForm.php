@@ -49,7 +49,7 @@ class LostPasswordForm extends CFormModel
 		if($admin === null)
 			return false;
 		
-		$validationKey = SBAdmin::getPasswordKey();
+		$validationKey = Yii::app()->securityManager->generateRandomString(32, false);
 		Yii::app()->mailer->AddAddress($admin->email);
 		Yii::app()->mailer->Subject = Yii::t('sourcebans', 'models.LostPasswordForm.reset.subject');
 		Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'models.LostPasswordForm.reset.body', array(

@@ -14,6 +14,7 @@
  * @property string $rcon RCON password
  * @property integer $game_id Game ID
  * @property boolean $enabled Enabled
+ * @property string $address Address
  *
  * The followings are the available model relations:
  * @property SBAction[] $actions Actions
@@ -34,7 +35,7 @@ class SBServer extends CActiveRecord
 	
 	public function __toString()
 	{
-		return $this->host . ':' . $this->port;
+		return $this->address;
 	}
 	
 	
@@ -178,6 +179,11 @@ class SBServer extends CActiveRecord
 				'class'=>'ext.EActiveRecordRelationBehavior',
 			),
 		);
+	}
+	
+	public function getAddress()
+	{
+		return $this->host . ':' . $this->port;
 	}
 	
 	public function getInfo()

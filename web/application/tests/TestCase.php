@@ -1,7 +1,5 @@
 <?php
-Yii::import('system.test.CTestCase');
-
-class TestCase extends CTestCase
+class TestCase extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * Clean up after test.

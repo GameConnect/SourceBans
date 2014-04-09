@@ -16,5 +16,6 @@ matrix:
 before_script:
   - mysql -uroot -e 'CREATE DATABASE sourcebans_test CHARACTER SET utf8 COLLATE utf8_general_ci;'
   - cat web/install/data/install.sql | sed 's/{prefix}//' | mysql -uroot -D sourcebans_test
+  - cd web/application/tests
 
-script: phpunit -c web/application/tests/phpunit.xml --colors --no-globals-backup web/application/tests/unit
+script: phpunit --colors --no-globals-backup unit

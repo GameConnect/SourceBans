@@ -1,5 +1,5 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>(isset($archive) ? 'archived' : 'active') . '-submissions-grid',
+	'id'=>(isset($archive) ? 'archived' : 'active') . '-reports-grid',
 	'dataProvider'=>$model->search(array(
 		'scopes'=>isset($archive) ? 'archived' : 'active',
 	)),

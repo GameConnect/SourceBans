@@ -22,7 +22,7 @@
  * @property SBBlock[] $blocks Blocks
  * @property SBGame $game Game
  * @property SBServerGroup[] $groups Groups
- * @property SBSubmission[] $submissions Submissions
+ * @property SBReport[] $reports Reports
  *
  * @package sourcebans.models
  * @since 2.0
@@ -96,7 +96,7 @@ class SBServer extends CActiveRecord
 			'blocks' => array(self::HAS_MANY, 'SBBlock', 'server_id'),
 			'game' => array(self::BELONGS_TO, 'SBGame', 'game_id'),
 			'groups' => array(self::MANY_MANY, 'SBServerGroup', '{{servers_server_groups}}(server_id, group_id)'),
-			'submissions' => array(self::HAS_MANY, 'SBSubmission', 'server_id'),
+			'reports' => array(self::HAS_MANY, 'SBReport', 'server_id'),
 		);
 	}
 

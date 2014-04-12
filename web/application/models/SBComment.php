@@ -20,8 +20,8 @@
  * The followings are the available model relations:
  * @property SBAdmin $admin Admin
  * @property SBBan $ban Ban
- * @property SBProtest $protest Protest
- * @property SBSubmission $submission Submission
+ * @property SBAppeal $appeal Appeal
+ * @property SBReport $report Report
  * @property SBAdmin $update_admin Edit admin
  *
  * @package sourcebans.models
@@ -29,9 +29,9 @@
  */
 class SBComment extends CActiveRecord
 {
-	const TYPE_BAN        = 'B';
-	const TYPE_PROTEST    = 'P';
-	const TYPE_SUBMISSION = 'S';
+	const TYPE_BAN    = 'B';
+	const TYPE_APPEAL = 'P';
+	const TYPE_REPORT = 'S';
 	
 	
 	/**
@@ -77,8 +77,8 @@ class SBComment extends CActiveRecord
 		return array(
 			'admin' => array(self::BELONGS_TO, 'SBAdmin', 'admin_id'),
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_BAN)),
-			'protest' => array(self::BELONGS_TO, 'SBProtest', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_PROTEST)),
-			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_SUBMISSION)),
+			'appeal' => array(self::BELONGS_TO, 'SBAppeal', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_APPEAL)),
+			'report' => array(self::BELONGS_TO, 'SBReport', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_REPORT)),
 			'update_admin' => array(self::BELONGS_TO, 'SBAdmin', 'update_admin_id'),
 		);
 	}
@@ -143,10 +143,5 @@ class SBComment extends CActiveRecord
 				'attributes' => 'admin_id',
 			),
 		);
-	}
-	
-	protected function beforeSave()
-	{
-		return parent::beforeSave();
 	}
 }

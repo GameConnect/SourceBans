@@ -1,13 +1,13 @@
 <?php
 
 /**
- * This is the model class for table "{{protests}}".
+ * This is the model class for table "{{appeals}}".
  *
  * @author GameConnect
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  *
- * The followings are the available columns in table '{{protests}}':
+ * The followings are the available columns in table '{{appeals}}':
  * @property integer $id ID
  * @property integer $ban_id Ban ID
  * @property string $reason Reason
@@ -23,7 +23,7 @@
  * @package sourcebans.models
  * @since 2.0
  */
-class SBProtest extends CActiveRecord
+class SBAppeal extends CActiveRecord
 {
 	public $ban_steam;
 	public $ban_ip;
@@ -31,7 +31,7 @@ class SBProtest extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return SBProtest the static model class
+	 * @return SBAppeal the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -43,7 +43,7 @@ class SBProtest extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{protests}}';
+		return '{{appeals}}';
 	}
 
 	/**
@@ -62,7 +62,7 @@ class SBProtest extends CActiveRecord
 			array('ban_steam, ban_ip', 'default', 'setOnEmpty'=>true),
 			array('ban_steam', 'match', 'pattern'=>SourceBans::PATTERN_STEAM),
 			array('ban_ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
-			array('ban_steam, ban_ip', 'application.validators.SBProtestBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBProtest.rules.err_not_banned'), 'criteria'=>array(
+			array('ban_steam, ban_ip', 'application.validators.SBAppealBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBAppeal.rules.err_not_banned'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
 			array('ban_id', 'safe'),
@@ -81,7 +81,7 @@ class SBProtest extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'ban_id'),
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_PROTEST)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_APPEAL)),
 		);
 	}
 

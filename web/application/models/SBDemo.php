@@ -15,15 +15,15 @@
  *
  * The followings are the available model relations:
  * @property SBBan $ban Ban
- * @property SBSubmission $submission Submission
+ * @property SBReport $report Report
  *
  * @package sourcebans.models
  * @since 2.0
  */
 class SBDemo extends CActiveRecord
 {
-	const TYPE_BAN        = 'B';
-	const TYPE_SUBMISSION = 'S';
+	const TYPE_BAN    = 'B';
+	const TYPE_REPORT = 'S';
 	
 	
 	public function __toString()
@@ -74,7 +74,7 @@ class SBDemo extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'ban' => array(self::BELONGS_TO, 'SBBan', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_BAN)),
-			'submission' => array(self::BELONGS_TO, 'SBSubmission', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_SUBMISSION)),
+			'report' => array(self::BELONGS_TO, 'SBReport', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => self::TYPE_REPORT)),
 		);
 	}
 

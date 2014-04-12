@@ -2,13 +2,13 @@
 /* @var $this AdminController */
 /* @var $demosize string */
 /* @var $total_admins integer */
-/* @var $total_archived_protests integer */
-/* @var $total_archived_submissions integer */
+/* @var $total_archived_appeals integer */
+/* @var $total_archived_reports integer */
 /* @var $total_bans integer */
 /* @var $total_blocks integer */
-/* @var $total_protests integer */
+/* @var $total_appeals integer */
 /* @var $total_servers integer */
-/* @var $total_submissions integer */
+/* @var $total_reports integer */
 ?>
     <div class="row">
       <div class="span8" style="float: none; margin: 0 auto;">
@@ -26,16 +26,16 @@
         <table class="table table-stat">
           <tbody>
             <tr>
-              <td class="value" width="20%"><?php echo $total_protests ?></td>
-              <td width="30%"><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.protests') ?></td>
-              <td class="value" width="20%"><?php echo $total_archived_protests ?></td>
-              <td width="30%"><?php echo Yii::t('sourcebans', 'Archived protests') ?></td>
+              <td class="value" width="20%"><?php echo $total_appeals ?></td>
+              <td width="30%"><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.appeals') ?></td>
+              <td class="value" width="20%"><?php echo $total_archived_appeals ?></td>
+              <td width="30%"><?php echo Yii::t('sourcebans', 'Archived appeals') ?></td>
             </tr>
             <tr>
-              <td class="value"><?php echo $total_submissions ?></td>
-              <td><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.submissions') ?></td>
-              <td class="value"><?php echo $total_archived_submissions ?></td>
-              <td><?php echo Yii::t('sourcebans', 'Archived submissions') ?></td>
+              <td class="value"><?php echo $total_reports ?></td>
+              <td><?php echo Yii::t('sourcebans', 'controllers.admin.bans.menu.reports') ?></td>
+              <td class="value"><?php echo $total_archived_reports ?></td>
+              <td><?php echo Yii::t('sourcebans', 'Archived reports') ?></td>
             </tr>
             <tr>
               <td class="value"><?php echo $demosize ?></td>

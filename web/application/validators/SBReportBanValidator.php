@@ -1,6 +1,6 @@
 <?php
 /**
- * SourceBans submit ban validator
+ * SourceBans report ban validator
  * 
  * @author GameConnect
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
@@ -9,7 +9,7 @@
  * @package sourcebans.components
  * @since 2.0
  */
-class SBSubmitBanValidator extends CValidator
+class SBReportBanValidator extends CValidator
 {
 	/**
 	 * @var boolean whether the comparison is case sensitive. Defaults to true.

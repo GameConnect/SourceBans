@@ -35,7 +35,7 @@
  * @property SBBlock[] $blocks Blocks
  * @property SBComment[] $comments Comments
  * @property SBDemo[] $demos Demos
- * @property SBProtest[] $protests Protests
+ * @property SBAppeal[] appeals Appeals
  * @property SBServer $server Server
  * @property SBAdmin $unban_admin Unban admin
  *
@@ -137,7 +137,7 @@ class SBBan extends CActiveRecord
 			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_BAN)),
 			'commentsCount' => array(self::STAT, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_BAN)),
 			'demos' => array(self::HAS_MANY, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::TYPE_BAN)),
-			'protests' => array(self::HAS_MANY, 'SBProtest', 'ban_id'),
+			'appeals' => array(self::HAS_MANY, 'SBAppeal', 'ban_id'),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 			'unban_admin' => array(self::BELONGS_TO, 'SBAdmin', 'unban_admin_id'),
 		);

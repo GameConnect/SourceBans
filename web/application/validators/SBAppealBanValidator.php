@@ -1,6 +1,6 @@
 <?php
 /**
- * SourceBans protest ban validator
+ * SourceBans appeal ban validator
  * 
  * @author GameConnect
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
@@ -9,7 +9,7 @@
  * @package sourcebans.components
  * @since 2.0
  */
-class SBProtestBanValidator extends CValidator
+class SBAppealBanValidator extends CValidator
 {
 	/**
 	 * @var boolean whether the comparison is case sensitive. Defaults to true.
@@ -59,7 +59,7 @@ class SBProtestBanValidator extends CValidator
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
 				'params'=>array(':type'=>SBBan::TYPE_STEAM),
-				'with'=>array('protests'=>array('select'=>false)),
+				'with'=>array('appeals'=>array('select'=>false)),
 			));
 		}
 		else if($attribute == 'ban_ip')
@@ -68,7 +68,7 @@ class SBProtestBanValidator extends CValidator
 			$criteria = new CDbCriteria(array(
 				'condition'=>'type = :type',
 				'params'=>array(':type'=>SBBan::TYPE_IP),
-				'with'=>array('protests'=>array('select'=>false)),
+				'with'=>array('appeals'=>array('select'=>false)),
 			));
 		}
 		else
@@ -94,9 +94,9 @@ class SBProtestBanValidator extends CValidator
 			$message=$this->message!==null?$this->message:Yii::t('yii','{attribute} "{value}" is invalid.');
 			$this->addError($object,$attribute,$message,array('{value}'=>CHtml::encode($value)));
 		}
-		else if(!empty($ban->protests))
+		else if(!empty($ban->appeals))
 		{
-			$message=Yii::t('sourcebans','components.SBProtestBanValidator.error');
+			$message=Yii::t('sourcebans','components.SBAppealBanValidator.error');
 			$this->addError($object,$attribute,$message,array('{value}'=>CHtml::encode($value)));
 		}
 		else

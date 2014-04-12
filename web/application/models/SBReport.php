@@ -1,13 +1,13 @@
 <?php
 
 /**
- * This is the model class for table "{{submissions}}".
+ * This is the model class for table "{{reports}}".
  *
  * @author GameConnect
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
  * @link http://www.sourcebans.net
  *
- * The followings are the available columns in table '{{submissions}}':
+ * The followings are the available columns in table '{{reports}}':
  * @property integer $id ID
  * @property string $name Name
  * @property string $steam Steam ID
@@ -28,12 +28,12 @@
  * @package sourcebans.models
  * @since 2.0
  */
-class SBSubmission extends CActiveRecord
+class SBReport extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return SBSubmission the static model class
+	 * @return SBReport the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -53,7 +53,7 @@ class SBSubmission extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '{{submissions}}';
+		return '{{reports}}';
 	}
 
 	/**
@@ -71,10 +71,10 @@ class SBSubmission extends CActiveRecord
 			array('steam, ip', 'default', 'setOnEmpty'=>true),
 			array('steam', 'match', 'pattern'=>SourceBans::PATTERN_STEAM),
 			array('ip', 'match', 'pattern'=>SourceBans::PATTERN_IP),
-			array('steam, ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBSubmission.rules.err_unique'), 'criteria'=>array(
+			array('steam, ip', 'unique', 'message'=>Yii::t('sourcebans','models.SBReport.rules.err_unique'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
-			array('steam, ip', 'application.validators.SBSubmitBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
+			array('steam, ip', 'application.validators.SBReportBanValidator', 'className'=>'SBBan', 'message'=>Yii::t('sourcebans','models.SBBan.rules.err_unique'), 'criteria'=>array(
 				'scopes'=>'active',
 			)),
 			array('reason', 'length', 'max'=>255),
@@ -94,8 +94,8 @@ class SBSubmission extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_SUBMISSION)),
-			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::TYPE_SUBMISSION)),
+			'comments' => array(self::HAS_MANY, 'SBComment', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBComment::TYPE_REPORT)),
+			'demo' => array(self::BELONGS_TO, 'SBDemo', 'object_id', 'condition' => 'object_type = :object_type', 'params' => array(':object_type' => SBDemo::TYPE_REPORT)),
 			'server' => array(self::BELONGS_TO, 'SBServer', 'server_id'),
 		);
 	}
@@ -186,7 +186,7 @@ class SBSubmission extends CActiveRecord
 	{
 		if($this->demo instanceof SBDemo)
 		{
-			$this->demo->object_type = SBDemo::TYPE_SUBMISSION;
+			$this->demo->object_type = SBDemo::TYPE_REPORT;
 			$this->demo->object_id = $this->id;
 			$this->demo->save();
 		}

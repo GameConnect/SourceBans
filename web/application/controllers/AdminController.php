@@ -41,7 +41,7 @@ class AdminController extends Controller
 			),
 			array('allow',
 				'actions'=>array('bans'),
-				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_BANS", "IMPORT_BANS", "BAN_PROTESTS", "BAN_SUBMISSIONS")',
+				'expression'=>'!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission("ADD_BANS", "IMPORT_BANS", "BAN_APPEALS", "BAN_REPORTS")',
 			),
 			array('allow',
 				'actions'=>array('games'),
@@ -83,7 +83,7 @@ class AdminController extends Controller
 		
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.admins.title'), 'url'=>array('admin/admins'), 'itemOptions'=>array('class'=>'admins'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_ADMINS', 'DELETE_ADMINS', 'EDIT_ADMINS', 'LIST_ADMINS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.title'), 'url'=>array('admin/bans'), 'itemOptions'=>array('class'=>'bans'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_PROTESTS', 'BAN_SUBMISSIONS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.title'), 'url'=>array('admin/bans'), 'itemOptions'=>array('class'=>'bans'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS', 'IMPORT_BANS', 'BAN_APPEALS', 'BAN_REPORTS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.groups.title'), 'url'=>array('admin/groups'), 'itemOptions'=>array('class'=>'groups'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GROUPS', 'DELETE_GROUPS', 'EDIT_GROUPS', 'LIST_GROUPS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.servers.title'), 'url'=>array('admin/servers'), 'itemOptions'=>array('class'=>'servers'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_SERVERS', 'DELETE_SERVERS', 'EDIT_SERVERS', 'LIST_SERVERS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.games.title'), 'url'=>array('admin/games'), 'itemOptions'=>array('class'=>'games'), 'visible'=>Yii::app()->user->data->hasPermission('ADD_GAMES', 'DELETE_GAMES', 'EDIT_GAMES', 'LIST_GAMES')),
@@ -95,13 +95,13 @@ class AdminController extends Controller
 		$this->render('index', array(
 			'demosize' => Yii::app()->format->formatSize($demosize['size']),
 			'total_admins' => SBAdmin::model()->count(),
-			'total_archived_protests' => SBProtest::model()->countByAttributes(array('archived' => true)),
-			'total_archived_submissions' => SBSubmission::model()->countByAttributes(array('archived' => true)),
+			'total_archived_appeals' => SBAppeal::model()->countByAttributes(array('archived' => true)),
+			'total_archived_reports' => SBReport::model()->countByAttributes(array('archived' => true)),
 			'total_bans' => SBBan::model()->count(),
 			'total_blocks' => SBBlock::model()->count(),
-			'total_protests' => SBProtest::model()->countByAttributes(array('archived' => false)),
+			'total_appeals' => SBAppeal::model()->countByAttributes(array('archived' => false)),
 			'total_servers' => SBServer::model()->count(),
-			'total_submissions' => SBSubmission::model()->countByAttributes(array('archived' => false)),
+			'total_reports' => SBReport::model()->countByAttributes(array('archived' => false)),
 		));
 	}
 	
@@ -165,24 +165,24 @@ class AdminController extends Controller
 		$this->menu=array(
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.add'), 'url'=>'#add', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
 			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.import'), 'url'=>'#import', 'visible'=>Yii::app()->user->data->hasPermission('ADD_BANS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.protests'), 'url'=>'#protests', 'visible'=>Yii::app()->user->data->hasPermission('BAN_PROTESTS')),
-			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.submissions'), 'url'=>'#submissions', 'visible'=>Yii::app()->user->data->hasPermission('BAN_SUBMISSIONS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.appeals'), 'url'=>'#appeals', 'visible'=>Yii::app()->user->data->hasPermission('BAN_APPEALS')),
+			array('label'=>Yii::t('sourcebans', 'controllers.admin.bans.menu.reports'), 'url'=>'#reports', 'visible'=>Yii::app()->user->data->hasPermission('BAN_REPORTS')),
 		);
 		
 		$ban=new SBBan;
 		$demo=new SBDemo;
 		
-		$protests=new SBProtest('search');
-		$protests->unsetAttributes();  // clear any default values
+		$appeals=new SBAppeal('search');
+		$appeals->unsetAttributes();  // clear any default values
 		
-		$submissions=new SBSubmission('search');
-		$submissions->unsetAttributes();  // clear any default values
+		$reports=new SBReport('search');
+		$reports->unsetAttributes();  // clear any default values
 		
 		$this->render('bans',array(
 			'ban'=>$ban,
 			'demo'=>$demo,
-			'protests'=>$protests,
-			'submissions'=>$submissions,
+			'appeals'=>$appeals,
+			'reports'=>$reports,
 		));
 	}
 	

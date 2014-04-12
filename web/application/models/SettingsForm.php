@@ -45,7 +45,7 @@ class SettingsForm extends CFormModel
 	{
 		return array(
 			array('default_page, items_per_page, language, password_min_length, theme, timezone', 'required'),
-			array('dashboard_blocks_popup, bans_hide_admin, bans_hide_ip, bans_public_export, enable_protest, enable_smtp, enable_submit', 'boolean'),
+			array('dashboard_blocks_popup, bans_hide_admin, bans_hide_ip, bans_public_export, enable_appeals, enable_reports, enable_smtp', 'boolean'),
 			array('items_per_page, password_min_length, smtp_port', 'numerical', 'integerOnly'=>true, 'min'=>1),
 			array('mailer_from', 'email'),
 			array('date_format, dashboard_text, dashboard_title, smtp_host, smtp_username, smtp_password, smtp_secure, steam_web_api_key', 'safe'),
@@ -66,9 +66,9 @@ class SettingsForm extends CFormModel
 			'bans_public_export' => Yii::t('sourcebans', 'models.SettingsForm.bans_public_export'),
 			'date_format' => Yii::t('sourcebans', 'models.SettingsForm.date_format'),
 			'default_page' => Yii::t('sourcebans', 'models.SettingsForm.default_page'),
-			'enable_protest' => Yii::t('sourcebans', 'models.SettingsForm.enable_protest'),
+			'enable_appeals' => Yii::t('sourcebans', 'models.SettingsForm.enable_appeals'),
 			'enable_smtp' => Yii::t('sourcebans', 'models.SettingsForm.enable_smtp'),
-			'enable_submit' => Yii::t('sourcebans', 'models.SettingsForm.enable_submit'),
+			'enable_reports' => Yii::t('sourcebans', 'models.SettingsForm.enable_reports'),
 			'items_per_page' => Yii::t('sourcebans', 'models.SettingsForm.items_per_page'),
 			'language' => Yii::t('sourcebans', 'models.SettingsForm.language'),
 			'mailer_from' => Yii::t('sourcebans', 'models.SettingsForm.mailer_from'),

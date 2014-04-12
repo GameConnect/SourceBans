@@ -41,18 +41,18 @@
         'dashboard'=>Yii::t('sourcebans', 'controllers.site.dashboard.title'),
         'bans'=>Yii::t('sourcebans', 'controllers.site.bans.title'),
         'servers'=>Yii::t('sourcebans', 'controllers.site.servers.title'),
-        'submitban'=>Yii::t('sourcebans', 'controllers.site.submitban.title'),
-        'protestban'=>Yii::t('sourcebans', 'controllers.site.protestban.title'),
+        'report'=>Yii::t('sourcebans', 'controllers.site.report.title'),
+        'appeal'=>Yii::t('sourcebans', 'controllers.site.appeal.title'),
       )); ?>
     </div>
   </div>
 
   <div class="control-group">
     <div class="controls">
-      <?php $checkbox = $form->checkBox($model,'enable_submit') . $model->getAttributeLabel('enable_submit'); ?>
-      <?php echo CHtml::label($checkbox,'SettingsForm_enable_submit',array('class' => 'checkbox')); ?>
-      <?php $checkbox = $form->checkBox($model,'enable_protest') . $model->getAttributeLabel('enable_protest'); ?>
-      <?php echo CHtml::label($checkbox,'SettingsForm_enable_protest',array('class' => 'checkbox')); ?>
+      <?php $checkbox = $form->checkBox($model,'enable_reports') . $model->getAttributeLabel('enable_reports'); ?>
+      <?php echo CHtml::label($checkbox,'SettingsForm_enable_reports',array('class' => 'checkbox')); ?>
+      <?php $checkbox = $form->checkBox($model,'enable_appeals') . $model->getAttributeLabel('enable_appeals'); ?>
+      <?php echo CHtml::label($checkbox,'SettingsForm_enable_appeals',array('class' => 'checkbox')); ?>
     </div>
   </div>
 

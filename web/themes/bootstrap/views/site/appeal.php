@@ -1,11 +1,11 @@
 <?php
 /* @var $this SiteController */
-/* @var $model SBProtest */
+/* @var $model SBAppeal */
 ?>
 <div class="row">
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'protestban-form',
+	'id'=>'appeal-form',
 	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(

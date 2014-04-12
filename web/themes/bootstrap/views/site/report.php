@@ -1,12 +1,12 @@
 <?php
 /* @var $this SiteController */
-/* @var $model SBSubmission */
+/* @var $model SBReport */
 /* @var $servers SBServer[] */
 ?>
 <div class="row">
   <section class="span12">
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'submitban-form',
+	'id'=>'report-form',
 	'enableAjaxValidation'=>true,
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
@@ -71,7 +71,7 @@
       <div class="control-group">
         <?php echo $form->labelEx($model,'server_id',array('class' => 'control-label')); ?>
         <div class="controls">
-          <select class="span6" id="SBSubmission_server_id" name="SBSubmission[server_id]">
+          <select class="span6" id="SBReport_server_id" name="SBReport[server_id]">
             <option value="">- <?php echo Yii::t('sourcebans', 'Unknown') ?> -</option>
 <?php foreach($games as $game): ?>
             <optgroup label="<?php echo CHtml::encode($game->name) ?>">
@@ -113,10 +113,10 @@
   </section>
 </div>
 
-<?php Yii::app()->clientScript->registerScript('site_submitban_queryServers', '
+<?php Yii::app()->clientScript->registerScript('site_report_queryServers', '
   $.getJSON("' . $this->createUrl('servers/info') . '", function(servers) {
     $.each(servers, function(i, server) {
-      var $option = $("#SBSubmission_server_id option[value=\"" + server.id + "\"]");
+      var $option = $("#SBReport_server_id option[value=\"" + server.id + "\"]");
       $option.text(server.error ? server.error.message : server.hostname);
     });
   });

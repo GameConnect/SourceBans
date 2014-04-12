@@ -245,10 +245,10 @@ CREATE TABLE {prefix}plugins (
 -- --------------------------------------------------------
 
 --
--- Table structure for table 'sb_protests'
+-- Table structure for table 'sb_appeals'
 --
 
-CREATE TABLE {prefix}protests (
+CREATE TABLE {prefix}appeals (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   ban_id mediumint(8) unsigned NOT NULL,
   reason varchar(255) NOT NULL,
@@ -258,7 +258,7 @@ CREATE TABLE {prefix}protests (
   create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY ban_id (ban_id),
-  CONSTRAINT protest_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE
+  CONSTRAINT appeal_ban FOREIGN KEY (ban_id) REFERENCES {prefix}bans (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -357,10 +357,10 @@ CREATE TABLE {prefix}settings (
 -- --------------------------------------------------------
 
 --
--- Table structure for table 'sb_submissions'
+-- Table structure for table 'sb_reports'
 --
 
-CREATE TABLE {prefix}submissions (
+CREATE TABLE {prefix}reports (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   name varchar(64) NOT NULL,
   steam varchar(32) DEFAULT NULL,
@@ -374,7 +374,7 @@ CREATE TABLE {prefix}submissions (
   create_time int(10) unsigned NOT NULL,
   PRIMARY KEY (id),
   KEY server_id (server_id),
-  CONSTRAINT submission_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE SET NULL
+  CONSTRAINT report_server FOREIGN KEY (server_id) REFERENCES {prefix}servers (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -423,9 +423,9 @@ INSERT INTO {prefix}settings (name, value) VALUES
 ('date_format', 'm-d-y H:i'),
 ('default_page', 'dashboard'),
 ('enable_debug', '0'),
-('enable_protest', '1'),
+('enable_appeals', '1'),
 ('enable_smtp', '0'),
-('enable_submit', '1'),
+('enable_reports', '1'),
 ('items_per_page', '10'),
 ('language', 'en'),
 ('mailer_from', ''),

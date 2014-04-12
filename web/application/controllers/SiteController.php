@@ -53,12 +53,12 @@ class SiteController extends Controller
 				'users'=>array('?'),
 			),
 			array('deny',
-				'actions'=>array('protestban'),
-				'expression'=>'!SourceBans::app()->settings->enable_protest',
+				'actions'=>array('appeal'),
+				'expression'=>'!SourceBans::app()->settings->enable_appeals',
 			),
 			array('deny',
-				'actions'=>array('submitban'),
-				'expression'=>'!SourceBans::app()->settings->enable_submit',
+				'actions'=>array('report'),
+				'expression'=>'!SourceBans::app()->settings->enable_reports',
 			),
 			array('allow', // allow all users
 				'users'=>array('*'),
@@ -168,32 +168,32 @@ class SiteController extends Controller
 	}
 
 	/**
-	 * Displays the submit ban page
+	 * Displays the report player page
 	 */
-	public function actionSubmitban()
+	public function actionReport()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.submitban.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.report.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.submitban.title'),
+			Yii::t('sourcebans', 'controllers.site.report.title'),
 		);
 		
-		$model = new SBSubmission;
+		$model = new SBReport;
 		$model->steam = 'STEAM_';
 		
 		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='submitban-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='report-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 		
-		if(isset($_POST['SBSubmission']))
+		if(isset($_POST['SBReport']))
 		{
-			$model->attributes=$_POST['SBSubmission'];
+			$model->attributes=$_POST['SBReport'];
 			if($model->save())
 			{
-				SourceBans::log('Ban submission added', 'Ban against "' . $model->name . '" was submitted');
+				SourceBans::log('Report added', 'Player "' . $model->name . '" was reported');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->refresh();
@@ -205,47 +205,47 @@ class SiteController extends Controller
 			'order' => 'name, servers.host, servers.port',
 		));
 		
-		$this->render('submitban', array(
+		$this->render('report', array(
 			'model' => $model,
 			'games' => $games,
 		));
 	}
 
 	/**
-	 * Displays the protest ban page
+	 * Displays the appeal ban page
 	 */
-	public function actionProtestban()
+	public function actionAppeal()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.protestban.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.appeal.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.protestban.title'),
+			Yii::t('sourcebans', 'controllers.site.appeal.title'),
 		);
 		
-		$model = new SBProtest;
+		$model = new SBAppeal;
 		$model->ban_steam = 'STEAM_';
 		$model->ban_ip = Yii::app()->request->userHostAddress;
 		
 		// if it is ajax validation request
-		if(isset($_POST['ajax']) && $_POST['ajax']==='protestban-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='appeal-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 		
-		if(isset($_POST['SBProtest']))
+		if(isset($_POST['SBAppeal']))
 		{
-			$model->attributes=$_POST['SBProtest'];
+			$model->attributes=$_POST['SBAppeal'];
 			if($model->save())
 			{
-				SourceBans::log('Ban protest added', 'Ban against "' . $model->user_email . '" was protested');
+				SourceBans::log('Appeal added', 'Ban against "' . $model->user_email . '" was appealed');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
 				$this->refresh();
 			}
 		}
 		
-		$this->render('protestban', array(
+		$this->render('appeal', array(
 			'model' => $model,
 		));
 	}

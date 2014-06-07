@@ -264,10 +264,10 @@ class ServersController extends Controller
 		preg_match_all(SourceBans::PATTERN_STATUS, $response['result'], $players);
 		for($i = 0; $i < count($players[0]); $i++)
 		{
-			if($players[2][$i] == $name)
+			if($players[3][$i] == $name)
 			{
 				Yii::app()->end(CJSON::encode(array(
-					'id' => Helpers::getCommunityId($players[3][$i]),
+					'id' => Helpers::getCommunityId($players[4][$i]),
 				)));
 			}
 		}

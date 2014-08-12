@@ -6,7 +6,7 @@
 return array(
 	'sourcePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..',
 	'messagePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'messages',
-	'languages'=>array('cs','de','en','nl','pt','ru'),
+	'languages'=>array('cs','de','en','fr','nl','pl','pt','ru'),
 	'fileTypes'=>array('php'),
 	'overwrite'=>true,
 	'sort'=>true,

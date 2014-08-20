@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $bans SBBan */
 /* @var $blocks SBBlock */
 /* @var $servers SBServer */
@@ -73,7 +73,7 @@
 		var $header = $("#" + grid + " tr.selected");
 		var id      = $header.data("key");
 		
-		location.href = "' . $this->createUrl('site/bans', array('#' => '__ID__')) . '".replace("__ID__", id);
+		location.href = "' . $this->createUrl('default/bans', array('#' => '__ID__')) . '".replace("__ID__", id);
 	}',
 	'summaryText'=>'<em>' . Yii::t('sourcebans', 'Total bans') . ': ' . $total_bans . '</em>',
 )) ?><!-- bans grid -->

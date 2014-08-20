@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $ban SBBan */
 /* @var $bans SBBan */
 /* @var $comment SBComment */
@@ -212,7 +212,7 @@
   });
 "); ?>
 
-<?php Yii::app()->clientScript->registerScript('site_bans_hashchange', '
+<?php Yii::app()->clientScript->registerScript('default_bans_hashchange', '
   $(window).bind("hashchange", function(e) {
     var id       = $.param.fragment();
     var $header  = $("#bans-grid tr[data-key=\"" + id + "\"]");
@@ -237,7 +237,7 @@
   });
 ') ?>
 
-<?php Yii::app()->clientScript->registerScript('site_bans_createSections', '
+<?php Yii::app()->clientScript->registerScript('default_bans_createSections', '
   function createSections() {
     var nullDisplay = "' . addslashes($grid->nullDisplay) . '";
     
@@ -301,7 +301,7 @@
   createSections();
 ') ?>
 
-<?php Yii::app()->clientScript->registerScript('site_bans_queryServer', '
+<?php Yii::app()->clientScript->registerScript('default_bans_queryServer', '
   $.getJSON("' . $this->createUrl('servers/info') . '", function(servers) {
     window.serverInfo = servers;
     
@@ -323,7 +323,7 @@
   </div>
 </div>
 
-<?php Yii::app()->clientScript->registerScript('site_bans_commentsDialog', '
+<?php Yii::app()->clientScript->registerScript('default_bans_commentsDialog', '
   $(document).on("click", ".ban-menu-comments a", function(e) {
     e.preventDefault();
     $("#comments-dialog .modal-body").load($(this).attr("href"), function(data) {

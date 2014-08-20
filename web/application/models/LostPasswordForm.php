@@ -54,7 +54,7 @@ class LostPasswordForm extends CFormModel
 		Yii::app()->mailer->Subject = Yii::t('sourcebans', 'models.LostPasswordForm.reset.subject');
 		Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'models.LostPasswordForm.reset.body', array(
 			'{name}' => $admin->name,
-			'{link}' => Yii::app()->createUrl('site/lostPassword', array('email' => $admin->email, 'key' => $validationKey)),
+			'{link}' => Yii::app()->createUrl('default/lostPassword', array('email' => $admin->email, 'key' => $validationKey)),
 		)));
 		if(!Yii::app()->mailer->Send())
 			return false;

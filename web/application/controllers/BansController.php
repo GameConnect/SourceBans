@@ -80,7 +80,7 @@ class BansController extends Controller
 				SourceBans::log('Ban added', 'Ban against "' . $model . '" was added');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				$this->redirect(array('site/bans','#'=>$model->id));
+				$this->redirect(array('default/bans','#'=>$model->id));
 			}
 		}
 	}
@@ -103,7 +103,7 @@ class BansController extends Controller
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('site/bans')),
+			array('label'=>Yii::t('sourcebans', 'Back'), 'url'=>array('default/bans')),
 		);
 		
 		if(!$this->canUpdate('EDIT', $model))
@@ -120,7 +120,7 @@ class BansController extends Controller
 				SourceBans::log('Ban edited', 'Ban against "' . $model . '" was edited');
 				Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Saved successfully'));
 				
-				$this->redirect(array('site/bans','#'=>$model->id));
+				$this->redirect(array('default/bans','#'=>$model->id));
 			}
 		}
 
@@ -227,7 +227,7 @@ class BansController extends Controller
 		SourceBans::log('Bans imported', 'Bans imported from ' . $file['name']);
 		Yii::app()->user->setFlash('success', Yii::t('sourcebans', 'Imported successfully'));
 		
-		$this->redirect(array('site/bans'));
+		$this->redirect(array('default/bans'));
 	}
 	
 	/**

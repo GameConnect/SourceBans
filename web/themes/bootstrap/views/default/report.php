@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $model SBReport */
 /* @var $servers SBServer[] */
 ?>
@@ -113,7 +113,7 @@
   </section>
 </div>
 
-<?php Yii::app()->clientScript->registerScript('site_report_queryServers', '
+<?php Yii::app()->clientScript->registerScript('default_report_queryServers', '
   $.getJSON("' . $this->createUrl('servers/info') . '", function(servers) {
     $.each(servers, function(i, server) {
       var $option = $("#SBReport_server_id option[value=\"" + server.id + "\"]");

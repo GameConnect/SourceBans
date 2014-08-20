@@ -74,10 +74,10 @@ class CommunityBansPlugin extends SBPlugin
 					);
 				}
 				break;
-			case 'site/bans':
+			case 'default/bans':
 				if(!Yii::app()->user->isGuest && Yii::app()->user->data->hasPermission('BAN_COMMUNITY_FRIENDS', 'BAN_COMMUNITY_GROUPS'))
 				{
-					// Add items to site/bans menu
+					// Add items to default/bans menu
 					Yii::app()->controller->menu[] = array(
 						'divider' => true,
 					);
@@ -95,7 +95,7 @@ class CommunityBansPlugin extends SBPlugin
 					);
 					
 					// Register script
-					Yii::app()->clientScript->registerScript('site_bans_communityBans', '
+					Yii::app()->clientScript->registerScript('default_bans_communityBans', '
   $(document).on("click", "li.ban-menu-community-friends > a", function() {
     viewCommunityBans(this, "' . Yii::app()->createUrl('communityBans/friends', array('id' => '__ID__')) . '");
   });

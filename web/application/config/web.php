@@ -8,6 +8,7 @@ $parent=require(dirname(__FILE__).'/main.php');
 // CWebApplication properties can be configured here.
 return CMap::mergeArray(
 	array(
+		'defaultController'=>'default',
 		'onBeginRequest'=>array('SourceBans', 'onBeginRequest'),
 		'onEndRequest'=>array('SourceBans', 'onEndRequest'),
 		'theme'=>'bootstrap',
@@ -35,8 +36,8 @@ return CMap::mergeArray(
 				'defaultScriptPosition'=>CClientScript::POS_END,
 			),
 			'errorHandler'=>array(
-				// use 'site/error' action to display errors
-				'errorAction'=>'site/error',
+				// use 'default/error' action to display errors
+				'errorAction'=>'default/error',
 			),
 			'log'=>array(
 				'routes'=>array(
@@ -52,9 +53,9 @@ return CMap::mergeArray(
 				'urlFormat'=>'path',
 				'showScriptName'=>!(defined('PRETTY_URLS') && PRETTY_URLS),
 				'rules'=>array(
-					''=>'site/index',
+					''=>'default/index',
 					'admin'=>'admin/index',
-					'<action>'=>'site/<action>',
+					'<action>'=>'default/<action>',
 					'<controller:\w+>/<id:\d+>'=>'<controller>/view',
 					'<controller:\w+>/<action:\w+>/<id:\w+>'=>'<controller>/<action>',
 					'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',

@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $model LoginForm */
 /* @var $form CActiveForm */
 ?>
@@ -32,7 +32,7 @@
             </div>
             <div>
               <?php echo CHtml::submitButton(Yii::t('sourcebans', 'Login'), array('class' => 'btn btn-success')); ?>
-              <div class="help-inline"><?php echo CHtml::link(Yii::t('sourcebans', 'Lost password'), array('site/lostPassword')) ?></div>
+              <div class="help-inline"><?php echo CHtml::link(Yii::t('sourcebans', 'Lost password'), array('default/lostPassword')) ?></div>
             </div>
           </fieldset>
 <?php $this->endWidget() ?>

@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $model SBBan */
 /* @var $form CActiveForm */
 ?>

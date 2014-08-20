@@ -1,6 +1,6 @@
 <?php
 /**
- * SourceBans site controller
+ * SourceBans default controller
  * 
  * @author GameConnect
  * @copyright (C)2007-2013 GameConnect.net.  All rights reserved.
@@ -9,7 +9,7 @@
  * @package sourcebans.controllers
  * @since 2.0
  */
-class SiteController extends Controller
+class DefaultController extends Controller
 {
 	/**
 	 * Declares class-based actions.
@@ -22,8 +22,8 @@ class SiteController extends Controller
 				'class'=>'CCaptchaAction',
 				'backColor'=>0xFFFFFF,
 			),
-			// page action renders "static" pages stored under 'application/views/site/pages'
-			// They can be accessed via: index.php?r=site/page&view=FileName
+			// page action renders "static" pages stored under 'application/views/default/pages'
+			// They can be accessed via: index.php?r=default/page&view=FileName
 			'page'=>array(
 				'class'=>'CViewAction',
 			),
@@ -82,10 +82,10 @@ class SiteController extends Controller
 	 */
 	public function actionDashboard()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.dashboard.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.dashboard.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.dashboard.title'),
+			Yii::t('sourcebans', 'controllers.default.dashboard.title'),
 		);
 		
 		$bans = SBBan::model()->search();
@@ -116,10 +116,10 @@ class SiteController extends Controller
 	 */
 	public function actionBans()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.bans.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.bans.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.bans.title'),
+			Yii::t('sourcebans', 'controllers.default.bans.title'),
 		);
 		
 		$hideInactive = Yii::app()->request->getQuery('hideinactive', 'false') == 'true';
@@ -152,10 +152,10 @@ class SiteController extends Controller
 	 */
 	public function actionServers()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.servers.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.servers.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.servers.title'),
+			Yii::t('sourcebans', 'controllers.default.servers.title'),
 		);
 		
 		$servers = SBServer::model()->search();
@@ -172,10 +172,10 @@ class SiteController extends Controller
 	 */
 	public function actionReport()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.report.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.report.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.report.title'),
+			Yii::t('sourcebans', 'controllers.default.report.title'),
 		);
 		
 		$model = new SBReport;
@@ -216,10 +216,10 @@ class SiteController extends Controller
 	 */
 	public function actionAppeal()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.appeal.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.appeal.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.appeal.title'),
+			Yii::t('sourcebans', 'controllers.default.appeal.title'),
 		);
 		
 		$model = new SBAppeal;
@@ -257,18 +257,18 @@ class SiteController extends Controller
 	{
 		$this->layout='//layouts/column2';
 		
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.account.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.account.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.account.title'),
+			Yii::t('sourcebans', 'controllers.default.account.title'),
 		);
 		
 		$this->menu=array(
-			array('label'=>Yii::t('sourcebans', 'controllers.site.account.menu.permissions'), 'url'=>'#permissions'),
-			array('label'=>Yii::t('sourcebans', 'controllers.site.account.menu.settings'), 'url'=>'#settings'),
-			array('label'=>Yii::t('sourcebans', 'controllers.site.account.menu.email'), 'url'=>'#email'),
-			array('label'=>Yii::t('sourcebans', 'controllers.site.account.menu.password'), 'url'=>'#password'),
-			array('label'=>Yii::t('sourcebans', 'controllers.site.account.menu.server-password'), 'url'=>'#server-password'),
+			array('label'=>Yii::t('sourcebans', 'controllers.default.account.menu.permissions'), 'url'=>'#permissions'),
+			array('label'=>Yii::t('sourcebans', 'controllers.default.account.menu.settings'), 'url'=>'#settings'),
+			array('label'=>Yii::t('sourcebans', 'controllers.default.account.menu.email'), 'url'=>'#email'),
+			array('label'=>Yii::t('sourcebans', 'controllers.default.account.menu.password'), 'url'=>'#password'),
+			array('label'=>Yii::t('sourcebans', 'controllers.default.account.menu.server-password'), 'url'=>'#server-password'),
 		);
 		
 		$model=new AccountForm;
@@ -306,10 +306,10 @@ class SiteController extends Controller
 	 */
 	public function actionError()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.error.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.error.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.error.title'),
+			Yii::t('sourcebans', 'controllers.default.error.title'),
 		);
 		
 		if($error=Yii::app()->errorHandler->error)
@@ -326,10 +326,10 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.login.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.login.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.login.title'),
+			Yii::t('sourcebans', 'controllers.default.login.title'),
 		);
 		
 		$model=new LoginForm;
@@ -370,10 +370,10 @@ class SiteController extends Controller
 	 */
 	public function actionLostPassword()
 	{
-		$this->pageTitle=Yii::t('sourcebans', 'controllers.site.lostPassword.title');
+		$this->pageTitle=Yii::t('sourcebans', 'controllers.default.lostPassword.title');
 		
 		$this->breadcrumbs=array(
-			Yii::t('sourcebans', 'controllers.site.lostPassword.title'),
+			Yii::t('sourcebans', 'controllers.default.lostPassword.title'),
 		);
 		
 		$model=new LostPasswordForm;
@@ -408,11 +408,11 @@ class SiteController extends Controller
 			
 			$password = Yii::app()->securityManager->generateRandomString(8, false);
 			Yii::app()->mailer->AddAddress($admin->email);
-			Yii::app()->mailer->Subject = Yii::t('sourcebans', 'controllers.site.lostPassword.subject');
-			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'controllers.site.lostPassword.body', array(
+			Yii::app()->mailer->Subject = Yii::t('sourcebans', 'controllers.default.lostPassword.subject');
+			Yii::app()->mailer->MsgHtml(Yii::t('sourcebans', 'controllers.default.lostPassword.body', array(
 				'{name}' => $admin->name,
 				'{password}' => $password,
-				'{link}' => CHtml::link(Yii::t('sourcebans', 'controllers.site.account.title'), array('site/account')),
+				'{link}' => CHtml::link(Yii::t('sourcebans', 'controllers.default.account.title'), array('default/account')),
 			)));
 			if(!Yii::app()->mailer->Send())
 				throw new CHttpException(500, 'Please try again later or contact your system administrator.');

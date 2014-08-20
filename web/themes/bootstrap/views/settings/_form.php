@@ -38,11 +38,11 @@
     <?php echo $form->label($model,'default_page',array('class' => 'control-label')); ?>
     <div class="controls">
       <?php echo $form->dropDownList($model,'default_page',array(
-        'dashboard'=>Yii::t('sourcebans', 'controllers.site.dashboard.title'),
-        'bans'=>Yii::t('sourcebans', 'controllers.site.bans.title'),
-        'servers'=>Yii::t('sourcebans', 'controllers.site.servers.title'),
-        'report'=>Yii::t('sourcebans', 'controllers.site.report.title'),
-        'appeal'=>Yii::t('sourcebans', 'controllers.site.appeal.title'),
+        'dashboard'=>Yii::t('sourcebans', 'controllers.default.dashboard.title'),
+        'bans'=>Yii::t('sourcebans', 'controllers.default.bans.title'),
+        'servers'=>Yii::t('sourcebans', 'controllers.default.servers.title'),
+        'report'=>Yii::t('sourcebans', 'controllers.default.report.title'),
+        'appeal'=>Yii::t('sourcebans', 'controllers.default.appeal.title'),
       )); ?>
     </div>
   </div>
@@ -94,7 +94,7 @@
 </fieldset>
 
 <fieldset>
-  <legend><?php echo Yii::t('sourcebans', 'controllers.site.dashboard.title') ?></legend>
+  <legend><?php echo Yii::t('sourcebans', 'controllers.default.dashboard.title') ?></legend>
   <div class="control-group">
     <div class="controls">
       <?php $checkbox = $form->checkBox($model,'dashboard_blocks_popup') . $model->getAttributeLabel('dashboard_blocks_popup'); ?>
@@ -140,7 +140,7 @@
 </fieldset>
 
 <fieldset>
-  <legend><?php echo Yii::t('sourcebans', 'controllers.site.bans.title') ?></legend>
+  <legend><?php echo Yii::t('sourcebans', 'controllers.default.bans.title') ?></legend>
   <div class="control-group">
     <?php echo $form->labelEx($model,'items_per_page',array('class' => 'control-label')); ?>
     <div class="controls">

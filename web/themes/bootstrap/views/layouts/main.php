@@ -25,34 +25,34 @@
 	'id' => 'tabs',
 	'items' => array_merge(array(
 		array(
-			'active' => $this->route == 'site/dashboard' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'dashboard'),
-			'label' => Yii::t('sourcebans', 'controllers.site.dashboard.title'),
-			'url' => array('site/dashboard'),
+			'active' => $this->route == 'default/dashboard' || ($this->route == 'default/index' && SourceBans::app()->settings->default_page == 'dashboard'),
+			'label' => Yii::t('sourcebans', 'controllers.default.dashboard.title'),
+			'url' => array('default/dashboard'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'This page shows an overview of your bans and servers.')),
 		),
 		array(
-			'active' => $this->route == 'site/bans' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'bans'),
-			'label' => Yii::t('sourcebans', 'controllers.site.bans.title'),
-			'url' => array('site/bans'),
+			'active' => $this->route == 'default/bans' || ($this->route == 'default/index' && SourceBans::app()->settings->default_page == 'bans'),
+			'label' => Yii::t('sourcebans', 'controllers.default.bans.title'),
+			'url' => array('default/bans'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'All of the bans in the database can be viewed from here.')),
 		),
 		array(
-			'active' => $this->route == 'site/servers' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'servers'),
-			'label' => Yii::t('sourcebans', 'controllers.site.servers.title'),
-			'url' => array('site/servers'),
+			'active' => $this->route == 'default/servers' || ($this->route == 'default/index' && SourceBans::app()->settings->default_page == 'servers'),
+			'label' => Yii::t('sourcebans', 'controllers.default.servers.title'),
+			'url' => array('default/servers'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'All of your servers and their status can be viewed here.')),
 		),
 		array(
-			'active' => $this->route == 'site/report' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'report'),
-			'label' => Yii::t('sourcebans', 'controllers.site.report.title'),
-			'url' => array('site/report'),
+			'active' => $this->route == 'default/report' || ($this->route == 'default/index' && SourceBans::app()->settings->default_page == 'report'),
+			'label' => Yii::t('sourcebans', 'controllers.default.report.title'),
+			'url' => array('default/report'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'You can submit a demo or screenshot of a suspected cheater here. It will then be up for review by one of the admins.')),
 			'visible' => SourceBans::app()->settings->enable_reports,
 		),
 		array(
-			'active' => $this->route == 'site/appeal' || ($this->route == 'site/index' && SourceBans::app()->settings->default_page == 'appeal'),
-			'label' => Yii::t('sourcebans', 'controllers.site.appeal.title'),
-			'url' => array('site/appeal'),
+			'active' => $this->route == 'default/appeal' || ($this->route == 'default/index' && SourceBans::app()->settings->default_page == 'appeal'),
+			'label' => Yii::t('sourcebans', 'controllers.default.appeal.title'),
+			'url' => array('default/appeal'),
 			'linkOptions' => array('title' => Yii::t('sourcebans', 'Here you can protest your ban. And prove your case as to why you should be unbanned.')),
 			'visible' => SourceBans::app()->settings->enable_appeals,
 		),
@@ -92,7 +92,7 @@
 
         </div>
         <div class="pull-right">
-          <form action="<?php echo $this->createUrl('site/bans') ?>" class="input-append pull-right" id="search">
+          <form action="<?php echo $this->createUrl('default/bans') ?>" class="input-append pull-right" id="search">
             <input class="span2" placeholder="<?php echo Yii::t('sourcebans', 'Search bans') ?>" name="q" type="search" />
             <button class="btn btn-inverse" type="submit"><i class="icon-search icon-white"></i></button>
           </form>
@@ -102,17 +102,17 @@
 	'items' => array(
 		array(
 			'label' => Yii::app()->user->name,
-			'url' => array('site/account'),
+			'url' => array('default/account'),
 			'visible' => !Yii::app()->user->isGuest,
 		),
 		array(
-			'label' => Yii::t('sourcebans', 'controllers.site.logout.title'),
-			'url' => array('site/logout'),
+			'label' => Yii::t('sourcebans', 'controllers.default.logout.title'),
+			'url' => array('default/logout'),
 			'visible' => !Yii::app()->user->isGuest,
 		),
 		array(
-			'label' => Yii::t('sourcebans', 'controllers.site.login.title'),
-			'url' => array('site/login'),
+			'label' => Yii::t('sourcebans', 'controllers.default.login.title'),
+			'url' => array('default/login'),
 			'visible' => Yii::app()->user->isGuest,
 		),
 	),

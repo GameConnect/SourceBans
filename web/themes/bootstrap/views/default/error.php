@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $code integer */
 /* @var $type string */
 /* @var $errorCode integer */

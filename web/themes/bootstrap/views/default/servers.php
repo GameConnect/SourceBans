@@ -1,5 +1,5 @@
 <?php
-/* @var $this SiteController */
+/* @var $this DefaultController */
 /* @var $servers SBServer */
 ?>
     <div class="row">
@@ -88,7 +88,7 @@
 		var $header = $("#" + grid + " tr.selected");
 		var id      = $header.data("key");
 		
-		location.href = "' . $this->createUrl('site/servers', array('#' => '__ID__')) . '".replace("__ID__", id);
+		location.href = "' . $this->createUrl('default/servers', array('#' => '__ID__')) . '".replace("__ID__", id);
 	}',
 	'summaryText'=>false,
 )) ?><!-- servers grid -->
@@ -131,7 +131,7 @@
   </div>
 </script>
 
-<?php Yii::app()->clientScript->registerScript('site_servers_hashchange', '
+<?php Yii::app()->clientScript->registerScript('default_servers_hashchange', '
   $(window).bind("hashchange", function(e) {
     $("#servers-grid > table.table-accordion > tbody > tr.selected").removeClass("selected");
     $("#servers-grid tr.section div:first-child").slideUp(200, "linear");
@@ -183,7 +183,7 @@
 	), $this->menu),
 )) ?>
 
-<?php Yii::app()->clientScript->registerScript('site_servers_playerMenu', '
+<?php Yii::app()->clientScript->registerScript('default_servers_playerMenu', '
   $(document).on("click", function() {
     $("#player-menu").hide();
   });
@@ -234,7 +234,7 @@
 <?php endif ?>
 <?php endif ?>
 
-<?php Yii::app()->clientScript->registerScript('site_servers_queryServer', '
+<?php Yii::app()->clientScript->registerScript('default_servers_queryServer', '
   function queryServer(id, callback) {
     if(typeof(id) == "function") {
       callback = id;

@@ -57,7 +57,10 @@ class Helpers
 		foreach((array)$steam as $i => $id)
 		{
 			$params[':id'.$i] = $id;
-			$select[] = '76561197960265728 + CAST(MID(:id'.$i.', 9, 1) AS UNSIGNED) + CAST(MID(:id'.$i.', 11) * 2 AS UNSIGNED)';
+			$select[] = '(CASE
+				WHEN :id'.$i.' LIKE "STEAM_%" THEN 76561197960265728 + CAST(SUBSTRING(:id'.$i.', 9, 1) AS UNSIGNED) + CAST(SUBSTRING(:id'.$i.', 11) * 2 AS UNSIGNED)
+				WHEN :id'.$i.' LIKE "[U:%]" THEN 76561197960265728 + CAST(SUBSTRING(:id'.$i.', 6, CHAR_LENGTH(:id'.$i.') - 6) AS UNSIGNED)
+			END)';
 		}
 		
 		$command = Yii::app()->db->createCommand();

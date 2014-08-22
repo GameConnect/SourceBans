@@ -44,7 +44,7 @@ class SourceBans extends CApplicationComponent
 	const PATTERN_HOST   = '/^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$/';
 	const PATTERN_IP     = '/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/';
 	const PATTERN_STATUS = '/# +([0-9]+) +"(.+)" +(STEAM_[0-9]:[0-9]:[0-9]+) +([0-9:]+) +([0-9]+) +([0-9]+) +([a-zA-Z]+) +([0-9.:]+)/';
-	const PATTERN_STEAM  = '/^STEAM_[0-9]:[0-9]:[0-9]+$/i';
+	const PATTERN_STEAM  = '/^(STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\])$/i';
 	
 	/**
 	 * @var array the attached event handlers (event name => handlers)

@@ -25,7 +25,7 @@ class SBAdminIdentityValidator extends CRegularExpressionValidator
 				return;
 		}
 		
-		parent::clientValidateAttribute($object, $attribute);
+		return parent::clientValidateAttribute($object, $attribute);
 	}
 	
 	

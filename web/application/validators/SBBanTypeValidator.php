@@ -16,16 +16,14 @@ class SBBanTypeValidator extends CRegularExpressionValidator
 		switch($attribute)
 		{
 			case 'ip':
-				$this->allowEmpty = ($object->type != SBBan::TYPE_IP);
-				$this->pattern    = SourceBans::PATTERN_IP;
+				$this->pattern = SourceBans::PATTERN_IP;
 				break;
 			case 'steam':
-				$this->allowEmpty = ($object->type != SBBan::TYPE_STEAM);
-				$this->pattern    = SourceBans::PATTERN_STEAM;
+				$this->pattern = SourceBans::PATTERN_STEAM;
 				break;
 		}
 		
-		parent::clientValidateAttribute($object, $attribute);
+		return parent::clientValidateAttribute($object, $attribute);
 	}
 	
 	

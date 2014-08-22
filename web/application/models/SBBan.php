@@ -460,7 +460,10 @@ class SBBan extends CActiveRecord
 		
 		// Select community ID
 		$select=array(
-			'76561197960265728 + CAST(MID('.$t.'.steam, 9, 1) AS UNSIGNED) + CAST(MID('.$t.'.steam, 11, 10) * 2 AS UNSIGNED) AS ban_community_id',
+			'(CASE
+				WHEN '.$t.'.steam LIKE "STEAM_%" THEN 76561197960265728 + CAST(SUBSTRING('.$t.'.steam, 9, 1) AS UNSIGNED) + CAST(SUBSTRING('.$t.'.steam, 11) * 2 AS UNSIGNED)
+				WHEN '.$t.'.steam LIKE "[U:%]" THEN 76561197960265728 + CAST(SUBSTRING('.$t.'.steam, 6, CHAR_LENGTH('.$t.'.steam) - 6) AS UNSIGNED)
+			END) AS ban_community_id',
 		);
 		if($this->dbCriteria->select==='*')
 		{

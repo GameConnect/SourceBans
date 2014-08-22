@@ -27,34 +27,34 @@
 </div>
 <div class="modal-body">
   <div class="control-group">
-		<?php echo $form->label($model,'type',array('class' => 'control-label')); ?>
-		<div class="controls">
-			<?php echo $form->dropDownList($model,'type',SBOverride::getTypes()); ?>
-			<?php echo $form->error($model,'type'); ?>
-		</div>
+    <?php echo $form->label($model,'type',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php echo $form->dropDownList($model,'type',SBOverride::getTypes()); ?>
+      <?php echo $form->error($model,'type'); ?>
+    </div>
   </div>
 
-	<div class="control-group">
-		<?php echo $form->labelEx($model,'name',array('class' => 'control-label')); ?>
-		<div class="controls">
-			<?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>64)); ?>
-			<?php echo $form->error($model,'name'); ?>
-		</div>
-	</div>
+  <div class="control-group">
+    <?php echo $form->labelEx($model,'name',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php echo $form->textField($model,'name',array('size'=>60,'maxlength'=>64)); ?>
+      <?php echo $form->error($model,'name'); ?>
+    </div>
+  </div>
 
-	<div class="control-group">
-		<?php echo $form->labelEx($model,'flags',array('class' => 'control-label')); ?>
-		<div class="controls">
-			<?php $radio = CHtml::radioButton('SBServerGroup[flags]', true, array('value'=>'')) . Yii::t('sourcebans', 'Anyone'); ?>
-			<?php echo CHtml::label($radio,'SBServerGroup_flags',array('class' => 'radio')); ?>
-			<?php foreach(SourceBans::app()->flags as $flag => $description): ?>
-				<?php if($flag == SM_ROOT) $description = Yii::t('sourcebans', 'permissions.root'); ?>
-				<?php $radio = CHtml::radioButton('SBServerGroup[flags]', false, array('id'=>'SBServerGroup_flags_'.$flag,'value'=>$flag)) . $description; ?>
-				<?php echo CHtml::label($radio,'SBServerGroup_flags_' . $flag,array('class' => 'radio')); ?>
-			<?php endforeach ?>
-			<?php echo $form->error($model,'flags'); ?>
-		</div>
-	</div>
+  <div class="control-group">
+    <?php echo $form->labelEx($model,'flags',array('class' => 'control-label')); ?>
+    <div class="controls">
+      <?php $radio = CHtml::radioButton('SBServerGroup[flags]', true, array('value'=>'')) . Yii::t('sourcebans', 'Anyone'); ?>
+      <?php echo CHtml::label($radio,'SBServerGroup_flags',array('class' => 'radio')); ?>
+      <?php foreach(SourceBans::app()->flags as $flag => $description): ?>
+        <?php if($flag == SM_ROOT) $description = Yii::t('sourcebans', 'permissions.root'); ?>
+        <?php $radio = CHtml::radioButton('SBServerGroup[flags]', false, array('id'=>'SBServerGroup_flags_'.$flag,'value'=>$flag)) . $description; ?>
+        <?php echo CHtml::label($radio,'SBServerGroup_flags_' . $flag,array('class' => 'radio')); ?>
+      <?php endforeach ?>
+      <?php echo $form->error($model,'flags'); ?>
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
   <button aria-hidden="true" class="btn" data-dismiss="modal" type="button"><?php echo Yii::t('sourcebans', 'common.close') ?></button>

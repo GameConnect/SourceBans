@@ -249,6 +249,7 @@ th.datetime {
 td.icon,
 th.icon {
   text-align: center !important;
+  white-space: nowrap;
   width: 16px;
 }
 th.SBGame_folder {

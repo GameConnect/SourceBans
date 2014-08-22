@@ -30,7 +30,7 @@
   <div class="control-group">
     <?php echo $form->labelEx($model,'port',array('class' => 'control-label')); ?>
     <div class="controls">
-      <?php echo $form->textField($model,'port',array('placeholder'=>27015)); ?>
+      <?php echo $form->numberField($model,'port',array('placeholder'=>27015)); ?>
       <?php echo $form->error($model,'port'); ?>
     </div>
   </div>

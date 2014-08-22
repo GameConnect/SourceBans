@@ -201,14 +201,14 @@
 
 <?php Yii::app()->clientScript->registerScript('search', "
   $('.search-button').click(function(){
-  	$('.search-form').slideToggle();
-  	return false;
+    $('.search-form').slideToggle();
+    return false;
   });
   $('.search-form form').submit(function(){
-  	$('#bans-grid').yiiGridView('update', {
-  		data: $(this).serialize()
-  	});
-  	return false;
+    $('#bans-grid').yiiGridView('update', {
+      data: $(this).serialize()
+    });
+    return false;
   });
 "); ?>
 

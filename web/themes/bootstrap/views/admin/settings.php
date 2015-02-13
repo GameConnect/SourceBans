@@ -47,7 +47,7 @@
 					'imageUrl'=>false,
 					'label'=>Yii::t('sourcebans', 'views.admin.settings.plugins.grid.settings'),
 					'url'=>'Yii::app()->createUrl("plugins/settings", array("id" => $data->id))',
-					'visible'=>'$data->status && $data->getViewFile("settings")',
+					'visible'=>'$data->status == SBPlugin::STATUS_ENABLED && $data->getViewFile("settings")',
 				),
 			),
 			'template'=>'{settings}',

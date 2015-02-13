@@ -243,7 +243,7 @@ public Query_ServerSelect(Handle:owner, Handle:hndl, const String:error[], any:d
 	decl String:sFolder[32], String:sQuery[1024];
 	GetGameFolderName(sFolder, sizeof(sFolder));
 	
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{servers}} (ip, port, game_id) \
+	Format(sQuery, sizeof(sQuery), "INSERT INTO {{servers}} (host, port, game_id) \
 	                                VALUES      ('%s', %i, (SELECT id FROM {{games}} WHERE folder = '%s'))",
 	                                g_sServerIp, g_iServerPort, sFolder);
 	SB_Query(Query_ServerInsert, sQuery);
@@ -329,7 +329,7 @@ public OnConnect(Handle:owner, Handle:hndl, const String:error[], any:data)
 	decl String:sQuery[1024];
 	Format(sQuery, sizeof(sQuery), "SELECT id \
 	                                FROM   {{servers}} \
-	                                WHERE  ip   = '%s' \
+	                                WHERE  host   = '%s' \
 	                                  AND  port = %i",
 	                                g_sServerIp, g_iServerPort);
 	SB_Query(Query_ServerSelect, sQuery);

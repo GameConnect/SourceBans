@@ -44,10 +44,16 @@ enum DatabaseState
 	DatabaseState_Connecting,
 	DatabaseState_Connected
 }
+enum CheckingState
+{
+	CheckingState_None = 0,
+	CheckingState_Active
+}
 
 new ConfigState:g_iConfigState;
 new g_iConnectLock = 0;
 new DatabaseState:g_iDatabaseState;
+new CheckingState:g_iCheckingState;
 new g_iSequence    = 0;
 new g_iServerPort;
 new Handle:g_hConfig;
@@ -267,6 +273,8 @@ public Query_ServerInsert(Handle:owner, Handle:hndl, const String:error[], any:d
 
 public Query_ExecuteCallback(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
+	CheckConnection(hndl);
+
 	ResetPack(pack);
 	new Handle:plugin = Handle:ReadPackCell(pack);
 	new SQLTCallback:callback = SQLTCallback:ReadPackCell(pack);
@@ -283,10 +291,23 @@ public Query_ExecuteCallback(Handle:owner, Handle:hndl, const String:error[], an
 
 public Query_ErrorCheck(Handle:owner, Handle:hndl, const String:error[], any:data)
 {
+	CheckConnection(hndl);
+
 	if(error[0])
 		LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
 }
 
+public Query_PingDBCallback(Handle:owner, Handle:hndl, const String:error[], any:data)
+{
+	if(!hndl || error[0])
+	{
+		LogError("Lost connection to database");
+		CloseHandle(g_hDatabase);
+		g_hDatabase = INVALID_HANDLE;
+		g_iDatabaseState = DatabaseState_None;
+	}
+	g_iCheckingState = CheckingState_None;
+}
 
 /**
  * Connect Callback
@@ -514,4 +535,17 @@ ExecuteQuery(SQLTCallback:callback, String:sQuery[4096], any:data = 0, DBPriorit
 	}
 	
 	SQL_TQuery(g_hDatabase, callback, sQuery, data, prio);
+}
+
+CheckConnection(Handle:hndl)
+{
+	if(hndl == INVALID_HANDLE && g_iDatabaseState == DatabaseState_Connected)
+	{
+		// Possible we lost connection to db. Also it could be an SQL-error.
+		if(g_iCheckingState == CheckingState_None)
+		{
+			g_iCheckingState = CheckingState_Active;
+			SQL_TQuery(g_hDatabase, Query_PingDBCallback, "SELECT 1", _, DBPrio_High);
+		}
+	}
 }

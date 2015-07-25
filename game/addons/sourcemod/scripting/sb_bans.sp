@@ -734,7 +734,7 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 		PrintToChat(param1, "%s%t", SB_PREFIX, "Chat Reason");
 		return;
 	}
-	if(g_iBanTarget[param1] != -1)
+	if(g_iBanTarget[param1] != -1 && IsClientInGame(g_iBanTarget[param1]))
 	{
 		decl String:sKickMessage[128];
 		Format(sKickMessage, sizeof(sKickMessage), "%T", "Banned Check Site", g_iBanTarget[param1], g_sWebsite);

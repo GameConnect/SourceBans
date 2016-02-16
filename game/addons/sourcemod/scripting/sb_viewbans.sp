@@ -3,18 +3,17 @@
  *
  * @author GameConnect
  * @version 2.0.0
- * @copyright SourceBans (C)2007-2013 GameCOnnect.net.  All rights reserved.
+ * @copyright SourceBans (C)2007-2016 GameConnect.net.  All rights reserved.
  * @package SourceBans
  * @link http://www.sourcebans.net
  */
 
-#pragma semicolon 1
-
 #include <sourcemod>
 #include <sourcebans>
-
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
+
+#pragma semicolon 1
 
 public Plugin:myinfo =
 {
@@ -40,7 +39,7 @@ new Handle:g_hTopMenu;
 public OnPluginStart()
 {
 	RegAdminCmd("sb_viewbans", Command_ViewBans, ADMFLAG_KICK, "Usage: sb_viewbans <#userid|name>");
-	
+
 	LoadTranslations("common.phrases");
 	LoadTranslations("sourcebans.phrases");
 	LoadTranslations("sb_viewbans.phrases");
@@ -51,10 +50,10 @@ public OnAdminMenuReady(Handle:topmenu)
 	// Block us from being called twice
 	if(topmenu == g_hTopMenu)
 		return;
-	
+
 	// Save the handle
 	g_hTopMenu = topmenu;
-	
+
 	// Find the "Player Commands" category
 	new TopMenuObject:iPlayerCommands = FindTopMenuCategory(g_hTopMenu, ADMINMENU_PLAYERCOMMANDS);
 	if(iPlayerCommands)
@@ -89,9 +88,9 @@ public OnClientPostAdminCheck(client)
 	// If its a fake client or 0 we can bug out.
 	if(!client || IsFakeClient(client))
 		return;
-	
+
 	// Request the ban information
-	RequestBanInformation(client, true);	
+	RequestBanInformation(client, true);
 }
 
 public OnClientDisconnect(client)
@@ -112,26 +111,26 @@ public OnClientDisconnect(client)
 public Action:Command_ViewBans(client, args)
 {
 	// Make sure we have arguments, if not, display the player menu and bug out.
-	if(args < 1) 
+	if(args < 1)
 	{
 		ReplyToCommand(client, "Usage: sm_viewbans <#userid|name>");
 		DisplayMenu(BuildPlayerMenu(client), client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 	}
-	
+
 	// We were at least sent a target, let's check him
 	decl String:sTargetBuffer[128];
 	GetCmdArg(1, sTargetBuffer, sizeof(sTargetBuffer));
-	new iTarget = FindTarget(client, sTargetBuffer, true); 
+	new iTarget = FindTarget(client, sTargetBuffer, true);
 
 	// If it's not a valid target display the player menu and bug out.
-	if(iTarget <= 0 || !IsClientInGame(iTarget)) 
+	if(iTarget <= 0 || !IsClientInGame(iTarget))
 	{
 		ReplyToCommand(client, "Usage: sm_viewbans <#userid|name>");
 		DisplayMenu(BuildPlayerMenu(client), client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 	}
-	
+
 	// We have a valid target start to process the request.
 	switch (g_iPlayerBans[iTarget])
 	{
@@ -171,7 +170,7 @@ public MenuHandler_AdminMenu_ViewBans(Handle:topmenu, TopMenuAction:action, TopM
 		DisplayMenu(BuildPlayerMenu(param), param, MENU_TIME_FOREVER);
 	}
 }
- 
+
 public MenuHandler_SelectPlayer(Handle:menu, MenuAction:action, param1, param2)
 {
 	if(action      == MenuAction_Cancel)
@@ -181,18 +180,18 @@ public MenuHandler_SelectPlayer(Handle:menu, MenuAction:action, param1, param2)
 	}
 	else if(action == MenuAction_End)
 		CloseHandle(menu);
-	else if(action != MenuAction_Select) 
+	else if(action != MenuAction_Select)
 		return;
-	
+
 	// Get the selection.
 	decl String:sTargetUserID[10];
 	GetMenuItem(menu, param2, sTargetUserID, sizeof(sTargetUserID));
 	new iTarget = GetClientOfUserId(StringToInt(sTargetUserID));
-	
+
 	// If the target is no longer connected we can bug out.
 	if(!iTarget || !IsClientInGame(iTarget))
 		return;
-	
+
 	// We have a valid target start to process the request.
 	switch(g_iPlayerBans[iTarget])
 	{
@@ -227,7 +226,7 @@ public MenuHandler_BanList(Handle:menu, MenuAction:action, param1, param2)
 		CloseHandle(menu);
 	else if(action != MenuAction_Select)
 		return;
-	
+
 	// Get the selection and display the ban.
 	decl String:sBanID[10];
 	GetMenuItem(menu, param2, sBanID, sizeof(sBanID));
@@ -251,21 +250,21 @@ public PanelHandler_BanInfo(Handle:menu, MenuAction:action, param1, param2)
 public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
 	ResetPack(pack);
-	
+
 	// Unload the datapack and load up some variables
 	decl String:sQuery[256];
 	new iClient = ReadPackCell(pack),
 			iTarget = ReadPackCell(pack),
 			bool:bOnConnect = bool:ReadPackCell(pack);
 	ReadPackString(pack, sQuery, sizeof(sQuery));
-	
+
 	// We're done with you now.
 	CloseHandle(pack);
-	
+
 	// If the target is no longer connected we can bug out.
 	if(!ParseClientFromSerial(iTarget))
 		return;
-	
+
 	// Make sure we succeeded.
 	if(error[0])
 	{
@@ -273,22 +272,22 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 		LogError("Query dump: %s", sQuery);
 		return;
 	}
-	
+
 	// Store the number bans.
 	g_iPlayerBans[iTarget] = SQL_GetRowCount(hndl);
-	
+
 	// If we have bans, clone the handle.
 	if(g_iPlayerBans[iTarget])
 	{
 		CloneHandle(g_hPlayerResults[iTarget], hndl);
-		
+
 		// If we the query was from a client connection announce bans to admins.
 		if(bOnConnect)
 		{
 			SendChatToAdmins(iTarget);
 			return;
 		}
-		
+
 		// This query was sent by the sm_viewbans command.
 		// Let's tell the client we succeeded.
 		if(ParseClientFromSerial(iClient))
@@ -323,7 +322,7 @@ stock Handle:BuildPlayerBanListMenu(iTarget)
 	Format(sTitle, sizeof(sTitle), "%T:", "Player ban list", iTarget, sTargetName);
 	SetMenuTitle(hMenu, sTitle);
 	SetMenuExitBackButton(hMenu, true);
-	
+
 	// Add the bans to the menu.
 	decl String:sReason[128], String:sBanID[10];
 	SQL_Rewind(g_hPlayerResults[iTarget]);
@@ -347,12 +346,12 @@ stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID, client = 0)
 
 	// Create all the string variables we will need
 	decl String:sBanID[10], String:sAuthID[64], String:sBanName[64], String:sCreated[15], String:sEnds[15], String:sLength[15], String:sReason[128], String:sAdminID[10], String:sRemovedType[10], String:sRemovedBy[10], String:sRemovedReason[15];
-	
+
 	decl String:sPanelAuthID[64], String:sPanelBanName[64], String:sPanelCreated[15], String:sPanelEnds[15], String:sPanelLength[15], String:sPanelReason[128], String:sPanelAdminID[10], String:sPanelRemovedBy[10];
-	
+
 	// Rewind the results
 	SQL_Rewind(g_hPlayerResults[iTarget]);
-	
+
 	// Start searching for the ban
 	while(SQL_FetchRow(g_hPlayerResults[iTarget]))
 	{
@@ -366,15 +365,15 @@ stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID, client = 0)
 			SQL_FetchString(g_hPlayerResults[iTarget], 7, sAdminID,     sizeof(sAdminID));
 			SQL_FetchString(g_hPlayerResults[iTarget], 8, sRemovedBy,   sizeof(sRemovedBy));
 			SQL_FetchString(g_hPlayerResults[iTarget], 9, sRemovedType, sizeof(sRemovedType));
-			
+
 			if(!strcmp(sRemovedType,      "E"))
 				Format(sRemovedReason, sizeof(sRemovedReason), "Removed Reason: Expired");
 			else if(!strcmp(sRemovedType, "U"))
 				Format(sRemovedReason, sizeof(sRemovedReason), "Removed Reason: Unbanned");
-			
+
 			FormatTime(sCreated, sizeof(sCreated), "%x %X", SQL_FetchInt(g_hPlayerResults[iTarget], 3));
 			FormatTime(sEnds,    sizeof(sEnds),    "%x %X", SQL_FetchInt(g_hPlayerResults[iTarget], 4));
-			
+
 			// Format the strings for the panel
 			Format(sBanID, sizeof(sBanID), "Ban ID: %i", iBanID);
 			Format(sPanelBanName, sizeof(sPanelBanName), "Player: %s", sBanName);
@@ -384,7 +383,7 @@ stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID, client = 0)
 			Format(sPanelEnds, sizeof(sPanelEnds), "Expired on: %s", sEnds);
 			Format(sPanelReason, sizeof(sPanelReason), "Reason: %s", sReason);
 			Format(sPanelAdminID, sizeof(sPanelAdminID), "Banned by: %s", sAdminID);
-			
+
 			// Add the ban information to the panel.
 			DrawPanelItem(hPanel, sBanID);
 			DrawPanelText(hPanel, sPanelBanName);
@@ -409,15 +408,15 @@ stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 {
 	if(!SB_Connect())
 		return;
-	
+
 	// Get the steamid and format the query.
 	decl String:sAuth[20], String:sQuery[256];
-	GetClientAuthString(iTarget, sAuth, sizeof(sAuth));
+	GetClientAuthId(iTarget, AuthId_Steam2, sAuth, sizeof(sAuth));
 	Format(sQuery, sizeof(sQuery), "SELECT id, steam, name, reason, length, admin_id, unban_admin_id, create_time \
 																	FROM   {{bans}} \
 																	WHERE  steam REGEXP '^STEAM_[0-9]:%s$'",
 																	sAuth[8]);
-	
+
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
 	WritePackCell(hPack, ParseClientSerial(iClient));
@@ -439,7 +438,7 @@ stock SendChatToAdmins(iTarget)
 stock PrintBans(iClient, iTarget)
 {
 	decl String:sAuth[64], String:sTargetName[64];
-	GetClientAuthString(iTarget, sAuth, sizeof(sAuth));
+	GetClientAuthId(iTarget, AuthId_Steam2, sAuth, sizeof(sAuth));
 	GetClientName(iTarget, sTargetName, sizeof(sTargetName));
 	PrintToChat(iClient, "[SM] %t", "Player bans", sTargetName, sAuth, g_iPlayerBans[iTarget]);
 }

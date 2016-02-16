@@ -3,20 +3,18 @@
  *
  * @author GameConnect
  * @version 2.0.0
- * @copyright SourceBans (C)2007-2013 InterWaveStudios.com.  All rights reserved.
+ * @copyright SourceBans (C)2007-2016 GameConnect.net.  All rights reserved.
  * @package SourceBans
  * @link http://www.sourcebans.net
  */
 
-#pragma semicolon 1
-
 #include <sourcemod>
 #include <sourcebans>
 #include <sb_bans>
-
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
-#define REQUIRE_PLUGIN
+
+#pragma semicolon 1
 
 public Plugin:myinfo =
 {
@@ -56,11 +54,11 @@ public OnPluginStart()
 	RegConsoleCmd("sb_submitban", Command_SubmitBan, "sb_submitban <#userid|name> [reason]");
 	AddCommandListener(Command_Say, "say");
 	AddCommandListener(Command_Say, "say_team");
-	
+
 	LoadTranslations("common.phrases");
 	LoadTranslations("sourcebans.phrases");
 	LoadTranslations("sb_submission.phrases");
-	
+
 	g_hReasonMenu = CreateMenu(MenuHandler_Reason);
 	g_hHackingMenu = CreateMenu(MenuHandler_Reason);
 }
@@ -93,12 +91,12 @@ public OnClientPostAdminCheck(client)
 	// If it's console or a fake client, or there is no database connection, we can bug out.
 	if(!client || IsFakeClient(client) || !SB_Connect())
 		return;
-	
+
 	// Get the steamid and format the query.
 	decl String:sAuth[20], String:sQuery[128];
-	GetClientAuthString(client, sAuth, sizeof(sAuth));
+	GetClientAuthId(client, AuthId_Steam2, sAuth, sizeof(sAuth));
 	Format(sQuery, sizeof(sQuery), "SELECT steam FROM {{submissions}} WHERE steam REGEXP '^STEAM_[0-9]:%s$'", sAuth[8]);
-	
+
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
 	WritePackCell(hPack, ParseClientSerial(client));
@@ -123,16 +121,16 @@ public SB_OnReload()
 {
 	// Get values from SourceBans config and store them locally
 	SB_GetConfigString("Website", g_sWebsite, sizeof(g_sWebsite));
-	
+
 	// Get reasons from SourceBans config and store them locally
 	decl String:sReason[128];
 	new Handle:hBanReasons     = Handle:SB_GetConfigValue("BanReasons");
 	new Handle:hHackingReasons = Handle:SB_GetConfigValue("HackingReasons");
-	
+
 	// Empty reason menus
 	RemoveAllMenuItems(g_hReasonMenu);
 	RemoveAllMenuItems(g_hHackingMenu);
-	
+
 	// Add reasons from SourceBans config to reason menus
 	for(new i = 0, iSize = GetArraySize(hBanReasons);     i < iSize; i++)
 	{
@@ -155,26 +153,26 @@ public SB_OnReload()
 public Action:Command_SubmitBan(client, args)
 {
 	// Make sure we have arguments, if not, display the player menu and bug out.
-	if(!args) 
+	if(!args)
 	{
 		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
 		DisplayTargetMenu(client);
 		return Plugin_Handled;
 	}
-	
+
 	// We were at least sent a target, lets check him
 	decl String:sTargetBuffer[128];
 	GetCmdArg(1, sTargetBuffer, sizeof(sTargetBuffer));
 	new iTarget = FindTarget(client, sTargetBuffer, false, false);
-	
+
 	// If it's not a valid target display the player menu and bug out.
-	if(iTarget <= 0 || !IsClientInGame(iTarget)) 
+	if(iTarget <= 0 || !IsClientInGame(iTarget))
 	{
 		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
 		DisplayTargetMenu(client);
 		return Plugin_Handled;
 	}
-	
+
 	// If it's a valid target but the player already has bans submitted, tell them and bug out.
 	if(g_aPlayers[iTarget][iBansSubmitted])
 	{
@@ -183,10 +181,10 @@ public Action:Command_SubmitBan(client, args)
 		ReplyToCommand(client, "[SM] %t", "Player already flagged", sTargetName);
 		return Plugin_Handled;
 	}
-	
+
 	// Set the target variables
 	AssignTargetInfo(client, iTarget);
-	
+
 	// If they have given us a reason submit the ban
 	if(args >= 2)
 	{
@@ -195,7 +193,7 @@ public Action:Command_SubmitBan(client, args)
 		SubmitBan(client, iTarget, sReason);
 	}
 	// If not, display the reason menu
-	else 
+	else
 	{
 		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
 		DisplayMenu(g_hReasonMenu, client, MENU_TIME_FOREVER);
@@ -208,14 +206,14 @@ public Action:Command_Say(client, const String:command[], argc)
 	// If this client is not typing their own reason to ban someone, ignore
 	if(argc < 1 || !g_aPlayers[client][bOwnReason])
 		return Plugin_Continue;
-	
+
 	g_aPlayers[client][bOwnReason] = false;
-	
+
 	decl String:sText[192];
 	GetCmdArgString(sText, sizeof(sText));
 	StripQuotes(sText);
 	TrimString(sText);
-	
+
 	if(!sText[0] || StrEqual(sText[1], "noreason", false))
 	{
 		ReplyToCommand(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
@@ -288,7 +286,7 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
 	ResetPack(pack);
-	
+
 	// If the client is no longer connected we can bug out.
 	new iClient = ReadPackCell(pack);
 	if(!ParseClientFromSerial(iClient))
@@ -296,7 +294,7 @@ public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[],
 		CloseHandle(pack);
 		return;
 	}
-	
+
 	// Make sure we succeeded.
 	if(error[0])
 	{
@@ -307,11 +305,11 @@ public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[],
 		CloseHandle(pack);
 		return;
 	}
-	
+
 	// We're done with you now.
 	CloseHandle(pack);
-	
-	// Set the number of submissions 
+
+	// Set the number of submissions
 	g_aPlayers[iClient][iBansSubmitted] = SQL_GetRowCount(hndl);
 }
 
@@ -322,10 +320,10 @@ public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[],
 stock SubmitBan(client, target, const String:reason[])
 {
 	SB_SubmitBan(client, target, reason);
-	
+
 	// Increment the submission array for the target.
 	g_aPlayers[target][iBansSubmitted] = 1;
-	
+
 	// Blank out the target for this client
 	g_aPlayers[client][iSubmissionTarget] = -1;
 }
@@ -342,7 +340,7 @@ stock DisplayTargetMenu(client)
 stock AssignTargetInfo(client, target)
 {
 	g_aPlayers[client][iSubmissionTarget] = target;
-	GetClientAuthString(target,	g_sTargetsAuth[target],		sizeof(g_sTargetsAuth[]));
-	GetClientIP(target,					g_sTargetsIP[target],	   	sizeof(g_sTargetsIP[]));
-	GetClientName(target,				g_sTargetsName[target], 	sizeof(g_sTargetsName[]));
+	GetClientAuthId(target, AuthId_Steam2, g_sTargetsAuth[target], sizeof(g_sTargetsAuth[]));
+	GetClientIP(target,                    g_sTargetsIP[target],   sizeof(g_sTargetsIP[]));
+	GetClientName(target,                  g_sTargetsName[target], sizeof(g_sTargetsName[]));
 }

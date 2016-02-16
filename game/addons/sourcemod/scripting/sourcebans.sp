@@ -3,26 +3,27 @@
  *
  * @author GameConnect
  * @version 2.0.0
- * @copyright SourceBans (C)2007-2013 GameConnect.net.  All rights reserved.
+ * @copyright SourceBans (C)2007-2016 GameConnect.net.  All rights reserved.
  * @package SourceBans
  * @link http://www.sourcebans.net
  */
-
-#pragma semicolon 1
 
 #include <sourcemod>
 #include <sourcebans>
 #include <regex>
 
+#pragma newdecls required
+#pragma semicolon 1
+
 //#define _DEBUG
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
-	name        = "SourceBans",
-	author      = "GameConnect",
-	description = "Advanced admin and ban management for the Source engine",
-	version     = SB_VERSION,
-	url         = "http://www.sourcebans.net"
+    name        = "SourceBans",
+    author      = "GameConnect",
+    description = "Advanced admin and ban management for the Source engine",
+    version     = SB_VERSION,
+    url         = "http://www.sourcebans.net"
 };
 
 
@@ -31,487 +32,483 @@ public Plugin:myinfo =
  */
 enum ConfigState
 {
-	ConfigState_None = 0,
-	ConfigState_Config,
-	ConfigState_Reasons,
-	ConfigState_Hacking,
-	ConfigState_Times,
-	ConfigState_Loaded
-}
-enum DatabaseState
-{
-	DatabaseState_None = 0,
-	DatabaseState_Connecting,
-	DatabaseState_Connected
+    ConfigState_None = 0,
+    ConfigState_Config,
+    ConfigState_Reasons,
+    ConfigState_Hacking,
+    ConfigState_Times,
+    ConfigState_Loaded
 }
 
-new ConfigState:g_iConfigState;
-new g_iConnectLock = 0;
-new DatabaseState:g_iDatabaseState;
-new g_iSequence    = 0;
-new g_iServerPort;
-new Handle:g_hConfig;
-new Handle:g_hConfigParser;
-new Handle:g_hDatabase;
-new Handle:g_hBanReasons;
-new Handle:g_hBanTimes;
-new Handle:g_hBanTimesFlags;
-new Handle:g_hBanTimesLength;
-new Handle:g_hHackingReasons;
-new Handle:g_hOnConnect;
-new Handle:g_hOnReload;
-new String:g_sConfigFile[PLATFORM_MAX_PATH];
-new String:g_sDatabasePrefix[16];
-new String:g_sServerIp[16];
+ConfigState g_iConfigState;
+int g_iConnectLock = 0;
+int g_iSequence    = 0;
+int g_iServerPort;
+StringMap g_hConfig;
+SMCParser g_hConfigParser;
+Database g_hDatabase;
+ArrayList g_hBanReasons;
+ArrayList g_hBanTimes;
+ArrayList g_hBanTimesFlags;
+ArrayList g_hBanTimesLength;
+ArrayList g_hHackingReasons;
+Handle g_hOnConnect;
+Handle g_hOnReload;
+char g_sConfigFile[PLATFORM_MAX_PATH];
+char g_sDatabasePrefix[16];
+char g_sServerIp[16];
 
 
 /**
  * Plugin Forwards
  */
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	CreateNative("SB_Connect",         Native_Connect);
-	CreateNative("SB_Escape",          Native_Escape);
-	CreateNative("SB_Execute",         Native_Execute);
-	CreateNative("SB_GetConfigString", Native_GetConfigString);
-	CreateNative("SB_GetConfigValue",  Native_GetConfigValue);
-	CreateNative("SB_Init",            Native_Init);
-	CreateNative("SB_Query",           Native_Query);
-	CreateNative("SB_Reload",          Native_Reload);
-	MarkNativeAsOptional("SQL_SetCharset");
-	RegPluginLibrary("sourcebans");
-	
-	return APLRes_Success;
+    CreateNative("SB_Connect",         Native_Connect);
+    CreateNative("SB_Escape",          Native_Escape);
+    CreateNative("SB_Execute",         Native_Execute);
+    CreateNative("SB_GetConfigString", Native_GetConfigString);
+    CreateNative("SB_GetConfigValue",  Native_GetConfigValue);
+    CreateNative("SB_Init",            Native_Init);
+    CreateNative("SB_IsConnected",     Native_IsConnected);
+    CreateNative("SB_Query",           Native_Query);
+    CreateNative("SB_Reload",          Native_Reload);
+    RegPluginLibrary("sourcebans");
+
+    return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	CreateConVar("sb_version", SB_VERSION, "Advanced admin and ban management for the Source engine", FCVAR_NOTIFY|FCVAR_PLUGIN);
-	RegAdminCmd("sb_reload", Command_Reload, ADMFLAG_RCON, "Reload SourceBans config and ban reason menu options");
-	
-	LoadTranslations("common.phrases");
-	LoadTranslations("sourcebans.phrases");
-	BuildPath(Path_SM, g_sConfigFile, sizeof(g_sConfigFile), "configs/sourcebans.cfg");
-	
-	g_hOnConnect      = CreateGlobalForward("SB_OnConnect", ET_Event, Param_Cell);
-	g_hOnReload       = CreateGlobalForward("SB_OnReload",  ET_Event);
-	g_hConfig         = CreateTrie();
-	g_hBanReasons     = CreateArray(256);
-	g_hBanTimes       = CreateArray(256);
-	g_hBanTimesFlags  = CreateArray(256);
-	g_hBanTimesLength = CreateArray(256);
-	g_hHackingReasons = CreateArray(256);
-	
-	g_hConfigParser   = SMC_CreateParser();
-	SMC_SetReaders(g_hConfigParser, ReadConfig_NewSection, ReadConfig_KeyValue, ReadConfig_EndSection);
-	
-	new iServerIp     = GetConVarInt(FindConVar("hostip"));
-	g_iServerPort     = GetConVarInt(FindConVar("hostport"));
-	Format(g_sServerIp, sizeof(g_sServerIp), "%i.%i.%i.%i", (iServerIp >> 24) & 0xFF,
-	                                                        (iServerIp >> 16) & 0xFF,
-	                                                        (iServerIp >>  8) & 0xFF,
-	                                                        iServerIp         & 0xFF);
-	
-	// Store server IP and port locally
-	SetTrieString(g_hConfig, "ServerIP",     g_sServerIp);
-	SetTrieValue(g_hConfig,  "ServerPort",   g_iServerPort);
-	// Store whether the admins plugin is enabled or disabled
-	SetTrieValue(g_hConfig,  "EnableAdmins", LibraryExists("sb_admins"));
+    CreateConVar("sb_version", SB_VERSION, "Advanced admin and ban management for the Source engine", FCVAR_NOTIFY|FCVAR_PLUGIN);
+    RegAdminCmd("sb_reload", Command_Reload, ADMFLAG_RCON, "Reload SourceBans config and ban reason menu options");
+
+    LoadTranslations("common.phrases");
+    LoadTranslations("sourcebans.phrases");
+    BuildPath(Path_SM, g_sConfigFile, sizeof(g_sConfigFile), "configs/sourcebans.cfg");
+
+    g_hOnConnect      = CreateGlobalForward("SB_OnConnect", ET_Event, Param_Cell);
+    g_hOnReload       = CreateGlobalForward("SB_OnReload",  ET_Event);
+    g_hConfig         = new StringMap();
+    g_hBanReasons     = new ArrayList(256);
+    g_hBanTimes       = new ArrayList(256);
+    g_hBanTimesFlags  = new ArrayList(256);
+    g_hBanTimesLength = new ArrayList(256);
+    g_hHackingReasons = new ArrayList(256);
+
+    g_hConfigParser   = new SMCParser();
+    g_hConfigParser.OnEnterSection = ReadConfig_NewSection;
+    g_hConfigParser.OnKeyValue     = ReadConfig_KeyValue;
+    g_hConfigParser.OnLeaveSection = ReadConfig_EndSection;
+
+    int iServerIp     = GetConVarInt(FindConVar("hostip"));
+    g_iServerPort     = GetConVarInt(FindConVar("hostport"));
+    Format(g_sServerIp, sizeof(g_sServerIp), "%i.%i.%i.%i", (iServerIp >> 24) & 0xFF,
+                                                            (iServerIp >> 16) & 0xFF,
+                                                            (iServerIp >>  8) & 0xFF,
+                                                            iServerIp         & 0xFF);
+
+    // Store server IP and port locally
+    g_hConfig.SetString("ServerIP",    g_sServerIp);
+    g_hConfig.SetValue("ServerPort",   g_iServerPort);
+    // Store whether the admins plugin is enabled or disabled
+    g_hConfig.SetValue("EnableAdmins", LibraryExists("sb_admins"));
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
-	SB_Reload();
+    SB_Reload();
+    SB_Connect();
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
-	/**
-	 * Clean up on map end just so we can start a fresh connection when we need it later.
-	 */
-	if(g_hDatabase)
-		CloseHandle(g_hDatabase);
-	
-	g_hDatabase = INVALID_HANDLE;
+    delete g_hDatabase;
 }
 
-public OnLibraryAdded(const String:name[])
+public void OnLibraryAdded(const char[] name)
 {
-	if(StrEqual(name, "sb_admins"))
-		SetTrieValue(g_hConfig, "EnableAdmins", true);
+    if (StrEqual(name, "sb_admins")) {
+        g_hConfig.SetValue("EnableAdmins", true);
+    }
 }
 
-public OnLibraryRemoved(const String:name[])
+public void OnLibraryRemoved(const char[] name)
 {
-	if(StrEqual(name, "sb_admins"))
-		SetTrieValue(g_hConfig, "EnableAdmins", false);
+    if (StrEqual(name, "sb_admins")) {
+        g_hConfig.SetValue("EnableAdmins", false);
+    }
 }
 
 
 /**
  * Commands
  */
-public Action:Command_Reload(client, args)
+public Action Command_Reload(int client, int args)
 {
-	SB_Reload();
-	return Plugin_Handled;
+    SB_Reload();
+    return Plugin_Handled;
 }
 
 
 /**
  * Config Parser
  */
-public SMCResult:ReadConfig_EndSection(Handle:smc)
+public SMCResult ReadConfig_EndSection(SMCParser smc)
 {
-	return SMCParse_Continue;
+    return SMCParse_Continue;
 }
 
-public SMCResult:ReadConfig_KeyValue(Handle:smc, const String:key[], const String:value[], bool:key_quotes, bool:value_quotes)
+public SMCResult ReadConfig_KeyValue(SMCParser smc, const char[] key, const char[] value, bool key_quotes, bool value_quotes)
 {
-	if(!key[0])
-		return SMCParse_Continue;
-	
-	switch(g_iConfigState)
-	{
-		case ConfigState_Config:
-		{
-			// If value is an integer
-			if(StrEqual("Addban",           key, false) ||
-			   StrEqual("ProcessQueueTime", key, false) ||
-			   StrEqual("RequireSiteLogin", key, false) ||
-			   StrEqual("Unban",            key, false))
-				SetTrieValue(g_hConfig,  key, StringToInt(value));
-			// If value is a float
-			else if(StrEqual("RetryTime",   key, false))
-				SetTrieValue(g_hConfig,  key, StringToFloat(value));
-			// If value is a string
-			else if(value[0])
-				SetTrieString(g_hConfig, key, value);
-		}
-		case ConfigState_Hacking:
-			PushArrayString(g_hHackingReasons, value);
-		case ConfigState_Reasons:
-			PushArrayString(g_hBanReasons,     value);
-		case ConfigState_Times:
-		{
-			if(StrEqual("flags",       key, false))
-				PushArrayString(g_hBanTimesFlags,  value);
-			else if(StrEqual("length", key, false))
-				PushArrayString(g_hBanTimesLength, value);
-		}
-	}
-	return SMCParse_Continue;
+    if (!key[0]) {
+        return SMCParse_Continue;
+    }
+
+    switch (g_iConfigState) {
+        case ConfigState_Config:
+        {
+            // If value is an integer
+            if (StrEqual("Addban",           key, false) ||
+                StrEqual("ProcessQueueTime", key, false) ||
+                StrEqual("RequireSiteLogin", key, false) ||
+                StrEqual("Unban",            key, false)) {
+                g_hConfig.SetValue(key,  StringToInt(value));
+            }
+            // If value is a float
+            else if (StrEqual("RetryTime",   key, false)) {
+                g_hConfig.SetValue(key,  StringToFloat(value));
+            }
+            // If value is a string
+            else if (value[0]) {
+                g_hConfig.SetString(key, value);
+            }
+        }
+        case ConfigState_Hacking:
+            g_hHackingReasons.PushString(value);
+        case ConfigState_Reasons:
+            g_hBanReasons.PushString(value);
+        case ConfigState_Times:
+        {
+            if (StrEqual("flags",       key, false)) {
+                g_hBanTimesFlags.PushString(value);
+            }
+            else if (StrEqual("length", key, false)) {
+                g_hBanTimesLength.PushString(value);
+            }
+        }
+    }
+    return SMCParse_Continue;
 }
 
-public SMCResult:ReadConfig_NewSection(Handle:smc, const String:name[], bool:opt_quotes)
+public SMCResult ReadConfig_NewSection(SMCParser smc, const char[] name, bool opt_quotes)
 {
-	if(StrEqual("Config",              name, false))
-		g_iConfigState = ConfigState_Config;
-	else if(StrEqual("BanReasons",     name, false))
-		g_iConfigState = ConfigState_Reasons;
-	else if(StrEqual("BanTimes",       name, false))
-		g_iConfigState = ConfigState_Times;
-	else if(StrEqual("HackingReasons", name, false))
-		g_iConfigState = ConfigState_Hacking;
-	else if(g_iConfigState == ConfigState_Times)
-		PushArrayString(g_hBanTimes, name);
-	return SMCParse_Continue;
+    if (StrEqual("Config",              name, false)) {
+        g_iConfigState = ConfigState_Config;
+    }
+    else if (StrEqual("BanReasons",     name, false)) {
+        g_iConfigState = ConfigState_Reasons;
+    }
+    else if (StrEqual("BanTimes",       name, false)) {
+        g_iConfigState = ConfigState_Times;
+    }
+    else if (StrEqual("HackingReasons", name, false)) {
+        g_iConfigState = ConfigState_Hacking;
+    }
+    else if (g_iConfigState == ConfigState_Times) {
+        g_hBanTimes.PushString(name);
+    }
+    return SMCParse_Continue;
 }
 
 
 /**
  * Query Callbacks
  */
-public Query_ServerSelect(Handle:owner, Handle:hndl, const String:error[], any:data)
+public void Query_ServerSelect(Database db, DBResultSet results, const char[] error, any data)
 {
-	if(error[0])
-	{
-		LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
-		return;
-	}
-	if(SQL_FetchRow(hndl))
-	{
-		// Store server ID locally
-		SetTrieValue(g_hConfig, "ServerID", SQL_FetchInt(hndl, 0));
-		
-		Call_StartForward(g_hOnConnect);
-		Call_PushCell(g_hDatabase);
-		Call_Finish();
-		return;
-	}
-	
-	decl String:sFolder[32], String:sQuery[1024];
-	GetGameFolderName(sFolder, sizeof(sFolder));
-	
-	Format(sQuery, sizeof(sQuery), "INSERT INTO {{servers}} (host, port, game_id) \
-	                                VALUES      ('%s', %i, (SELECT id FROM {{games}} WHERE folder = '%s'))",
-	                                g_sServerIp, g_iServerPort, sFolder);
-	SB_Query(Query_ServerInsert, sQuery);
+    if (error[0]) {
+        LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
+        return;
+    }
+    if (results.FetchRow()) {
+        // Store server ID locally
+        g_hConfig.SetValue("ServerID", results.FetchInt(0));
+
+        Call_StartForward(g_hOnConnect);
+        Call_PushCell(g_hDatabase);
+        Call_Finish();
+        return;
+    }
+
+    char sFolder[32], sQuery[1024];
+    GetGameFolderName(sFolder, sizeof(sFolder));
+
+    Format(sQuery, sizeof(sQuery), "INSERT INTO {{servers}} (host, port, game_id) \
+                                    VALUES      ('%s', %i, (SELECT id FROM {{games}} WHERE folder = '%s'))",
+                                    g_sServerIp, g_iServerPort, sFolder);
+    SB_Query(Query_ServerInsert, sQuery);
 }
 
-public Query_ServerInsert(Handle:owner, Handle:hndl, const String:error[], any:data)
+public void Query_ServerInsert(Database db, DBResultSet results, const char[] error, any data)
 {
-	if(error[0])
-	{
-		LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
-		return;
-	}
-	
-	// Store server ID locally
-	SetTrieValue(g_hConfig, "ServerID", SQL_GetInsertId(owner));
-	
-	Call_StartForward(g_hOnConnect);
-	Call_PushCell(g_hDatabase);
-	Call_Finish();
+    if (error[0]) {
+        LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
+        return;
+    }
+
+    // Store server ID locally
+    g_hConfig.SetValue("ServerID", results.InsertId);
+
+    Call_StartForward(g_hOnConnect);
+    Call_PushCell(g_hDatabase);
+    Call_Finish();
 }
 
-public Query_ExecuteCallback(Handle:owner, Handle:hndl, const String:error[], any:pack)
+public void Query_ExecuteCallback(Database db, DBResultSet results, const char[] error, DataPack pack)
 {
-	ResetPack(pack);
-	new Handle:plugin = Handle:ReadPackCell(pack);
-	new SQLTCallback:callback = SQLTCallback:ReadPackCell(pack);
-	new data = ReadPackCell(pack);
-	CloseHandle(pack);
-	
-	Call_StartFunction(plugin, callback);
-	Call_PushCell(owner);
-	Call_PushCell(hndl);
-	Call_PushString(error);
-	Call_PushCell(data);
-	Call_Finish();
+    pack.Reset();
+    Handle plugin = pack.ReadCell();
+    Function callback = pack.ReadFunction();
+    any data = pack.ReadCell();
+    delete pack;
+
+    Call_StartFunction(plugin, callback);
+    Call_PushCell(db);
+    Call_PushCell(results);
+    Call_PushString(error);
+    Call_PushCell(data);
+    Call_Finish();
 }
 
-public Query_ErrorCheck(Handle:owner, Handle:hndl, const String:error[], any:data)
+public void Query_ErrorCheck(Database db, DBResultSet results, const char[] error, any data)
 {
-	if(error[0])
-		LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
+    if (error[0]) {
+        LogError("%T (%s)", "Failed to query database", LANG_SERVER, error);
+    }
 }
 
 
 /**
  * Connect Callback
  */
-public OnConnect(Handle:owner, Handle:hndl, const String:error[], any:data)
+public void OnDatabaseConnect(Database db, const char[] error, any data)
 {
-	#if defined _DEBUG
-	PrintToServer("%sOnConnect(%x,%x,%d) ConnectLock=%d", SB_PREFIX, owner, hndl, data, g_iConnectLock);
-	#endif
-	
-	// If this happens to be an old connection request, ignore it.
-	if(data != g_iConnectLock || g_hDatabase)
-	{
-		if(hndl)
-			CloseHandle(hndl);
-		return;
-	}
-	
-	g_iConnectLock   = 0;
-	g_iDatabaseState = DatabaseState_Connected;
-	g_hDatabase      = hndl;
-	
-	// See if the connection is valid.  If not, don't un-mark the caches
-	// as needing rebuilding, in case the next connection request works.
-	if(!g_hDatabase)
-	{
-		LogError("%T (%s)", "Could not connect to database", LANG_SERVER, error);
-		return;
-	}
-	
-	// Set character set to UTF-8 in the database
-	#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 6
-	if(GetFeatureStatus(FeatureType_Native, "SQL_SetCharset") == FeatureStatus_Available)
-		SQL_SetCharset(g_hDatabase, "utf8");
-	else
-	#endif
-		SB_Execute("SET NAMES 'UTF8'");
-	
-	// Select server from the database
-	decl String:sQuery[1024];
-	Format(sQuery, sizeof(sQuery), "SELECT id \
-	                                FROM   {{servers}} \
-	                                WHERE  host   = '%s' \
-	                                  AND  port = %i",
-	                                g_sServerIp, g_iServerPort);
-	SB_Query(Query_ServerSelect, sQuery);
+    #if defined _DEBUG
+    PrintToServer("%sOnDatabaseConnect(%x, %d) ConnectLock=%d", SB_PREFIX, db, data, g_iConnectLock);
+    #endif
+
+    // If this happens to be an old connection request, ignore it.
+    if (data != g_iConnectLock || g_hDatabase) {
+        if (db) {
+            delete db;
+        }
+        return;
+    }
+
+    g_iConnectLock = 0;
+    g_hDatabase    = db;
+
+    // See if the connection is valid.  If not, don't un-mark the caches
+    // as needing rebuilding, in case the next connection request works.
+    if (!g_hDatabase) {
+        LogError("%T (%s)", "Could not connect to database", LANG_SERVER, error);
+        return;
+    }
+
+    g_hDatabase.SetCharset("utf8");
+
+    // Select server from the database
+    char sQuery[1024];
+    Format(sQuery, sizeof(sQuery), "SELECT id \
+                                    FROM   {{servers}} \
+                                    WHERE  host = '%s' \
+                                      AND  port = %i",
+                                    g_sServerIp, g_iServerPort);
+    SB_Query(Query_ServerSelect, sQuery);
 }
 
 
 /**
  * Natives
  */
-public Native_Connect(Handle:plugin, numParams)
+public int Native_Connect(Handle plugin, int numParams)
 {
-	if(g_hDatabase)
-		return true;
-	
-	if(g_iDatabaseState != DatabaseState_Connecting)
-	{
-		g_iDatabaseState = DatabaseState_Connecting;
-		g_iConnectLock   = ++g_iSequence;
-		// Connect using the "sourcebans" section, or the "default" section if "sourcebans" does not exist
-		SQL_TConnect(OnConnect, SQL_CheckConfig("sourcebans") ? "sourcebans" : "default", g_iConnectLock);
-	}
-	
-	return false;
+    if (g_iConnectLock) {
+        return;
+    }
+
+    g_iConnectLock = ++g_iSequence;
+    // Connect using the "sourcebans" section, or the "default" section if "sourcebans" does not exist
+    Database.Connect(OnDatabaseConnect, SQL_CheckConfig("sourcebans") ? "sourcebans" : "default", g_iConnectLock);
 }
 
-public Native_Escape(Handle:plugin, numParams)
+public int Native_Escape(Handle plugin, int numParams)
 {
-	// Get max length for the string buffer
-	new iLen = GetNativeCell(3);
-	if(iLen <= 0)
-		return false;
-	
-	decl String:sData[iLen], String:sBuffer[iLen];
-	GetNativeString(1, sData, iLen);
-	
-	new written = GetNativeCellRef(4);
-	new bool:success = SQL_EscapeString(g_hDatabase, sData, sBuffer, iLen, written);
-	
-	// Store value in string buffer
-	SetNativeString(2, sBuffer, iLen);
-	return success;
+    // Get max length for the string buffer
+    int iLen = GetNativeCell(3);
+    if (iLen <= 0) {
+        return false;
+    }
+
+    char[] sData = new char[iLen], sBuffer = new char[iLen];
+    GetNativeString(1, sData, iLen);
+
+    any written = GetNativeCellRef(4);
+    bool success = g_hDatabase.Escape(sData, sBuffer, iLen, written);
+
+    // Store value in string buffer
+    SetNativeString(2, sBuffer, iLen);
+    return success;
 }
 
-public Native_Execute(Handle:plugin, numParams)
+public int Native_Execute(Handle plugin, int numParams)
 {
-	decl String:sQuery[4096];
-	GetNativeString(1, sQuery, sizeof(sQuery));
-	
-	new DBPriority:prio = DBPriority:GetNativeCell(2);
-	
-	ExecuteQuery(Query_ErrorCheck, sQuery, 0, prio);
+    if (!SB_IsConnected()) {
+        return;
+    }
+
+    char sQuery[4096];
+    GetNativeString(1, sQuery, sizeof(sQuery));
+
+    DBPriority prio = GetNativeCell(2);
+
+    ExecuteQuery(Query_ErrorCheck, sQuery, 0, prio);
 }
 
-public Native_GetConfigString(Handle:plugin, numParams)
+public int Native_GetConfigString(Handle plugin, int numParams)
 {
-	// Get max length for the string buffer
-	new iLen = GetNativeCell(3);
-	if(iLen <= 0)
-		return;
-	
-	// Get value for key
-	decl String:sKey[32], String:sValue[iLen];
-	GetNativeString(1, sKey, sizeof(sKey));
-	GetTrieString(g_hConfig, sKey, sValue, iLen);
-	
-	// Store value in string buffer
-	SetNativeString(2, sValue, iLen);
+    // Get max length for the string buffer
+    int iLen = GetNativeCell(3);
+    if (iLen <= 0) {
+        return;
+    }
+
+    // Get value for key
+    char sKey[32];
+    char[] sValue = new char[iLen];
+    GetNativeString(1, sKey, sizeof(sKey));
+    g_hConfig.GetString(sKey, sValue, iLen);
+
+    // Store value in string buffer
+    SetNativeString(2, sValue, iLen);
 }
 
-public Native_GetConfigValue(Handle:plugin, numParams)
+public int Native_GetConfigValue(Handle plugin, int numParams)
 {
-	// Get value for key
-	decl String:sKey[32];
-	new iValue;
-	GetNativeString(1, sKey, sizeof(sKey));
-	GetTrieValue(g_hConfig, sKey, iValue);
-	
-	// Return value
-	return iValue;
+    // Get value for key
+    char sKey[32];
+    int iValue;
+    GetNativeString(1, sKey, sizeof(sKey));
+    g_hConfig.GetValue(sKey, iValue);
+
+    // Return value
+    return iValue;
 }
 
-public Native_Init(Handle:plugin, numParams)
+public int Native_Init(Handle plugin, int numParams)
 {
-	// If config is loaded, call reload forward
-	if(g_iConfigState == ConfigState_Loaded)
-	{
-		Call_StartForward(g_hOnReload);
-		Call_Finish();
-	}
-	
-	// If server ID has been fetched, call connect forward
-	new iServerId;
-	if(GetTrieValue(g_hConfig, "ServerID", iServerId))
-	{
-		Call_StartForward(g_hOnConnect);
-		Call_PushCell(g_hDatabase);
-		Call_Finish();
-	}
+    // If config is loaded, call reload forward
+    if (g_iConfigState == ConfigState_Loaded) {
+        Call_StartForward(g_hOnReload);
+        Call_Finish();
+    }
+
+    // If server ID has been fetched, call connect forward
+    int iServerId;
+    if (g_hConfig.GetValue("ServerID", iServerId)) {
+        Call_StartForward(g_hOnConnect);
+        Call_PushCell(g_hDatabase);
+        Call_Finish();
+    }
 }
 
-public Native_Query(Handle:plugin, numParams)
+public int Native_IsConnected(Handle plugin, int numParams)
 {
-	decl String:sQuery[4096];
-	GetNativeString(2, sQuery, sizeof(sQuery));
-	
-	new SQLTCallback:callback = SQLTCallback:GetNativeCell(1);
-	new data = GetNativeCell(3);
-	new DBPriority:prio = DBPriority:GetNativeCell(4);
-	
-	new Handle:hPack = CreateDataPack();
-	WritePackCell(hPack, _:plugin);
-	WritePackCell(hPack, _:callback);
-	WritePackCell(hPack, data);
-	
-	ExecuteQuery(Query_ExecuteCallback, sQuery, hPack, prio);
+    return !!g_hDatabase;
 }
 
-public Native_Reload(Handle:plugin, numParams)
+public int Native_Query(Handle plugin, int numParams)
 {
-	if(!FileExists(g_sConfigFile))
-		SetFailState("%sFile not found: %s", SB_PREFIX, g_sConfigFile);
-	
-	// Empty ban reason and ban time arrays
-	ClearArray(g_hBanReasons);
-	ClearArray(g_hBanTimes);
-	ClearArray(g_hBanTimesFlags);
-	ClearArray(g_hBanTimesLength);
-	ClearArray(g_hHackingReasons);
-	
-	// Reset config state
-	g_iConfigState      = ConfigState_None;
-	
-	// Parse config file
-	new SMCError:iError = SMC_ParseFile(g_hConfigParser, g_sConfigFile);
-	if(iError != SMCError_Okay)
-	{
-		decl String:sError[64];
-		if(SMC_GetErrorString(iError, sError, sizeof(sError)))
-			LogError(sError);
-		else
-			LogError("Fatal parse error");
-		return;
-	}
-	
-	g_iConfigState      = ConfigState_Loaded;
-	
-	GetTrieString(g_hConfig, "DatabasePrefix", g_sDatabasePrefix, sizeof(g_sDatabasePrefix));
-	GetTrieString(g_hConfig, "ServerIP",       g_sServerIp,       sizeof(g_sServerIp));
-	GetTrieValue(g_hConfig,  "ServerPort",     g_iServerPort);
-	SetTrieValue(g_hConfig,  "BanReasons",     g_hBanReasons);
-	SetTrieValue(g_hConfig,  "BanTimes",       g_hBanTimes);
-	SetTrieValue(g_hConfig,  "BanTimesFlags",  g_hBanTimesFlags);
-	SetTrieValue(g_hConfig,  "BanTimesLength", g_hBanTimesLength);
-	SetTrieValue(g_hConfig,  "HackingReasons", g_hHackingReasons);
-	
-	Call_StartForward(g_hOnReload);
-	Call_Finish();
+    if (!SB_IsConnected()) {
+        return;
+    }
+
+    char sQuery[4096];
+    GetNativeString(2, sQuery, sizeof(sQuery));
+
+    Function callback = GetNativeFunction(1);
+    any data = GetNativeCell(3);
+    DBPriority prio = GetNativeCell(4);
+
+    DataPack hPack = new DataPack();
+    hPack.WriteCell(plugin);
+    hPack.WriteFunction(callback);
+    hPack.WriteCell(data);
+
+    ExecuteQuery(Query_ExecuteCallback, sQuery, hPack, prio);
+}
+
+public int Native_Reload(Handle plugin, int numParams)
+{
+    if (!FileExists(g_sConfigFile)) {
+        SetFailState("%sFile not found: %s", SB_PREFIX, g_sConfigFile);
+    }
+
+    // Empty ban reason and ban time arrays
+    g_hBanReasons.Clear();
+    g_hBanTimes.Clear();
+    g_hBanTimesFlags.Clear();
+    g_hBanTimesLength.Clear();
+    g_hHackingReasons.Clear();
+
+    // Reset config state
+    g_iConfigState  = ConfigState_None;
+
+    // Parse config file
+    SMCError iError = g_hConfigParser.ParseFile(g_sConfigFile);
+    if (iError != SMCError_Okay) {
+        char sError[64] = "Fatal parse error";
+        g_hConfigParser.GetErrorString(iError, sError, sizeof(sError));
+        LogError(sError);
+        return;
+    }
+
+    g_iConfigState  = ConfigState_Loaded;
+
+    g_hConfig.GetString("DatabasePrefix", g_sDatabasePrefix, sizeof(g_sDatabasePrefix));
+    g_hConfig.GetString("ServerIP",       g_sServerIp,       sizeof(g_sServerIp));
+    g_hConfig.GetValue("ServerPort",      g_iServerPort);
+    g_hConfig.SetValue("BanReasons",      g_hBanReasons);
+    g_hConfig.SetValue("BanTimes",        g_hBanTimes);
+    g_hConfig.SetValue("BanTimesFlags",   g_hBanTimesFlags);
+    g_hConfig.SetValue("BanTimesLength",  g_hBanTimesLength);
+    g_hConfig.SetValue("HackingReasons",  g_hHackingReasons);
+
+    Call_StartForward(g_hOnReload);
+    Call_Finish();
 }
 
 
 /**
  * Stocks
  */
-ExecuteQuery(SQLTCallback:callback, String:sQuery[4096], any:data = 0, DBPriority:prio = DBPrio_Normal)
+void ExecuteQuery(SQLQueryCallback callback, char sQuery[4096], any data = 0, DBPriority prio = DBPrio_Normal)
 {
-	if(!SB_Connect())
-		return;
-	
-	// Format {{table}} as DatabasePrefixtable
-	decl String:sSearch[65], String:sReplace[65], String:sTable[65];
-	static Handle:hTables;
-	if(!hTables)
-		hTables = CompileRegex("\\{\\{([0-9a-zA-Z\\$_]+?)\\}\\}");
-	
-	while(MatchRegex(hTables, sQuery) > 0)
-	{
-		GetRegexSubString(hTables, 0, sSearch, sizeof(sSearch));
-		GetRegexSubString(hTables, 1, sTable,  sizeof(sTable));
-		Format(sReplace, sizeof(sReplace), "%s%s", g_sDatabasePrefix, sTable);
-		
-		ReplaceString(sQuery, sizeof(sQuery), sSearch, sReplace);
-	}
-	
-	SQL_TQuery(g_hDatabase, callback, sQuery, data, prio);
+    // Format {{table}} as DatabasePrefixtable
+    char sSearch[65], sReplace[65], sTable[65];
+    static Regex hTables;
+    if (!hTables) {
+        hTables = new Regex("\\{\\{([0-9a-zA-Z\\$_]+?)\\}\\}");
+    }
+
+    while (hTables.Match(sQuery) > 0) {
+        hTables.GetSubString(0, sSearch, sizeof(sSearch));
+        hTables.GetSubString(1, sTable,  sizeof(sTable));
+        Format(sReplace, sizeof(sReplace), "%s%s", g_sDatabasePrefix, sTable);
+
+        ReplaceString(sQuery, sizeof(sQuery), sSearch, sReplace);
+    }
+
+    g_hDatabase.Query(callback, sQuery, data, prio);
 }

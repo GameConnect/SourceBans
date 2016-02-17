@@ -1,5 +1,5 @@
 /**
- * SourceBans Submission Plugin
+ * SourceBans Report Plugin
  *
  * @author GameConnect
  * @version 2.0.0
@@ -18,9 +18,9 @@
 
 public Plugin:myinfo =
 {
-	name        = "SourceBans: Submission",
+	name        = "SourceBans: Report",
 	author      = "GameConnect",
-	description = "Allows players to submit bans ingame",
+	description = "Allows players to report other players ingame",
 	version     = SB_VERSION,
 	url         = "http://www.sourcebans.net"
 };
@@ -31,9 +31,9 @@ public Plugin:myinfo =
  */
 enum PlayerData
 {
-	iBansSubmitted,
-	iSubmissionTarget,
-	bool:bOwnReason
+	iReports,
+	iReportTarget,
+	bool:bIsWaitingForChatReason
 };
 
 new g_aPlayers[MAXPLAYERS + 1][PlayerData];
@@ -51,13 +51,11 @@ new String:g_sWebsite[256];
  */
 public OnPluginStart()
 {
-	RegConsoleCmd("sb_submitban", Command_SubmitBan, "sb_submitban <#userid|name> [reason]");
-	AddCommandListener(Command_Say, "say");
-	AddCommandListener(Command_Say, "say_team");
+	RegConsoleCmd("sb_report", Command_Report, "sb_report <#userid|name> <reason>");
 
 	LoadTranslations("common.phrases");
 	LoadTranslations("sourcebans.phrases");
-	LoadTranslations("sb_submission.phrases");
+	LoadTranslations("sb_report.phrases");
 
 	g_hReasonMenu = CreateMenu(MenuHandler_Reason);
 	g_hHackingMenu = CreateMenu(MenuHandler_Reason);
@@ -89,28 +87,28 @@ public OnLibraryRemoved(const String:name[])
 public OnClientPostAdminCheck(client)
 {
 	// If it's console or a fake client, or there is no database connection, we can bug out.
-	if(!client || IsFakeClient(client) || !SB_Connect())
+	if(!client || IsFakeClient(client) || !SB_IsConnected())
 		return;
 
 	// Get the steamid and format the query.
 	decl String:sAuth[20], String:sQuery[128];
 	GetClientAuthId(client, AuthId_Steam2, sAuth, sizeof(sAuth));
-	Format(sQuery, sizeof(sQuery), "SELECT steam FROM {{submissions}} WHERE steam REGEXP '^STEAM_[0-9]:%s$'", sAuth[8]);
+	Format(sQuery, sizeof(sQuery), "SELECT steam FROM {{reports}} WHERE steam REGEXP '^STEAM_[0-9]:%s$'", sAuth[8]);
 
 	// Send the query.
 	new Handle:hPack = CreateDataPack();
 	WritePackCell(hPack, ParseClientSerial(client));
 	WritePackString(hPack, sQuery);
-	SB_Query(Query_ReceiveSubmissions, sQuery, hPack, DBPrio_High);
+	SB_Query(Query_ReceiveReports, sQuery, hPack, DBPrio_High);
 }
 
 public OnClientDisconnect(client)
 {
 	// Cleanup the client variables
-	g_aPlayers[client][iBansSubmitted] = -1;
-	g_aPlayers[client][iSubmissionTarget] = -1;
-	// Not going to search to see of the target is currently in the process for a submission
-	// This allows us to submit bans even if the person disconnects after the process is started
+	g_aPlayers[client][iReports] = -1;
+	g_aPlayers[client][iReportTarget] = -1;
+	// Not going to search to see if the target is currently in the process for a report
+	// This allows us to report players even if the person disconnects after the process is started
 }
 
 
@@ -150,12 +148,12 @@ public SB_OnReload()
 /**
  * Commands
  */
-public Action:Command_SubmitBan(client, args)
+public Action:Command_Report(client, args)
 {
 	// Make sure we have arguments, if not, display the player menu and bug out.
 	if(!args)
 	{
-		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
+		ReplyToCommand(client, "Usage: sb_report <#userid|name> <reason>");
 		DisplayTargetMenu(client);
 		return Plugin_Handled;
 	}
@@ -168,13 +166,13 @@ public Action:Command_SubmitBan(client, args)
 	// If it's not a valid target display the player menu and bug out.
 	if(iTarget <= 0 || !IsClientInGame(iTarget))
 	{
-		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
+		ReplyToCommand(client, "Usage: sb_report <#userid|name> <reason>");
 		DisplayTargetMenu(client);
 		return Plugin_Handled;
 	}
 
-	// If it's a valid target but the player already has bans submitted, tell them and bug out.
-	if(g_aPlayers[iTarget][iBansSubmitted])
+	// If it's a valid target but the player has already been reported, tell them and bug out.
+	if(g_aPlayers[iTarget][iReports])
 	{
 		decl String:sTargetName[64];
 		GetClientName(iTarget, sTargetName, sizeof(sTargetName));
@@ -185,46 +183,40 @@ public Action:Command_SubmitBan(client, args)
 	// Set the target variables
 	AssignTargetInfo(client, iTarget);
 
-	// If they have given us a reason submit the ban
+	// If they have given us a reason report the player
 	if(args >= 2)
 	{
 		decl String:sReason[256];
 		GetCmdArg(2, sReason, sizeof(sReason));
-		SubmitBan(client, iTarget, sReason);
+		ReportPlayer(client, iTarget, sReason);
 	}
 	// If not, display the reason menu
 	else
 	{
-		ReplyToCommand(client, "Usage: sm_submitban <#userid|name> <reason>");
+		ReplyToCommand(client, "Usage: sb_report <#userid|name> <reason>");
 		DisplayMenu(g_hReasonMenu, client, MENU_TIME_FOREVER);
 	}
 	return Plugin_Handled;
 }
 
-public Action:Command_Say(client, const String:command[], argc)
+public Action:OnClientSayCommand(client, const String:command[], const String:sArgs[])
 {
 	// If this client is not typing their own reason to ban someone, ignore
-	if(argc < 1 || !g_aPlayers[client][bOwnReason])
+	if(!sArgs[0] || !g_aPlayers[client][bIsWaitingForChatReason])
 		return Plugin_Continue;
 
-	g_aPlayers[client][bOwnReason] = false;
+	g_aPlayers[client][bIsWaitingForChatReason] = false;
 
-	decl String:sText[192];
-	GetCmdArgString(sText, sizeof(sText));
-	StripQuotes(sText);
-	TrimString(sText);
+	if (StrEqual(sArgs[1], "abortban", false))
+	{
+		PrintToChat(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
+		return Plugin_Stop;
+	}
+	if(g_aPlayers[client][iReportTarget] == -1)
+		return Plugin_Continue;
 
-	if(!sText[0] || StrEqual(sText[1], "noreason", false))
-	{
-		ReplyToCommand(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
-		return Plugin_Handled;
-	}
-	if(g_aPlayers[client][iSubmissionTarget] != -1)
-	{
-		SubmitBan(client, g_aPlayers[client][iSubmissionTarget], sText);
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
+	ReportPlayer(client, g_aPlayers[client][iReportTarget], sArgs);
+	return Plugin_Stop;
 }
 
 
@@ -268,13 +260,13 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 		}
 		if(StrEqual(sInfo, "Own Reason"))
 		{
-			g_aPlayers[param1][bOwnReason] = true;
+			g_aPlayers[param1][bIsWaitingForChatReason] = true;
 			PrintToChat(param1, "%s%t", SB_PREFIX, "Chat Reason");
 			return;
 		}
-		if(g_aPlayers[param1][iSubmissionTarget] != -1)
+		if(g_aPlayers[param1][iReportTarget] != -1)
 		{
-			SubmitBan(param1, g_aPlayers[param1][iSubmissionTarget], sInfo);
+			ReportPlayer(param1, g_aPlayers[param1][iReportTarget], sInfo);
 		}
 	}
 }
@@ -283,7 +275,7 @@ public MenuHandler_Reason(Handle:menu, MenuAction:action, param1, param2)
 /**
  * Query Callbacks
  */
-public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[], any:pack)
+public Query_ReceiveReports(Handle:owner, Handle:hndl, const String:error[], any:pack)
 {
 	ResetPack(pack);
 
@@ -309,23 +301,23 @@ public Query_ReceiveSubmissions(Handle:owner, Handle:hndl, const String:error[],
 	// We're done with you now.
 	CloseHandle(pack);
 
-	// Set the number of submissions
-	g_aPlayers[iClient][iBansSubmitted] = SQL_GetRowCount(hndl);
+	// Set the number of reports
+	g_aPlayers[iClient][iReports] = SQL_GetRowCount(hndl);
 }
 
 
 /**
  * Stocks
  */
-stock SubmitBan(client, target, const String:reason[])
+stock ReportPlayer(client, target, const String:reason[])
 {
-	SB_SubmitBan(client, target, reason);
+	SB_ReportPlayer(client, target, reason);
 
-	// Increment the submission array for the target.
-	g_aPlayers[target][iBansSubmitted] = 1;
+	// Increment the report array for the target.
+	g_aPlayers[target][iReports] = 1;
 
 	// Blank out the target for this client
-	g_aPlayers[client][iSubmissionTarget] = -1;
+	g_aPlayers[client][iReportTarget] = -1;
 }
 
 stock DisplayTargetMenu(client)
@@ -339,7 +331,7 @@ stock DisplayTargetMenu(client)
 
 stock AssignTargetInfo(client, target)
 {
-	g_aPlayers[client][iSubmissionTarget] = target;
+	g_aPlayers[client][iReportTarget] = target;
 	GetClientAuthId(target, AuthId_Steam2, g_sTargetsAuth[target], sizeof(g_sTargetsAuth[]));
 	GetClientIP(target,                    g_sTargetsIP[target],   sizeof(g_sTargetsIP[]));
 	GetClientName(target,                  g_sTargetsName[target], sizeof(g_sTargetsName[]));

@@ -21,12 +21,12 @@
  *
  * @param db	The database handle
  */
-forward SB_OnConnect(Database db);
+forward void SB_OnConnect(Database db);
 
 /**
  * When SourceBans config is reloaded
  */
-forward SB_OnReload();
+forward void SB_OnReload();
 
 
 /**
@@ -62,7 +62,7 @@ native void SB_Execute(const char[] query, DBPriority prio = DBPrio_Normal);
  * @param buffer		The string buffer to store the value in
  * @param maxlength	The max length of the string buffer
  */
-native void SB_GetConfigString(const char[] key, char[] buffer, maxlength);
+native void SB_GetConfigString(const char[] key, char[] buffer, int maxlength);
 
 /**
  * Get value from SourceBans config

@@ -38,7 +38,7 @@
     }
     "Chat Reason"
     {
-        "no"			"Vennligst skriv din grunn for utestengelse i chaten og trykk enter. Skriv 'abortban' for og annulere."
+        "no"			"Vennligst skriv din grunn for utestengelse i chaten og trykk enter. Skriv '!abortban' for og annulere."
     }
     "Chat Reason Aborted"
     {

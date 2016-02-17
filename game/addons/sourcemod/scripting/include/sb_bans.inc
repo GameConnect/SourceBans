@@ -14,13 +14,13 @@
 #define _sb_bans_included
 
 /**
- * Submits a ban to the SourceBans database
+ * Reports a player to SourceBans
  *
- * @param client	The index of the client
- * @param target	The index of the target
- * @param reason	The reason for the submission
+ * @param client	The index of the reporting client
+ * @param target	The index of the reported client
+ * @param reason	The reason for reporting the player
  */
-native void SB_SubmitBan(int client, int target, const char[] reason);
+native void SB_ReportPlayer(int client, int target, const char[] reason);
 
 public SharedPlugin __pl_sb_bans =
 {

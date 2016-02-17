@@ -66,7 +66,7 @@ char g_sWebsite[256];
  */
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-    CreateNative("SB_SubmitBan", Native_SubmitBan);
+    CreateNative("SB_ReportPlayer", Native_ReportPlayer);
     RegPluginLibrary("sb_bans");
 
     return APLRes_Success;
@@ -78,12 +78,10 @@ public void OnPluginStart()
     RegAdminCmd("sm_banip",  Command_BanIp,  ADMFLAG_BAN,   "sm_banip <ip|#userid|name> <time> [reason]");
     RegAdminCmd("sm_addban", Command_AddBan, ADMFLAG_RCON,  "sm_addban <time> <steamid> [reason]");
     RegAdminCmd("sm_unban",  Command_Unban,  ADMFLAG_UNBAN, "sm_unban <steamid|ip>");
-    RegConsoleCmd("sm_abortban", Command_AbortBan, "sm_abortban");
 
     LoadTranslations("common.phrases");
     LoadTranslations("sourcebans.phrases");
     LoadTranslations("basebans.phrases");
-    LoadTranslations("core.phrases");
 
     // Hook player_connect event to prevent connection spamming from people that are banned
     HookEvent("player_connect", Event_PlayerConnect, EventHookMode_Pre);
@@ -351,12 +349,12 @@ public Action OnRemoveBan(const char[] identity, int flags, const char[] command
 /**
  * SourceBans Forwards
  */
-public int SB_OnConnect(Database db)
+public void SB_OnConnect(Database db)
 {
     g_iServerId = SB_GetConfigValue("ServerID");
 }
 
-public int SB_OnReload()
+public void SB_OnReload()
 {
     // Get values from SourceBans config and store them locally
     SB_GetConfigString("ServerIP", g_sServerIp, sizeof(g_sServerIp));
@@ -514,22 +512,6 @@ public Action Command_Unban(int client, int args)
     return Plugin_Handled;
 }
 
-public Action Command_AbortBan(int client, int args)
-{
-  if (!CheckCommandAccess(client, "sm_ban", ADMFLAG_BAN)) {
-    ReplyToCommand(client, "%s%t", SB_PREFIX, "No Access");
-    return Plugin_Handled;
-  }
-  if (g_bIsWaitingForChatReason[client]) {
-    g_bIsWaitingForChatReason[client] = false;
-    ReplyToCommand(client, "%s%t", SB_PREFIX, "AbortBan applied successfully");
-  } else {
-    ReplyToCommand(client, "%s%t", SB_PREFIX, "AbortBan not waiting for custom reason");
-  }
-
-  return Plugin_Handled;
-}
-
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
 {
     // If this client is not typing their own reason to ban someone, ignore
@@ -539,6 +521,10 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 
     g_bIsWaitingForChatReason[client] = false;
 
+    if (StrEqual(sArgs[1], "abortban", false)) {
+        PrintToChat(client, "%s%t", SB_PREFIX, "Chat Reason Aborted");
+        return Plugin_Stop;
+    }
     if (g_iBanTarget[client] == -1) {
         return Plugin_Continue;
     }
@@ -999,7 +985,7 @@ public void Query_UnbanUpdate(Database db, DBResultSet results, const char[] err
     }
 }
 
-public void Query_SubmitBan(Database db, DBResultSet results, const char[] error, DataPack pack)
+public void Query_ReportPlayer(Database db, DBResultSet results, const char[] error, DataPack pack)
 {
     pack.Reset();
 
@@ -1086,7 +1072,7 @@ public void Query_AddedFromQueue(Database db, DBResultSet results, const char[] 
 /**
  * Natives
  */
-public int Native_SubmitBan(Handle plugin, int numParams)
+public int Native_ReportPlayer(Handle plugin, int numParams)
 {
     char sReason[256];
     int iClient = GetNativeCell(1),
@@ -1109,10 +1095,10 @@ public int Native_SubmitBan(Handle plugin, int numParams)
     SB_Escape(sName,       sEscapedName,       sizeof(sEscapedName));
     SB_Escape(sReason,     sEscapedReason,     sizeof(sEscapedReason));
     SB_Escape(sTargetName, sEscapedTargetName, sizeof(sEscapedTargetName));
-    Format(sQuery, sizeof(sQuery), "INSERT INTO {{submissions}} (name, steam, ip, reason, server_id, user_name, user_ip, create_time) \
+    Format(sQuery, sizeof(sQuery), "INSERT INTO {{reports}} (name, steam, ip, reason, server_id, user_name, user_ip, create_time) \
                                     VALUES      ('%s', '%s', '%s', '%s', %i, '%s', '%s', UNIX_TIMESTAMP())",
                                     sEscapedTargetName, sTargetAuth, sTargetIp, sEscapedReason, g_iServerId, sEscapedName, sIp);
-    SB_Query(Query_SubmitBan, sQuery, hPack);
+    SB_Query(Query_ReportPlayer, sQuery, hPack);
 
     return SP_ERROR_NONE;
 }

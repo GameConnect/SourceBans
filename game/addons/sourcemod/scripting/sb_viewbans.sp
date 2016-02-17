@@ -113,7 +113,7 @@ public Action:Command_ViewBans(client, args)
 	// Make sure we have arguments, if not, display the player menu and bug out.
 	if(args < 1)
 	{
-		ReplyToCommand(client, "Usage: sm_viewbans <#userid|name>");
+		ReplyToCommand(client, "Usage: sb_viewbans <#userid|name>");
 		DisplayMenu(BuildPlayerMenu(client), client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 	}
@@ -126,7 +126,7 @@ public Action:Command_ViewBans(client, args)
 	// If it's not a valid target display the player menu and bug out.
 	if(iTarget <= 0 || !IsClientInGame(iTarget))
 	{
-		ReplyToCommand(client, "Usage: sm_viewbans <#userid|name>");
+		ReplyToCommand(client, "Usage: sb_viewbans <#userid|name>");
 		DisplayMenu(BuildPlayerMenu(client), client, MENU_TIME_FOREVER);
 		return Plugin_Handled;
 	}
@@ -279,7 +279,7 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 	// If we have bans, clone the handle.
 	if(g_iPlayerBans[iTarget])
 	{
-		CloneHandle(g_hPlayerResults[iTarget], hndl);
+		g_hPlayerResults[iTarget] = CloneHandle(hndl);
 
 		// If we the query was from a client connection announce bans to admins.
 		if(bOnConnect)
@@ -288,7 +288,7 @@ public OnReceiveBans(Handle:owner, Handle:hndl, const String:error[], any:pack)
 			return;
 		}
 
-		// This query was sent by the sm_viewbans command.
+		// This query was sent by the sb_viewbans command.
 		// Let's tell the client we succeeded.
 		if(ParseClientFromSerial(iClient))
 		{
@@ -406,7 +406,7 @@ stock Handle:BuildPlayerBanInfoPanel(iTarget, iBanID, client = 0)
 
 stock RequestBanInformation(iTarget, bool:bOnConnect, iClient = 0)
 {
-	if(!SB_Connect())
+	if(!SB_IsConnected())
 		return;
 
 	// Get the steamid and format the query.

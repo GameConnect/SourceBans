@@ -189,7 +189,7 @@ public Action OnClientPreAdminCheck(int client)
 /**
  * SourceBans Forwards
  */
-public int SB_OnConnect(Database db)
+public void SB_OnConnect(Database db)
 {
     g_iServerId = SB_GetConfigValue("ServerID");
 
@@ -206,7 +206,7 @@ public int SB_OnConnect(Database db)
     }
 }
 
-public int SB_OnReload()
+public void SB_OnReload()
 {
     g_bRequireSiteLogin = SB_GetConfigValue("RequireSiteLogin");
 

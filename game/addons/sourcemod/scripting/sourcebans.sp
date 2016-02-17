@@ -123,6 +123,7 @@ public void OnMapStart()
 
 public void OnMapEnd()
 {
+    g_iConnectLock = 0;
     delete g_hDatabase;
 }
 

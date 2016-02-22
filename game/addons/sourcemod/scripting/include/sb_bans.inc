@@ -36,6 +36,6 @@ public SharedPlugin __pl_sb_bans =
 #if !defined REQUIRE_PLUGIN
 public __pl_sourcebans_SetNTVOptional()
 {
-    MarkNativeAsOptional("SB_SubmitBan");
+    MarkNativeAsOptional("SB_ReportPlayer");
 }
 #endif

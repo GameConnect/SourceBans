@@ -369,21 +369,21 @@ public void SB_OnReload()
 
     // Get reasons from SourceBans config and store them locally
     char sReason[128];
-    Handle hBanReasons     = SB_GetConfigValue("BanReasons");
-    Handle hHackingReasons = SB_GetConfigValue("HackingReasons");
+    ArrayList hBanReasons     = SB_GetConfigValue("BanReasons");
+    ArrayList hHackingReasons = SB_GetConfigValue("HackingReasons");
 
     // Empty reason menus
-    RemoveAllMenuItems(g_hReasonMenu);
-    RemoveAllMenuItems(g_hHackingMenu);
+    g_hReasonMenu.RemoveAllItems();
+    g_hHackingMenu.RemoveAllItems();
 
     // Add reasons from SourceBans config to reason menus
-    for (int i = 0, iSize = GetArraySize(hBanReasons);     i < iSize; i++) {
-        GetArrayString(hBanReasons,     i, sReason, sizeof(sReason));
-        AddMenuItem(g_hReasonMenu,  sReason, sReason);
+    for (int i = 0, iSize = hBanReasons.Length;     i < iSize; i++) {
+        hBanReasons.GetString(i,     sReason, sizeof(sReason));
+        g_hReasonMenu.AddItem(sReason,  sReason);
     }
-    for (int i = 0, iSize = GetArraySize(hHackingReasons); i < iSize; i++) {
-        GetArrayString(hHackingReasons, i, sReason, sizeof(sReason));
-        AddMenuItem(g_hHackingMenu, sReason, sReason);
+    for (int i = 0, iSize = hHackingReasons.Length; i < iSize; i++) {
+        hHackingReasons.GetString(i, sReason, sizeof(sReason));
+        g_hHackingMenu.AddItem(sReason, sReason);
     }
 
     // Restart process queue timer

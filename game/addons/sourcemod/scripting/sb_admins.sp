@@ -639,7 +639,7 @@ public void Query_SelectAdmin(Database db, DBResultSet results, const char[] err
 
     int iAdminId;
     AdminId iAdmin;
-    char sIdentity[65],sName[MAX_NAME_LENGTH + 1], sPassword[65], sType[8];
+    char sIdentity[65], sName[MAX_NAME_LENGTH + 1], sPassword[65], sType[8];
     while (results.FetchRow()) {
         iAdminId = results.FetchInt(0);
         results.FetchString(1, sName,     sizeof(sName));

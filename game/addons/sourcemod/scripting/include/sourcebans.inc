@@ -119,6 +119,7 @@ public __pl_sourcebans_SetNTVOptional()
     MarkNativeAsOptional("SB_GetConfigString");
     MarkNativeAsOptional("SB_GetConfigValue");
     MarkNativeAsOptional("SB_Init");
+    MarkNativeAsOptional("SB_IsConnected");
     MarkNativeAsOptional("SB_Query");
     MarkNativeAsOptional("SB_Reload");
 }

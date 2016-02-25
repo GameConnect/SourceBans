@@ -1,0 +1,51 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "pt"            "Você foi banido deste servidor, entre em {1} para obter mais informações"
+    }
+    "DB Connect Fail"
+    {
+        "pt"            "A conexão com o bando de dados falhou, entre em contato com o administrador do servidor."
+    }
+    "Not In Game"
+    {
+        "pt"            "O jogador não está no jogo, visite o painel na web para bani-lo."
+    }
+    "Ban Not Verified"
+    {
+        "pt"            "O banimento deste jogador não foi verificado. Aguarde trinta segundos antes de tentar novamente."
+    }
+    "Can Not Unban"
+    {
+        "pt"            "Voce não pode desbanir dentro do servidor, entre em {1} para desbanir."
+    }
+    "Can Not Add Ban"
+    {
+        "pt"            "Voce não pode adicionar o banimento dentro do servidor, entre em {1} para adicionar o banimento."
+    }
+    "Check Menu"
+    {
+        "pt"            "Por favor cheque o menu para selecionar o motivo do banimento."
+    }
+    "Include Reason"
+    {
+        "pt"            "Por favor escreva o motivo do banimento."
+    }
+    "Ban Fail"
+    {
+        "pt"            "Falha ao banir o jogador, tente novamente."
+    }
+    "Chat Reason"
+    {
+        "pt"            "Por favor escreva o motivo do banimento no chat e aperte enter. Escreva '!abortban' para cancelar."
+    }
+    "Chat Reason Aborted"
+    {
+        "pt"            "O banimento foi cancelado com sucesso!"
+    }
+    "Select player"
+    {
+        "pt"            "Selecione o Jogador:"
+    }
+}

@@ -1,0 +1,51 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "chi"			"你被当前服务器封禁, 请检查 {1} 获取更多信息"
+    }
+    "DB Connect Fail"
+    {
+        "chi"			"连接数据库服务器失败，请联系管理员（服主）进行检查"
+    }
+    "Not In Game"
+    {
+        "chi"			"玩家不在当前游戏内, 请访问 SourceBans Web 面板进行封禁"
+    }
+    "Ban Not Verified"
+    {
+        "chi"			"当前玩家的封禁尚未验证，请等待30秒后再试"
+    }
+    "Can Not Unban"
+    {
+        "chi"			"你无法在当前服务器解除封禁, 请访问 {1} 进行解封操作"
+    }
+    "Can Not Add Ban"
+    {
+        "chi"			"你无法在当前服务器进行封禁, 请访问 {1} 进行封禁操作"
+    }
+    "Check Menu"
+    {
+        "chi"			"请选择封禁原因"
+    }
+    "Include Reason"
+    {
+        "chi"			"请在封禁一个玩家同时务必包含封禁的原因"
+    }
+    "Ban Fail"
+    {
+        "chi"			"封禁玩家失败，请再次尝试."
+    }
+    "Chat Reason"
+    {
+        "chi"			"请在对话框中输入封禁的原因，输入 '!abortban' 将中止"
+    }
+    "Chat Reason Aborted"
+    {
+        "chi"			"封禁命令已成功停止"
+    }
+    "Select player"
+    {
+        "chi"			"选择玩家:"
+    }
+}

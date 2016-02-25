@@ -74,7 +74,11 @@ public void OnPluginStart()
     }
 }
 
+#if SOURCEMOD_V_MAJOR >= 1 && SOURCEMOD_V_MINOR >= 8
+public void OnRebuildAdminCache(AdminCachePart part)
+#else
 public int OnRebuildAdminCache(AdminCachePart part)
+#endif
 {
     // Mark this part of the cache as being rebuilt.  This is used by the
     // callback system to determine whether the results should still be

@@ -1,0 +1,39 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.default.servers.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="20%">{{ 'Game' | trans }}</th>
+                            <th>{{ 'Host' | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for server in servers %}
+                        <tr>
+                            <td>{{ server.game }}</td>
+                            <td>{{ server }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2">No results</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ pagerfanta(servers, 'twitter_bootstrap3', {
+                    'css_container_class': 'pagination pull-right',
+                    'next_message': '&raquo;',
+                    'prev_message': '&laquo;',
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

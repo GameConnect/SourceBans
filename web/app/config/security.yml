@@ -1,0 +1,39 @@
+security:
+    encoders:
+        SourceBans\CoreBundle\Entity\Admin: bcrypt
+
+    role_hierarchy:
+        ROLE_ROOT: [ROLE_ADMINS, ROLE_BANS, ROLE_GAMES, ROLE_GROUPS, ROLE_SERVERS, ROLE_SETTINGS]
+        ROLE_ADMINS: [ROLE_ADD_ADMINS, ROLE_DELETE_ADMINS, ROLE_EDIT_ADMINS, ROLE_VIEW_ADMINS, ROLE_OVERRIDES]
+        ROLE_BANS: [ROLE_ADD_BANS, ROLE_DELETE_BANS, ROLE_EDIT_BANS, ROLE_UNBAN_BANS, ROLE_APPEALS, ROLE_REPORTS]
+        ROLE_GAMES: [ROLE_ADD_GAMES, ROLE_DELETE_GAMES, ROLE_EDIT_GAMES, ROLE_VIEW_GAMES]
+        ROLE_GROUPS: [ROLE_ADD_GROUPS, ROLE_DELETE_GROUPS, ROLE_EDIT_GROUPS, ROLE_VIEW_GROUPS]
+        ROLE_SERVERS: [ROLE_ADD_SERVERS, ROLE_DELETE_SERVERS, ROLE_EDIT_SERVERS, ROLE_VIEW_SERVERS]
+
+    providers:
+        administrators:
+            entity:
+                class: SourceBansCoreBundle:Admin
+
+    firewalls:
+        secured_area:
+            pattern: ^/
+            anonymous: ~
+            form_login: ~
+            logout: ~
+            remember_me:
+                secret:   "%secret%"
+                lifetime: 2592000 # 30 days in seconds
+                path:     /
+                domain:   ~
+
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        default:
+            anonymous: ~
+
+    access_control:
+        - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }

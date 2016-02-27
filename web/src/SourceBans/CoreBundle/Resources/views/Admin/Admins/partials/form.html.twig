@@ -1,0 +1,13 @@
+{% form_theme form '@SourceBansCore/form_horizontal_layout.html.twig' %}
+
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.auth) }}
+    {{ form_row(form.identity) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword) }}
+    {{ form_row(form.serverPassword) }}
+    {{ form_row(form.group) }}
+    {{ form_row(form.serverGroups) }}
+    {{ form_row(form.submit) }}
+{{ form_end(form) }}

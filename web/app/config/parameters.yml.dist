@@ -1,0 +1,23 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     sourcebans
+    database_user:     root
+    database_password: ~
+    database_prefix:   ~
+
+    mailer_transport:  mail
+    mailer_host:       127.0.0.1
+    mailer_user:       ~
+    mailer_password:   ~
+
+    locale:            en
+    secret:            SourceBansSecretToken
+
+    debug_toolbar:          true
+    debug_redirects:        false
+    use_assetic_controller: true
+
+    sourcebans:
+        console_name: CONSOLE

@@ -1,0 +1,39 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.admin.admins.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="50%">{{ 'Name' | trans }}</th>
+                            <th width="50%">{{ 'Identity' | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for admin in admins %}
+                        <tr>
+                            <td>{{ admin.name }}</td>
+                            <td>{{ admin.identity }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2">No results</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ pagerfanta(admins, 'twitter_bootstrap3', {
+                    'css_container_class': 'pagination pull-right',
+                    'next_message': '&raquo;',
+                    'prev_message': '&laquo;',
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% form_theme form '@SourceBansCore/form_horizontal_layout.html.twig' %}
+
+{{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.steam) }}
+    {{ form_row(form.ip) }}
+    {{ form_row(form.reason) }}
+    {{ form_row(form.length) }}
+    {{ form_row(form.submit) }}
+{{ form_end(form) }}

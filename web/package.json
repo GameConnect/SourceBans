@@ -1,0 +1,27 @@
+{
+  "name": "sourcebans",
+  "version": "2.0.0",
+  "description": "Advanced admin and ban management for the Source engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/GameConnect/SourceBans.git"
+  },
+  "author": "GameConnect",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/GameConnect/SourceBans/issues"
+  },
+  "homepage": "https://github.com/GameConnect/SourceBans#readme",
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-sass": "^2.2.0",
+    "sass-importer-npm": "^1.0.2",
+    "yargs": "^4.1.0"
+  }
+}

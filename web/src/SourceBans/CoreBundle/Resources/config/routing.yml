@@ -1,0 +1,4 @@
+sourcebans_core_admin:
+    resource: "@SourceBansCoreBundle/Controller/Admin"
+    type:     annotation
+    prefix:   /admin

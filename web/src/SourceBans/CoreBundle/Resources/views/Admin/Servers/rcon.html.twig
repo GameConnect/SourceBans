@@ -1,0 +1,50 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.servers.rcon.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <pre class="pre-scrollable" id="console">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+********************************************************
+**                                                    **
+* SourceBans {{ '%-41s' | format('controllers.servers.rcon.title' | trans) }} *
+* {{ '%-52s' | format('Type \'clr\' to clear the console' | trans) }} *
+**                                                    **
+********************************************************
+
+</pre>
+                <form id="command-form" method="post">
+                    <div class="input-group">
+                        <input autofocus="autofocus" class="form-control" id="command" name="command" placeholder="{{ 'Command' | trans }}" type="text" />
+                        <div class="input-group-btn">
+                            <input class="btn btn-primary" disabled="disabled" id="submit" type="submit" value="{{ 'Execute' | trans }}" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

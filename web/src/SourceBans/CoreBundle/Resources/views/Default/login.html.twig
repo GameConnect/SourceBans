@@ -1,0 +1,39 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.default.login.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                {% if error %}
+                <div class="alert alert-danger">{{ error.message }}</div>
+                {% endif %}
+                <form action="{{ path('login_check') }}" method="post">
+                    <div class="form-group">
+                        <label for="username">{{ 'models.LoginForm.username' | trans }}</label>
+                        <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="password">{{ 'models.LoginForm.password' | trans }}</label>
+                        <input type="password" id="password" name="_password" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <div class="rememberMe checkbox pull-left">
+                            <label>
+                                <input type="checkbox" id="remember_me" name="_remember_me" checked="checked" />
+                                {{ 'models.LoginForm.rememberMe' | trans }}
+                            </label>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ path('sourcebans_core_default_forgotpassword') }}" class="btn btn-link">{{ 'Forgot password?' | trans }}</a>
+                            <button class="btn btn-success" type="submit">{{ 'Login' | trans }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

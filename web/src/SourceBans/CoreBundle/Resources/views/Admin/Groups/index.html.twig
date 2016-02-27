@@ -1,0 +1,37 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.admin.groups.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>{{ 'Name' | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for group in groups %}
+                        <tr>
+                            <td>{{ group.name }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td>No results</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ pagerfanta(groups, 'twitter_bootstrap3', {
+                    'css_container_class': 'pagination pull-right',
+                    'next_message': '&raquo;',
+                    'prev_message': '&laquo;',
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

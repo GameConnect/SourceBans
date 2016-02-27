@@ -1,0 +1,21 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% form_theme form '@SourceBansCore/form_horizontal_layout.html.twig' %}
+
+{% set pageTitle = 'controllers.default.account.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {{ form_start(form) }}
+                    {{ form_row(form.currentEmail) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.submit) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

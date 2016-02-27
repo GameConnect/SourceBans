@@ -1,0 +1,11 @@
+{% form_theme form '@SourceBansCore/form_horizontal_layout.html.twig' %}
+
+{{ form_start(form) }}
+    {{ form_row(form.host) }}
+    {{ form_row(form.port) }}
+    {{ form_row(form.rcon) }}
+    {{ form_row(form.game) }}
+    {{ form_row(form.enabled) }}
+    {{ form_row(form.groups) }}
+    {{ form_row(form.submit) }}
+{{ form_end(form) }}

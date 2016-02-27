@@ -1,0 +1,40 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.servers.config.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<p>{{ 'The game server needs the following configuration to be able to communicate with the database.' | trans }}</p>
+				<p>{{ 'Copy the {section} section below and place it on the game server in {file}, so that the file looks similar to this:' | trans({
+					'{file}': '<strong>/[' ~ 'Game' | trans | lower ~ ']/addons/sourcemod/configs/databases.cfg</strong>',
+					'{section}': '<strong>"sourcebans"</strong>',
+				}) | raw }}</p>
+				<pre>"Databases"
+{
+	"driver_default"		"mysql"
+
+	"sourcebans"
+	{
+		"driver"		"mysql"
+		"host"			"{{ db_host }}"
+		"database"		"{{ db_name }}"
+		"user"			"{{ db_user }}"
+		"pass"			"{{ db_pass }}"
+		//"timeout"		"0"
+		"port"			"{{ db_port }}"
+	}
+
+	"storage-local"
+	{
+		"driver"		"sqlite"
+		"database"		"sourcemod-local"
+	}
+}</pre>
+			</div>
+        </div>
+    </div>
+{% endblock %}

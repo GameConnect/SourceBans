@@ -1,0 +1,161 @@
+services:
+    sourcebans.core.settings:
+        class: SourceBans\CoreBundle\Entity\SettingRepository
+        factory: ["@doctrine", getRepository]
+        arguments: ["SourceBansCoreBundle:Setting"]
+
+    sourcebans.core.adapter.admin:
+        class: SourceBans\CoreBundle\Adapter\AdminAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Admin"]
+
+    sourcebans.core.adapter.appeal:
+        class: SourceBans\CoreBundle\Adapter\AppealAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Appeal"]
+
+    sourcebans.core.adapter.ban:
+        class: SourceBans\CoreBundle\Adapter\BanAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Ban"]
+
+    sourcebans.core.adapter.game:
+        class: SourceBans\CoreBundle\Adapter\GameAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Game"]
+
+    sourcebans.core.adapter.group:
+        class: SourceBans\CoreBundle\Adapter\GroupAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Group"]
+
+    sourcebans.core.adapter.log:
+        class: SourceBans\CoreBundle\Adapter\LogAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Log"]
+
+    sourcebans.core.adapter.report:
+        class: SourceBans\CoreBundle\Adapter\ReportAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Report"]
+
+    sourcebans.core.adapter.server:
+        class: SourceBans\CoreBundle\Adapter\ServerAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Server"]
+
+    sourcebans.core.adapter.serverGroup:
+        class: SourceBans\CoreBundle\Adapter\ServerGroupAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:ServerGroup"]
+
+    sourcebans.core.controller.account:
+        class: SourceBans\CoreBundle\Controller\AccountController
+        arguments: ["@router", "@form.factory", "@security.token_storage", "@sourcebans.core.adapter.admin"]
+
+    sourcebans.core.controller.admin.admins:
+        class: SourceBans\CoreBundle\Controller\Admin\AdminsController
+        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.admin"]
+
+    sourcebans.core.controller.admin.bans:
+        class: SourceBans\CoreBundle\Controller\Admin\BansController
+        arguments: ["@router", "@sourcebans.core.adapter.ban"]
+
+    sourcebans.core.controller.admin.default:
+        class: SourceBans\CoreBundle\Controller\Admin\DefaultController
+        arguments: ["@router", "@form.factory", "@sourcebans.core.settings"]
+
+    sourcebans.core.controller.admin.games:
+        class: SourceBans\CoreBundle\Controller\Admin\GamesController
+        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.game"]
+
+    sourcebans.core.controller.admin.groups:
+        class: SourceBans\CoreBundle\Controller\Admin\GroupsController
+        arguments: ["@router", "@sourcebans.core.adapter.group"]
+
+    sourcebans.core.controller.admin.servers:
+        class: SourceBans\CoreBundle\Controller\Admin\ServersController
+        arguments: ["@router", "@doctrine.dbal.default_connection", "@sourcebans.core.settings", "@sourcebans.core.adapter.server"]
+
+    sourcebans.core.controller.default:
+        class: SourceBans\CoreBundle\Controller\DefaultController
+        arguments:
+            - "@http_kernel"
+            - "@translator"
+            - "@form.factory"
+            - "@security.authentication_utils"
+            - "@sourcebans.core.settings"
+            - "@sourcebans.core.adapter.ban"
+            - "@sourcebans.core.adapter.server"
+            - "@sourcebans.core.adapter.appeal"
+            - "@sourcebans.core.adapter.report"
+
+    sourcebans.core.event_subscriber.database_prefix:
+        class: SourceBans\CoreBundle\EventSubscriber\DatabasePrefixSubscriber
+        arguments: ["%database_prefix%"]
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    sourcebans.core.event_subscriber.log:
+        class: SourceBans\CoreBundle\EventSubscriber\LogSubscriber
+        arguments: ["@doctrine", "@sourcebans.core.adapter.log"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    sourcebans.core.event_subscriber.login:
+        class: SourceBans\CoreBundle\EventSubscriber\LoginSubscriber
+        arguments: ["@doctrine", "@sourcebans.core.settings"]
+        tags:
+            - { name: kernel.event_subscriber }
+
+    sourcebans.core.form.appeal:
+        class: SourceBans\CoreBundle\Form\AppealForm
+        arguments: ["@request_stack"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.form.ban.length:
+        class: SourceBans\CoreBundle\Form\Ban\LengthType
+        arguments: ["@translator"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.form.group.id:
+        class: SourceBans\CoreBundle\Form\Group\IdType
+        arguments: ["@translator"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.form.server.id:
+        class: SourceBans\CoreBundle\Form\Server\IdType
+        arguments: ["@translator"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.form.settings:
+        class: SourceBans\CoreBundle\Form\SettingsForm
+        arguments: ["@request_stack"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.request.param_converter.adapter:
+        class: SourceBans\CoreBundle\Request\ParamConverter\AdapterParamConverter
+        arguments:
+            - "@service_container"
+            - "sourcebans.core.adapter."
+            -
+                - SourceBans\CoreBundle\Entity\Admin
+                - SourceBans\CoreBundle\Entity\Ban
+                - SourceBans\CoreBundle\Entity\Game
+                - SourceBans\CoreBundle\Entity\Group
+                - SourceBans\CoreBundle\Entity\Server
+                - SourceBans\CoreBundle\Entity\ServerGroup
+        tags:
+            - { name: request.param_converter, converter: admin, priority: 10 }
+            - { name: request.param_converter, converter: ban, priority: 10 }
+            - { name: request.param_converter, converter: game, priority: 10 }
+            - { name: request.param_converter, converter: group, priority: 10 }
+            - { name: request.param_converter, converter: server, priority: 10 }
+            - { name: request.param_converter, converter: serverGroup, priority: 10 }
+
+    sourcebans.core.security.access.ban_voter:
+        class:      SourceBans\CoreBundle\Security\Authorization\Voter\BanVoter
+        public:     false
+        tags:
+           - { name: security.voter }
+
+    sourcebans.core.twig.extension.format:
+        class: SourceBans\CoreBundle\Twig\Extension\FormatExtension
+        tags:
+            - { name: twig.extension }

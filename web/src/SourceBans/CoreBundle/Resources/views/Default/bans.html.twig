@@ -1,0 +1,55 @@
+{% extends '@SourceBansCore/layout.html.twig' %}
+
+{% set pageTitle = 'controllers.default.bans.title' | trans %}
+
+{% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="10%">{{ 'Date' | trans }}/{{ 'Time' | trans }}</th>
+                            <th>{{ 'Name' | trans }}</th>
+                            <th width="20%">{{ 'Admin' | trans }}</th>
+                            <th class="text-right" width="10%">{{ 'Length' | trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ban in bans %}
+                        <tr>
+                            <td>{{ ban.createTime | date('d-m-y H:i') }}</td>
+                            <td>
+                                {% if ban.name %}
+                                    {{ ban.name }}
+                                {% else %}
+                                    <em class="text-muted">{{ 'Unknown' | trans }}</em>
+                                {% endif %}
+                            </td>
+                            <td>{{ ban.admin | default(sourcebans.console_name) }}</td>
+                            <td class="text-right">
+                                {% if ban.isPermanent %}
+                                    {{ 'Permanent' | trans }}
+                                {% else %}
+                                    {{ (ban.length * 60) | formatLength }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4">No results</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {{ pagerfanta(bans, 'twitter_bootstrap3', {
+                    'css_container_class': 'pagination pull-right',
+                    'next_message': '&raquo;',
+                    'prev_message': '&laquo;',
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

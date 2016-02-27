@@ -1,16 +1,16 @@
-.DS_Store
-Thumbs.db
-
-# Eclipse
-.buildpath
-.project
-.settings/
-
-# PhpStorm
 .idea/
-
-# Sublime Text
-*.sublime-*
-
-# SourceBans
-web/application/config/sourcebans.php
+/game/addons/sourcemod/plugins/*
+!game/addons/sourcemod/plugins/.gitkeep
+/web/node_modules/
+/web/public_html/bundles/
+/web/public_html/dist/
+/web/app/bootstrap.php.cache
+/web/app/cache/*
+/web/app/config/parameters.yml
+/web/app/logs/*
+!web/app/cache/.gitkeep
+!web/app/logs/.gitkeep
+/web/build/
+/web/vendor/
+/web/bin/
+/web/composer.phar

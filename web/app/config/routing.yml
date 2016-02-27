@@ -1,0 +1,11 @@
+sourcebans_core:
+    resource: "@SourceBansCoreBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+login:
+    path: /login
+login_check:
+    path: /login_check
+logout:
+    path: /logout

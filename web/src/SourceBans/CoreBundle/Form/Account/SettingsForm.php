@@ -10,12 +10,26 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * SettingsForm
  */
 class SettingsForm extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @inheritdoc
      */
@@ -24,12 +38,15 @@ class SettingsForm extends AbstractType
         $builder
             ->add('language', LanguageType::class, [
                 'label' => 'models.AccountForm.language',
+                'placeholder' => '- ' . $this->translator->trans('Default setting') . ' -',
             ])
             ->add('theme', ThemeType::class, [
                 'label' => 'models.AccountForm.theme',
+                'placeholder' => '- ' . $this->translator->trans('Default setting') . ' -',
             ])
             ->add('timezone', TimezoneType::class, [
                 'label' => 'models.AccountForm.timezone',
+                'placeholder' => '- ' . $this->translator->trans('Default setting') . ' -',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',

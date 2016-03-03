@@ -11,6 +11,10 @@ use SourceBans\CoreBundle\Entity\Admin;
 use SourceBans\CoreBundle\Entity\Server;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Form\ImportForm;
+use SourceBans\CoreBundle\Util\Admin\ImportFactory;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +33,11 @@ class AdminsController
     private $router;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * @var SettingRepository
      */
     private $settings;
@@ -39,15 +48,29 @@ class AdminsController
     private $adapter;
 
     /**
-     * @param RouterInterface   $router
-     * @param SettingRepository $settings
-     * @param AdminAdapter      $adapter
+     * @var ImportFactory
      */
-    public function __construct(RouterInterface $router, SettingRepository $settings, AdminAdapter $adapter)
-    {
+    private $importer;
+
+    /**
+     * @param RouterInterface      $router
+     * @param FormFactoryInterface $formFactory
+     * @param SettingRepository    $settings
+     * @param AdminAdapter         $adapter
+     * @param ImportFactory        $importer
+     */
+    public function __construct(
+        RouterInterface $router,
+        FormFactoryInterface $formFactory,
+        SettingRepository $settings,
+        AdminAdapter $adapter,
+        ImportFactory $importer
+    ) {
         $this->router = $router;
+        $this->formFactory = $formFactory;
         $this->settings = $settings;
         $this->adapter = $adapter;
+        $this->importer = $importer;
     }
 
     /**
@@ -130,6 +153,30 @@ class AdminsController
         $this->adapter->delete($admin);
 
         return new RedirectResponse($this->router->generate('sourcebans_core_admin_admins_index'));
+    }
+
+    /**
+     * @param Request $request
+     * @return array|Response
+     *
+     * @Route("/admin/admins/import")
+     * @Security("has_role('ROLE_ADD_ADMINS')")
+     * @Template
+     */
+    public function importAction(Request $request)
+    {
+        $form = $this->formFactory->create(ImportForm::class)
+            ->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+            $this->importer->import($file->getRealPath(), $file->getClientOriginalName());
+
+            return new RedirectResponse($this->router->generate('sourcebans_core_admin_admins_index'));
+        }
+
+        return ['form' => $form->createView()];
     }
 
     /**

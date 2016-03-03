@@ -40,7 +40,7 @@ class ServerGroup implements EntityInterface
      *
      * @ORM\Column(name="flags", type="string", length=32, nullable=false)
      */
-    private $flags;
+    private $flags = '';
 
     /**
      * @var integer

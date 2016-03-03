@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="server_group_overrides", indexes={@ORM\Index(name="group_id", columns={"group_id"})})
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
-class ServerGroupOverride
+class ServerGroupOverride implements EntityInterface
 {
     const ACCESS_ALLOW = 'allow';
     const ACCESS_DENY  = 'deny';

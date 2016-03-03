@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
+use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\Ban;
@@ -12,6 +13,7 @@ use SourceBans\CoreBundle\Event\BanAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\BanForm;
 use SourceBans\CoreBundle\Specification\Ban\IsActive;
+use SourceBans\CoreBundle\Specification\Ban\IsPermanent;
 use SourceBans\CoreBundle\Specification\BanSpecification;
 use SourceBans\CoreBundle\Specification\ById;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -39,6 +41,30 @@ class BanAdapter extends AbstractAdapter
         }
         if ($options['active']) {
             $specification->add(new IsActive);
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
+     * @param integer $type
+     * @param integer $limit
+     * @param integer $page
+     * @param array $options
+     * @return Pagerfanta
+     */
+    public function allByType($type, $limit = null, $page = null, array $options = [])
+    {
+        $resolver = new OptionsResolver;
+        $resolver->setDefault('permanent', false);
+        $options = $resolver->resolve($options);
+
+        $specification = new AndX(
+            new BanSpecification,
+            new Condition\Equals('type', $type)
+        );
+        if ($options['permanent']) {
+            $specification->add(new IsPermanent);
         }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
@@ -92,6 +118,21 @@ class BanAdapter extends AbstractAdapter
         $this->objectManager->remove($entity);
         $this->objectManager->flush();
         $this->dispatcher->dispatch(AdapterEvents::BAN_DELETE, new BanAdapterEvent($entity));
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $reason
+     */
+    public function unban(EntityInterface $entity, $reason = null)
+    {
+        /** @var Ban $entity */
+        $entity->setUnbanAdmin($this->container->get('security.token_storage')->getToken()->getUser());
+        $entity->setUnbanReason($reason);
+        $entity->setUnbanTime(new \DateTime);
+
+        $this->processForm($entity);
+        $this->dispatcher->dispatch(AdapterEvents::BAN_UNBAN, new BanAdapterEvent($entity));
     }
 
     /**

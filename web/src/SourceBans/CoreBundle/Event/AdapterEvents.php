@@ -53,6 +53,11 @@ final class AdapterEvents
     const BAN_DELETE = 'ban.delete';
 
     /**
+     * This event is dispatched when a ban is unbanned
+     */
+    const BAN_UNBAN = 'ban.unban';
+
+    /**
      * This event is dispatched when a game is created
      */
     const GAME_CREATE = 'game.create';

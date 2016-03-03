@@ -46,11 +46,11 @@ services:
 
     sourcebans.core.controller.admin.admins:
         class: SourceBans\CoreBundle\Controller\Admin\AdminsController
-        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.admin"]
+        arguments: ["@router", "@form.factory", "@sourcebans.core.settings", "@sourcebans.core.adapter.admin", "@sourcebans.core.util.admin.import"]
 
     sourcebans.core.controller.admin.bans:
         class: SourceBans\CoreBundle\Controller\Admin\BansController
-        arguments: ["@router", "@sourcebans.core.adapter.ban"]
+        arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.ban", "@sourcebans.core.util.ban.import"]
 
     sourcebans.core.controller.admin.default:
         class: SourceBans\CoreBundle\Controller\Admin\DefaultController
@@ -62,11 +62,15 @@ services:
 
     sourcebans.core.controller.admin.groups:
         class: SourceBans\CoreBundle\Controller\Admin\GroupsController
-        arguments: ["@router", "@sourcebans.core.adapter.group"]
+        arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.group", "@sourcebans.core.util.serverGroup.import"]
 
     sourcebans.core.controller.admin.servers:
         class: SourceBans\CoreBundle\Controller\Admin\ServersController
         arguments: ["@router", "@doctrine.dbal.default_connection", "@sourcebans.core.settings", "@sourcebans.core.adapter.server"]
+
+    sourcebans.core.controller.bans:
+        class: SourceBans\CoreBundle\Controller\BansController
+        arguments: ["@sourcebans.core.adapter.ban"]
 
     sourcebans.core.controller.default:
         class: SourceBans\CoreBundle\Controller\DefaultController
@@ -98,6 +102,12 @@ services:
         arguments: ["@doctrine", "@sourcebans.core.settings"]
         tags:
             - { name: kernel.event_subscriber }
+
+    sourcebans.core.form.account.settings:
+        class: SourceBans\CoreBundle\Form\Account\SettingsForm
+        arguments: ["@translator"]
+        tags:
+            - { name: form.type }
 
     sourcebans.core.form.appeal:
         class: SourceBans\CoreBundle\Form\AppealForm
@@ -159,3 +169,15 @@ services:
         class: SourceBans\CoreBundle\Twig\Extension\FormatExtension
         tags:
             - { name: twig.extension }
+
+    sourcebans.core.util.admin.import:
+        class: SourceBans\CoreBundle\Util\Admin\ImportFactory
+        arguments: ["@sourcebans.core.adapter.admin", "@sourcebans.core.adapter.serverGroup"]
+
+    sourcebans.core.util.ban.import:
+        class: SourceBans\CoreBundle\Util\Ban\ImportFactory
+        arguments: ["@sourcebans.core.adapter.ban"]
+
+    sourcebans.core.util.serverGroup.import:
+        class: SourceBans\CoreBundle\Util\ServerGroup\ImportFactory
+        arguments: ["@sourcebans.core.adapter.serverGroup"]

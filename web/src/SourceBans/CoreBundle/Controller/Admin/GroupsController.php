@@ -9,6 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\GroupAdapter;
 use SourceBans\CoreBundle\Entity\Group;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Form\ImportForm;
+use SourceBans\CoreBundle\Util\ServerGroup\ImportFactory;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,18 +31,36 @@ class GroupsController
     private $router;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * @var GroupAdapter
      */
     private $adapter;
 
     /**
-     * @param RouterInterface $router
-     * @param GroupAdapter    $adapter
+     * @var ImportFactory
      */
-    public function __construct(RouterInterface $router, GroupAdapter $adapter)
-    {
+    private $importer;
+
+    /**
+     * @param RouterInterface      $router
+     * @param FormFactoryInterface $formFactory
+     * @param GroupAdapter         $adapter
+     * @param ImportFactory        $importer
+     */
+    public function __construct(
+        RouterInterface $router,
+        FormFactoryInterface $formFactory,
+        GroupAdapter $adapter,
+        ImportFactory $importer
+    ) {
         $this->router = $router;
+        $this->formFactory = $formFactory;
         $this->adapter = $adapter;
+        $this->importer = $importer;
     }
 
     /**
@@ -121,5 +143,29 @@ class GroupsController
         $this->adapter->delete($group);
 
         return new RedirectResponse($this->router->generate('sourcebans_core_admin_groups_index'));
+    }
+
+    /**
+     * @param Request $request
+     * @return array|Response
+     *
+     * @Route("/admin/groups/import")
+     * @Security("has_role('ROLE_ADD_GROUPS')")
+     * @Template
+     */
+    public function importAction(Request $request)
+    {
+        $form = $this->formFactory->create(ImportForm::class)
+            ->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+            $this->importer->import($file->getRealPath(), $file->getClientOriginalName());
+
+            return new RedirectResponse($this->router->generate('sourcebans_core_admin_groups_index'));
+        }
+
+        return ['form' => $form->createView()];
     }
 }

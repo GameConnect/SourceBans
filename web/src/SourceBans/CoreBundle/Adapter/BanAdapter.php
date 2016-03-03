@@ -25,22 +25,23 @@ class BanAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $resolver = new OptionsResolver;
         $resolver->setDefault('active', false);
         $options = $resolver->resolve($options);
 
-        $specification = new AndX(
-            new BanSpecification,
-            new Query\OrderBy($sort ?: 'createTime', $order ?: Query\OrderBy::DESC)
-        );
+        $specification = new BanSpecification;
+        if ($sort) {
+            $specification->add(new Query\OrderBy($sort, $order));
+        } else {
+            $specification->add(new Query\OrderBy('createTime', Query\OrderBy::DESC));
+        }
         if ($options['active']) {
             $specification->add(new IsActive);
         }
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -61,7 +62,7 @@ class BanAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Ban
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         /** @var Ban $entity */
         $entity = new $this->entityClass;
@@ -77,7 +78,7 @@ class BanAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::BAN_UPDATE, new BanAdapterEvent($entity));
@@ -98,7 +99,7 @@ class BanAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(BanForm::class, $entity, $parameters);
 

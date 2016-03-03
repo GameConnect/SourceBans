@@ -18,7 +18,7 @@ services:
 
     sourcebans.core.adapter.game:
         class: SourceBans\CoreBundle\Adapter\GameAdapter
-        arguments: ["@service_container", "SourceBansCoreBundle:Game"]
+        arguments: ["@service_container", "SourceBansCoreBundle:Game", "%kernel.root_dir%/../public_html/images"]
 
     sourcebans.core.adapter.group:
         class: SourceBans\CoreBundle\Adapter\GroupAdapter
@@ -89,7 +89,7 @@ services:
 
     sourcebans.core.event_subscriber.log:
         class: SourceBans\CoreBundle\EventSubscriber\LogSubscriber
-        arguments: ["@doctrine", "@sourcebans.core.adapter.log"]
+        arguments: ["@sourcebans.core.adapter.log"]
         tags:
             - { name: kernel.event_subscriber }
 

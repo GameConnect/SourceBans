@@ -19,15 +19,13 @@ class GroupAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $query = $this->repository->createQueryBuilder('webGroup')
             ->orderBy(sprintf('webGroup.%s', $sort ?: 'name'), $order)
             ->getQuery();
 
-        $pager = static::queryToPager($query);
-
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($query, $limit, $page);
     }
 
     /**
@@ -43,7 +41,7 @@ class GroupAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Group
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         $entity = new $this->entityClass;
 
@@ -56,7 +54,7 @@ class GroupAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::GROUP_UPDATE, new GroupAdapterEvent($entity));
@@ -77,7 +75,7 @@ class GroupAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(GroupForm::class, $entity, $parameters);
 

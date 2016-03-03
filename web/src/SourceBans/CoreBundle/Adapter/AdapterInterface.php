@@ -19,7 +19,7 @@ interface AdapterInterface
      * @param array $options
      * @return \IteratorAggregate
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = []);
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = []);
 
     /**
      * Get one entity
@@ -41,14 +41,14 @@ interface AdapterInterface
      * @param array $parameters
      * @return EntityInterface
      */
-    public function create(array $parameters);
+    public function create(array $parameters = null);
 
     /**
      * Update an entity
      * @param EntityInterface $entity
      * @param array $parameters
      */
-    public function update(EntityInterface $entity, array $parameters);
+    public function update(EntityInterface $entity, array $parameters = null);
 
     /**
      * Delete an entity

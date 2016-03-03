@@ -20,12 +20,11 @@ class LogAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $specification = new LogSpecification;
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -46,7 +45,7 @@ class LogAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Log
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         /** @var Log $entity */
         $entity = new $this->entityClass;
@@ -63,7 +62,7 @@ class LogAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
     }
@@ -82,7 +81,7 @@ class LogAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(LogForm::class, $entity, $parameters);
 

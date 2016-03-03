@@ -26,15 +26,14 @@ class AdminAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $specification = new AndX(
             new AdminSpecification,
             new Query\OrderBy($sort ?: 'name', $order)
         );
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -43,15 +42,14 @@ class AdminAdapter extends AbstractAdapter
      * @param integer $page
      * @return Pagerfanta
      */
-    public function allByServer($server, $limit = 25, $page = 1)
+    public function allByServer($server, $limit = null, $page = null)
     {
         $specification = new AndX(
             new Servers,
             new Condition\Equals('id', $server, 'servers')
         );
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -72,7 +70,7 @@ class AdminAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Admin
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         $entity = new $this->entityClass;
 
@@ -85,7 +83,7 @@ class AdminAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::ADMIN_UPDATE, new AdminAdapterEvent($entity));
@@ -106,7 +104,7 @@ class AdminAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         /** @var Admin $entity */
         $form = $this->submitForm(AdminForm::class, $entity, $parameters);

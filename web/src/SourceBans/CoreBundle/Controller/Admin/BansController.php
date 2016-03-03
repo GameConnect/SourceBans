@@ -65,7 +65,7 @@ class BansController
     public function addAction(Request $request)
     {
         try {
-            $ban = $this->adapter->create($request->request->all());
+            $ban = $this->adapter->create();
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_bans_edit', ['id' => $ban->getId()])
@@ -89,7 +89,7 @@ class BansController
     public function editAction(Request $request, Ban $ban)
     {
         try {
-            $this->adapter->update($ban, $request->request->all());
+            $this->adapter->update($ban);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_bans_edit', ['id' => $ban->getId()])

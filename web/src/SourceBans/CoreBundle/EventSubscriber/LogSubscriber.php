@@ -2,7 +2,6 @@
 
 namespace SourceBans\CoreBundle\EventSubscriber;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use SourceBans\CoreBundle\Adapter\LogAdapter;
 use SourceBans\CoreBundle\Entity\Log;
 use SourceBans\CoreBundle\Event\AdapterEvents;
@@ -20,22 +19,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class LogSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ManagerRegistry
-     */
-    private $doctrine;
-
-    /**
      * @var LogAdapter
      */
     private $adapter;
 
     /**
-     * @param ManagerRegistry $doctrine
      * @param LogAdapter $adapter
      */
-    public function __construct(ManagerRegistry $doctrine, LogAdapter $adapter)
+    public function __construct(LogAdapter $adapter)
     {
-        $this->doctrine = $doctrine;
         $this->adapter = $adapter;
     }
 

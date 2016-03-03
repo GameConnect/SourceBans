@@ -131,20 +131,20 @@ abstract class AbstractAdapter implements AdapterInterface
      * @return FormInterface
      * @throws InvalidFormException
      */
-    protected function submitForm($type, EntityInterface $entity, array $parameters)
+    protected function submitForm($type, EntityInterface $entity, array $parameters = null)
     {
         $form = $this->formFactory->create($type, $entity);
         $formName = $form->getName();
 
-        if ($formName != '' && isset($parameters[$formName])) {
-            $data = $parameters[$formName];
+        if ($parameters === null) {
+            $form->handleRequest($this->container->get('request'));
+        } elseif ($formName != '' && isset($parameters[$formName])) {
+            $form->submit($parameters[$formName]);
         } elseif (count($parameters) > 0) {
-            $data = $parameters;
+            $form->submit($parameters);
         } else {
             throw new InvalidFormException('This form was not submitted', $form);
         }
-
-        $form->submit($data);
 
         if (!$form->isValid()) {
             throw new InvalidFormException('Invalid submitted data', $form);
@@ -155,10 +155,18 @@ abstract class AbstractAdapter implements AdapterInterface
 
     /**
      * @param Query $query
+     * @param integer $limit
+     * @param integer $page
      * @return Pagerfanta
      */
-    protected static function queryToPager(Query $query)
+    protected static function queryToPager(Query $query, $limit = null, $page = null)
     {
-        return new Pagerfanta(new DoctrineORMAdapter($query));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+
+        if ($limit > 0) {
+            $pager->setMaxPerPage($limit)->setCurrentPage($page ?: 1);
+        }
+
+        return $pager;
     }
 }

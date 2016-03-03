@@ -22,12 +22,11 @@ class AppealAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $specification = new AppealSpecification;
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -48,7 +47,7 @@ class AppealAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Appeal
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         /** @var Appeal $entity */
         $entity = new $this->entityClass;
@@ -63,7 +62,7 @@ class AppealAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::APPEAL_UPDATE, new AppealAdapterEvent($entity));
@@ -84,7 +83,7 @@ class AppealAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(AppealForm::class, $entity, $parameters);
 

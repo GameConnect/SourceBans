@@ -26,10 +26,8 @@ class GameForm extends AbstractType
             ->add('folder', null, [
                 'label' => 'Folder',
             ])
-            ->add('file', FileType::class, [
+            ->add('icon', FileType::class, [
                 'label' => 'Icon',
-                'mapped' => false,
-                'required' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',

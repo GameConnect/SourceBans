@@ -92,7 +92,7 @@ class ServersController
     public function addAction(Request $request)
     {
         try {
-            $server = $this->adapter->create($request->request->all());
+            $server = $this->adapter->create();
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_servers_edit', ['id' => $server->getId()])
@@ -116,7 +116,7 @@ class ServersController
     public function editAction(Request $request, Server $server)
     {
         try {
-            $this->adapter->update($server, $request->request->all());
+            $this->adapter->update($server);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_servers_edit', ['id' => $server->getId()])

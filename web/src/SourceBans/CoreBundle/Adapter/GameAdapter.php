@@ -9,6 +9,9 @@ use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\GameAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\GameForm;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * GameAdapter
@@ -16,18 +19,32 @@ use SourceBans\CoreBundle\Form\GameForm;
 class GameAdapter extends AbstractAdapter
 {
     /**
+     * @var string
+     */
+    protected $imageDir;
+
+    /**
+     * @inheritdoc
+     * @param string $imageDir
+     */
+    public function __construct(ContainerInterface $container, $entityClass, $imageDir)
+    {
+        parent::__construct($container, $entityClass);
+
+        $this->imageDir = $imageDir;
+    }
+
+    /**
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $query = $this->repository->createQueryBuilder('game')
             ->orderBy(sprintf('game.%s', $sort ?: 'name'), $order)
             ->getQuery();
 
-        $pager = static::queryToPager($query);
-
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($query, $limit, $page);
     }
 
     /**
@@ -43,7 +60,7 @@ class GameAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Game
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         $entity = new $this->entityClass;
 
@@ -56,7 +73,7 @@ class GameAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::GAME_UPDATE, new GameAdapterEvent($entity));
@@ -73,25 +90,33 @@ class GameAdapter extends AbstractAdapter
     }
 
     /**
+     * @param Game $game
+     * @param UploadedFile $file
+     * @param string $mapName
+     * @return File
+     */
+    public function uploadMapImage(Game $game, UploadedFile $file, $mapName)
+    {
+        return $file->move($this->imageDir . '/maps/' . $game->getFolder(), $mapName . '.' . $file->guessExtension());
+    }
+
+    /**
      * @param EntityInterface $entity
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
+        /** @var Game $entity */
         $this->submitForm(GameForm::class, $entity, $parameters);
+
+        $icon = $entity->getIcon();
+        $fileName = $entity->getFolder() . '.' . $icon->guessExtension();
+
+        $icon->move($this->imageDir . '/games', $fileName);
+        $entity->setIcon($fileName);
 
         $this->objectManager->persist($entity);
         $this->objectManager->flush();
-    }
-
-    protected function uploadIcon()
-    {
-        $uploadDir = $this->container->getParameter('kernel.root_dir') . '/../web/images/games';
-    }
-
-    protected function uploadMapImage(Game $game)
-    {
-        $uploadDir = $this->container->getParameter('kernel.root_dir') . '/../web/images/maps/' . $game->getFolder();
     }
 }

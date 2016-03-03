@@ -52,8 +52,8 @@ class GroupsController
     public function indexAction(Request $request)
     {
         $groups = $this->adapter->all(
-            255,
-            1,
+            null,
+            null,
             $request->query->get('sort'),
             $request->query->get('order')
         );
@@ -72,7 +72,7 @@ class GroupsController
     public function addAction(Request $request)
     {
         try {
-            $group = $this->adapter->create($request->request->all());
+            $group = $this->adapter->create();
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_groups_edit', ['id' => $group->getId()])
@@ -96,7 +96,7 @@ class GroupsController
     public function editAction(Request $request, Group $group)
     {
         try {
-            $this->adapter->update($group, $request->request->all());
+            $this->adapter->update($group);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_groups_edit', ['id' => $group->getId()])

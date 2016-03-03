@@ -20,7 +20,7 @@
                     <tbody>
                         {% for ban in bans %}
                         <tr>
-                            <td>{{ ban.createTime | date('d-m-y H:i') }}</td>
+                            <td>{{ ban.createTime | date('m-d-y H:i') }}</td>
                             <td>
                                 {% if ban.name %}
                                     {{ ban.name }}

@@ -22,12 +22,11 @@ class ReportAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $specification = new ReportSpecification;
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -48,7 +47,7 @@ class ReportAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Report
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         /** @var Report $entity */
         $entity = new $this->entityClass;
@@ -63,7 +62,7 @@ class ReportAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::REPORT_UPDATE, new ReportAdapterEvent($entity));
@@ -84,7 +83,7 @@ class ReportAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(ReportForm::class, $entity, $parameters);
 

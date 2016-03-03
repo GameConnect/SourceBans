@@ -23,7 +23,7 @@ class ServerAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = 25, $page = 1, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
         $specification = new ServerSpecification;
         if ($sort) {
@@ -33,9 +33,8 @@ class ServerAdapter extends AbstractAdapter
             $specification->add(new Query\OrderBy('host'));
             $specification->add(new Query\OrderBy('port'));
         }
-        $pager = static::queryToPager($this->repository->match($specification));
 
-        return $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
 
     /**
@@ -56,7 +55,7 @@ class ServerAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Server
      */
-    public function create(array $parameters)
+    public function create(array $parameters = null)
     {
         $entity = new $this->entityClass;
 
@@ -69,7 +68,7 @@ class ServerAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters)
+    public function update(EntityInterface $entity, array $parameters = null)
     {
         $this->processForm($entity, $parameters);
         $this->dispatcher->dispatch(AdapterEvents::SERVER_UPDATE, new ServerAdapterEvent($entity));
@@ -90,7 +89,7 @@ class ServerAdapter extends AbstractAdapter
      * @param array $parameters
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters)
+    protected function processForm(EntityInterface $entity, array $parameters = null)
     {
         $this->submitForm(ServerForm::class, $entity, $parameters);
 

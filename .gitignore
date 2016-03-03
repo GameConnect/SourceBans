@@ -3,6 +3,8 @@
 !game/addons/sourcemod/plugins/.gitkeep
 /web/node_modules/
 /web/public_html/bundles/
+/web/public_html/demos/*
+!web/public_html/demos/.gitkeep
 /web/public_html/dist/
 /web/app/bootstrap.php.cache
 /web/app/cache/*

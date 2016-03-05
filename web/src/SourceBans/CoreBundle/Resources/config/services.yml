@@ -85,6 +85,10 @@ services:
             - "@sourcebans.core.adapter.appeal"
             - "@sourcebans.core.adapter.report"
 
+    sourcebans.core.controller.servers:
+        class: SourceBans\CoreBundle\Controller\ServersController
+        arguments: ["@translator", "@sourcebans.core.adapter.server", "%kernel.root_dir%/../public_html/images"]
+
     sourcebans.core.event_subscriber.database_prefix:
         class: SourceBans\CoreBundle\EventSubscriber\DatabasePrefixSubscriber
         arguments: ["%database_prefix%"]

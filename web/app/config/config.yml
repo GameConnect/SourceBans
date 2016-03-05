@@ -29,7 +29,8 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     globals:
-        sourcebans: %sourcebans%
+        parameters: "%sourcebans%"
+        settings: "@sourcebans.core.settings"
 
 # Assetic Configuration
 assetic:
@@ -79,3 +80,21 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+stfalcon_tinymce:
+    tinymce_jquery: true
+    language: "%locale%"
+
+    theme:
+        advanced:
+            width: 750
+            height: 250
+            menubar: false
+            statusbar: false
+            plugins:
+                - "pagebreak layer table save hr image link charmap emoticons spellchecker insertdatetime preview media textcolor"
+                - "searchreplace print contextmenu paste directionality fullscreen noneditable visualchars nonbreaking template"
+            toolbar1: "bold italic underline strikethrough | bullist numlist blockquote | alignleft aligncenter alignright alignjustify | link unlink image media"
+            toolbar2: "formatselect | subscript superscript forecolor | hr charmap emoticons | removeformat"
+            toolbar_items_size: "small"
+            schema: "html5"

@@ -10,6 +10,8 @@ use SourceBans\CoreBundle\Adapter\GameAdapter;
 use SourceBans\CoreBundle\Entity\Game;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Form\MapImageForm;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +30,11 @@ class GamesController
     private $router;
 
     /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
      * @var SettingRepository
      */
     private $settings;
@@ -38,13 +45,19 @@ class GamesController
     private $adapter;
 
     /**
-     * @param RouterInterface   $router
-     * @param SettingRepository $settings
-     * @param GameAdapter       $adapter
+     * @param RouterInterface      $router
+     * @param FormFactoryInterface $formFactory
+     * @param SettingRepository    $settings
+     * @param GameAdapter          $adapter
      */
-    public function __construct(RouterInterface $router, SettingRepository $settings, GameAdapter $adapter)
-    {
+    public function __construct(
+        RouterInterface $router,
+        FormFactoryInterface $formFactory,
+        SettingRepository $settings,
+        GameAdapter $adapter
+    ) {
         $this->router = $router;
+        $this->formFactory = $formFactory;
         $this->settings = $settings;
         $this->adapter = $adapter;
     }
@@ -129,5 +142,31 @@ class GamesController
         $this->adapter->delete($game);
 
         return new RedirectResponse($this->router->generate('sourcebans_core_admin_games_index'));
+    }
+
+    /**
+     * @param Request $request
+     * @return array|Response
+     *
+     * @Route("/admin/games/mapImage")
+     * @Security("has_role('ROLE_ADD_GAMES')")
+     * @Template
+     */
+    public function mapImageAction(Request $request)
+    {
+        $form = $this->formFactory->create(MapImageForm::class)
+            ->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->adapter->uploadMapImage(
+                $form->get('game')->getData(),
+                $form->get('file')->getData(),
+                $form->get('mapName')->getData()
+            );
+
+            return new RedirectResponse($this->router->generate('sourcebans_core_admin_bans_index'));
+        }
+
+        return ['form' => $form->createView()];
     }
 }

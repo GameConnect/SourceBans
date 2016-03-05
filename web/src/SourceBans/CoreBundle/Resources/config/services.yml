@@ -58,7 +58,7 @@ services:
 
     sourcebans.core.controller.admin.games:
         class: SourceBans\CoreBundle\Controller\Admin\GamesController
-        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.game"]
+        arguments: ["@router", "@form.factory", "@sourcebans.core.settings", "@sourcebans.core.adapter.game"]
 
     sourcebans.core.controller.admin.groups:
         class: SourceBans\CoreBundle\Controller\Admin\GroupsController

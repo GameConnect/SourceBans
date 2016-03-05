@@ -8,6 +8,26 @@ namespace SourceBans\CoreBundle\Entity;
 class SettingRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        $settings = $this->all();
+
+        return isset($settings[$name]);
+    }
+
+    /**
      * @return array
      */
     public function all()

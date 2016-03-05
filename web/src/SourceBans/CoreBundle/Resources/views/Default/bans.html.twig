@@ -20,7 +20,7 @@
                     <tbody>
                         {% for ban in bans %}
                         <tr>
-                            <td>{{ ban.createTime | date('m-d-y H:i') }}</td>
+                            <td>{{ ban.createTime | date(settings.date_format) }}</td>
                             <td>
                                 {% if ban.name %}
                                     {{ ban.name }}
@@ -28,7 +28,7 @@
                                     <em class="text-muted">{{ 'Unknown' | trans }}</em>
                                 {% endif %}
                             </td>
-                            <td>{{ ban.admin | default(sourcebans.console_name) }}</td>
+                            <td>{{ ban.admin | default(parameters.console_name) }}</td>
                             <td class="text-right">
                                 {% if ban.isPermanent %}
                                     {{ 'Permanent' | trans }}

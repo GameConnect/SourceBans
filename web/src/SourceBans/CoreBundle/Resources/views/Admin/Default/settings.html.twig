@@ -40,6 +40,7 @@
                         <legend>Dashboard</legend>
                         {{ form_row(form.dashboard_blocks_popup) }}
                         {{ form_row(form.dashboard_title) }}
+                        {{ form_row(form.dashboard_text, {'attr': {'class': 'tinymce', 'data-theme': 'advanced'}}) }}
                     </fieldset>
                     <fieldset>
                         <legend>Bans</legend>
@@ -67,4 +68,9 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ tinymce_init() }}
 {% endblock %}

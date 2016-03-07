@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f230ad04a093aa7cce39faaa7238268",
-    "content-hash": "2cd4c3b457139f369dd81137ceb77785",
+    "hash": "16e9d99f675db4ac11b45d0fdce628f7",
+    "content-hash": "c6599ba6112805c65b9a1b41377adc68",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2668,6 +2668,47 @@
                 "paging"
             ],
             "time": "2015-12-06 17:16:06"
+        },
+        {
+            "name": "xpaw/steamid",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xPaw/SteamID.php.git",
+                "reference": "2a7cea536dffb0326a95d9c94febe2b3f9897e59"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xPaw/SteamID.php/zipball/2a7cea536dffb0326a95d9c94febe2b3f9897e59",
+                "reference": "2a7cea536dffb0326a95d9c94febe2b3f9897e59",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "4.7.x-dev"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "SteamID.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Djundik",
+                    "email": "steamid.php@xpaw.me"
+                }
+            ],
+            "description": "SteamID conversion library",
+            "time": "2015-10-20 09:48:55"
         }
     ],
     "packages-dev": [

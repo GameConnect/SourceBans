@@ -80,7 +80,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-    CreateConVar("sb_version", SB_VERSION, "Advanced admin and ban management for the Source engine");
+    CreateConVar("sb_version", SB_VERSION, "Advanced admin and ban management for the Source engine", FCVAR_NOTIFY);
     RegAdminCmd("sb_reload", Command_Reload, ADMFLAG_RCON, "Reload SourceBans config and ban reason menu options");
 
     LoadTranslations("common.phrases");
@@ -101,8 +101,8 @@ public void OnPluginStart()
     g_hConfigParser.OnKeyValue     = ReadConfig_KeyValue;
     g_hConfigParser.OnLeaveSection = ReadConfig_EndSection;
 
-    int iServerIp     = GetConVarInt(FindConVar("hostip"));
-    g_iServerPort     = GetConVarInt(FindConVar("hostport"));
+    int iServerIp     = FindConVar("hostip").IntValue;
+    g_iServerPort     = FindConVar("hostport").IntValue;
     Format(g_sServerIp, sizeof(g_sServerIp), "%i.%i.%i.%i", (iServerIp >> 24) & 0xFF,
                                                             (iServerIp >> 16) & 0xFF,
                                                             (iServerIp >>  8) & 0xFF,

@@ -57,7 +57,7 @@ before_deploy:
 
 deploy:
     provider: releases
-    api-key:
+    api_key:
         secure: So2mA42X0pegsvhztvaycGC8WDz8hPnt2DO7N3x5VjwBx7OuqUiz56UrXgAZwyQdtefjLzYIcgzte5y4cLLxRhEVSCuQ40EEItO4RTUBfLQFcH2KNSqPmlYtGZsR5ZXKE+skTF1majacSy7xndHmZH585ZAlGqTIhhjml+IMh2Y=
     file: release.tar.gz
     skip_cleanup: true

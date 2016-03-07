@@ -11,10 +11,13 @@ use SourceBans\CoreBundle\Adapter\ServerAdapter;
 use SourceBans\CoreBundle\Entity\Server;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Util\SourceRcon;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * ServersController
@@ -27,6 +30,11 @@ class ServersController
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var Connection
@@ -44,21 +52,32 @@ class ServersController
     private $adapter;
 
     /**
-     * @param RouterInterface   $router
-     * @param Connection        $connection
-     * @param SettingRepository $settings
-     * @param ServerAdapter     $adapter
+     * @var string
+     */
+    private $patternStatus;
+
+    /**
+     * @param RouterInterface     $router
+     * @param TranslatorInterface $translator
+     * @param Connection          $connection
+     * @param SettingRepository   $settings
+     * @param ServerAdapter       $adapter
+     * @param string              $patternStatus
      */
     public function __construct(
         RouterInterface $router,
+        TranslatorInterface $translator,
         Connection $connection,
         SettingRepository $settings,
-        ServerAdapter $adapter
+        ServerAdapter $adapter,
+        $patternStatus
     ) {
         $this->router = $router;
+        $this->translator = $translator;
         $this->connection = $connection;
         $this->settings = $settings;
         $this->adapter = $adapter;
+        $this->patternStatus = $patternStatus;
     }
 
     /**
@@ -179,5 +198,80 @@ class ServersController
     public function rconAction(Request $request, Server $server)
     {
         return ['server' => $server];
+    }
+
+    /**
+     * @param Server $server
+     * @param string $name
+     * @return array|Response
+     *
+     * @Route("/admin/servers/kick/{id}/{name}")
+     * @Security("has_role('ROLE_ADD_BANS')")
+     */
+    public function kickAction(Server $server, $name)
+    {
+        $response = $this->rcon($server, 'kick "' . addslashes($name) . '"');
+
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @param Server $server
+     * @param string $name
+     * @return array|Response
+     *
+     * @Route("/admin/servers/getProfile/{id}/{name}")
+     * @Security("has_role('ROLE_ADD_BANS')")
+     */
+    public function getProfileAction(Server $server, $name)
+    {
+        $response = $this->rcon($server, 'status');
+        if (isset($response['error'])) {
+            return new JsonResponse($response);
+        }
+
+        preg_match_all($this->patternStatus, $response['result'], $players);
+        for ($i = 0; $i < count($players[0]); $i++) {
+            if ($players[2][$i] == $name) {
+                $steam = new \SteamID($players[3][$i]);
+
+                return new JsonResponse([
+                    'id' => $steam->RenderSteam3(),
+                ]);
+            }
+        }
+
+        return new JsonResponse([
+            'error' => [
+                'code'    => 'ERR_INVALID_NAME',
+                'message' => $this->translator->trans('controllers.servers.getProfile.err_invalid_name', ['{name}' => $name]),
+            ],
+        ]);
+    }
+
+    /**
+     * @param Server $server
+     * @param string $command
+     * @return array
+     */
+    private function rcon(Server $server, $command)
+    {
+        $rcon   = new SourceRcon($server->getHost(), $server->getPort(), $server->getRcon());
+        $result = [
+            'id'   => $server->getId(),
+            'host' => $server->getHost(),
+            'port' => $server->getPort(),
+        ];
+
+        if (!$rcon->auth()) {
+            $result['error'] = [
+                'code'    => 'ERR_INVALID_PASSWORD',
+                'message' => 'Invalid RCON password.',
+            ];
+        } else {
+            $result['result'] = $rcon->execute($command);
+        }
+
+        return $result;
     }
 }

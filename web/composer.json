@@ -21,7 +21,8 @@
         "knplabs/knp-menu-bundle": "~2.0",
         "white-october/pagerfanta-bundle": ">=1.0.2",
         "stfalcon/tinymce-bundle": "~0.4",
-        "rikbruil/doctrine-specification": "~1.0"
+        "rikbruil/doctrine-specification": "~1.0",
+        "xpaw/steamid": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

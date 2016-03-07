@@ -39,7 +39,7 @@ class Ban implements EntityInterface
     /**
      * @var string
      *
-     * @Assert\Regex("/^(STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\])$/i")
+     * @Assert\Regex("/^STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\]$/i")
      * @ORM\Column(name="steam", type="string", length=32, nullable=true)
      */
     private $steam;
@@ -461,7 +461,7 @@ class Ban implements EntityInterface
             $accountId = $matches[1];
         }
 
-        return $this->communityId = bcadd('76561197960265728', $accountId);
+        return $this->communityId = gmp_strval(gmp_add('76561197960265728', $accountId));
     }
 
     /**

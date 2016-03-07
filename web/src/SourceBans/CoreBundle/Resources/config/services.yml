@@ -54,7 +54,7 @@ services:
 
     sourcebans.core.controller.admin.default:
         class: SourceBans\CoreBundle\Controller\Admin\DefaultController
-        arguments: ["@router", "@form.factory", "@sourcebans.core.settings"]
+        arguments: ["@router", "@translator", "@form.factory", "@sourcebans.core.settings", "%version%", "%version_url%"]
 
     sourcebans.core.controller.admin.games:
         class: SourceBans\CoreBundle\Controller\Admin\GamesController
@@ -66,7 +66,7 @@ services:
 
     sourcebans.core.controller.admin.servers:
         class: SourceBans\CoreBundle\Controller\Admin\ServersController
-        arguments: ["@router", "@doctrine.dbal.default_connection", "@sourcebans.core.settings", "@sourcebans.core.adapter.server"]
+        arguments: ["@router", "@translator", "@doctrine.dbal.default_connection", "@sourcebans.core.settings", "@sourcebans.core.adapter.server", "%pattern_status%"]
 
     sourcebans.core.controller.bans:
         class: SourceBans\CoreBundle\Controller\BansController

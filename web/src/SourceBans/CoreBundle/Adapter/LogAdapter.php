@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
+use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Log;
@@ -29,6 +30,20 @@ class LogAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
+     * @return Pagerfanta
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $specification = new LogSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
+     * @inheritdoc
      * @return Log
      */
     public function get($id)
@@ -37,6 +52,20 @@ class LogAdapter extends AbstractAdapter
             new LogSpecification,
             new ById($id)
         );
+
+        return $this->repository->match($specification)->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritdoc
+     * @return Log
+     */
+    public function getBy(array $criteria)
+    {
+        $specification = new LogSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

@@ -22,11 +22,27 @@ interface AdapterInterface
     public function all($limit = null, $page = null, $sort = null, $order = null, array $options = []);
 
     /**
+     * Get a collection of entities
+     * @param array $criteria
+     * @param integer $limit
+     * @param integer $page
+     * @return \IteratorAggregate
+     */
+    public function allBy(array $criteria, $limit = null, $page = null);
+
+    /**
      * Get one entity
      * @param integer $id
      * @return EntityInterface
      */
     public function get($id);
+
+    /**
+     * Get one entity
+     * @param array $criteria
+     * @return EntityInterface
+     */
+    public function getBy(array $criteria);
 
     /**
      * Get one entity or throw a 404 exception

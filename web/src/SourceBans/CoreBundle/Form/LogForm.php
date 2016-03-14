@@ -20,9 +20,7 @@ class LogForm extends AbstractType
         $builder
             ->add('type')
             ->add('title')
-            ->add('message')
-            ->add('function')
-            ->add('query');
+            ->add('message');
     }
 
     /**
@@ -31,6 +29,7 @@ class LogForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'csrf_protection' => false,
             'data_class' => Log::class,
         ]);
     }

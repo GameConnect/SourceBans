@@ -42,7 +42,7 @@ services:
 
     sourcebans.core.controller.account:
         class: SourceBans\CoreBundle\Controller\AccountController
-        arguments: ["@router", "@form.factory", "@security.token_storage", "@sourcebans.core.adapter.admin"]
+        arguments: ["@router", "@form.factory", "@security.token_storage", "@sourcebans.core.util.mailer", "@sourcebans.core.adapter.admin"]
 
     sourcebans.core.controller.admin.admins:
         class: SourceBans\CoreBundle\Controller\Admin\AdminsController
@@ -106,6 +106,12 @@ services:
         arguments: ["@doctrine", "@sourcebans.core.settings"]
         tags:
             - { name: kernel.event_subscriber }
+
+    sourcebans.core.form.account.forgotPassword:
+        class: SourceBans\CoreBundle\Form\Account\ForgotPasswordForm
+        arguments: ["@sourcebans.core.adapter.admin"]
+        tags:
+            - { name: form.type }
 
     sourcebans.core.form.account.settings:
         class: SourceBans\CoreBundle\Form\Account\SettingsForm
@@ -185,3 +191,7 @@ services:
     sourcebans.core.util.serverGroup.import:
         class: SourceBans\CoreBundle\Util\ServerGroup\ImportFactory
         arguments: ["@sourcebans.core.adapter.serverGroup"]
+
+    sourcebans.core.util.mailer:
+        class: SourceBans\CoreBundle\Util\Mailer
+        arguments: ["@router", "@translator", "@mailer", "@sourcebans.core.settings"]

@@ -30,11 +30,30 @@ class GroupAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $offset = (null === $page ?: $page * $limit - $limit);
+
+        return $this->repository->findBy($criteria, null, $limit, $offset);
+    }
+
+    /**
+     * @inheritdoc
      * @return Group
      */
     public function get($id)
     {
         return $this->repository->find($id);
+    }
+
+    /**
+     * @inheritdoc
+     * @return Group
+     */
+    public function getBy(array $criteria)
+    {
+        return $this->repository->findOneBy($criteria);
     }
 
     /**

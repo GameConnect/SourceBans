@@ -20,7 +20,9 @@
     "bootstrap-sass": "^3.3.6",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
     "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.3",
     "sass-importer-npm": "^1.0.2",
     "yargs": "^4.1.0"
   }

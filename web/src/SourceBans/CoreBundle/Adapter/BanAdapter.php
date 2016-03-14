@@ -47,6 +47,20 @@ class BanAdapter extends AbstractAdapter
     }
 
     /**
+     * @inheritdoc
+     * @return Pagerfanta
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $specification = new BanSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
      * @param integer $type
      * @param integer $limit
      * @param integer $page
@@ -80,6 +94,20 @@ class BanAdapter extends AbstractAdapter
             new BanSpecification,
             new ById($id)
         );
+
+        return $this->repository->match($specification)->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritdoc
+     * @return Ban
+     */
+    public function getBy(array $criteria)
+    {
+        $specification = new BanSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

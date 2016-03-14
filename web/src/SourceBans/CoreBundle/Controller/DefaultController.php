@@ -242,23 +242,4 @@ class DefaultController
             'last_username' => $this->authenticationUtils->getLastUsername(),
         ];
     }
-
-    /**
-     * @param Request $request
-     * @return array|Response
-     *
-     * @Route("/forgotPassword")
-     * @Template
-     */
-    public function forgotPasswordAction(Request $request)
-    {
-        $form = $this->formFactory->create(ForgotPasswordForm::class)
-            ->handleRequest($request);
-
-        if ($form->isValid()) {
-            return new Response;
-        }
-
-        return ['form' => $form->createView()];
-    }
 }

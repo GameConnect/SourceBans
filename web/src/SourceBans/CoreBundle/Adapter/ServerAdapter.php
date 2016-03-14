@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
+use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
@@ -39,6 +40,20 @@ class ServerAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
+     * @return Pagerfanta
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $specification = new ServerSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
+     * @inheritdoc
      * @return Server
      */
     public function get($id)
@@ -47,6 +62,20 @@ class ServerAdapter extends AbstractAdapter
             new ServerSpecification,
             new ById($id)
         );
+
+        return $this->repository->match($specification)->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritdoc
+     * @return Server
+     */
+    public function getBy(array $criteria)
+    {
+        $specification = new ServerSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

@@ -215,6 +215,11 @@ class Admin implements EntityInterface, UserInterface, \Serializable
     /**
      * @var string
      */
+    private $plainPassword;
+
+    /**
+     * @var string
+     */
     private $communityId;
 
     /**
@@ -549,6 +554,25 @@ class Admin implements EntityInterface, UserInterface, \Serializable
     public function removeServerGroup(ServerGroup $serverGroup)
     {
         $this->serverGroups->removeElement($serverGroup);
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     * @return Admin
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
+use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Report;
@@ -31,6 +32,20 @@ class ReportAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
+     * @return Pagerfanta
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $specification = new ReportSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
+     * @inheritdoc
      * @return Report
      */
     public function get($id)
@@ -39,6 +54,20 @@ class ReportAdapter extends AbstractAdapter
             new ReportSpecification,
             new ById($id)
         );
+
+        return $this->repository->match($specification)->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritdoc
+     * @return Report
+     */
+    public function getBy(array $criteria)
+    {
+        $specification = new ReportSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

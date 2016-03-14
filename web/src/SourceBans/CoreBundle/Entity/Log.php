@@ -58,7 +58,7 @@ class Log implements EntityInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="query", type="string", length=255, nullable=false)
+     * @ORM\Column(name="query", type="string", length=255, nullable=true)
      */
     private $query;
 

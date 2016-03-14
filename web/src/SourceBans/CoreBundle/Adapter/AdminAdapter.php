@@ -37,6 +37,20 @@ class AdminAdapter extends AbstractAdapter
     }
 
     /**
+     * @inheritdoc
+     * @return Pagerfanta
+     */
+    public function allBy(array $criteria, $limit = null, $page = null)
+    {
+        $specification = new AdminSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
+
+        return static::queryToPager($this->repository->match($specification), $limit, $page);
+    }
+
+    /**
      * @param integer|Server $server
      * @param integer $limit
      * @param integer $page
@@ -62,6 +76,20 @@ class AdminAdapter extends AbstractAdapter
             new AdminSpecification,
             new ById($id)
         );
+
+        return $this->repository->match($specification)->getOneOrNullResult();
+    }
+
+    /**
+     * @inheritdoc
+     * @return Admin
+     */
+    public function getBy(array $criteria)
+    {
+        $specification = new AdminSpecification;
+        foreach ($criteria as $field => $value) {
+            $specification->add(new Condition\Equals($field, $value));
+        }
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

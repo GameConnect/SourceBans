@@ -40,7 +40,6 @@ class AdminForm extends AbstractType
             ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'Password',
-                'mapped' => false,
                 'required' => false,
             ])
             ->add('serverPassword', PasswordType::class, [

@@ -33,7 +33,6 @@ class PasswordForm extends AbstractType
                 'second_options' => [
                     'label' => 'models.AccountForm.confirm_password',
                 ],
-                'mapped' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',

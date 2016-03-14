@@ -34,7 +34,7 @@ public SharedPlugin __pl_sb_bans =
 };
 
 #if !defined REQUIRE_PLUGIN
-public __pl_sourcebans_SetNTVOptional()
+public __pl_sb_bans_SetNTVOptional()
 {
     MarkNativeAsOptional("SB_ReportPlayer");
 }

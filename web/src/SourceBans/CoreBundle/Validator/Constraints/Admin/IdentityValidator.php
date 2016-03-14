@@ -11,7 +11,7 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class IdentityValidator extends ConstraintValidator
 {
-    const PATTERN_STEAM = '/^(STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\])$/i';
+    const PATTERN_STEAM = '/^STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\]$/i';
 
     /**
      * @inheritdoc

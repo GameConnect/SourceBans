@@ -7,7 +7,10 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
                 <pre class="pre-scrollable" id="console">
 
 
@@ -47,4 +50,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>initRcon({successText: '{{ 'Command executed' | trans }}', url: '{{ path('sourcebans_core_admin_servers_rcon', {'id': server.id}) }}'});</script>
 {% endblock %}

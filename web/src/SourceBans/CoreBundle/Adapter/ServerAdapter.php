@@ -14,6 +14,7 @@ use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ServerForm;
 use SourceBans\CoreBundle\Specification\ById;
 use SourceBans\CoreBundle\Specification\ServerSpecification;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ServerAdapter
@@ -84,11 +85,11 @@ class ServerAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Server
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         $entity = new $this->entityClass;
 
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::SERVER_CREATE, new ServerAdapterEvent($entity));
 
         return $entity;
@@ -97,9 +98,9 @@ class ServerAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::SERVER_UPDATE, new ServerAdapterEvent($entity));
     }
 
@@ -108,21 +109,20 @@ class ServerAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::SERVER_DELETE, new ServerAdapterEvent($entity));
     }
 
     /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(ServerForm::class, $entity, $parameters);
+        $this->submitForm(ServerForm::class, $entity, $request);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
     }
 }

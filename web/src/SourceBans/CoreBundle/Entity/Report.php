@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Report implements EntityInterface
+class Report implements EntityInterface, SteamAccountInterface
 {
     /**
      * @var integer
@@ -36,7 +36,7 @@ class Report implements EntityInterface
     /**
      * @var string
      *
-     * @Assert\Regex("/^(STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\])$/i")
+     * @Assert\Regex("/^STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\]$/i")
      * @ORM\Column(name="steam", type="string", length=32, nullable=true)
      */
     private $steam;
@@ -44,7 +44,7 @@ class Report implements EntityInterface
     /**
      * @var string
      *
-     * @Assert\Ip
+     * @Assert\Ip(version="all")
      * @ORM\Column(name="ip", type="string", length=15, nullable=true)
      */
     private $ip;
@@ -107,6 +107,11 @@ class Report implements EntityInterface
      * })
      */
     private $server;
+
+    /**
+     * @var integer
+     */
+    private $accountId;
 
     /**
      * @return integer
@@ -296,6 +301,27 @@ class Report implements EntityInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getSteamAccountId()
+    {
+        if (isset($this->accountId)) {
+            return $this->accountId;
+        }
+        if ($this->getSteam() == '') {
+            return null;
+        }
+
+        try {
+            $steam = new \SteamID($this->getSteam());
+        } catch (\InvalidArgumentException $exception) {
+            return null;
+        }
+
+        return $this->accountId = $steam->GetAccountID();
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -310,7 +336,8 @@ class Report implements EntityInterface
     public function preUpdate()
     {
         if (!empty($this->steam)) {
-            $this->steam = strtoupper($this->steam);
+            $steam = new \SteamID($this->steam);
+            $this->steam = $steam->RenderSteam3();
         }
     }
 }

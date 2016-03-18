@@ -6,6 +6,13 @@
 
 {% block body %}
     <div class="container">
-        {% include '@SourceBansCore/Admin/Bans/partials/form.html.twig' %}
+        <div class="row">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
+                {% include '@SourceBansCore/Admin/Bans/partials/form.html.twig' %}
+            </div>
+        </div>
     </div>
 {% endblock %}

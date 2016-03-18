@@ -37,7 +37,7 @@ class AppealForm extends AbstractType
         $builder
             ->add('banSteam', TextType::class, [
                 'attr' => [
-                    'value' => 'STEAM_',
+                    'placeholder' => '[U:1:XXXXXX]',
                 ],
                 'label' => 'Steam ID',
                 'mapped' => false,

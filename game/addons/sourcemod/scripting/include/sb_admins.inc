@@ -39,7 +39,7 @@ native void SB_AddAdmin(int client, const char[] name, const char[] authtype, co
  *
  * @param client		The index of the client (person deleting admin)
  * @param authtype	The authentication type (AUTHMETHOD_STEAM, AUTHMETHOD_IP, AUTHMETHOD_NAME)
- * @param identity	The steamid, ip, or name of admin based on authtype* @noreturn
+ * @param identity	The steamid, ip, or name of admin based on authtype
  * @error						Invalid authtype
  */
 native void SB_DeleteAdmin(int client, const char[] authtype, const char[] identity);

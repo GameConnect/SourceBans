@@ -20,7 +20,7 @@ return [
     'Are you sure you want to kick {name}?' => 'Вы уверены, что хотите отключить {name}?',
     'Are you sure you want to remove these items from {name}?' => '@@@@',
     'Are you sure you want to uninstall this plugin?\nThis will delete all its data!' => 'Вы уверены, что хотите удалить плагин?\nУдаление сотрёт все данные!',
-    'Authentication type' => 'Тип аутентификации',
+    'Authentication method' => 'Тип аутентификации',
     'Author' => 'Автор',
     'Back' => 'Назад',
     'Ban' => 'Бан',

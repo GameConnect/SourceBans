@@ -20,7 +20,7 @@ return [
     'Are you sure you want to kick {name}?' => 'Willst du {name} wirklich kicken?',
     'Are you sure you want to remove these items from {name}?' => '@@@@',
     'Are you sure you want to uninstall this plugin?\nThis will delete all its data!' => 'Willst du dieses Plugin wirklich deinstallieren?\nDadurch werden all seine Informationen gelöscht!',
-    'Authentication type' => 'Autorisierungstyp',
+    'Authentication method' => 'Autorisierungstyp',
     'Author' => 'Autor',
     'Back' => 'Zurück',
     'Ban' => 'Bannen',

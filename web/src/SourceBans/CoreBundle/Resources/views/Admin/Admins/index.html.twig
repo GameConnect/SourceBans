@@ -7,12 +7,16 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th width="50%">{{ 'Name' | trans }}</th>
-                            <th width="50%">{{ 'Identity' | trans }}</th>
+                            <th width="45%">{{ 'Identity' | trans }}</th>
+                            <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,10 +24,11 @@
                         <tr>
                             <td>{{ admin.name }}</td>
                             <td>{{ admin.identity }}</td>
+                            <td><a href="{{ path('sourcebans_core_admin_admins_edit', {'id': admin.id}) }}">{{ 'Edit' | trans }}</a></td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="2">No results</td>
+                            <td colspan="3">{{ 'No results' | trans }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

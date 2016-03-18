@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Admin implements EntityInterface, UserInterface, \Serializable
+class Admin implements EntityInterface, SteamAccountInterface, UserInterface, \Serializable
 {
     const AUTH_IP          = 'ip';
     const AUTH_NAME        = 'name';
@@ -220,17 +220,17 @@ class Admin implements EntityInterface, UserInterface, \Serializable
     /**
      * @var string
      */
-    private $communityId;
-
-    /**
-     * @var string
-     */
     private $flags;
 
     /**
      * @var integer
      */
     private $immunity;
+
+    /**
+     * @var integer
+     */
+    private $accountId;
 
     /**
      * Constructor
@@ -578,32 +578,6 @@ class Admin implements EntityInterface, UserInterface, \Serializable
     }
 
     /**
-     * Returns the Steam Community ID
-     *
-     * @return string
-     */
-    public function getCommunityId()
-    {
-        if (isset($this->communityId)) {
-            return $this->communityId;
-        }
-        if ($this->getAuth() != self::AUTH_STEAM) {
-            return null;
-        }
-
-        $accountId = 0;
-        $identity = $this->getIdentity();
-
-        if (preg_match('/^STEAM_[0-9]:([0-9]):([0-9]+)$/i', $identity, $matches)) {
-            $accountId = $matches[1] + $matches[2] * 2;
-        } elseif (preg_match('/^\[U:[0-9]:([0-9]+)\]$/i', $identity, $matches)) {
-            $accountId = $matches[1];
-        }
-
-        return $this->communityId = gmp_strval(gmp_add('76561197960265728', $accountId));
-    }
-
-    /**
      * Returns the server permissions
      *
      * @return string
@@ -655,6 +629,27 @@ class Admin implements EntityInterface, UserInterface, \Serializable
         }
 
         return $this->immunity;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSteamAccountId()
+    {
+        if (isset($this->accountId)) {
+            return $this->accountId;
+        }
+        if ($this->getAuth() != self::AUTH_STEAM) {
+            return null;
+        }
+
+        try {
+            $steam = new \SteamID($this->getIdentity());
+        } catch (\InvalidArgumentException $exception) {
+            return null;
+        }
+
+        return $this->accountId = $steam->GetAccountID();
     }
 
     /**
@@ -742,7 +737,8 @@ class Admin implements EntityInterface, UserInterface, \Serializable
     public function preUpdate()
     {
         if ($this->auth == self::AUTH_STEAM) {
-            $this->identity = strtoupper($this->identity);
+            $steam = new \SteamID($this->identity);
+            $this->identity = $steam->RenderSteam3();
         }
     }
 }

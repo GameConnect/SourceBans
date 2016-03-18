@@ -30,7 +30,7 @@ class BanForm extends AbstractType
             ])
             ->add('steam', null, [
                 'attr' => [
-                    'value' => 'STEAM_',
+                    'placeholder' => '[U:1:XXXXXX]',
                 ],
                 'label' => 'Steam ID',
             ])

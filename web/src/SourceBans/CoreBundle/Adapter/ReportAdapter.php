@@ -13,6 +13,7 @@ use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ReportForm;
 use SourceBans\CoreBundle\Specification\ById;
 use SourceBans\CoreBundle\Specification\ReportSpecification;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ReportAdapter
@@ -76,13 +77,12 @@ class ReportAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Report
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
-        /** @var Report $entity */
         $entity = new $this->entityClass;
-        $entity->setUserIp($this->container->get('request')->getClientIp());
 
-        $this->processForm($entity, $parameters);
+        $this->preSubmit($entity);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::REPORT_CREATE, new ReportAdapterEvent($entity));
 
         return $entity;
@@ -91,9 +91,9 @@ class ReportAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::REPORT_UPDATE, new ReportAdapterEvent($entity));
     }
 
@@ -102,21 +102,39 @@ class ReportAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::REPORT_DELETE, new ReportAdapterEvent($entity));
     }
 
     /**
+     * @inheritdoc
+     */
+    public function persist(EntityInterface $entity)
+    {
+        $this->preSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(ReportForm::class, $entity, $parameters);
+        $this->submitForm(ReportForm::class, $entity, $request);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    protected function preSubmit(EntityInterface $entity)
+    {
+        /** @var Report $entity */
+        $entity->setUserIp($this->container->get('request')->getClientIp());
     }
 }

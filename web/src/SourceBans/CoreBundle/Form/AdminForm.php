@@ -27,11 +27,11 @@ class AdminForm extends AbstractType
                 'label' => 'Name',
             ])
             ->add('auth', AuthType::class, [
-                'label' => 'Authentication type',
+                'label' => 'Authentication method',
             ])
             ->add('identity', null, [
                 'attr' => [
-                    'value' => 'STEAM_',
+                    'placeholder' => '[U:1:XXXXXX]',
                 ],
                 'label' => 'Identity',
             ])

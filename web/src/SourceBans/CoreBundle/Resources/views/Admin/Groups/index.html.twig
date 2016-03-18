@@ -7,30 +7,30 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>{{ 'Name' | trans }}</th>
+                            <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for group in groups %}
                         <tr>
                             <td>{{ group.name }}</td>
+                            <td><a href="{{ path('sourcebans_core_admin_groups_edit', {'id': group.id}) }}">{{ 'Edit' | trans }}</a></td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td>No results</td>
+                            <td colspan="2">{{ 'No results' | trans }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                {{ pagerfanta(groups, 'twitter_bootstrap3', {
-                    'css_container_class': 'pagination pull-right',
-                    'next_message': '&raquo;',
-                    'prev_message': '&laquo;',
-                }) }}
             </div>
         </div>
     </div>

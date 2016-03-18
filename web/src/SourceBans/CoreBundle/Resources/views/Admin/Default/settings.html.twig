@@ -9,7 +9,10 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
                 {{ form_start(form) }}
                     <fieldset>
                         <legend>General</legend>
@@ -17,7 +20,7 @@
                         {{ form_row(form.theme) }}
                         {{ form_row(form.default_page) }}
                         <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-4">
+                            <div class="col-sm-9 col-sm-offset-3">
                                 {{ form_widget(form.enable_reports) }}
                                 {{ form_widget(form.enable_appeals) }}
                             </div>
@@ -27,7 +30,7 @@
                         {{ form_row(form.password_min_length) }}
                         <div class="form-group">
                             {{ form_label(form.steam_web_api_key) }}
-                            <div class="col-sm-4">
+                            <div class="col-sm-9">
                                 {{ form_widget(form.steam_web_api_key) }}
                                 <small class="help-block">
                                     {% set apiKeyLink = '<a href="http://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com</a>' %}
@@ -46,7 +49,7 @@
                         <legend>Bans</legend>
                         {{ form_row(form.items_per_page) }}
                         <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-4">
+                            <div class="col-sm-9 col-sm-offset-3">
                                 {{ form_widget(form.bans_hide_admin) }}
                                 {{ form_widget(form.bans_hide_ip) }}
                                 {{ form_widget(form.bans_public_export) }}
@@ -71,6 +74,5 @@
 {% endblock %}
 
 {% block javascripts %}
-  {{ parent() }}
   {{ tinymce_init() }}
 {% endblock %}

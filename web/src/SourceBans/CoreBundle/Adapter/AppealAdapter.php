@@ -13,6 +13,7 @@ use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\AppealForm;
 use SourceBans\CoreBundle\Specification\AppealSpecification;
 use SourceBans\CoreBundle\Specification\ById;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * AppealAdapter
@@ -76,13 +77,12 @@ class AppealAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Appeal
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
-        /** @var Appeal $entity */
         $entity = new $this->entityClass;
-        $entity->setUserIp($this->container->get('request')->getClientIp());
 
-        $this->processForm($entity, $parameters);
+        $this->preSubmit($entity);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::APPEAL_CREATE, new AppealAdapterEvent($entity));
 
         return $entity;
@@ -91,9 +91,9 @@ class AppealAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::APPEAL_UPDATE, new AppealAdapterEvent($entity));
     }
 
@@ -102,21 +102,39 @@ class AppealAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::APPEAL_DELETE, new AppealAdapterEvent($entity));
     }
 
     /**
+     * @inheritdoc
+     */
+    public function persist(EntityInterface $entity)
+    {
+        $this->preSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(AppealForm::class, $entity, $parameters);
+        $this->submitForm(AppealForm::class, $entity, $request);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    protected function preSubmit(EntityInterface $entity)
+    {
+        /** @var Appeal $entity */
+        $entity->setUserIp($this->container->get('request')->getClientIp());
     }
 }

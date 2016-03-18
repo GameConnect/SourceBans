@@ -21,11 +21,17 @@ class SteamImport extends AbstractImport
                 continue;
             }
 
+            try {
+                $steam = new \SteamID($identity);
+            } catch (\InvalidArgumentException $exception) {
+                continue;
+            }
+
             $ban = new Ban;
             $ban->setType(Ban::TYPE_STEAM);
-            $ban->setSteam($identity);
+            $ban->setSteam($steam->RenderSteam3());
             $ban->setReason('Imported from banned_user.cfg');
-            $ban->setLength(0);
+            $ban->setLength(Ban::LENGTH_PERMANENT);
 
             $this->banAdapter->persist($ban);
         }

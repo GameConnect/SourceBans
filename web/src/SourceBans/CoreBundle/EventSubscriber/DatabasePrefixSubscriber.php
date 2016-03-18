@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
  */
 class DatabasePrefixSubscriber implements EventSubscriber
 {
+    /**
+     * @var string
+     */
     private $prefix = '';
 
     /**

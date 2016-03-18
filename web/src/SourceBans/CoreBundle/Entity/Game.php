@@ -5,7 +5,7 @@ namespace SourceBans\CoreBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -46,7 +46,7 @@ class Game implements EntityInterface
     private $folder;
 
     /**
-     * @var string|UploadedFile
+     * @var string|File
      *
      * @Assert\NotBlank
      * @Assert\Length(max=32)
@@ -128,7 +128,7 @@ class Game implements EntityInterface
     }
 
     /**
-     * @return string|UploadedFile
+     * @return string|File
      */
     public function getIcon()
     {
@@ -136,7 +136,7 @@ class Game implements EntityInterface
     }
 
     /**
-     * @param string|UploadedFile $icon
+     * @param string|File $icon
      * @return Game
      */
     public function setIcon($icon)

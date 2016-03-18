@@ -29,7 +29,7 @@
                                 {% endif %}
                             </td>
                             <td>{{ ban.admin | default(parameters.console_name) }}</td>
-                            <td class="text-right">
+                            <td class="text-right{% if ban.isInactive %} success{% endif %}">
                                 {% if ban.isPermanent %}
                                     {{ 'Permanent' | trans }}
                                 {% else %}
@@ -39,7 +39,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="4">No results</td>
+                            <td colspan="4">{{ 'No results' | trans }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

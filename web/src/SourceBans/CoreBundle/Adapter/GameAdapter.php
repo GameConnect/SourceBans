@@ -12,6 +12,7 @@ use SourceBans\CoreBundle\Form\GameForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * GameAdapter
@@ -79,11 +80,11 @@ class GameAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Game
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         $entity = new $this->entityClass;
 
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::GAME_CREATE, new GameAdapterEvent($entity));
 
         return $entity;
@@ -92,9 +93,12 @@ class GameAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        /** @var Game $entity */
+        $entity->setIcon(new File($this->imageDir . '/games/' . $entity->getIcon()));
+
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::GAME_UPDATE, new GameAdapterEvent($entity));
     }
 
@@ -103,9 +107,19 @@ class GameAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::GAME_DELETE, new GameAdapterEvent($entity));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function persist(EntityInterface $entity)
+    {
+        $this->postSubmit($entity);
+
+        parent::persist($entity);
     }
 
     /**
@@ -121,21 +135,27 @@ class GameAdapter extends AbstractAdapter
 
     /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
+    {
+        $this->submitForm(GameForm::class, $entity, $request);
+        $this->postSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    protected function postSubmit(EntityInterface $entity)
     {
         /** @var Game $entity */
-        $this->submitForm(GameForm::class, $entity, $parameters);
-
         $icon = $entity->getIcon();
         $fileName = $entity->getFolder() . '.' . $icon->guessExtension();
 
         $icon->move($this->imageDir . '/games', $fileName);
         $entity->setIcon($fileName);
-
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
     }
 }

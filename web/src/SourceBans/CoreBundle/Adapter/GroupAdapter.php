@@ -9,6 +9,7 @@ use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\GroupAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\GroupForm;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * GroupAdapter
@@ -60,11 +61,11 @@ class GroupAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Group
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         $entity = new $this->entityClass;
 
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::GROUP_CREATE, new GroupAdapterEvent($entity));
 
         return $entity;
@@ -73,9 +74,9 @@ class GroupAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::GROUP_UPDATE, new GroupAdapterEvent($entity));
     }
 
@@ -84,21 +85,20 @@ class GroupAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::GROUP_DELETE, new GroupAdapterEvent($entity));
     }
 
     /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(GroupForm::class, $entity, $parameters);
+        $this->submitForm(GroupForm::class, $entity, $request);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
     }
 }

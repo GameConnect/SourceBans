@@ -121,7 +121,7 @@ public Action OnLogAction(Handle source, Identity ident, int client, int target,
     char sAdminIp[16] = "", sAuth[20] = "", sEscapedMessage[256], sEscapedName[MAX_NAME_LENGTH * 2 + 1], sIp[16] = "", sName[MAX_NAME_LENGTH + 1] = "", sQuery[1024];
     int iAdminId = SB_GetAdminId(client);
     if (target > 0 && IsClientInGame(target)) {
-        GetClientAuthId(target, AuthId_Steam2, sAuth, sizeof(sAuth));
+        GetClientAuthId(target, AuthId_Steam3, sAuth, sizeof(sAuth));
         GetClientIP(target,                    sIp,   sizeof(sIp));
         GetClientName(target,                  sName, sizeof(sName));
     }
@@ -1152,14 +1152,14 @@ public int Native_SetAdminGroups(Handle plugin, int numParams)
          */
         char sName[33];
         int iIndex  = 0;
-        ArrayList hGroups = new ArrayList(33);
+        ArrayList hGroups = new ArrayList(ByteCountToCells(33));
         while (iIndex != -1) {
             iIndex = BreakString(sGroups[iIndex], sName, sizeof(sName));
             hGroups.PushString(sName);
         }
 
         // Store amount of passed groups
-        int iGroups = GetArraySize(hGroups);
+        int iGroups = hGroups.Length;
         hPack.WriteCell(iGroups);
 
         // Store group names
@@ -1194,7 +1194,7 @@ void FetchAdmin(int iClient)
     GetClientName(iClient, sName, sizeof(sName));
     GetClientIP(iClient,   sIp,   sizeof(sIp));
 
-    if (!GetClientAuthId(iClient, AuthId_Steam2, sAuth, sizeof(sAuth)) || StrContains("BOT STEAM_ID_LAN", sAuth) != -1) {
+    if (!GetClientAuthId(iClient, AuthId_Steam3, sAuth, sizeof(sAuth)) || StrContains("BOT STEAM_ID_LAN", sAuth) != -1) {
         sAuth[8] = '\0';
     }
 
@@ -1209,12 +1209,12 @@ void FetchAdmin(int iClient)
                                     FROM      {{admins}}                AS ad \
                                     LEFT JOIN {{admins_server_groups}}  AS ag ON ag.admin_id = ad.id \
                                     LEFT JOIN {{servers_server_groups}} AS gs ON gs.group_id = ag.group_id \
-                                    WHERE     ((ad.auth = '%s' AND ad.identity REGEXP '^(STEAM_[0-9]:%s)$') \
+                                    WHERE     ((ad.auth = '%s' AND ad.identity REGEXP '^\\[U:[0-9]:%s$') \
                                        OR      (ad.auth = '%s' AND '%s' REGEXP REPLACE(REPLACE(ad.identity, '.', '\\.') , '.0', '..{1,3}')) \
                                        OR      (ad.auth = '%s' AND ad.identity = '%s')) \
                                       AND     gs.server_id = %i%s \
                                     GROUP BY  ad.id",
-                                    AUTHMETHOD_STEAM, sAuth[8], AUTHMETHOD_IP, sIp, AUTHMETHOD_NAME, sEscapedName, g_iServerId, sCondition);
+                                    AUTHMETHOD_STEAM, sAuth[5], AUTHMETHOD_IP, sIp, AUTHMETHOD_NAME, sEscapedName, g_iServerId, sCondition);
 
     // Send the actual query.
     g_iPlayerSeq[iClient] = ++g_iSequence;

@@ -90,11 +90,11 @@ public void OnPluginStart()
     g_hOnConnect      = CreateGlobalForward("SB_OnConnect", ET_Event, Param_Cell);
     g_hOnReload       = CreateGlobalForward("SB_OnReload",  ET_Event);
     g_hConfig         = new StringMap();
-    g_hBanReasons     = new ArrayList(256);
-    g_hBanTimes       = new ArrayList(256);
-    g_hBanTimesFlags  = new ArrayList(256);
-    g_hBanTimesLength = new ArrayList(256);
-    g_hHackingReasons = new ArrayList(256);
+    g_hBanReasons     = new ArrayList(ByteCountToCells(256));
+    g_hBanTimes       = new ArrayList(ByteCountToCells(256));
+    g_hBanTimesFlags  = new ArrayList(ByteCountToCells(256));
+    g_hBanTimesLength = new ArrayList(ByteCountToCells(256));
+    g_hHackingReasons = new ArrayList(ByteCountToCells(256));
 
     g_hConfigParser   = new SMCParser();
     g_hConfigParser.OnEnterSection = ReadConfig_NewSection;

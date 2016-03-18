@@ -30,6 +30,7 @@ class EmailForm extends AbstractType
                 'mapped' => false,
             ])
             ->add('email', RepeatedType::class, [
+                'data' => '',
                 'type' => EmailType::class,
                 'first_options' => [
                     'label' => 'models.AccountForm.new_email',

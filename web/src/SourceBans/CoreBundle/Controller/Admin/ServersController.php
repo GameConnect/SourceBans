@@ -111,7 +111,7 @@ class ServersController
     public function addAction(Request $request)
     {
         try {
-            $server = $this->adapter->create();
+            $server = $this->adapter->create($request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_servers_edit', ['id' => $server->getId()])
@@ -135,7 +135,7 @@ class ServersController
     public function editAction(Request $request, Server $server)
     {
         try {
-            $this->adapter->update($server);
+            $this->adapter->update($server, $request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_servers_edit', ['id' => $server->getId()])
@@ -197,6 +197,10 @@ class ServersController
      */
     public function rconAction(Request $request, Server $server)
     {
+        if ($request->isMethod('POST')) {
+            return new JsonResponse($this->rcon($server, $request->request->get('command')));
+        }
+
         return ['server' => $server];
     }
 

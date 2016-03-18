@@ -7,23 +7,30 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
-                <table class="table table-hover">
+            <div class="col-lg-3">
+                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+            </div>
+            <div class="col-lg-9">
+                <table class="table table-hover js-servers">
                     <thead>
                         <tr>
-                            <th width="20%">{{ 'Game' | trans }}</th>
-                            <th>{{ 'Host' | trans }}</th>
+                            <th class="icon">&nbsp;</th>
+                            <th>{{ 'Hostname' | trans }}</th>
+                            <th width="5%">&nbsp;</th>
+                            <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for server in servers %}
-                        <tr>
-                            <td>{{ server.game }}</td>
-                            <td>{{ server }}</td>
+                        <tr data-server-id="{{ server.id }}">
+                            <td class="icon"><img alt="{{ server.game }}" src="{{ app.request.basePath }}/images/games/{{ server.game.icon }}" /></td>
+                            <td class="js-server-hostname">{{ server }}</td>
+                            <td><a href="{{ path('sourcebans_core_admin_servers_rcon', {'id': server.id}) }}">{{ 'RCON' | trans }}</a></td>
+                            <td><a href="{{ path('sourcebans_core_admin_servers_edit', {'id': server.id}) }}">{{ 'Edit' | trans }}</a></td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="2">No results</td>
+                            <td colspan="4">{{ 'No results' | trans }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -36,4 +43,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>initServerList({el: '.js-servers', errorText: '{{ 'N/A' | trans }}', url: '{{ path('sourcebans_core_servers_info', {'id': '__ID__'}) }}'});</script>
 {% endblock %}

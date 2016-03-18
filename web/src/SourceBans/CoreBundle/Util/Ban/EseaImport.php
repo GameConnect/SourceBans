@@ -16,19 +16,19 @@ class EseaImport extends AbstractImport
     {
         $handle = fopen($file, 'r');
 
-        while (list($steam, $name) = fgetcsv($handle, 4096)) {
-            $steam = 'STEAM_' . trim($steam);
-            // If this is not a valid Steam ID, ignore
-            if (!preg_match(SourceBans::PATTERN_STEAM, $steam)) {
+        while (list($id, $name) = fgetcsv($handle, 4096)) {
+            try {
+                $steam = new \SteamID('STEAM_' . trim($id));
+            } catch (\InvalidArgumentException $exception) {
                 continue;
             }
 
             $ban = new Ban;
             $ban->setType(Ban::TYPE_STEAM);
-            $ban->setSteam($steam);
+            $ban->setSteam($steam->RenderSteam3());
             $ban->setName($name);
             $ban->setReason('Imported from esea_ban_list.csv');
-            $ban->setLength(0);
+            $ban->setLength(Ban::LENGTH_PERMANENT);
 
             $this->banAdapter->persist($ban);
         }

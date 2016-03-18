@@ -4,9 +4,8 @@
         <title>{% block title %}SourceBans{% endblock %}</title>
         <meta charset="UTF-8" />
         <link href="{{ asset('favicon.ico') }}" rel="icon" type="image/x-icon" />
-        {% block stylesheets %}
-            <link href="{{ asset('dist/css/app.css') }}" rel="stylesheet" type="text/css" />
-        {% endblock %}
+        <link href="{{ asset('dist/css/app.css') }}" rel="stylesheet" type="text/css" />
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top">
@@ -28,15 +27,15 @@
                             </span>
                         </div>
                     </form>
-                    {{ knp_menu_render('SourceBansCoreBundle:Builder:accountMenu', {'currentClass': 'active'}) }}
+                    {{ knp_menu_render('SourceBansCoreBundle:Builder:userMenu', {'currentClass': 'active'}) }}
                 </div>
             </div>
         </nav>
         {% block body %}{% endblock %}
-        {% block javascripts %}
-            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-            <script src="{{ asset('dist/js/app.js') }}"></script>
-        {% endblock %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <script src="{{ asset('dist/js/app.js') }}"></script>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>

@@ -149,6 +149,7 @@ class SettingsForm extends AbstractType
             ->add('smtp_secure', SmtpSecureType::class, [
                 'label' => 'models.SettingsForm.smtp_secure',
                 'expanded' => true,
+                'required' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',

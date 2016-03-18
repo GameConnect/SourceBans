@@ -93,7 +93,7 @@ class GamesController
     public function addAction(Request $request)
     {
         try {
-            $game = $this->adapter->create();
+            $game = $this->adapter->create($request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_games_edit', ['id' => $game->getId()])
@@ -117,7 +117,7 @@ class GamesController
     public function editAction(Request $request, Game $game)
     {
         try {
-            $this->adapter->update($game);
+            $this->adapter->update($game, $request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_games_edit', ['id' => $game->getId()])

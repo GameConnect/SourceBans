@@ -11,30 +11,30 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class IdentityValidator extends ConstraintValidator
 {
-    const PATTERN_STEAM = '/^STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\]$/i';
-
     /**
      * @inheritdoc
+     * @param Admin $admin
      */
     public function validate($admin, Constraint $constraint)
     {
-        switch ($admin->getAuth()) {
-            case Admin::AUTH_STEAM:
-                $isValid = preg_match(self::PATTERN_STEAM, $admin->getIdentity());
-                $message = 'This value is not a valid Steam ID.';
-                break;
-            case Admin::AUTH_IP:
-                $isValid = filter_var($admin->getIdentity(), FILTER_VALIDATE_IP);
-                $message = 'This value is not a valid IP address.';
-                break;
-            default:
-                return;
+        if ($admin->getAuth() == Admin::AUTH_STEAM) {
+            try {
+                new \SteamID($admin->getIdentity());
+            } catch (\InvalidArgumentException $exception) {
+                $this->addViolation('Invalid Steam ID');
+            }
+        } elseif ($admin->getAuth() == Admin::AUTH_IP && !filter_var($admin->getIdentity(), FILTER_VALIDATE_IP)) {
+            $this->addViolation('Invalid IP address');
         }
+    }
 
-        if (!$isValid) {
-            $this->context->buildViolation($message)
-                ->atPath('identity')
-                ->addViolation();
-        }
+    /**
+     * @param string $message
+     */
+    private function addViolation($message)
+    {
+        $this->context->buildViolation($message)
+            ->atPath('identity')
+            ->addViolation();
     }
 }

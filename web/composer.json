@@ -27,7 +27,7 @@
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
         "phpspec/phpspec": "^2.4",
-        "fabpot/php-cs-fixer": "^1.11"
+        "friendsofphp/php-cs-fixer": "^1.11"
     },
     "scripts": {
         "post-root-package-install": [

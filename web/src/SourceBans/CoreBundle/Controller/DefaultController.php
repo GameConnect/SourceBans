@@ -184,7 +184,7 @@ class DefaultController
         }
 
         try {
-            $this->appealAdapter->create($request->request->all());
+            $this->appealAdapter->create($request);
 
             $request->getSession()->getFlashBag()->add(
                 'success',
@@ -213,7 +213,7 @@ class DefaultController
         }
 
         try {
-            $this->reportAdapter->create($request->request->all());
+            $this->reportAdapter->create($request);
 
             $request->getSession()->getFlashBag()->add(
                 'success',

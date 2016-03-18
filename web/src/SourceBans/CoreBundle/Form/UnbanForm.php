@@ -2,15 +2,16 @@
 
 namespace SourceBans\CoreBundle\Form;
 
-use SourceBans\CoreBundle\Entity\Log;
+use SourceBans\CoreBundle\Entity\Ban;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * LogForm
+ * UnbanForm
  */
-class LogForm extends AbstractType
+class UnbanForm extends AbstractType
 {
     /**
      * @inheritdoc
@@ -18,9 +19,12 @@ class LogForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type')
-            ->add('title')
-            ->add('message');
+            ->add('unbanReason', null, [
+                'label' => 'Reason',
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Unban',
+            ]);
     }
 
     /**
@@ -29,8 +33,7 @@ class LogForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false,
-            'data_class' => Log::class,
+            'data_class' => Ban::class,
         ]);
     }
 }

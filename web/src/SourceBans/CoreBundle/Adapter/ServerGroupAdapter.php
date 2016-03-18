@@ -9,6 +9,7 @@ use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\ServerGroupAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ServerGroupForm;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * ServerGroupAdapter
@@ -60,11 +61,11 @@ class ServerGroupAdapter extends AbstractAdapter
      * @inheritdoc
      * @return ServerGroup
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         $entity = new $this->entityClass;
 
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::SERVER_GROUP_CREATE, new ServerGroupAdapterEvent($entity));
 
         return $entity;
@@ -73,9 +74,9 @@ class ServerGroupAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::SERVER_GROUP_UPDATE, new ServerGroupAdapterEvent($entity));
     }
 
@@ -84,21 +85,20 @@ class ServerGroupAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::SERVER_GROUP_DELETE, new ServerGroupAdapterEvent($entity));
     }
 
     /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(ServerGroupForm::class, $entity, $parameters);
+        $this->submitForm(ServerGroupForm::class, $entity, $request);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
     }
 }

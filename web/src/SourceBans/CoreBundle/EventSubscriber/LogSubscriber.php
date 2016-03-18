@@ -209,10 +209,11 @@ class LogSubscriber implements EventSubscriberInterface
      */
     private function log($title, $message, $type = Log::TYPE_INFORMATION)
     {
-        $this->adapter->create([
-            'message' => $message,
-            'title' => $title,
-            'type' => $type,
-        ]);
+        $log = new Log;
+        $log->setMessage($message);
+        $log->setTitle($title);
+        $log->setType($type);
+
+        $this->adapter->persist($log);
     }
 }

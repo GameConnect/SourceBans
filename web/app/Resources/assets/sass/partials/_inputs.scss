@@ -1,0 +1,7 @@
+label.required:after {
+    color: $state-danger-text;
+    content: " *";
+}
+textarea.form-control {
+    height: 100px;
+}

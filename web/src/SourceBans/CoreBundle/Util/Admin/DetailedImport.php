@@ -27,7 +27,7 @@ class DetailedImport extends AbstractImport
             $admin->setIdentity($data['identity']);
 
             if (isset($data['password'])) {
-                $admin->setPassword($data['password']);
+                $admin->setPlainPassword($data['password']);
                 $admin->setServerPassword($data['password']);
             }
             if (isset($data['group'])) {

@@ -14,6 +14,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -82,6 +83,16 @@ abstract class AbstractAdapter implements AdapterInterface
     }
 
     /**
+     * Delete an entity
+     * @param EntityInterface $entity
+     */
+    public function delete(EntityInterface $entity)
+    {
+        $this->objectManager->remove($entity);
+        $this->objectManager->flush();
+    }
+
+    /**
      * Persist an entity
      * @param EntityInterface $entity
      */
@@ -127,25 +138,18 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * @param string|FormTypeInterface $type
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @return FormInterface
      * @throws InvalidFormException
      */
-    protected function submitForm($type, EntityInterface $entity, array $parameters = null)
+    protected function submitForm($type, EntityInterface $entity, Request $request)
     {
-        $form = $this->formFactory->create($type, $entity);
-        $formName = $form->getName();
+        $form = $this->formFactory->create($type, $entity)
+            ->handleRequest($request);
 
-        if ($parameters === null) {
-            $form->handleRequest($this->container->get('request'));
-        } elseif ($formName != '' && isset($parameters[$formName])) {
-            $form->submit($parameters[$formName]);
-        } elseif (count($parameters) > 0) {
-            $form->submit($parameters);
-        } else {
-            throw new InvalidFormException('This form was not submitted', $form);
+        if (!$form->isSubmitted()) {
+            throw new InvalidFormException('No data submitted', $form);
         }
-
         if (!$form->isValid()) {
             throw new InvalidFormException('Invalid submitted data', $form);
         }
@@ -157,16 +161,16 @@ abstract class AbstractAdapter implements AdapterInterface
      * @param Query $query
      * @param integer $limit
      * @param integer $page
-     * @return Pagerfanta
+     * @return array|Pagerfanta
      */
     protected static function queryToPager(Query $query, $limit = null, $page = null)
     {
-        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
-
-        if ($limit > 0) {
-            $pager->setMaxPerPage($limit)->setCurrentPage($page ?: 1);
+        if ($limit === null) {
+            return $query->getResult();
         }
 
-        return $pager;
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+
+        return $pager->setMaxPerPage($limit)->setCurrentPage($page ?: 1);
     }
 }

@@ -12,10 +12,12 @@ use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\BanAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\BanForm;
+use SourceBans\CoreBundle\Form\UnbanForm;
 use SourceBans\CoreBundle\Specification\Ban\IsActive;
 use SourceBans\CoreBundle\Specification\Ban\IsPermanent;
 use SourceBans\CoreBundle\Specification\BanSpecification;
 use SourceBans\CoreBundle\Specification\ById;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -116,14 +118,13 @@ class BanAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Ban
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         /** @var Ban $entity */
         $entity = new $this->entityClass;
-        $entity->setAdmin($this->container->get('security.token_storage')->getToken()->getUser());
-        $entity->setAdminIp($this->container->get('request')->getClientIp());
 
-        $this->processForm($entity, $parameters);
+        $this->preSubmit($entity);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::BAN_CREATE, new BanAdapterEvent($entity));
 
         return $entity;
@@ -132,9 +133,9 @@ class BanAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::BAN_UPDATE, new BanAdapterEvent($entity));
     }
 
@@ -143,36 +144,58 @@ class BanAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::BAN_DELETE, new BanAdapterEvent($entity));
     }
 
     /**
      * @inheritdoc
-     * @param string $reason
      */
-    public function unban(EntityInterface $entity, $reason = null)
+    public function persist(EntityInterface $entity)
+    {
+        $this->preSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param Request $request
+     */
+    public function unban(EntityInterface $entity, Request $request)
     {
         /** @var Ban $entity */
+        $this->submitForm(UnbanForm::class, $entity, $request);
+
         $entity->setUnbanAdmin($this->container->get('security.token_storage')->getToken()->getUser());
-        $entity->setUnbanReason($reason);
         $entity->setUnbanTime(new \DateTime);
 
-        $this->processForm($entity);
+        $this->objectManager->persist($entity);
+        $this->objectManager->flush();
         $this->dispatcher->dispatch(AdapterEvents::BAN_UNBAN, new BanAdapterEvent($entity));
     }
 
     /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
     {
-        $this->submitForm(BanForm::class, $entity, $parameters);
+        $this->submitForm(BanForm::class, $entity, $request);
 
         $this->objectManager->persist($entity);
         $this->objectManager->flush();
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    protected function preSubmit(EntityInterface $entity)
+    {
+        /** @var Ban $entity */
+        $entity->setAdmin($this->container->get('security.token_storage')->getToken()->getUser());
+        $entity->setAdminIp($this->container->get('request')->getClientIp());
     }
 }

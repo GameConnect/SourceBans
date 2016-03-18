@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     sass = require('gulp-sass'),
     uglify = require('gulp-uglify'),
+    util = require('gulp-util'),
     sassImporter = require('sass-importer-npm'),
     argv = require('yargs').argv;
 
@@ -34,7 +35,7 @@ gulp.task('sass', function () {
 gulp.task('js', function() {
     gulp.src(srcPaths.js + '*.js')
         .pipe(concat('app.js'))
-        .pipe(uglify())
+        .pipe(argv.production ? uglify() : util.noop())
         .pipe(gulp.dest(destPaths.js))
 });
 

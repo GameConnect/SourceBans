@@ -16,6 +16,7 @@ use SourceBans\CoreBundle\Form\AdminForm;
 use SourceBans\CoreBundle\Specification\Admin\Servers;
 use SourceBans\CoreBundle\Specification\AdminSpecification;
 use SourceBans\CoreBundle\Specification\ById;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * AdminAdapter
@@ -98,11 +99,11 @@ class AdminAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Admin
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
     {
         $entity = new $this->entityClass;
 
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::ADMIN_CREATE, new AdminAdapterEvent($entity));
 
         return $entity;
@@ -111,9 +112,9 @@ class AdminAdapter extends AbstractAdapter
     /**
      * @inheritdoc
      */
-    public function update(EntityInterface $entity, array $parameters = null)
+    public function update(EntityInterface $entity, Request $request)
     {
-        $this->processForm($entity, $parameters);
+        $this->processForm($entity, $request);
         $this->dispatcher->dispatch(AdapterEvents::ADMIN_UPDATE, new AdminAdapterEvent($entity));
     }
 
@@ -122,29 +123,45 @@ class AdminAdapter extends AbstractAdapter
      */
     public function delete(EntityInterface $entity)
     {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
+        parent::delete($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::ADMIN_DELETE, new AdminAdapterEvent($entity));
     }
 
     /**
+     * @inheritdoc
+     */
+    public function persist(EntityInterface $entity)
+    {
+        $this->postSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      * @throws InvalidFormException
      */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
+    protected function processForm(EntityInterface $entity, Request $request)
+    {
+        $this->submitForm(AdminForm::class, $entity, $request);
+        $this->postSubmit($entity);
+
+        parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    protected function postSubmit(EntityInterface $entity)
     {
         /** @var Admin $entity */
-        $form = $this->submitForm(AdminForm::class, $entity, $parameters);
-
-        if ($form->has('plainPassword') && $form->get('plainPassword')->getData() != '') {
+        if ($entity->getPlainPassword() != '') {
             $encoder = $this->container->get('security.password_encoder');
-            $password = $encoder->encodePassword($entity, $form->get('plainPassword')->getData());
+            $password = $encoder->encodePassword($entity, $entity->getPlainPassword());
 
             $entity->setPassword($password);
         }
-
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
     }
 }

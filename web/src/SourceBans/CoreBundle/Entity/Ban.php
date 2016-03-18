@@ -4,20 +4,23 @@ namespace SourceBans\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use SourceBans\CoreBundle\Validator\Constraints\Ban as BanAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Bans
  *
+ * @BanAssert\Type
  * @ORM\Entity
  * @ORM\Table(name="bans", indexes={@ORM\Index(name="server_id", columns={"server_id"}), @ORM\Index(name="admin_id", columns={"admin_id"}), @ORM\Index(name="unban_admin_id", columns={"unban_admin_id"})})
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Ban implements EntityInterface
+class Ban implements EntityInterface, SteamAccountInterface
 {
-    const TYPE_STEAM = 0;
-    const TYPE_IP    = 1;
+    const TYPE_STEAM       = 0;
+    const TYPE_IP          = 1;
+    const LENGTH_PERMANENT = 0;
 
     /**
      * @var integer
@@ -39,7 +42,6 @@ class Ban implements EntityInterface
     /**
      * @var string
      *
-     * @Assert\Regex("/^STEAM_[0-9]:[0-9]:[0-9]+|\[U:[0-9]:[0-9]+\]$/i")
      * @ORM\Column(name="steam", type="string", length=32, nullable=true)
      */
     private $steam;
@@ -47,7 +49,6 @@ class Ban implements EntityInterface
     /**
      * @var string
      *
-     * @Assert\Ip(version="all")
      * @ORM\Column(name="ip", type="string", length=45, nullable=true)
      */
     private $ip;
@@ -157,9 +158,9 @@ class Ban implements EntityInterface
     private $unbanAdmin;
 
     /**
-     * @var string
+     * @var integer
      */
-    private $communityId;
+    private $accountId;
 
     /**
      * Constructor
@@ -175,7 +176,7 @@ class Ban implements EntityInterface
      */
     public function __toString()
     {
-        return ($this->getType() == self::TYPE_IP ? $this->getIp() : $this->getSteam()) ?: '';
+        return (string)($this->getType() == self::TYPE_IP ? $this->getIp() : $this->getSteam());
     }
 
     /**
@@ -439,32 +440,6 @@ class Ban implements EntityInterface
     }
 
     /**
-     * Returns the Steam Community ID
-     *
-     * @return string
-     */
-    public function getCommunityId()
-    {
-        if (isset($this->communityId)) {
-            return $this->communityId;
-        }
-
-        $steam = $this->getSteam();
-        if ($steam == '') {
-            return null;
-        }
-
-        $accountId = 0;
-        if (preg_match('/^STEAM_[0-9]:([0-9]):([0-9]+)$/i', $steam, $matches)) {
-            $accountId = $matches[1] + $matches[2] * 2;
-        } elseif (preg_match('/^\[U:[0-9]:([0-9]+)\]$/i', $steam, $matches)) {
-            $accountId = $matches[1];
-        }
-
-        return $this->communityId = gmp_strval(gmp_add('76561197960265728', $accountId));
-    }
-
-    /**
      * @return boolean
      */
     public function isActive()
@@ -507,6 +482,27 @@ class Ban implements EntityInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function getSteamAccountId()
+    {
+        if (isset($this->accountId)) {
+            return $this->accountId;
+        }
+        if ($this->getSteam() == '') {
+            return null;
+        }
+
+        try {
+            $steam = new \SteamID($this->getSteam());
+        } catch (\InvalidArgumentException $exception) {
+            return null;
+        }
+
+        return $this->accountId = $steam->GetAccountID();
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function prePersist()
@@ -521,7 +517,8 @@ class Ban implements EntityInterface
     public function preUpdate()
     {
         if (!empty($this->steam)) {
-            $this->steam = strtoupper($this->steam);
+            $steam = new \SteamID($this->steam);
+            $this->steam = $steam->RenderSteam3();
         }
     }
 }

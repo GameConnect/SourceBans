@@ -24,3 +24,7 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    <script>initServerSelect({el: '#{{ form.server.vars.id }}', url: '{{ path('sourcebans_core_servers_info', {'id': '__ID__'}) }}'});</script>
+{% endblock %}

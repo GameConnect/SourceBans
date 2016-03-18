@@ -87,7 +87,6 @@ stfalcon_tinymce:
 
     theme:
         advanced:
-            width: 750
             height: 250
             menubar: false
             statusbar: false

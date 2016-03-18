@@ -23,9 +23,9 @@ class IpImport extends AbstractImport
 
             $ban = new Ban;
             $ban->setType(Ban::TYPE_IP);
-            $ban->setSteam($identity);
+            $ban->setIp($identity);
             $ban->setReason('Imported from banned_ip.cfg');
-            $ban->setLength(0);
+            $ban->setLength(Ban::LENGTH_PERMANENT);
 
             $this->banAdapter->persist($ban);
         }

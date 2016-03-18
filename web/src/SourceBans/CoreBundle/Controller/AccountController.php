@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\AdminAdapter;
+use SourceBans\CoreBundle\Entity\Admin;
 use SourceBans\CoreBundle\Form\Account\EmailForm;
 use SourceBans\CoreBundle\Form\Account\ForgotPasswordForm;
 use SourceBans\CoreBundle\Form\Account\PasswordForm;
@@ -96,12 +97,14 @@ class AccountController
      */
     public function emailAction(Request $request)
     {
+        /** @var Admin $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(EmailForm::class, $user)
             ->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->adapter->update($user);
+            $user->setEmail($form->get('email')->getData());
+            $this->adapter->persist($user);
 
             return new RedirectResponse($this->router->generate('sourcebans_core_account_index'));
         }
@@ -119,12 +122,14 @@ class AccountController
      */
     public function passwordAction(Request $request)
     {
+        /** @var Admin $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(PasswordForm::class, $user)
             ->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->adapter->update($user);
+            $user->setPlainPassword($form->get('plainPassword')->getData());
+            $this->adapter->persist($user);
 
             return new RedirectResponse($this->router->generate('sourcebans_core_account_index'));
         }
@@ -142,12 +147,14 @@ class AccountController
      */
     public function serverPasswordAction(Request $request)
     {
+        /** @var Admin $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(ServerPasswordForm::class, $user)
             ->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->adapter->update($user);
+            $user->setServerPassword($form->get('serverPassword')->getData());
+            $this->adapter->persist($user);
 
             return new RedirectResponse($this->router->generate('sourcebans_core_account_index'));
         }
@@ -165,12 +172,16 @@ class AccountController
      */
     public function settingsAction(Request $request)
     {
+        /** @var Admin $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(SettingsForm::class, $user)
             ->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->adapter->update($user);
+            $user->setLanguage($form->get('language')->getData());
+            $user->setTheme($form->get('theme')->getData());
+            $user->setTimezone($form->get('timezone')->getData());
+            $this->adapter->persist($user);
 
             return new RedirectResponse($this->router->generate('sourcebans_core_account_index'));
         }
@@ -198,7 +209,7 @@ class AccountController
             }
 
             $admin->setPlainPassword(bin2hex(random_bytes(4)));
-            $this->adapter->update($admin);
+            $this->adapter->persist($admin);
             $this->mailer->sendForgotPasswordMail($admin);
 
             return new RedirectResponse($request->getUri());
@@ -212,7 +223,7 @@ class AccountController
             $admin = $this->adapter->getBy(['email' => $email]);
 
             $admin->setValidationKey(bin2hex(random_bytes(16)));
-            $this->adapter->update($admin);
+            $this->adapter->persist($admin);
             $this->mailer->sendPasswordResetMail($admin);
 
             return new RedirectResponse($request->getUri());

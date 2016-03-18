@@ -166,7 +166,7 @@ public void OnClientPostAdminCheck(int client)
 {
     char sAuth[20], sIp[16], sName[MAX_NAME_LENGTH + 1], sReason[128];
     int iLength, iTime;
-    GetClientAuthId(client, AuthId_Steam2, sAuth, sizeof(sAuth));
+    GetClientAuthId(client, AuthId_Steam3, sAuth, sizeof(sAuth));
     GetClientIP(client,                    sIp,   sizeof(sIp));
 
     if (GetLocalBan(true, sAuth, sIp, sAuth, sIp, sName, sReason, iLength, iTime)) {
@@ -183,10 +183,10 @@ public void OnClientPostAdminCheck(int client)
     char sQuery[1024];
     Format(sQuery, sizeof(sQuery), "SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, create_time \
                                     FROM   {{bans}} \
-                                    WHERE  ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) \
+                                    WHERE  ((type = %i AND steam REGEXP '^\\[U:[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) \
                                       AND  (length = 0 OR create_time + length * 60 > UNIX_TIMESTAMP()) \
                                       AND  unban_time IS NULL",
-                                    STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp);
+                                    STEAM_BAN_TYPE, sAuth[5], IP_BAN_TYPE, sIp);
     SB_Query(Query_BanVerify, sQuery, ParseClientSerial(client), DBPrio_High);
 }
 
@@ -198,7 +198,7 @@ public Action OnBanClient(int client, int time, int flags, const char[] reason, 
 {
     char sAdminIp[16], sAuth[20], sIp[16], sName[MAX_NAME_LENGTH + 1];
     int iAdminId = GetAdminId(admin), iType;
-    bool bSteam  = GetClientAuthId(client, AuthId_Steam2, sAuth, sizeof(sAuth));
+    bool bSteam  = GetClientAuthId(client, AuthId_Steam3, sAuth, sizeof(sAuth));
     GetClientIP(client,   sIp,   sizeof(sIp));
     GetClientName(client, sName, sizeof(sName));
 
@@ -651,7 +651,7 @@ public Action Timer_ProcessTemp(Handle timer)
 /**
  * Menu Handlers
  */
-public void MenuHandler_Ban(Handle topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
+public void MenuHandler_Ban(TopMenu topmenu, TopMenuAction action, TopMenuObject object_id, int param, char[] buffer, int maxlength)
 {
     if (action      == TopMenuAction_DisplayOption) {
         Format(buffer, maxlength, "%T", "Ban player", param);
@@ -1028,14 +1028,14 @@ public void Query_BanVerify(Database db, DBResultSet results, const char[] error
 
     char sAdminIp[16], sAuth[20], sEscapedName[MAX_NAME_LENGTH * 2 + 1], sIp[16],
          sName[MAX_NAME_LENGTH + 1], sQuery[1024], sReason[128];
-    GetClientAuthId(client, AuthId_Steam2, sAuth, sizeof(sAuth));
+    GetClientAuthId(client, AuthId_Steam3, sAuth, sizeof(sAuth));
     GetClientIP(client,                    sIp,   sizeof(sIp));
     GetClientName(client,                  sName, sizeof(sName));
 
     SB_Escape(sName, sEscapedName, sizeof(sEscapedName));
     Format(sQuery, sizeof(sQuery), "INSERT INTO {{blocks}} (ban_id, name, server_id, create_time) \
-                                    VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^STEAM_[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_time IS NULL ORDER BY create_time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
-                                    STEAM_BAN_TYPE, sAuth[8], IP_BAN_TYPE, sIp, sEscapedName, g_iServerId);
+                                    VALUES      ((SELECT id FROM {{bans}} WHERE ((type = %i AND steam REGEXP '^\\[U:[0-9]:%s$') OR (type = %i AND '%s' REGEXP REPLACE(REPLACE(ip, '.', '\\.') , '.0', '..{1,3}'))) AND unban_time IS NULL ORDER BY create_time LIMIT 1), '%s', %i, UNIX_TIMESTAMP())",
+                                    STEAM_BAN_TYPE, sAuth[5], IP_BAN_TYPE, sIp, sEscapedName, g_iServerId);
     SB_Execute(sQuery, DBPrio_High);
 
     // SELECT type, steam, ip, name, reason, length, admin_id, admin_ip, create_time
@@ -1081,7 +1081,7 @@ public int Native_ReportPlayer(Handle plugin, int numParams)
 
     char sEscapedName[MAX_NAME_LENGTH * 2 + 1], sEscapedReason[512], sEscapedTargetName[MAX_NAME_LENGTH * 2 + 1],
          sIp[16], sName[MAX_NAME_LENGTH + 1], sQuery[1024], sTargetAuth[20], sTargetIp[16], sTargetName[MAX_NAME_LENGTH + 1];
-    GetClientAuthId(iTarget, AuthId_Steam2, sTargetAuth, sizeof(sTargetAuth));
+    GetClientAuthId(iTarget, AuthId_Steam3, sTargetAuth, sizeof(sTargetAuth));
     GetClientIP(iClient,                    sIp,         sizeof(sIp));
     GetClientIP(iTarget,                    sTargetIp,   sizeof(sTargetIp));
     GetClientName(iClient,                  sName,       sizeof(sName));

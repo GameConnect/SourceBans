@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use SourceBans\CoreBundle\Entity\EntityInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,17 +55,17 @@ interface AdapterInterface
 
     /**
      * Create an entity
-     * @param array $parameters
+     * @param Request $request
      * @return EntityInterface
      */
-    public function create(array $parameters = null);
+    public function create(Request $request);
 
     /**
      * Update an entity
      * @param EntityInterface $entity
-     * @param array $parameters
+     * @param Request $request
      */
-    public function update(EntityInterface $entity, array $parameters = null);
+    public function update(EntityInterface $entity, Request $request);
 
     /**
      * Delete an entity

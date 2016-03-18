@@ -1,9 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,300);
 @import "bootstrap";
-
-textarea.form-control {
-    height: 100px;
-}
-
-.navbar-brand {
-    padding: 10px;
-}
+@import "partials/header";
+@import "partials/inputs";
+@import "partials/rcon";
+@import "partials/tables";

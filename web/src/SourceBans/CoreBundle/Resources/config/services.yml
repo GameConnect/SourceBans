@@ -4,6 +4,10 @@ services:
         factory: ["@doctrine", getRepository]
         arguments: ["SourceBansCoreBundle:Setting"]
 
+    sourcebans.core.adapter.action:
+        class: SourceBans\CoreBundle\Adapter\ActionAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Action"]
+
     sourcebans.core.adapter.admin:
         class: SourceBans\CoreBundle\Adapter\AdminAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Admin"]
@@ -15,6 +19,10 @@ services:
     sourcebans.core.adapter.ban:
         class: SourceBans\CoreBundle\Adapter\BanAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Ban"]
+
+    sourcebans.core.adapter.block:
+        class: SourceBans\CoreBundle\Adapter\BlockAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Block"]
 
     sourcebans.core.adapter.game:
         class: SourceBans\CoreBundle\Adapter\GameAdapter
@@ -36,7 +44,7 @@ services:
         class: SourceBans\CoreBundle\Adapter\ServerAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Server"]
 
-    sourcebans.core.adapter.serverGroup:
+    sourcebans.core.adapter.server_group:
         class: SourceBans\CoreBundle\Adapter\ServerGroupAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:ServerGroup"]
 
@@ -62,7 +70,7 @@ services:
 
     sourcebans.core.controller.admin.groups:
         class: SourceBans\CoreBundle\Controller\Admin\GroupsController
-        arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.group", "@sourcebans.core.util.serverGroup.import"]
+        arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.group", "@sourcebans.core.util.server_group.import"]
 
     sourcebans.core.controller.admin.servers:
         class: SourceBans\CoreBundle\Controller\Admin\ServersController
@@ -107,7 +115,7 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    sourcebans.core.form.account.forgotPassword:
+    sourcebans.core.form.account.forgot_password:
         class: SourceBans\CoreBundle\Form\Account\ForgotPasswordForm
         arguments: ["@sourcebans.core.adapter.admin"]
         tags:
@@ -182,16 +190,21 @@ services:
 
     sourcebans.core.util.admin.import:
         class: SourceBans\CoreBundle\Util\Admin\ImportFactory
-        arguments: ["@sourcebans.core.adapter.admin", "@sourcebans.core.adapter.serverGroup"]
+        arguments: ["@sourcebans.core.adapter.admin", "@sourcebans.core.adapter.server_group"]
 
     sourcebans.core.util.ban.import:
         class: SourceBans\CoreBundle\Util\Ban\ImportFactory
         arguments: ["@sourcebans.core.adapter.ban"]
 
-    sourcebans.core.util.serverGroup.import:
+    sourcebans.core.util.server_group.import:
         class: SourceBans\CoreBundle\Util\ServerGroup\ImportFactory
-        arguments: ["@sourcebans.core.adapter.serverGroup"]
+        arguments: ["@sourcebans.core.adapter.server_group"]
 
     sourcebans.core.util.mailer:
         class: SourceBans\CoreBundle\Util\Mailer
-        arguments: ["@router", "@translator", "@mailer", "@sourcebans.core.settings"]
+        arguments: ["@router", "@translator", "@request_stack", "@mailer", "@sourcebans.core.settings"]
+
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }

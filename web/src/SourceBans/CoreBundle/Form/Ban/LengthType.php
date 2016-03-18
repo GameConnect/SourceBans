@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Form\Ban;
 
+use SourceBans\CoreBundle\Entity\Ban;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -40,7 +41,7 @@ class LengthType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [
-                0 => 'Permanent',
+                Ban::LENGTH_PERMANENT => 'Permanent',
                 'minutes' => [
                   1  => $this->transChoice('{n} minute|{n} minutes', 1),
                   5  => $this->transChoice('{n} minute|{n} minutes', 5),

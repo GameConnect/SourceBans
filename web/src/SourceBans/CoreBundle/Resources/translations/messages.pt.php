@@ -20,7 +20,7 @@ return [
     'Are you sure you want to kick {name}?' => 'Tem certeza de que quer Kickar {name}?',
     'Are you sure you want to remove these items from {name}?' => '@@Você tem certeza que deseja remover estes itens de {name}?@@',
     'Are you sure you want to uninstall this plugin?\nThis will delete all its data!' => 'Tem certeza de que deseja desinstalar este plugin?\nIsto irá apagar todos os seus dados!',
-    'Authentication type' => 'tipo de autenticação',
+    'Authentication method' => 'tipo de autenticação',
     'Author' => 'autor',
     'Back' => 'voltar',
     'Ban' => 'Banir',

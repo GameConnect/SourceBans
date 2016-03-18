@@ -104,7 +104,7 @@ class AdminsController
     public function addAction(Request $request)
     {
         try {
-            $admin = $this->adapter->create();
+            $admin = $this->adapter->create($request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_admins_edit', ['id' => $admin->getId()])
@@ -128,7 +128,7 @@ class AdminsController
     public function editAction(Request $request, Admin $admin)
     {
         try {
-            $this->adapter->update($admin);
+            $this->adapter->update($admin, $request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_admins_edit', ['id' => $admin->getId()])

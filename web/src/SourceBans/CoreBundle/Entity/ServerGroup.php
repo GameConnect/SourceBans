@@ -260,4 +260,34 @@ class ServerGroup implements EntityInterface
 
         return $this;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOverrides()
+    {
+        return $this->servers;
+    }
+
+    /**
+     * @param ServerGroupOverride $override
+     * @return ServerGroup
+     */
+    public function addOverride(ServerGroupOverride $override)
+    {
+        $this->overrides[] = $override;
+
+        return $this;
+    }
+
+    /**
+     * @param ServerGroupOverride $override
+     * @return ServerGroup
+     */
+    public function removeOverride(ServerGroupOverride $override)
+    {
+        $this->overrides->removeElement($override);
+
+        return $this;
+    }
 }

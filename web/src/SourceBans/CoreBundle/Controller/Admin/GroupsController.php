@@ -94,7 +94,7 @@ class GroupsController
     public function addAction(Request $request)
     {
         try {
-            $group = $this->adapter->create();
+            $group = $this->adapter->create($request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_groups_edit', ['id' => $group->getId()])
@@ -118,7 +118,7 @@ class GroupsController
     public function editAction(Request $request, Group $group)
     {
         try {
-            $this->adapter->update($group);
+            $this->adapter->update($group, $request);
 
             return new RedirectResponse(
                 $this->router->generate('sourcebans_core_admin_groups_edit', ['id' => $group->getId()])

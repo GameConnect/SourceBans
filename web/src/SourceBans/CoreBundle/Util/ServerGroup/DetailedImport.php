@@ -47,9 +47,11 @@ class DetailedImport extends AbstractImport
                     $override->setName($name);
                     $override->setAccess($access);
 
-                    $this->serverGroupAdapter->persist($override);
+                    $serverGroup->addOverride($override);
                 }
             }
+
+            $this->serverGroupAdapter->persist($serverGroup);
         }
     }
 }

@@ -23,6 +23,9 @@ class ReportForm extends AbstractType
     {
         $builder
             ->add('steam', null, [
+                'attr' => [
+                    'placeholder' => '[U:1:XXXXXX]',
+                ],
                 'label' => 'Steam ID',
             ])
             ->add('ip', null, [

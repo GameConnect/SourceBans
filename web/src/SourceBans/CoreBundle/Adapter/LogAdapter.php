@@ -7,10 +7,9 @@ use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Log;
-use SourceBans\CoreBundle\Exception\InvalidFormException;
-use SourceBans\CoreBundle\Form\LogForm;
 use SourceBans\CoreBundle\Specification\ById;
 use SourceBans\CoreBundle\Specification\LogSpecification;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * LogAdapter
@@ -72,74 +71,50 @@ class LogAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
-     * @return Log
      */
-    public function create(array $parameters = null)
+    public function create(Request $request)
+    {
+        throw new \RuntimeException('Not implemented');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function update(EntityInterface $entity, Request $request)
+    {
+        throw new \RuntimeException('Not implemented');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function persist(EntityInterface $entity)
     {
         /** @var Log $entity */
-        $entity = new $this->entityClass;
         $entity->setAdmin($this->container->get('security.token_storage')->getToken()->getUser());
         $entity->setAdminIp($this->container->get('request')->getClientIp());
         $entity->setFunction($this->getBacktrace());
         $entity->setQuery($this->container->get('request')->getQueryString());
 
-        $this->processForm($entity, $parameters);
-
-        return $entity;
+        parent::persist($entity);
     }
 
     /**
-     * @inheritdoc
-     */
-    public function update(EntityInterface $entity, array $parameters = null)
-    {
-        $this->processForm($entity, $parameters);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function delete(EntityInterface $entity)
-    {
-        $this->objectManager->remove($entity);
-        $this->objectManager->flush();
-    }
-
-    /**
-     * @param EntityInterface $entity
-     * @param array $parameters
-     * @throws InvalidFormException
-     */
-    protected function processForm(EntityInterface $entity, array $parameters = null)
-    {
-        $this->submitForm(LogForm::class, $entity, $parameters);
-
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
-    }
-
-    /**
-     * @param integer $limit
      * @return string
      */
-    private function getBacktrace($limit = 5)
+    private function getBacktrace()
     {
-        $traces = array_slice(debug_backtrace(), 3); // Strip first 3 traces
-        $count  = 0;
-        $ret    = '';
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $traces    = [];
 
-        foreach ($traces as $trace) {
+        foreach ($backtrace as $trace) {
             if (!isset($trace['file'], $trace['line'])) {
                 continue;
             }
 
-            $ret .= $trace['file'] . ' (' . $trace['line'] . ")\n";
-
-            if (++$count >= $limit) {
-                break;
-            }
+            $traces[] = $trace['file'] . ':' . $trace['line'];
         }
 
-        return trim($ret);
+        return implode("\n", $traces);
     }
 }

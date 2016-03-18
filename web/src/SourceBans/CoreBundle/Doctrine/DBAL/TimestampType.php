@@ -32,7 +32,7 @@ class TimestampType extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         /* @var \DateTime $value */
-        return null === $value ?: $value->getTimestamp();
+        return null === $value ? null : $value->getTimestamp();
     }
 
     /**
@@ -40,6 +40,6 @@ class TimestampType extends Type
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return null === $value ?: \DateTime::createFromFormat('U', $value);
+        return null === $value ? null : \DateTime::createFromFormat('U', $value);
     }
 }

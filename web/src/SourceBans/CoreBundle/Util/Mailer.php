@@ -4,6 +4,7 @@ namespace SourceBans\CoreBundle\Util;
 
 use SourceBans\CoreBundle\Entity\Admin;
 use SourceBans\CoreBundle\Entity\SettingRepository;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -33,14 +34,21 @@ class Mailer
     private $settings;
 
     /**
+     * @var string
+     */
+    private $host;
+
+    /**
      * @param RouterInterface     $router
      * @param TranslatorInterface $translator
+     * @param RequestStack        $requestStack
      * @param \Swift_Mailer       $mailer
      * @param SettingRepository   $settings
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
+        RequestStack $requestStack,
         \Swift_Mailer $mailer,
         SettingRepository $settings
     ) {
@@ -48,6 +56,7 @@ class Mailer
         $this->translator = $translator;
         $this->mailer = $mailer;
         $this->settings = $settings;
+        $this->host = $requestStack->getCurrentRequest()->server->get('HTTP_HOST');
     }
 
     /**
@@ -56,8 +65,7 @@ class Mailer
     public function sendForgotPasswordMail(Admin $admin)
     {
         $link = $this->router->generate('sourcebans_core_account_index', [], RouterInterface::ABSOLUTE_URL);
-        $message = \Swift_Message::newInstance()
-            ->setFrom($this->settings->get('mailer_from'))
+        $message = $this->createMessage()
             ->setTo($admin->getEmail())
             ->setSubject($this->translator->trans('controllers.default.lostPassword.subject'))
             ->setBody($this->translator->trans('controllers.default.lostPassword.body', [
@@ -78,8 +86,7 @@ class Mailer
             ['email' => $admin->getEmail(), 'key' => $admin->getValidationKey()],
             RouterInterface::ABSOLUTE_URL
         );
-        $message = \Swift_Message::newInstance()
-            ->setFrom($this->settings->get('mailer_from'))
+        $message = $this->createMessage()
             ->setTo($admin->getEmail())
             ->setSubject($this->translator->trans('models.LostPasswordForm.reset.subject'))
             ->setBody($this->translator->trans('models.LostPasswordForm.reset.body', [
@@ -87,5 +94,14 @@ class Mailer
                 '{link}' => $link,
             ]));
         $this->mailer->send($message);
+    }
+
+    /**
+     * @return \Swift_Message
+     */
+    private function createMessage()
+    {
+        return \Swift_Message::newInstance()
+            ->setFrom($this->settings->get('mailer_from') ?: 'noreply@' . $this->host);
     }
 }

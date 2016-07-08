@@ -2,19 +2,19 @@
 {
     "Banned Check Site"
     {
-        "fr"			"Vous avez ete banne de ce serveur, allez sur {1} pour plus d'informations"
+        "fr"			"Vous avez ete banni(e) de ce serveur, allez sur {1} pour plus d'informations"
     }
     "DB Connect Fail"
     {
-        "fr"			"Probleme de connection avec la database. Merci de bien vouloir contacter un admin."
+        "fr"			"Problème de connection avec la base de données. Merci de bien vouloir contacter un admin."
     }
     "Not In Game"
     {
-        "fr"			"Le joueur ne joue plus, merci d'aller sur le pannel internet pour le banner."
+        "fr"			"Le joueur ne joue plus, merci d'aller sur le panel internet pour le bannir."
     }
     "Ban Not Verified"
     {
-        "fr"			"Le systeme n'a pas reussi a determiner si ce joueur est ban. Merci de bien vouloir attendre trente secondes avant de re-essayer.
+        "fr"			"Le système n'a pas réussi à déterminer si ce joueur est banni. Merci de bien vouloir attendre trente secondes avant de re-essayer.
     }
     "Can Not Unban"
     {
@@ -34,14 +34,14 @@
     }
     "Ban Fail"
     {
-        "fr"			"Le joueur n'a pas pu être ban merci d'essayer ulterieurment."
+        "fr"			"Le joueur n'a pas pu être ban merci d'essayer ultérieurment."
     }
     "Chat Reason"
     {
-        "fr"			"Prière d'ecrire la raison du ban dans le chat et appuyez sur la touche Enter. Tapez '!abortban' pour annuler."
+        "fr"			"Veuillez écrire la raison du ban dans le chat et appuyez sur la touche Entrée. Tapez '!abortban' pour annuler."
     }
     "Chat Reason Aborted"
     {
-        "fr"			"La procédure de ban a etée arreté avec succes."
+        "fr"			"La procédure de ban a été arretée avec succés."
     }
 }

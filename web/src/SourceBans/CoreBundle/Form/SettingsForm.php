@@ -45,9 +45,7 @@ class SettingsForm extends AbstractType
         $data['bans_hide_admin'] = (bool)$data['bans_hide_admin'];
         $data['bans_hide_ip'] = (bool)$data['bans_hide_ip'];
         $data['bans_public_export'] = (bool)$data['bans_public_export'];
-        $data['dashboard_blocks_popup'] = (bool)$data['dashboard_blocks_popup'];
         $data['enable_appeals'] = (bool)$data['enable_appeals'];
-        $data['enable_debug'] = (bool)$data['enable_debug'];
         $data['enable_reports'] = (bool)$data['enable_reports'];
         $data['enable_smtp'] = (bool)$data['enable_smtp'];
 
@@ -60,17 +58,6 @@ class SettingsForm extends AbstractType
             ->add('theme', ThemeType::class, [
                 'label' => 'models.SettingsForm.theme',
             ])
-            ->add('default_page', DefaultPageType::class, [
-                'label' => 'models.SettingsForm.default_page',
-            ])
-            ->add('enable_reports', CheckboxType::class, [
-                'label' => 'models.SettingsForm.enable_reports',
-                'required' => false,
-            ])
-            ->add('enable_appeals', CheckboxType::class, [
-                'label' => 'models.SettingsForm.enable_appeals',
-                'required' => false,
-            ])
             ->add('timezone', TimezoneType::class, [
                 'label' => 'models.SettingsForm.timezone',
             ])
@@ -81,18 +68,15 @@ class SettingsForm extends AbstractType
                 'label' => 'models.SettingsForm.date_format',
                 'required' => false,
             ])
-            ->add('password_min_length', IntegerType::class, [
-                'label' => 'models.SettingsForm.password_min_length',
+            ->add('items_per_page', IntegerType::class, [
+                'label' => 'models.SettingsForm.items_per_page',
+                'required' => false,
             ])
             ->add('steam_web_api_key', TextType::class, [
                 'label' => 'models.SettingsForm.steam_web_api_key',
                 'required' => false,
             ])
             // Dashboard
-            ->add('dashboard_blocks_popup', CheckboxType::class, [
-                'label' => 'models.SettingsForm.dashboard_blocks_popup',
-                'required' => false,
-            ])
             ->add('dashboard_title', TextType::class, [
                 'label' => 'models.SettingsForm.dashboard_title',
                 'required' => false,
@@ -102,10 +86,6 @@ class SettingsForm extends AbstractType
                 'required' => false,
             ])
             // Bans
-            ->add('items_per_page', IntegerType::class, [
-                'label' => 'models.SettingsForm.items_per_page',
-                'required' => false,
-            ])
             ->add('bans_hide_admin', CheckboxType::class, [
                 'label' => 'models.SettingsForm.bans_hide_admin',
                 'required' => false,
@@ -116,6 +96,14 @@ class SettingsForm extends AbstractType
             ])
             ->add('bans_public_export', CheckboxType::class, [
                 'label' => 'models.SettingsForm.bans_public_export',
+                'required' => false,
+            ])
+            ->add('enable_appeals', CheckboxType::class, [
+                'label' => 'models.SettingsForm.enable_appeals',
+                'required' => false,
+            ])
+            ->add('enable_reports', CheckboxType::class, [
+                'label' => 'models.SettingsForm.enable_reports',
                 'required' => false,
             ])
             // Email

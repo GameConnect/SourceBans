@@ -1,51 +1,54 @@
-function initRcon (options) {
-    var opts = $.extend({
-        successText: '',
-        url: window.location.href
-    }, options);
-    var scrollConsole = function (duration) {
-        var $console = $('#console');
-        $console.stop(true).animate({
-            scrollTop: $console[0].scrollHeight - $console.height()
-        }, duration, 'easeInOutCubic');
-    };
+define(['animate', 'easing', 'axios'], function (animate, easing, axios) {
+    'use strict';
+    return function (rconUrl, successText) {
+        var $console = document.getElementById('console');
+        var $command = document.getElementById('command');
+        var $form    = document.getElementById('command-form');
+        var $submit  = document.getElementById('submit');
+        var scrollConsole = function (duration) {
+            var scrollTo = $console.scrollHeight - $console.clientHeight;
+            animate($console, 'scrollTop', scrollTo, duration, easing.easeInOutCubic);
+        };
 
-    $('#command-form').submit(function (e) {
-        e.preventDefault();
-        $('#submit').prop('disabled', true);
+        $form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            $submit.disabled = true;
 
-        var $console = $('#console');
-        var $command = $('#command');
-        var command = $command.val().trim();
-        if (command == '') {
-            return;
-        }
-        if (command == 'clr') {
-            $console.text('');
-            $command.val('');
-        } else {
-            $command.prop('disabled', true);
-            $console.text($console.text() + '> ' + command + "\n");
+            var command = $command.value.trim();
+            if (command == '') {
+                return;
+            }
+            if (command == 'clr') {
+                $console.textContent = '';
+                $command.value = '';
+                return;
+            }
+
+            $command.disabled = true;
+            $console.textContent += '> ' + command + "\n";
             scrollConsole(200);
 
-            $.post(opts.url, {
-                command: command
-            }, function (data) {
-                $console.text($console.text() + (data.error || data.result || opts.successText) + "\n");
+            var handleData = function (data) {
+                $console.textContent += (data.error || data.result || successText) + "\n";
                 scrollConsole(200);
 
-                $command.val('').prop('disabled', false);
-            }, 'json');
-        }
-    });
-    $('#command').keyup(function (e) {
-        // If Enter was pressed, ignore
-        if (e.which == 13) {
-            return;
-        }
+                $command.value = '';
+                $command.disabled = false;
+            };
 
-        $('#submit').prop('disabled', $(this).val().trim() == '');
-    });
+            axios.post(rconUrl, {command: command})
+                .then(function (res) { handleData(res.data); })
+                .catch(function (err) { handleData(err.response.data); });
+        });
+        $command.addEventListener('keyup', function (e) {
+            // If Enter was pressed, ignore
+            if (e.which == 13) {
+                return;
+            }
 
-    scrollConsole(800);
-}
+            $submit.disabled = (this.value.trim() == '');
+        });
+
+        scrollConsole(800);
+    };
+});

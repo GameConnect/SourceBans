@@ -1,0 +1,13 @@
+.pagination {
+    margin: 0;
+
+    > li {
+        > a,
+        > span {
+            border-radius: $border-radius-base;
+            line-height: (20 / 14);
+            margin-left: 5px;
+            padding: 5px 10px;
+        }
+    }
+}

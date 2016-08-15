@@ -266,7 +266,7 @@ class ServerGroup implements EntityInterface
      */
     public function getOverrides()
     {
-        return $this->servers;
+        return $this->overrides;
     }
 
     /**

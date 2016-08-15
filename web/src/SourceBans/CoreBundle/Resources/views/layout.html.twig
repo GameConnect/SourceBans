@@ -8,7 +8,7 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-static-top">
+        <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ path('sourcebans_core_default_index') }}">
@@ -17,7 +17,7 @@
                     {{ knp_menu_render('SourceBansCoreBundle:Builder:mainMenu', {'currentClass': 'active'}) }}
                 </div>
                 <div class="collapse navbar-collapse navbar-right">
-                    <form action="{{ path('sourcebans_core_default_bans') }}" class="navbar-form navbar-left" role="search">
+                    <form action="{{ path('sourcebans_core_bans_index') }}" class="navbar-form navbar-left" role="search">
                         <div class="input-group">
                             <input name="q" type="text" class="form-control" placeholder="{{ 'Search bans' | trans }}">
                             <span class="input-group-btn">
@@ -32,9 +32,6 @@
             </div>
         </nav>
         {% block body %}{% endblock %}
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="{{ asset('dist/js/app.js') }}"></script>
         {% block javascripts %}{% endblock %}
     </body>

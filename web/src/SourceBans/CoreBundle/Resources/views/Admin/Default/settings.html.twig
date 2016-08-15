@@ -7,72 +7,67 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+    {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+        {% block content %}
+            <div class="panel">
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                        <fieldset>
+                            <legend>General</legend>
+                            {{ form_row(form.language) }}
+                            {{ form_row(form.theme) }}
+                            {{ form_row(form.timezone) }}
+                            {{ form_row(form.date_format) }}
+                            {{ form_row(form.items_per_page) }}
+                            <div class="form-group">
+                                {{ form_label(form.steam_web_api_key) }}
+                                <div class="col-sm-9">
+                                    {{ form_widget(form.steam_web_api_key) }}
+                                    <small class="help-block">
+                                        {% set apiKeyLink = '<a href="http://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com</a>' %}
+                                        {{ 'views.admin.settings.help.steam_web_api_key' | trans({'{link}': apiKeyLink}) | raw | nl2br }}
+                                    </small>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Dashboard</legend>
+                            {{ form_row(form.dashboard_title) }}
+                            {{ form_row(form.dashboard_text, {'attr': {'class': 'tinymce', 'data-theme': 'advanced'}}) }}
+                        </fieldset>
+                        <fieldset>
+                            <legend>Bans</legend>
+                            <div class="form-group">
+                                <div class="col-sm-9 col-sm-offset-3">
+                                    {{ form_widget(form.bans_hide_admin) }}
+                                    {{ form_widget(form.bans_hide_ip) }}
+                                    {{ form_widget(form.bans_public_export) }}
+                                    {{ form_widget(form.enable_appeals) }}
+                                    {{ form_widget(form.enable_reports) }}
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Email</legend>
+                            {{ form_row(form.mailer_from) }}
+                            {{ form_row(form.enable_smtp) }}
+                            {{ form_row(form.smtp_host) }}
+                            {{ form_row(form.smtp_port) }}
+                            {{ form_row(form.smtp_username) }}
+                            {{ form_row(form.smtp_password) }}
+                            {{ form_row(form.smtp_secure, {'label_attr': {'class': 'radio-inline'}}) }}
+                            {{ form_row(form.submit) }}
+                        </fieldset>
+                    {{ form_end(form) }}
+                </div>
             </div>
-            <div class="col-lg-9">
-                {{ form_start(form) }}
-                    <fieldset>
-                        <legend>General</legend>
-                        {{ form_row(form.language) }}
-                        {{ form_row(form.theme) }}
-                        {{ form_row(form.default_page) }}
-                        <div class="form-group">
-                            <div class="col-sm-9 col-sm-offset-3">
-                                {{ form_widget(form.enable_reports) }}
-                                {{ form_widget(form.enable_appeals) }}
-                            </div>
-                        </div>
-                        {{ form_row(form.timezone) }}
-                        {{ form_row(form.date_format) }}
-                        {{ form_row(form.password_min_length) }}
-                        <div class="form-group">
-                            {{ form_label(form.steam_web_api_key) }}
-                            <div class="col-sm-9">
-                                {{ form_widget(form.steam_web_api_key) }}
-                                <small class="help-block">
-                                    {% set apiKeyLink = '<a href="http://www.steamcommunity.com/dev/apikey" target="_blank">steamcommunity.com</a>' %}
-                                    {{ 'views.admin.settings.help.steam_web_api_key' | trans({'{link}': apiKeyLink}) | raw | nl2br }}
-                                </small>
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Dashboard</legend>
-                        {{ form_row(form.dashboard_blocks_popup) }}
-                        {{ form_row(form.dashboard_title) }}
-                        {{ form_row(form.dashboard_text, {'attr': {'class': 'tinymce', 'data-theme': 'advanced'}}) }}
-                    </fieldset>
-                    <fieldset>
-                        <legend>Bans</legend>
-                        {{ form_row(form.items_per_page) }}
-                        <div class="form-group">
-                            <div class="col-sm-9 col-sm-offset-3">
-                                {{ form_widget(form.bans_hide_admin) }}
-                                {{ form_widget(form.bans_hide_ip) }}
-                                {{ form_widget(form.bans_public_export) }}
-                            </div>
-                        </div>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Email</legend>
-                        {{ form_row(form.mailer_from) }}
-                        {{ form_row(form.enable_smtp) }}
-                        {{ form_row(form.smtp_host) }}
-                        {{ form_row(form.smtp_port) }}
-                        {{ form_row(form.smtp_username) }}
-                        {{ form_row(form.smtp_password) }}
-                        {{ form_row(form.smtp_secure, {'label_attr': {'class': 'radio-inline'}}) }}
-                        {{ form_row(form.submit) }}
-                    </fieldset>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}
 
 {% block javascripts %}
-  {{ tinymce_init() }}
+    {{ tinymce_init() }}
+    <script>
+        require(['settings'], function (settings) { settings(); });
+    </script>
 {% endblock %}

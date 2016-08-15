@@ -1,24 +1,59 @@
 var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
-    concat = require('gulp-concat'),
+    requirejs = require('gulp-requirejs-optimize'),
     sass = require('gulp-sass'),
-    uglify = require('gulp-uglify'),
     util = require('gulp-util'),
     sassImporter = require('sass-importer-npm'),
     argv = require('yargs').argv;
 
+var vendorPath = __dirname + '/node_modules';
 var srcPaths = {
-    sass: 'app/Resources/assets/sass/**/',
-    fonts: 'node_modules/bootstrap-sass/assets/fonts/**/*',
-    js: 'app/Resources/assets/js/**/'
+    sass: 'app/Resources/assets/sass/app.scss',
+    fonts: vendorPath + '/bootstrap-sass/assets/fonts/**/*',
+    js: 'app/Resources/assets/js/**/*.js'
 };
 var destPaths = {
     css: 'public_html/dist/css',
     fonts: 'public_html/dist/fonts',
     js: 'public_html/dist/js'
 };
+var watchPaths = {
+    sass: 'app/Resources/assets/sass/**/*.scss',
+    fonts: srcPaths.fonts,
+    js: srcPaths.js
+};
 var autoprefixerOptions = {
     browsers: ['last 2 versions']
+};
+var requirejsOptions = {
+    baseUrl: 'app/Resources/assets/js',
+    include: 'app',
+    name: require.resolve('almond'),
+    optimize: argv.production ? 'uglify2' : 'none',
+    out: 'app.js',
+    paths: {
+        axios: vendorPath + '/axios/dist/axios',
+        bootstrap: vendorPath + '/bootstrap-sass/assets/javascripts/bootstrap',
+        jquery: vendorPath + '/jquery/dist/jquery',
+        lodash: vendorPath + '/lodash/lodash',
+        raf: vendorPath + '/requestanimationframe/app/requestAnimationFrame',
+        ramda: vendorPath + '/ramda/dist/ramda'
+    },
+    preserveLicenseComments: false,
+    shim: {
+        'bootstrap/affix':      { deps: ['jquery'] },
+        'bootstrap/alert':      { deps: ['jquery'] },
+        'bootstrap/button':     { deps: ['jquery'] },
+        'bootstrap/carousel':   { deps: ['jquery'] },
+        'bootstrap/collapse':   { deps: ['jquery'] },
+        'bootstrap/dropdown':   { deps: ['jquery'] },
+        'bootstrap/modal':      { deps: ['jquery'] },
+        'bootstrap/popover':    { deps: ['jquery'] },
+        'bootstrap/scrollspy':  { deps: ['jquery'] },
+        'bootstrap/tab':        { deps: ['jquery'] },
+        'bootstrap/tooltip':    { deps: ['jquery'] },
+        'bootstrap/transition': { deps: ['jquery'] }
+    }
 };
 var sassOptions = {
     importer: sassImporter,
@@ -26,16 +61,15 @@ var sassOptions = {
 };
 
 gulp.task('sass', function () {
-    return gulp.src(srcPaths.sass + 'app.scss')
+    return gulp.src(srcPaths.sass)
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(autoprefixer(autoprefixerOptions))
         .pipe(gulp.dest(destPaths.css));
 });
 
 gulp.task('js', function() {
-    gulp.src(srcPaths.js + '*.js')
-        .pipe(concat('app.js'))
-        .pipe(argv.production ? uglify() : util.noop())
+    gulp.src(srcPaths.js)
+        .pipe(requirejs(requirejsOptions))
         .pipe(gulp.dest(destPaths.js))
 });
 
@@ -45,9 +79,9 @@ gulp.task('fonts', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(srcPaths.sass + '*.scss', ['sass']);
-    gulp.watch(srcPaths.js + '*.js', ['js']);
-    gulp.watch(srcPaths.fonts, ['fonts']);
+    gulp.watch(watchPaths.sass, ['sass']);
+    gulp.watch(watchPaths.js, ['js']);
+    gulp.watch(watchPaths.fonts, ['fonts']);
 });
 
 gulp.task('build', ['sass', 'js', 'fonts']);

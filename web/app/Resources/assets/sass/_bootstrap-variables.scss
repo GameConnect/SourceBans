@@ -9,10 +9,10 @@
 //
 //## Gray and brand colors for use across Bootstrap.
 
-// $gray-base:              #000;
+$gray-base:              #000;
 // $gray-darker:            lighten($gray-base, 13.5%); // #222
 // $gray-dark:              lighten($gray-base, 20%);   // #333
-// $gray:                   lighten($gray-base, 33.5%); // #555
+$gray:                   lighten($gray-base, 33.5%); // #555
 // $gray-light:             lighten($gray-base, 46.7%); // #777
 // $gray-lighter:           lighten($gray-base, 93.5%); // #eee
 
@@ -28,9 +28,9 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-// $body-bg:               #fff;
+$body-bg:               #f8fafc;
 //** Global text color on `<body>`.
-// $text-color:            $gray-dark;
+$text-color:            $gray;
 
 //** Global textual link color.
 // $link-color:            $brand-primary;
@@ -141,7 +141,7 @@ $line-height-base:        1.666666667; // 20/12
 // $table-bg-active:               $table-bg-hover;
 
 //** Border color for table and cell borders.
-// $table-border-color:            #ddd;
+$table-border-color:            #eee;
 
 
 //== Buttons
@@ -206,7 +206,7 @@ $line-height-base:        1.666666667; // 20/12
 // $input-border-radius-small:      $border-radius-small;
 
 //** Border color for inputs on focus
-// $input-border-focus:             #66afe9;
+$input-border-focus:             #605f5e;
 
 //** Placeholder text color
 // $input-color-placeholder:        #999;
@@ -330,7 +330,7 @@ $line-height-base:        1.666666667; // 20/12
 //** Number of columns in the grid.
 // $grid-columns:              12;
 //** Padding between columns. Gets divided in half for the left and right.
-// $grid-gutter-width:         30px;
+$grid-gutter-width:         60px;
 // Navbar collapse
 //** Point at which the navbar becomes uncollapsed.
 // $grid-float-breakpoint:     $screen-sm-min;
@@ -372,7 +372,7 @@ $navbar-height:                    62px;
 
 // $navbar-default-color:             #777;
 $navbar-default-bg:                rgba(255,255,255,.98);
-// $navbar-default-border:            darken($navbar-default-bg, 6.5%);
+$navbar-default-border:            rgba(238,238,238,.4);
 
 // Navbar links
 // $navbar-default-link-color:                #777;

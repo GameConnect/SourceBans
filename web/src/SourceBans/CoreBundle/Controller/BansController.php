@@ -3,8 +3,10 @@
 namespace SourceBans\CoreBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\BanAdapter;
 use SourceBans\CoreBundle\Entity\Ban;
+use SourceBans\CoreBundle\Entity\SettingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -17,16 +19,45 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class BansController
 {
     /**
+     * @var SettingRepository
+     */
+    private $settings;
+
+    /**
      * @var BanAdapter
      */
     private $adapter;
 
     /**
-     * @param BanAdapter $adapter
+     * @param SettingRepository $settings
+     * @param BanAdapter        $adapter
      */
-    public function __construct(BanAdapter $adapter)
+    public function __construct(SettingRepository $settings, BanAdapter $adapter)
     {
+        $this->settings = $settings;
         $this->adapter = $adapter;
+    }
+
+    /**
+     * @param Request $request
+     * @return array|Response
+     *
+     * @Route("/bans/{type}", defaults={"type": null})
+     * @Template
+     */
+    public function indexAction(Request $request)
+    {
+        $isActive = $request->query->get('type') == 'active';
+
+        $bans = $this->adapter->all(
+            $this->settings->get('items_per_page'),
+            $request->query->getInt('page', 1),
+            $request->query->get('sort'),
+            $request->query->get('order'),
+            ['active' => $isActive]
+        );
+
+        return ['bans' => $bans];
     }
 
     /**

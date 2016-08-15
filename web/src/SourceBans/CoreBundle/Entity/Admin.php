@@ -682,12 +682,7 @@ class Admin implements EntityInterface, SteamAccountInterface, UserInterface, \S
 
         return array_merge(
             $defaultRoles,
-            array_map(
-                function (Permission $permission) {
-                    return $permission->getRole();
-                },
-                $group->getPermissions()->toArray()
-            )
+            $group->getPermissions()->toArray()
         );
     }
 

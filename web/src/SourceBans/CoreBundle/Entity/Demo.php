@@ -3,6 +3,7 @@
 namespace SourceBans\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -41,13 +42,14 @@ class Demo
     private $objectId;
 
     /**
-     * @var string
+     * @var string|File
      *
      * @Assert\NotBlank
      * @Assert\Length(max=255)
-     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
+     * @Assert\File
+     * @ORM\Column(name="file", type="string", length=255, nullable=false)
      */
-    private $filename;
+    private $file;
 
     /**
      * @return integer
@@ -74,20 +76,20 @@ class Demo
     }
 
     /**
-     * @return string
+     * @return string|File
      */
-    public function getFilename()
+    public function getFile()
     {
-        return $this->filename;
+        return $this->file;
     }
 
     /**
-     * @param string $filename
+     * @param string|File $file
      * @return Demo
      */
-    public function setFilename($filename)
+    public function setFile($file)
     {
-        $this->filename = $filename;
+        $this->file = $file;
 
         return $this;
     }

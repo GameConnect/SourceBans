@@ -198,7 +198,11 @@ class ServersController
     public function rconAction(Request $request, Server $server)
     {
         if ($request->isMethod('POST')) {
-            return new JsonResponse($this->rcon($server, $request->request->get('command')));
+            try {
+                return new JsonResponse($this->rcon($server, $request->request->get('command')));
+            } catch (\RuntimeException $e) {
+                return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
+            }
         }
 
         return ['server' => $server];
@@ -214,9 +218,11 @@ class ServersController
      */
     public function kickAction(Server $server, $name)
     {
-        $response = $this->rcon($server, 'kick "' . addslashes($name) . '"');
-
-        return new JsonResponse($response);
+        try {
+            return new JsonResponse($this->rcon($server, 'kick "' . addslashes($name) . '"'));
+        } catch (\RuntimeException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
+        }
     }
 
     /**
@@ -229,9 +235,10 @@ class ServersController
      */
     public function getProfileAction(Server $server, $name)
     {
-        $response = $this->rcon($server, 'status');
-        if (isset($response['error'])) {
-            return new JsonResponse($response);
+        try {
+            $response = $this->rcon($server, 'status');
+        } catch (\RuntimeException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], $e->getCode());
         }
 
         preg_match_all($this->patternStatus, $response['result'], $players);
@@ -246,11 +253,8 @@ class ServersController
         }
 
         return new JsonResponse([
-            'error' => [
-                'code'    => 'ERR_INVALID_NAME',
-                'message' => $this->translator->trans('controllers.servers.getProfile.err_invalid_name', ['{name}' => $name]),
-            ],
-        ]);
+            'error' => $this->translator->trans('controllers.servers.getProfile.err_invalid_name', ['{name}' => $name]),
+        ], Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -268,13 +272,10 @@ class ServersController
         ];
 
         if (!$rcon->auth()) {
-            $result['error'] = [
-                'code'    => 'ERR_INVALID_PASSWORD',
-                'message' => 'Invalid RCON password.',
-            ];
-        } else {
-            $result['result'] = $rcon->execute($command);
+            throw new \RuntimeException('Invalid RCON password.', Response::HTTP_UNAUTHORIZED);
         }
+
+        $result['result'] = $rcon->execute($command);
 
         return $result;
     }

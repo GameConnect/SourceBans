@@ -120,7 +120,6 @@ class BanAdapter extends AbstractAdapter
      */
     public function create(Request $request)
     {
-        /** @var Ban $entity */
         $entity = new $this->entityClass;
 
         $this->preSubmit($entity);

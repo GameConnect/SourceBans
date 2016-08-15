@@ -539,10 +539,10 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 /**
  * Events
  */
-public Action Event_PlayerConnect(Handle event, const char[] name, bool dontBroadcast)
+public Action Event_PlayerConnect(Event event, const char[] name, bool dontBroadcast)
 {
     char sIp[16];
-    GetEventString(event, "address", sIp, sizeof(sIp));
+    event.GetString("address", sIp, sizeof(sIp));
 
     // Strip the port
     int iPos = StrContains(sIp, ":");
@@ -552,7 +552,7 @@ public Action Event_PlayerConnect(Handle event, const char[] name, bool dontBroa
 
     // If the IP address is banned, don't broadcast the event
     if (GetLocalBan(false, "", sIp)) {
-        SetEventBroadcast(event, true);
+        event.BroadcastDisabled = true;
     }
 
     return Plugin_Continue;

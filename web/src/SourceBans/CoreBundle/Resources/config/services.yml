@@ -78,7 +78,7 @@ services:
 
     sourcebans.core.controller.bans:
         class: SourceBans\CoreBundle\Controller\BansController
-        arguments: ["@sourcebans.core.adapter.ban"]
+        arguments: ["@sourcebans.core.settings", "@sourcebans.core.adapter.ban"]
 
     sourcebans.core.controller.default:
         class: SourceBans\CoreBundle\Controller\DefaultController
@@ -88,14 +88,12 @@ services:
             - "@form.factory"
             - "@security.authentication_utils"
             - "@sourcebans.core.settings"
-            - "@sourcebans.core.adapter.ban"
-            - "@sourcebans.core.adapter.server"
             - "@sourcebans.core.adapter.appeal"
             - "@sourcebans.core.adapter.report"
 
     sourcebans.core.controller.servers:
         class: SourceBans\CoreBundle\Controller\ServersController
-        arguments: ["@translator", "@sourcebans.core.adapter.server", "%kernel.root_dir%/../public_html/images"]
+        arguments: ["@translator", "@sourcebans.core.settings", "@sourcebans.core.adapter.server", "%kernel.root_dir%/../public_html/images"]
 
     sourcebans.core.event_subscriber.database_prefix:
         class: SourceBans\CoreBundle\EventSubscriber\DatabasePrefixSubscriber

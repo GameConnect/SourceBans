@@ -1,17 +1,22 @@
-function initServerList (options) {
-    var opts = $.extend({
-        el: null,
-        errorText: '',
-        url: window.location.href
-    }, options);
+define(['ramda', 'axios'], function (R, axios) {
+    'use strict';
+    return function (selector, infoUrl, errorText) {
+        var setRowData = function (row, data) {
+            R.forEach(function (col) {
+                col.textContent = (data.error ? data.error : data.hostname);
+            })(row.getElementsByClassName('js-server-hostname'));
+            R.forEach(function (col) {
+                col.textContent = (data.error ? errorText : data.map);
+            })(row.getElementsByClassName('js-server-map'));
+            R.forEach(function (col) {
+                col.textContent = (data.error ? errorText : data.numplayers + '/' + data.maxplayers);
+            })(row.getElementsByClassName('js-server-players'));
+        };
 
-    $(opts.el).find('[data-server-id]').each(function () {
-        var $this = $(this);
-
-        $.get(opts.url.replace('__ID__', $this.data('serverId')), function (data) {
-            $this.find('.js-server-hostname').text(data.error ? data.error.message : data.hostname);
-            $this.find('.js-server-players').text(data.error ? opts.errorText : data.numplayers + '/' + data.maxplayers);
-            $this.find('.js-server-map').text(data.error ? opts.errorText : data.map);
-        }, 'json');
-    });
-}
+        R.forEach(function (row) {
+            axios(infoUrl.replace('__ID__', row.getAttribute('data-server-id')))
+                .then(function (res) { setRowData(row, res.data); })
+                .catch(function (err) { setRowData(row, err.response.data); });
+        })(document.querySelectorAll(selector + ' [data-server-id]'));
+    };
+});

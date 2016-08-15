@@ -5,29 +5,28 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+    {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+        {% block content %}
+            <div class="panel">
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-6">{{ 'Name' | trans }}</th>
+                                <th class="col-sm-6">{{ 'Identity' | trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.name }}</td>
+                                <td>{{ admin.identity }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div class="col-lg-9">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th class="col-sm-6">{{ 'Name' | trans }}</th>
-                            <th class="col-sm-6">{{ 'Identity' | trans }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for admin in admins %}
-                        <tr>
-                            <td>{{ admin.name }}</td>
-                            <td>{{ admin.identity }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

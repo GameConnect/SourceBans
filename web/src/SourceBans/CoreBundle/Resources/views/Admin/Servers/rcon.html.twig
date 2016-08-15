@@ -5,13 +5,11 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
-            </div>
-            <div class="col-lg-9">
-                <pre class="pre-scrollable" id="console">
+    {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+        {% block content %}
+            <div class="panel">
+                <div class="panel-body">
+                    <pre class="pre-scrollable" id="console">
 
 
 
@@ -39,19 +37,24 @@
 ********************************************************
 
 </pre>
-                <form id="command-form" method="post">
-                    <div class="input-group">
-                        <input autofocus="autofocus" class="form-control" id="command" name="command" placeholder="{{ 'Command' | trans }}" type="text" />
-                        <div class="input-group-btn">
-                            <input class="btn btn-primary" disabled="disabled" id="submit" type="submit" value="{{ 'Execute' | trans }}" />
+                    <form id="command-form" method="post">
+                        <div class="input-group">
+                            <input autofocus="autofocus" class="form-control" id="command" name="command" placeholder="{{ 'Command' | trans }}" type="text" />
+                            <div class="input-group-btn">
+                                <input class="btn btn-primary" disabled="disabled" id="submit" type="submit" value="{{ 'Execute' | trans }}" />
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}
 
 {% block javascripts %}
-    <script>initRcon({successText: '{{ 'Command executed' | trans }}', url: '{{ path('sourcebans_core_admin_servers_rcon', {'id': server.id}) }}'});</script>
+    <script>
+        require(['rcon'], function (rcon) {
+            rcon('{{ path('sourcebans_core_admin_servers_rcon', {'id': server.id}) }}', '{{ 'Command executed' | trans }}');
+        });
+    </script>
 {% endblock %}

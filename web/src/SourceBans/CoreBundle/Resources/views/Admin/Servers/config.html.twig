@@ -5,18 +5,16 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-		<div class="row">
-            <div class="col-lg-3">
-                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
-            </div>
-            <div class="col-lg-9">
-				<p>{{ 'The game server needs the following configuration to be able to communicate with the database.' | trans }}</p>
-				<p>{{ 'Copy the {section} section below and place it on the game server in {file}, so that the file looks similar to this:' | trans({
-					'{file}': '<strong>/[' ~ 'Game' | trans | lower ~ ']/addons/sourcemod/configs/databases.cfg</strong>',
-					'{section}': '<strong>"sourcebans"</strong>',
-				}) | raw }}</p>
-				<pre>"Databases"
+    {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+		{% block content %}
+			<div class="panel">
+				<div class="panel-body">
+					<p>{{ 'The game server needs the following configuration to be able to communicate with the database.' | trans }}</p>
+					<p>{{ 'Copy the {section} section below and place it on the game server in {file}, so that the file looks similar to this:' | trans({
+						'{file}': '<strong>/[' ~ 'Game' | trans | lower ~ ']/addons/sourcemod/configs/databases.cfg</strong>',
+						'{section}': '<strong>"sourcebans"</strong>',
+					}) | raw }}</p>
+					<pre>"Databases"
 {
 	"driver_default"		"mysql"
 
@@ -37,7 +35,8 @@
 		"database"		"sourcemod-local"
 	}
 }</pre>
+				</div>
 			</div>
-        </div>
-    </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

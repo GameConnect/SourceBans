@@ -7,24 +7,32 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="container-fluid page-container">
         <div class="row">
-            <div class="col-lg-12">
-                {{ form_start(form) }}
-                    {{ form_row(form.steam) }}
-                    {{ form_row(form.ip) }}
-                    {{ form_row(form.name) }}
-                    {{ form_row(form.reason) }}
-                    {{ form_row(form.userName) }}
-                    {{ form_row(form.userEmail) }}
-                    {{ form_row(form.server) }}
-                    {{ form_row(form.submit) }}
-                {{ form_end(form) }}
+            <div class="col-sm-6 col-sm-offset-3">
+                <div class="panel">
+                    <div class="panel-body">
+                        {{ form_start(form) }}
+                            {{ form_row(form.steam) }}
+                            {{ form_row(form.ip) }}
+                            {{ form_row(form.name) }}
+                            {{ form_row(form.reason) }}
+                            {{ form_row(form.userName) }}
+                            {{ form_row(form.userEmail) }}
+                            {{ form_row(form.server) }}
+                            {{ form_row(form.submit) }}
+                        {{ form_end(form) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script>initServerSelect({el: '#{{ form.server.vars.id }}', url: '{{ path('sourcebans_core_servers_info', {'id': '__ID__'}) }}'});</script>
+    <script>
+        require(['server_select'], function (serverSelect) {
+            serverSelect('{{ form.server.vars.id }}', '{{ path('sourcebans_core_servers_info', {'id': '__ID__'}) }}');
+        });
+    </script>
 {% endblock %}

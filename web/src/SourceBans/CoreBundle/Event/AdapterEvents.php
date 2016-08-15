@@ -58,6 +58,21 @@ final class AdapterEvents
     const BAN_UNBAN = 'ban.unban';
 
     /**
+     * This event is dispatched when a comment is created
+     */
+    const COMMENT_CREATE = 'comment.create';
+
+    /**
+     * This event is dispatched when a comment is updated
+     */
+    const COMMENT_UPDATE = 'comment.update';
+
+    /**
+     * This event is dispatched when a comment is deleted
+     */
+    const COMMENT_DELETE = 'comment.delete';
+
+    /**
      * This event is dispatched when a game is created
      */
     const GAME_CREATE = 'game.create';

@@ -21,8 +21,8 @@ env:
         - SYMFONY_ENV=prod
         - TRAVIS_NODE_VERSION=5
     matrix:
-        - SOURCEMOD=1.7
         - SOURCEMOD=1.8
+        - SOURCEMOD=1.9
 
 install:
     - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm
@@ -64,4 +64,4 @@ deploy:
     on:
         tags: true
         php: 5.5
-        condition: $SOURCEMOD = 1.7
+        condition: $SOURCEMOD = 1.8

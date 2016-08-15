@@ -83,6 +83,7 @@ swiftmailer:
 
 stfalcon_tinymce:
     tinymce_jquery: true
+    include_jquery: true
     language: "%locale%"
 
     theme:

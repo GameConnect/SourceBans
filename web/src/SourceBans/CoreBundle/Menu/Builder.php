@@ -34,11 +34,11 @@ class Builder implements ContainerAwareInterface
         );
         $menu->addChild(
             'controllers.default.bans.title',
-            ['route' => 'sourcebans_core_default_bans']
+            ['route' => 'sourcebans_core_bans_index']
         );
         $menu->addChild(
             'controllers.default.servers.title',
-            ['route' => 'sourcebans_core_default_servers']
+            ['route' => 'sourcebans_core_servers_index']
         );
         $menu->addChild(
             'controllers.default.report.title',

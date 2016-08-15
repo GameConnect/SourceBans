@@ -7,19 +7,18 @@
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
+    {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+        {% block content %}
+            <div class="panel">
+                <div class="panel-body">
+                    {{ form_start(form) }}
+                        {{ form_row(form.game) }}
+                        {{ form_row(form.mapName) }}
+                        {{ form_row(form.file) }}
+                        {{ form_row(form.submit) }}
+                    {{ form_end(form) }}
+                </div>
             </div>
-            <div class="col-lg-9">
-                {{ form_start(form) }}
-                    {{ form_row(form.game) }}
-                    {{ form_row(form.mapName) }}
-                    {{ form_row(form.file) }}
-                    {{ form_row(form.submit) }}
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
+        {% endblock %}
+    {% endembed %}
 {% endblock %}

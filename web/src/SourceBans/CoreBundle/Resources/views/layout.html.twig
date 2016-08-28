@@ -7,7 +7,7 @@
         <link href="{{ asset('dist/css/app.css') }}" rel="stylesheet" type="text/css" />
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
+    <body{% if settings.theme %} class="theme-{{ settings.theme }}"{% endif %}>
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">

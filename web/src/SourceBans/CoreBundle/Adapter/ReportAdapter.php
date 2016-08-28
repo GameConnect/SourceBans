@@ -135,6 +135,6 @@ class ReportAdapter extends AbstractAdapter
     protected function preSubmit(EntityInterface $entity)
     {
         /** @var Report $entity */
-        $entity->setUserIp($this->container->get('request')->getClientIp());
+        $entity->setUserIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
     }
 }

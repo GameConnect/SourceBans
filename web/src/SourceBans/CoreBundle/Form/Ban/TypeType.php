@@ -27,8 +27,8 @@ class TypeType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [
-                Ban::TYPE_STEAM => 'Steam ID',
-                Ban::TYPE_IP    => 'IP address',
+                'Steam ID'   => Ban::TYPE_STEAM,
+                'IP address' => Ban::TYPE_IP,
             ],
         ]);
     }

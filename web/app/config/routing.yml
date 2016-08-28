@@ -1,7 +1,6 @@
 sourcebans_core:
     resource: "@SourceBansCoreBundle/Controller/"
     type:     annotation
-    prefix:   /
 
 login:
     path: /login

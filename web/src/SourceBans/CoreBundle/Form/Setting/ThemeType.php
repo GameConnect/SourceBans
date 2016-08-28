@@ -26,7 +26,7 @@ class ThemeType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [
-                'bootstrap' => 'Bootstrap',
+                'Bootstrap' => '',
             ],
         ]);
     }

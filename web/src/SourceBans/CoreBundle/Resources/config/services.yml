@@ -149,6 +149,12 @@ services:
         tags:
             - { name: form.type }
 
+    sourcebans.core.form.setting.language:
+        class: SourceBans\CoreBundle\Form\Setting\LanguageType
+        arguments: ["%locale%"]
+        tags:
+            - { name: form.type }
+
     sourcebans.core.form.settings:
         class: SourceBans\CoreBundle\Form\SettingsForm
         arguments: ["@request_stack"]

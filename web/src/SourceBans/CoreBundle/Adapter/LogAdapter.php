@@ -92,9 +92,9 @@ class LogAdapter extends AbstractAdapter
     {
         /** @var Log $entity */
         $entity->setAdmin($this->container->get('security.token_storage')->getToken()->getUser());
-        $entity->setAdminIp($this->container->get('request')->getClientIp());
+        $entity->setAdminIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
         $entity->setFunction($this->getBacktrace());
-        $entity->setQuery($this->container->get('request')->getQueryString());
+        $entity->setQuery($this->container->get('request_stack')->getCurrentRequest()->getQueryString());
 
         parent::persist($entity);
     }

@@ -135,6 +135,6 @@ class AppealAdapter extends AbstractAdapter
     protected function preSubmit(EntityInterface $entity)
     {
         /** @var Appeal $entity */
-        $entity->setUserIp($this->container->get('request')->getClientIp());
+        $entity->setUserIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
     }
 }

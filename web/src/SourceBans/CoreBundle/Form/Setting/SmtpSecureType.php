@@ -26,9 +26,9 @@ class SmtpSecureType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [
-                '' => 'None',
-                'ssl' => 'SSL',
-                'tls' => 'TLS',
+                'None' => '',
+                'SSL'  => 'ssl',
+                'TLS'  => 'tls',
             ],
         ]);
     }

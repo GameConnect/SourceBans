@@ -27,9 +27,9 @@ class AuthType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [
-                Admin::AUTH_STEAM => 'Steam ID',
-                Admin::AUTH_IP    => 'IP address',
-                Admin::AUTH_NAME  => 'Name',
+                'Steam ID'   => Admin::AUTH_STEAM,
+                'IP address' => Admin::AUTH_IP,
+                'Name'       => Admin::AUTH_NAME,
             ],
         ]);
     }

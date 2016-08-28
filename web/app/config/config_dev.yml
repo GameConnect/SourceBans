@@ -8,18 +8,19 @@ framework:
     profiler: { only_exceptions: false }
 
 web_profiler:
-    toolbar: "%debug_toolbar%"
-    intercept_redirects: "%debug_redirects%"
+    toolbar: true
+    intercept_redirects: false
 
 monolog:
     handlers:
         main:
-            type:   stream
-            path:   "%kernel.logs_dir%/%kernel.environment%.log"
-            level:  debug
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+            level: debug
+            channels: [!event]
         console:
             type:   console
-            bubble: false
+            channels: [!event, !doctrine]
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:
@@ -28,9 +29,6 @@ monolog:
         #chromephp:
         #    type:   chromephp
         #    level:  info
-
-assetic:
-    use_controller: "%use_assetic_controller%"
 
 #swiftmailer:
 #    delivery_address: me@example.com

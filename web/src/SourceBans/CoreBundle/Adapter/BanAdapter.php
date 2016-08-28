@@ -195,6 +195,6 @@ class BanAdapter extends AbstractAdapter
     {
         /** @var Ban $entity */
         $entity->setAdmin($this->container->get('security.token_storage')->getToken()->getUser());
-        $entity->setAdminIp($this->container->get('request')->getClientIp());
+        $entity->setAdminIp($this->container->get('request_stack')->getCurrentRequest()->getClientIp());
     }
 }

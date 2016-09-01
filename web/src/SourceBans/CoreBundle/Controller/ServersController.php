@@ -83,12 +83,15 @@ class ServersController
 
     /**
      * @param Request $request
+     * @param Server $server
      * @return array|Response
      *
      * @Route("/servers/query/{id}")
      */
     public function queryAction(Request $request, Server $server)
     {
+        $request->getSession()->save();
+
         try {
             return new JsonResponse($this->query($server, self::QUERY_INFO|self::QUERY_PLAYERS));
         } catch (\RuntimeException $e) {
@@ -98,12 +101,15 @@ class ServersController
 
     /**
      * @param Request $request
+     * @param Server $server
      * @return array|Response
      *
      * @Route("/servers/info/{id}")
      */
     public function infoAction(Request $request, Server $server)
     {
+        $request->getSession()->save();
+
         try {
             return new JsonResponse($this->query($server, self::QUERY_INFO));
         } catch (\RuntimeException $e) {
@@ -113,23 +119,29 @@ class ServersController
 
     /**
      * @param Request $request
+     * @param Server $server
      * @return array|Response
      *
      * @Route("/servers/players/{id}")
      */
     public function playersAction(Request $request, Server $server)
     {
+        $request->getSession()->save();
+
         return new JsonResponse($this->query($server, self::QUERY_PLAYERS));
     }
 
     /**
      * @param Request $request
+     * @param Server $server
      * @return array|Response
      *
      * @Route("/servers/rules/{id}")
      */
     public function rulesAction(Request $request, Server $server)
     {
+        $request->getSession()->save();
+
         return new JsonResponse($this->query($server, self::QUERY_RULES));
     }
 

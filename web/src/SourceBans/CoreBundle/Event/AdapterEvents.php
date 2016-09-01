@@ -38,6 +38,11 @@ final class AdapterEvents
     const APPEAL_DELETE = 'appeal.delete';
 
     /**
+     * This event is dispatched when an appeal is archived
+     */
+    const APPEAL_ARCHIVE = 'appeal.archive';
+
+    /**
      * This event is dispatched when a ban is created
      */
     const BAN_CREATE = 'ban.create';
@@ -116,6 +121,11 @@ final class AdapterEvents
      * This event is dispatched when a report is deleted
      */
     const REPORT_DELETE = 'report.delete';
+
+    /**
+     * This event is dispatched when a report is archived
+     */
+    const REPORT_ARCHIVE = 'report.archive';
 
     /**
      * This event is dispatched when a server is created

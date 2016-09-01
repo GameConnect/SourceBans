@@ -7,12 +7,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\AdapterInterface;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -32,11 +31,6 @@ class DefaultController
      * @var TranslatorInterface
      */
     private $translator;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
 
     /**
      * @var AuthenticationUtils
@@ -59,18 +53,16 @@ class DefaultController
     private $reportAdapter;
 
     /**
-     * @param HttpKernelInterface  $httpKernel
-     * @param TranslatorInterface  $translator
-     * @param FormFactoryInterface $formFactory
-     * @param AuthenticationUtils  $authenticationUtils
-     * @param SettingRepository    $settings
-     * @param AdapterInterface     $appealAdapter
-     * @param AdapterInterface     $reportAdapter
+     * @param HttpKernelInterface $httpKernel
+     * @param TranslatorInterface $translator
+     * @param AuthenticationUtils $authenticationUtils
+     * @param SettingRepository   $settings
+     * @param AdapterInterface    $appealAdapter
+     * @param AdapterInterface    $reportAdapter
      */
     public function __construct(
         HttpKernelInterface $httpKernel,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
         AuthenticationUtils $authenticationUtils,
         SettingRepository $settings,
         AdapterInterface $appealAdapter,
@@ -78,7 +70,6 @@ class DefaultController
     ) {
         $this->httpKernel = $httpKernel;
         $this->translator = $translator;
-        $this->formFactory = $formFactory;
         $this->authenticationUtils = $authenticationUtils;
         $this->settings = $settings;
         $this->appealAdapter = $appealAdapter;
@@ -107,7 +98,7 @@ class DefaultController
     public function appealAction(Request $request)
     {
         if (!$this->settings->get('enable_appeals')) {
-            throw new AccessDeniedHttpException;
+            throw new AccessDeniedException;
         }
 
         try {
@@ -136,7 +127,7 @@ class DefaultController
     public function reportAction(Request $request)
     {
         if (!$this->settings->get('enable_reports')) {
-            throw new AccessDeniedHttpException;
+            throw new AccessDeniedException;
         }
 
         try {

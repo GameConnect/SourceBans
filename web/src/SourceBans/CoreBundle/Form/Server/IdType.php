@@ -48,7 +48,9 @@ class IdType extends AbstractType
                 return $repository->createQueryBuilder('server')
                     ->addSelect('game')
                     ->join('server.game', 'game')
-                    ->orderBy('game.name, server.host, server.port');
+                    ->where('server.enabled = :enabled')
+                    ->orderBy('game.name, server.host, server.port')
+                    ->setParameter('enabled', true);
             },
         ]);
     }

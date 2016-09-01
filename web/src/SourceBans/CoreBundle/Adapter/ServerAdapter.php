@@ -13,8 +13,10 @@ use SourceBans\CoreBundle\Event\ServerAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ServerForm;
 use SourceBans\CoreBundle\Specification\ById;
+use SourceBans\CoreBundle\Specification\Server\IsEnabled;
 use SourceBans\CoreBundle\Specification\ServerSpecification;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * ServerAdapter
@@ -27,6 +29,10 @@ class ServerAdapter extends AbstractAdapter
      */
     public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
+        $resolver = new OptionsResolver;
+        $resolver->setDefault('enabled', false);
+        $options = $resolver->resolve($options);
+
         $specification = new ServerSpecification;
         if ($sort) {
             $specification->add(new Query\OrderBy($sort, $order));
@@ -34,6 +40,9 @@ class ServerAdapter extends AbstractAdapter
             $specification->add(new Query\OrderBy('name', null, 'game'));
             $specification->add(new Query\OrderBy('host'));
             $specification->add(new Query\OrderBy('port'));
+        }
+        if ($options['enabled']) {
+            $specification->add(new IsEnabled);
         }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);

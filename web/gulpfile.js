@@ -2,8 +2,6 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     requirejs = require('gulp-requirejs-optimize'),
     sass = require('gulp-sass'),
-    util = require('gulp-util'),
-    sassImporter = require('sass-importer-npm'),
     argv = require('yargs').argv;
 
 var vendorPath = __dirname + '/node_modules';
@@ -36,8 +34,10 @@ var requirejsOptions = {
         bootstrap: vendorPath + '/bootstrap-sass/assets/javascripts/bootstrap',
         jquery: vendorPath + '/jquery/dist/jquery',
         lodash: vendorPath + '/lodash/lodash',
+        matches: vendorPath + '/desandro-matches-selector/matches-selector',
         raf: vendorPath + '/requestanimationframe/app/requestAnimationFrame',
-        ramda: vendorPath + '/ramda/dist/ramda'
+        ramda: vendorPath + '/ramda/dist/ramda',
+        tpl: vendorPath + '/lodash-template-loader/loader'
     },
     preserveLicenseComments: false,
     shim: {
@@ -53,10 +53,17 @@ var requirejsOptions = {
         'bootstrap/tab':        { deps: ['jquery'] },
         'bootstrap/tooltip':    { deps: ['jquery'] },
         'bootstrap/transition': { deps: ['jquery'] }
-    }
+    },
+    stubModules: ['lodash', 'tpl']
 };
 var sassOptions = {
-    importer: sassImporter,
+    importer: function (url) {
+        if (url[0] == '~') {
+            url = vendorPath + '/' + url.substr(1);
+        }
+
+        return {file: url};
+    },
     outputStyle: argv.production ? 'compressed' : 'expanded'
 };
 

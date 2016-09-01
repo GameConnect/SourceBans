@@ -56,6 +56,10 @@ services:
         class: SourceBans\CoreBundle\Controller\Admin\AdminsController
         arguments: ["@router", "@form.factory", "@sourcebans.core.settings", "@sourcebans.core.adapter.admin", "@sourcebans.core.util.admin.import"]
 
+    sourcebans.core.controller.admin.appeals:
+        class: SourceBans\CoreBundle\Controller\Admin\AppealsController
+        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.appeal"]
+
     sourcebans.core.controller.admin.bans:
         class: SourceBans\CoreBundle\Controller\Admin\BansController
         arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.ban", "@sourcebans.core.util.ban.import"]
@@ -72,6 +76,10 @@ services:
         class: SourceBans\CoreBundle\Controller\Admin\GroupsController
         arguments: ["@router", "@form.factory", "@sourcebans.core.adapter.group", "@sourcebans.core.util.server_group.import"]
 
+    sourcebans.core.controller.admin.reports:
+        class: SourceBans\CoreBundle\Controller\Admin\ReportsController
+        arguments: ["@router", "@sourcebans.core.settings", "@sourcebans.core.adapter.report"]
+
     sourcebans.core.controller.admin.servers:
         class: SourceBans\CoreBundle\Controller\Admin\ServersController
         arguments: ["@router", "@translator", "@doctrine.dbal.default_connection", "@sourcebans.core.settings", "@sourcebans.core.adapter.server", "%pattern_status%"]
@@ -85,7 +93,6 @@ services:
         arguments:
             - "@http_kernel"
             - "@translator"
-            - "@form.factory"
             - "@security.authentication_utils"
             - "@sourcebans.core.settings"
             - "@sourcebans.core.adapter.appeal"
@@ -186,6 +193,11 @@ services:
         public:     false
         tags:
            - { name: security.voter }
+
+    sourcebans.core.security.expression_language_provider:
+        class: SourceBans\CoreBundle\Security\Authorization\ExpressionLanguageProvider
+        tags:
+            - { name: security.expression_language_provider }
 
     sourcebans.core.twig.extension.format:
         class: SourceBans\CoreBundle\Twig\Extension\FormatExtension

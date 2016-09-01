@@ -12,8 +12,11 @@ use SourceBans\CoreBundle\Event\ReportAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ReportForm;
 use SourceBans\CoreBundle\Specification\ById;
+use SourceBans\CoreBundle\Specification\IsActive;
+use SourceBans\CoreBundle\Specification\IsArchived;
 use SourceBans\CoreBundle\Specification\ReportSpecification;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * ReportAdapter
@@ -26,7 +29,17 @@ class ReportAdapter extends AbstractAdapter
      */
     public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
+        $resolver = new OptionsResolver;
+        $resolver->setDefault('active', false);
+        $resolver->setDefault('archive', false);
+        $options = $resolver->resolve($options);
+
         $specification = new ReportSpecification;
+        if ($options['active']) {
+            $specification->add(new IsActive);
+        } elseif ($options['archive']) {
+            $specification->add(new IsArchived);
+        }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -115,6 +128,19 @@ class ReportAdapter extends AbstractAdapter
         $this->preSubmit($entity);
 
         parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    public function archive(EntityInterface $entity)
+    {
+        /** @var Report $entity */
+        $entity->setArchived(true);
+
+        $this->objectManager->persist($entity);
+        $this->objectManager->flush();
+        $this->dispatcher->dispatch(AdapterEvents::REPORT_ARCHIVE, new ReportAdapterEvent($entity));
     }
 
     /**

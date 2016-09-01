@@ -1,6 +1,6 @@
 {% extends '@SourceBansCore/layout.html.twig' %}
 
-{% set pageTitle = 'controllers.admin.games.title' | trans %}
+{% set pageTitle = 'controllers.admin.bans.menu.reports' | trans %}
 
 {% block title %}{{ pageTitle }} « {{ parent() }}{% endblock %}
 
@@ -12,28 +12,24 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th class="icon">&nbsp;</th>
-                                <th>{{ 'Name' | trans }}</th>
-                                <th width="20%">{{ 'Folder' | trans }}</th>
-                                <th width="5%">&nbsp;</th>
+                                <th width="50%">{{ 'Name' | trans }}</th>
+                                <th width="50%">{{ 'Identity' | trans }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for game in games %}
+                            {% for report in reports %}
                             <tr>
-                                <td class="icon"><img src="{{ app.request.basePath }}/images/games/{{ game.icon }}" /></td>
-                                <td>{{ game.name }}</td>
-                                <td>{{ game.folder }}</td>
-                                <td><a href="{{ path('sourcebans_core_admin_games_edit', {'id': game.id}) }}">{{ 'Edit' | trans }}</a></td>
+                                <td>{{ report.name }}</td>
+                                <td>{{ report.steam | default(report.ip) }}</td>
                             </tr>
                             {% else %}
                             <tr>
-                                <td colspan="4">{{ 'No results' | trans }}</td>
+                                <td colspan="2">{{ 'No results' | trans }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                    {{ pagerfanta(games, 'twitter_bootstrap3', {
+                    {{ pagerfanta(reports, 'twitter_bootstrap3', {
                         'css_container_class': 'pagination pull-right',
                         'next_message': '&raquo;',
                         'prev_message': '&laquo;',
@@ -43,7 +39,7 @@
         {% endblock %}
 
         {% block sidebar %}
-            {% include '@SourceBansCore/Admin/Games/partials/sidebar.html.twig' %}
+            {% include '@SourceBansCore/Admin/Bans/partials/sidebar.html.twig' %}
         {% endblock %}
     {% endembed %}
 {% endblock %}

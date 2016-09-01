@@ -20,15 +20,16 @@
     "almond": "^0.3.2",
     "axios": "^0.13.1",
     "bootstrap-sass": "^3.3.6",
+    "desandro-matches-selector": "^2.0.1",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-requirejs-optimize": "^1.2.0",
     "gulp-sass": "^2.2.0",
     "jquery": "^3.1.0",
     "lodash": "^4.15.0",
+    "lodash-template-loader": "^2.0.0",
     "ramda": "^0.22.1",
     "requestanimationframe": "0.0.23",
-    "sass-importer-npm": "^1.0.2",
     "yargs": "^4.1.0"
   }
 }

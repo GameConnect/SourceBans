@@ -13,7 +13,10 @@ use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\AppealForm;
 use SourceBans\CoreBundle\Specification\AppealSpecification;
 use SourceBans\CoreBundle\Specification\ById;
+use SourceBans\CoreBundle\Specification\IsActive;
+use SourceBans\CoreBundle\Specification\IsArchived;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * AppealAdapter
@@ -26,7 +29,17 @@ class AppealAdapter extends AbstractAdapter
      */
     public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
     {
+        $resolver = new OptionsResolver;
+        $resolver->setDefault('active', false);
+        $resolver->setDefault('archive', false);
+        $options = $resolver->resolve($options);
+
         $specification = new AppealSpecification;
+        if ($options['active']) {
+            $specification->add(new IsActive);
+        } elseif ($options['archive']) {
+            $specification->add(new IsArchived);
+        }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -115,6 +128,19 @@ class AppealAdapter extends AbstractAdapter
         $this->preSubmit($entity);
 
         parent::persist($entity);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     */
+    public function archive(EntityInterface $entity)
+    {
+        /** @var Appeal $entity */
+        $entity->setArchived(true);
+
+        $this->objectManager->persist($entity);
+        $this->objectManager->flush();
+        $this->dispatcher->dispatch(AdapterEvents::APPEAL_ARCHIVE, new AppealAdapterEvent($entity));
     }
 
     /**

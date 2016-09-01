@@ -6,5 +6,8 @@
 
 {% block body %}
     {% embed '@SourceBansCore/Admin/layout.html.twig' %}
+        {% block sidebar %}
+            {% include '@SourceBansCore/Admin/Bans/partials/sidebar.html.twig' %}
+        {% endblock %}
     {% endembed %}
 {% endblock %}

@@ -1,14 +1,15 @@
 <div class="container-fluid page-container">
     <div class="row">
-        <div class="col-sm-3">
-            <div class="panel">
-                <div class="panel-body">
-                    {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu') }}
-                </div>
-            </div>
+        <div class="col-sm-12">
+            {{ knp_menu_render('SourceBansCoreBundle:Builder:adminMenu', {'currentClass': 'active'}) }}
         </div>
-        <div class="col-sm-9">
+    </div>
+    <div class="row">
+        <aside class="col-sm-3">
+            {% block sidebar %}{% endblock %}
+        </aside>
+        <section class="col-sm-9">
             {% block content %}{% endblock %}
-        </div>
+        </section>
     </div>
 </div>

@@ -167,7 +167,7 @@ class ServersController
      * @return array|Response
      *
      * @Route("/admin/servers/config")
-     * @Security("has_role('ROLE_VIEW_SERVERS')")
+     * @Security("has_flag('i')")
      * @Template
      */
     public function configAction(Request $request)
@@ -192,12 +192,14 @@ class ServersController
      * @return array|Response
      *
      * @Route("/admin/servers/rcon/{id}")
-     * @Security("has_role('ROLE_VIEW_SERVERS')")
+     * @Security("has_flag('m')")
      * @Template
      */
     public function rconAction(Request $request, Server $server)
     {
         if ($request->isMethod('POST')) {
+            $request->getSession()->save();
+
             try {
                 return new JsonResponse($this->rcon($server, $request->request->get('command')));
             } catch (\RuntimeException $e) {
@@ -209,6 +211,7 @@ class ServersController
     }
 
     /**
+     * @param Request $request
      * @param Server $server
      * @param string $name
      * @return array|Response
@@ -216,8 +219,10 @@ class ServersController
      * @Route("/admin/servers/kick/{id}/{name}")
      * @Security("has_role('ROLE_ADD_BANS')")
      */
-    public function kickAction(Server $server, $name)
+    public function kickAction(Request $request, Server $server, $name)
     {
+        $request->getSession()->save();
+
         try {
             return new JsonResponse($this->rcon($server, 'kick "' . addslashes($name) . '"'));
         } catch (\RuntimeException $e) {
@@ -226,6 +231,7 @@ class ServersController
     }
 
     /**
+     * @param Request $request
      * @param Server $server
      * @param string $name
      * @return array|Response
@@ -233,8 +239,10 @@ class ServersController
      * @Route("/admin/servers/getProfile/{id}/{name}")
      * @Security("has_role('ROLE_ADD_BANS')")
      */
-    public function getProfileAction(Server $server, $name)
+    public function getProfileAction(Request $request, Server $server, $name)
     {
+        $request->getSession()->save();
+
         try {
             $response = $this->rcon($server, 'status');
         } catch (\RuntimeException $e) {

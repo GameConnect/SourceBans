@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Ban implements EntityInterface, SteamAccountInterface
+class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountInterface
 {
     const TYPE_STEAM       = 0;
     const TYPE_IP          = 1;

@@ -24,6 +24,14 @@ services:
         class: SourceBans\CoreBundle\Adapter\BlockAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Block"]
 
+    sourcebans.core.adapter.comment:
+        class: SourceBans\CoreBundle\Adapter\CommentAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Comment"]
+
+    sourcebans.core.adapter.demo:
+        class: SourceBans\CoreBundle\Adapter\DemoAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Demo", "%kernel.root_dir%/../public_html/demos"]
+
     sourcebans.core.adapter.game:
         class: SourceBans\CoreBundle\Adapter\GameAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Game", "%kernel.root_dir%/../public_html/images"]
@@ -35,6 +43,10 @@ services:
     sourcebans.core.adapter.log:
         class: SourceBans\CoreBundle\Adapter\LogAdapter
         arguments: ["@service_container", "SourceBansCoreBundle:Log"]
+
+    sourcebans.core.adapter.override:
+        class: SourceBans\CoreBundle\Adapter\OverrideAdapter
+        arguments: ["@service_container", "SourceBansCoreBundle:Override"]
 
     sourcebans.core.adapter.report:
         class: SourceBans\CoreBundle\Adapter\ReportAdapter
@@ -120,6 +132,12 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    sourcebans.core.event_subscriber.roles:
+        class: SourceBans\CoreBundle\EventSubscriber\RolesSubscriber
+        arguments: ["@file_locator"]
+        tags:
+            - { name: kernel.event_subscriber }
+
     sourcebans.core.form.account.forgot_password:
         class: SourceBans\CoreBundle\Form\Account\ForgotPasswordForm
         arguments: ["@sourcebans.core.adapter.admin"]
@@ -147,6 +165,12 @@ services:
     sourcebans.core.form.group.id:
         class: SourceBans\CoreBundle\Form\Group\IdType
         arguments: ["@translator"]
+        tags:
+            - { name: form.type }
+
+    sourcebans.core.form.group.role:
+        class: SourceBans\CoreBundle\Form\Group\RoleType
+        arguments: ["@event_dispatcher"]
         tags:
             - { name: form.type }
 
@@ -198,6 +222,14 @@ services:
         class: SourceBans\CoreBundle\Security\Authorization\ExpressionLanguageProvider
         tags:
             - { name: security.expression_language_provider }
+
+    sourcebans.core.steam.api:
+        class: SourceBans\CoreBundle\Steam\SteamApi
+        arguments: ["@sourcebans.core.steam.client_factory"]
+
+    sourcebans.core.steam.client_factory:
+        class: SourceBans\CoreBundle\Steam\SteamClientFactory
+        arguments: ["@=service('sourcebans.core.settings').get('steam_web_api_key')"]
 
     sourcebans.core.twig.extension.format:
         class: SourceBans\CoreBundle\Twig\Extension\FormatExtension

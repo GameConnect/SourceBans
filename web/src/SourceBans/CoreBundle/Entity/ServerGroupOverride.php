@@ -63,14 +63,6 @@ class ServerGroupOverride implements EntityInterface
     /**
      * @return string
      */
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * @return string
-     */
     public function getType()
     {
         return $this->type;

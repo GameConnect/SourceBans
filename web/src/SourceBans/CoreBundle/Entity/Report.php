@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Report implements EntityInterface, SteamAccountInterface
+class Report extends AbstractSteamAccount implements EntityInterface, SteamAccountInterface
 {
     /**
      * @var integer

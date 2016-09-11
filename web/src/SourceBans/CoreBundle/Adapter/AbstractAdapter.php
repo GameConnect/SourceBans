@@ -161,15 +161,16 @@ abstract class AbstractAdapter implements AdapterInterface
      * @param Query $query
      * @param integer $limit
      * @param integer $page
+     * @param boolean $fetchJoinCollection
      * @return array|Pagerfanta
      */
-    protected static function queryToPager(Query $query, $limit = null, $page = null)
+    protected static function queryToPager(Query $query, $limit = null, $page = null, $fetchJoinCollection = true)
     {
         if ($limit === null) {
             return $query->getResult();
         }
 
-        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query, $fetchJoinCollection));
 
         return $pager->setMaxPerPage($limit)->setCurrentPage($page ?: 1);
     }

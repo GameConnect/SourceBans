@@ -108,6 +108,21 @@ final class AdapterEvents
     const GROUP_DELETE = 'group.delete';
 
     /**
+     * This event is dispatched when an override is created
+     */
+    const OVERRIDE_CREATE = 'override.create';
+
+    /**
+     * This event is dispatched when an override is updated
+     */
+    const OVERRIDE_UPDATE = 'override.update';
+
+    /**
+     * This event is dispatched when an override is deleted
+     */
+    const OVERRIDE_DELETE = 'override.delete';
+
+    /**
      * This event is dispatched when a report is created
      */
     const REPORT_CREATE = 'report.create';

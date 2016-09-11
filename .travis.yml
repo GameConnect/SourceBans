@@ -36,8 +36,8 @@ before_script:
     - cp -R game/addons/sourcemod/scripting/* addons/sourcemod/scripting/
     - cd web
     - composer install --no-interaction --optimize-autoloader
-    - php app/console doctrine:database:create
-    - php app/console doctrine:schema:create
+    - php bin/console doctrine:database:create
+    - php bin/console doctrine:schema:create
     - npm install --production
     - ./node_modules/.bin/gulp build --production
 

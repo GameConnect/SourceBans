@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Comment
+class Comment implements EntityInterface
 {
     const TYPE_BAN    = 'B';
     const TYPE_APPEAL = 'P';

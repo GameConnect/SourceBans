@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="demos", indexes={@ORM\Index(name="object", columns={"object_type", "object_id"})})
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
-class Demo
+class Demo implements EntityInterface
 {
     const TYPE_BAN    = 'B';
     const TYPE_REPORT = 'S';

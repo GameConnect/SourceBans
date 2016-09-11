@@ -5,6 +5,8 @@ namespace SourceBans\CoreBundle\Menu;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use SourceBans\CoreBundle\Entity\Admin;
+use SourceBans\CoreBundle\Event\LoadMenuEvent;
+use SourceBans\CoreBundle\Event\MenuEvents;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -23,6 +25,8 @@ class Builder implements ContainerAwareInterface
     public function mainMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
+        $settings = $this->container->get('sourcebans.core.settings');
 
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
@@ -41,15 +45,21 @@ class Builder implements ContainerAwareInterface
             'controllers.default.servers.title',
             ['route' => 'sourcebans_core_servers_index']
         );
-        $menu->addChild(
-            'controllers.default.report.title',
-            ['route' => 'sourcebans_core_default_report']
-        );
-        $menu->addChild(
-            'controllers.default.appeal.title',
-            ['route' => 'sourcebans_core_default_appeal']
-        );
 
+        $dispatcher->dispatch(MenuEvents::MAIN_LOAD, new LoadMenuEvent($menu));
+
+        if ($settings->get('enable_reports')) {
+            $menu->addChild(
+                'controllers.default.report.title',
+                ['route' => 'sourcebans_core_default_report']
+            );
+        }
+        if ($settings->get('enable_appeals')) {
+            $menu->addChild(
+                'controllers.default.appeal.title',
+                ['route' => 'sourcebans_core_default_appeal']
+            );
+        }
         if ($authChecker->isGranted('ROLE_ADMIN')) {
             $menu->addChild(
                 'controllers.admin.index.title',
@@ -101,6 +111,8 @@ class Builder implements ContainerAwareInterface
      */
     public function accountMenu(FactoryInterface $factory, array $options)
     {
+        $dispatcher = $this->container->get('event_dispatcher');
+
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
                 'class' => 'nav nav-pills nav-stacked',
@@ -126,6 +138,8 @@ class Builder implements ContainerAwareInterface
             'controllers.default.account.menu.settings',
             ['route' => 'sourcebans_core_account_settings']
         );
+
+        $dispatcher->dispatch(MenuEvents::ACCOUNT_LOAD, new LoadMenuEvent($menu));
 
         return $menu;
     }
@@ -193,6 +207,7 @@ class Builder implements ContainerAwareInterface
     public function adminAdminsMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
 
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
@@ -216,6 +231,14 @@ class Builder implements ContainerAwareInterface
                 ['route' => 'sourcebans_core_admin_admins_import']
             );
         }
+        if ($authChecker->isGranted('ROLE_OVERRIDES')) {
+            $menu->addChild(
+                'controllers.admin.admins.menu.overrides',
+                ['route' => 'sourcebans_core_admin_admins_overrides']
+            );
+        }
+
+        $dispatcher->dispatch(MenuEvents::ADMIN_ADMINS_LOAD, new LoadMenuEvent($menu));
 
         return $menu;
     }
@@ -228,6 +251,7 @@ class Builder implements ContainerAwareInterface
     public function adminBansMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
 
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
@@ -258,6 +282,8 @@ class Builder implements ContainerAwareInterface
             );
         }
 
+        $dispatcher->dispatch(MenuEvents::ADMIN_BANS_LOAD, new LoadMenuEvent($menu));
+
         return $menu;
     }
 
@@ -269,6 +295,7 @@ class Builder implements ContainerAwareInterface
     public function adminGamesMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
 
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
@@ -293,6 +320,8 @@ class Builder implements ContainerAwareInterface
             );
         }
 
+        $dispatcher->dispatch(MenuEvents::ADMIN_GAMES_LOAD, new LoadMenuEvent($menu));
+
         return $menu;
     }
 
@@ -304,6 +333,7 @@ class Builder implements ContainerAwareInterface
     public function adminGroupsMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
 
         $menu = $factory->createItem('root', [
             'childrenAttributes' => [
@@ -328,6 +358,8 @@ class Builder implements ContainerAwareInterface
             );
         }
 
+        $dispatcher->dispatch(MenuEvents::ADMIN_GROUPS_LOAD, new LoadMenuEvent($menu));
+
         return $menu;
     }
 
@@ -339,6 +371,7 @@ class Builder implements ContainerAwareInterface
     public function adminServersMenu(FactoryInterface $factory, array $options)
     {
         $authChecker = $this->container->get('security.authorization_checker');
+        $dispatcher = $this->container->get('event_dispatcher');
         /** @var Admin $user */
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
@@ -366,6 +399,8 @@ class Builder implements ContainerAwareInterface
                 ['route' => 'sourcebans_core_admin_servers_config']
             );
         }
+
+        $dispatcher->dispatch(MenuEvents::ADMIN_SERVERS_LOAD, new LoadMenuEvent($menu));
 
         return $menu;
     }

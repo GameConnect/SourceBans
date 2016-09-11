@@ -7,8 +7,6 @@ use Rb\Specification\Doctrine\Condition;
 use Rb\Specification\Doctrine\Logic\AndX;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
-use SourceBans\CoreBundle\Entity\Block;
-use SourceBans\CoreBundle\Specification\ById;
 use SourceBans\CoreBundle\Specification\BlockSpecification;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,30 +48,18 @@ class BlockAdapter extends AbstractAdapter
 
     /**
      * @inheritdoc
-     * @return Block
      */
     public function get($id)
     {
-        $specification = new AndX(
-            new BlockSpecification,
-            new ById($id)
-        );
-
-        return $this->repository->match($specification)->getOneOrNullResult();
+        throw new \RuntimeException('Not implemented');
     }
 
     /**
      * @inheritdoc
-     * @return Block
      */
     public function getBy(array $criteria)
     {
-        $specification = new BlockSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
-
-        return $this->repository->match($specification)->getOneOrNullResult();
+        throw new \RuntimeException('Not implemented');
     }
 
     /**

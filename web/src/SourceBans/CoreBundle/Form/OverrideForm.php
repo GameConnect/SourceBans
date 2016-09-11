@@ -2,17 +2,18 @@
 
 namespace SourceBans\CoreBundle\Form;
 
-use SourceBans\CoreBundle\Entity\Group;
-use SourceBans\CoreBundle\Form\Group\RoleType;
+use SourceBans\CoreBundle\Entity\Override;
+use SourceBans\CoreBundle\Form\Override\TypeType;
+use SourceBans\CoreBundle\Form\ServerGroup\FlagType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * GroupForm
+ * OverrideForm
  */
-class GroupForm extends AbstractType
+class OverrideForm extends AbstractType
 {
     /**
      * @inheritdoc
@@ -20,11 +21,14 @@ class GroupForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('type', TypeType::class, [
+                'label' => 'Type',
+            ])
             ->add('name', null, [
                 'label' => 'Name',
             ])
-            ->add('roles', RoleType::class, [
-                'label' => 'Web permissions',
+            ->add('flags', FlagType::class, [
+                'label' => 'Server permissions',
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',
@@ -37,7 +41,7 @@ class GroupForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Group::class,
+            'data_class' => Override::class,
         ]);
     }
 }

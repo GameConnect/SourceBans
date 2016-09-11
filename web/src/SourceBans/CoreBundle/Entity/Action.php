@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Action
+class Action implements EntityInterface
 {
     /**
      * @var integer

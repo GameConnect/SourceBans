@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
  */
-class Admin implements EntityInterface, SteamAccountInterface, UserInterface, \Serializable
+class Admin extends AbstractSteamAccount implements EntityInterface, SteamAccountInterface, UserInterface, \Serializable
 {
     const AUTH_IP          = 'ip';
     const AUTH_NAME        = 'name';
@@ -682,7 +682,7 @@ class Admin implements EntityInterface, SteamAccountInterface, UserInterface, \S
 
         return array_merge(
             $defaultRoles,
-            $group->getPermissions()->toArray()
+            $group->getRoles()
         );
     }
 

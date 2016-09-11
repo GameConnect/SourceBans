@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="overrides")
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
-class Override
+class Override implements EntityInterface
 {
     const TYPE_COMMAND = 'command';
     const TYPE_GROUP   = 'group';
@@ -45,14 +45,6 @@ class Override
      * @ORM\Column(name="flags", type="string", length=30, nullable=false)
      */
     private $flags;
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName();
-    }
 
     /**
      * @return string

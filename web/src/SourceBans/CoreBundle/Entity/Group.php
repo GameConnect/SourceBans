@@ -36,6 +36,13 @@ class Group implements EntityInterface
     private $name;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="simple_array", length=65535, nullable=true)
+     */
+    private $roles;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Admin", mappedBy="group")
@@ -46,28 +53,11 @@ class Group implements EntityInterface
     private $admins;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Permission", inversedBy="groups", cascade={"persist"})
-     * @ORM\JoinTable(name="groups_permissions",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="group_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="permission_id", referencedColumnName="id")
-     *   }
-     * )
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $permissions;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->admins = new ArrayCollection;
-        $this->permissions = new ArrayCollection;
     }
 
     /**
@@ -106,40 +96,29 @@ class Group implements EntityInterface
     }
 
     /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param array $roles
+     * @return Group
+     */
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getAdmins()
     {
         return $this->admins;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getPermissions()
-    {
-        return $this->permissions;
-    }
-
-    /**
-     * @param Permission $permission
-     * @return Group
-     */
-    public function addPermission(Permission $permission)
-    {
-        $this->permissions[] = $permission;
-
-        return $this;
-    }
-
-    /**
-     * @param Permission $permission
-     * @return Group
-     */
-    public function removePermission(Permission $permission)
-    {
-        $this->permissions->removeElement($permission);
-
-        return $this;
     }
 }

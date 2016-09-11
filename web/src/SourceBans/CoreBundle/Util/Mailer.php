@@ -54,7 +54,7 @@ class Mailer
     ) {
         $this->router = $router;
         $this->translator = $translator;
-        $this->mailer = $mailer;
+        $this->mailer = ($settings->get('enable_smtp') ? $this->createSmtpMailer() : $mailer);
         $this->settings = $settings;
         $this->host = $requestStack->getCurrentRequest()->server->get('HTTP_HOST');
     }
@@ -103,5 +103,20 @@ class Mailer
     {
         return \Swift_Message::newInstance()
             ->setFrom($this->settings->get('mailer_from') ?: 'noreply@' . $this->host);
+    }
+
+    /**
+     * @return \Swift_Mailer
+     */
+    private function createSmtpMailer()
+    {
+        $transport = \Swift_SmtpTransport::newInstance()
+            ->setHost($this->settings->get('smtp_host'))
+            ->setPort($this->settings->get('smtp_port'))
+            ->setEncryption($this->settings->get('smtp_secure'))
+            ->setUsername($this->settings->get('smtp_username'))
+            ->setPassword($this->settings->get('smtp_password'));
+
+        return \Swift_Mailer::newInstance($transport);
     }
 }

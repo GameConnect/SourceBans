@@ -16,10 +16,9 @@ class AdminRepository extends SpecificationRepository implements UserLoaderInter
     public function loadUserByUsername($username)
     {
         return $this->createQueryBuilder('admin')
-            ->addSelect(['serverGroups', 'webGroup', 'webPermissions'])
+            ->addSelect(['serverGroups', 'webGroup'])
             ->leftJoin('admin.serverGroups', 'serverGroups')
             ->leftJoin('admin.group', 'webGroup')
-            ->leftJoin('webGroup.permissions', 'webPermissions')
             ->where('admin.name = :username')
             ->setParameter('username', $username)
             ->getQuery()

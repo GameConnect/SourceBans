@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Form\Account;
 
+use Rb\Specification\Doctrine\Condition;
 use SourceBans\CoreBundle\Adapter\AdapterInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -61,7 +62,9 @@ class ForgotPasswordForm extends AbstractType
      */
     public function validateEmail(array $data, ExecutionContextInterface $context)
     {
-        $admin = $this->adapter->getBy(['email' => $data['email']]);
+        $admin = $this->adapter->getBy([
+            new Condition\Equals('email', $data['email']),
+        ]);
 
         if ($admin === null) {
             $context->buildViolation('Invalid email address')

@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Controller\Admin;
 
+use Rb\Specification\Doctrine\Logic;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -10,6 +11,7 @@ use SourceBans\CoreBundle\Adapter\AppealAdapter;
 use SourceBans\CoreBundle\Entity\Appeal;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Specification;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,20 +55,23 @@ class AppealsController
      * @param Request $request
      * @return array|Response
      *
-     * @Route("/admin/appeals/{type}", defaults={"type": null})
+     * @Route("/admin/appeals")
      * @Security("has_role('ROLE_APPEALS')")
      * @Template
      */
     public function indexAction(Request $request)
     {
-        $isArchive = $request->query->get('type') == 'archive';
+        $specification = new Specification\IsArchived;
+        if ($request->query->get('type') != 'archive') {
+            $specification = new Logic\Not($specification);
+        }
 
         $appeals = $this->adapter->all(
             $this->settings->get('items_per_page'),
             $request->query->getInt('page', 1),
             $request->query->get('sort'),
             $request->query->get('order'),
-            [($isArchive ? 'archive' : 'active') => true]
+            [$specification]
         );
 
         return ['appeals' => $appeals];

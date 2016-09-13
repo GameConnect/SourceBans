@@ -7,7 +7,6 @@ use SourceBans\CoreBundle\Form\Admin\AuthType;
 use SourceBans\CoreBundle\Form\Group\IdType as GroupType;
 use SourceBans\CoreBundle\Form\ServerGroup\IdType as ServerGroupType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,6 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AdminForm extends AbstractType
 {
+    const PASSWORD_PLACEHOLDER_VALUE = 'xxxxx';
+
     /**
      * @inheritdoc
      */
@@ -38,11 +39,12 @@ class AdminForm extends AbstractType
             ->add('email', null, [
                 'label' => 'Email address',
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('plainPassword', OptionalPasswordType::class, [
+                'data' => ($builder->getData()->getPassword() !== null ? self::PASSWORD_PLACEHOLDER_VALUE : ''),
                 'label' => 'Password',
                 'required' => false,
             ])
-            ->add('serverPassword', PasswordType::class, [
+            ->add('serverPassword', OptionalPasswordType::class, [
                 'label' => 'Server password',
                 'required' => false,
             ])

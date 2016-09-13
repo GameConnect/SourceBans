@@ -2,8 +2,12 @@
 
 namespace SourceBans\CoreBundle\Steam;
 
+use JMS\Serializer\Annotation as Serialize;
+
 /**
  * Steam Community profile
+ *
+ * @Serialize\ExclusionPolicy("all")
  */
 class SteamProfile
 {
@@ -41,6 +45,8 @@ class SteamProfile
 
     /**
      * @return string
+     *
+     * @Serialize\VirtualProperty
      */
     public function getAvatar()
     {
@@ -49,6 +55,8 @@ class SteamProfile
 
     /**
      * @return string
+     *
+     * @Serialize\VirtualProperty
      */
     public function getAvatarFull()
     {
@@ -57,6 +65,8 @@ class SteamProfile
 
     /**
      * @return string
+     *
+     * @Serialize\VirtualProperty
      */
     public function getAvatarMedium()
     {
@@ -89,6 +99,8 @@ class SteamProfile
 
     /**
      * @return string
+     *
+     * @Serialize\VirtualProperty
      */
     public function getDisplayName()
     {

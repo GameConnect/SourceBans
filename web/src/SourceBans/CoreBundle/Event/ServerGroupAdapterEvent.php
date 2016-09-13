@@ -5,6 +5,9 @@ namespace SourceBans\CoreBundle\Event;
 use SourceBans\CoreBundle\Entity\ServerGroup;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * ServerGroupAdapterEvent
+ */
 class ServerGroupAdapterEvent extends Event
 {
     /**

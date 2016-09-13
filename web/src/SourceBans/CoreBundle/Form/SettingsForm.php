@@ -2,7 +2,6 @@
 
 namespace SourceBans\CoreBundle\Form;
 
-use SourceBans\CoreBundle\Form\Setting\DefaultPageType;
 use SourceBans\CoreBundle\Form\Setting\LanguageType;
 use SourceBans\CoreBundle\Form\Setting\SmtpSecureType;
 use SourceBans\CoreBundle\Form\Setting\ThemeType;
@@ -62,15 +61,10 @@ class SettingsForm extends AbstractType
                 'label' => 'models.SettingsForm.timezone',
             ])
             ->add('date_format', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'm-d-y H:i',
-                ],
                 'label' => 'models.SettingsForm.date_format',
-                'required' => false,
             ])
             ->add('items_per_page', IntegerType::class, [
                 'label' => 'models.SettingsForm.items_per_page',
-                'required' => false,
             ])
             ->add('steam_web_api_key', TextType::class, [
                 'label' => 'models.SettingsForm.steam_web_api_key',

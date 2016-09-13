@@ -3,8 +3,8 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Demo;
+use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\DemoForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,10 +36,10 @@ class DemoAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
         $query = $this->repository->createQueryBuilder('demo')
-            ->orderBy('demo.createTime')
+            ->orderBy(sprintf('demo.%s', $sort ?: 'createTime'), $order)
             ->getQuery();
 
         return static::queryToPager($query, $limit, $page);
@@ -50,7 +50,7 @@ class DemoAdapter extends AbstractAdapter
      */
     public function allBy(array $criteria, $limit = null, $page = null)
     {
-        $offset = (null === $page ?: $page * $limit - $limit);
+        $offset = (null === $page ? null : ($page - 1) * $limit);
 
         return $this->repository->findBy($criteria, null, $limit, $offset);
     }

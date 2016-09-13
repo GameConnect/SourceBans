@@ -2,11 +2,13 @@
 
 namespace SourceBans\CoreBundle\Controller;
 
+use Rb\Specification\Doctrine\Condition;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\BanAdapter;
 use SourceBans\CoreBundle\Entity\Ban;
 use SourceBans\CoreBundle\Entity\SettingRepository;
+use SourceBans\CoreBundle\Specification\Ban as BanSpecification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -42,19 +44,22 @@ class BansController
      * @param Request $request
      * @return array|Response
      *
-     * @Route("/bans/{type}", defaults={"type": null})
+     * @Route("/bans")
      * @Template
      */
     public function indexAction(Request $request)
     {
-        $isActive = $request->query->get('type') == 'active';
+        $criteria = [];
+        if ($request->query->get('type') == 'active') {
+            $criteria[] = new BanSpecification\IsActive;
+        }
 
         $bans = $this->adapter->all(
             $this->settings->get('items_per_page'),
             $request->query->getInt('page', 1),
             $request->query->get('sort'),
             $request->query->get('order'),
-            ['active' => $isActive]
+            $criteria
         );
 
         return ['bans' => $bans];
@@ -68,9 +73,12 @@ class BansController
      */
     public function exportAction(Request $request)
     {
-        $type = $request->query->get('type') == 'ip' ? Ban::TYPE_IP : Ban::TYPE_STEAM;
+        $type = ($request->query->get('type') == 'ip' ? Ban::TYPE_IP : Ban::TYPE_STEAM);
         /** @var Ban[] $bans */
-        $bans = $this->adapter->allByType($type, null, null, ['permanent' => true]);
+        $bans = $this->adapter->allBy([
+            new Condition\Equals('type', $type),
+            new BanSpecification\IsPermanent,
+        ]);
 
         $content = '';
         foreach ($bans as $ban) {

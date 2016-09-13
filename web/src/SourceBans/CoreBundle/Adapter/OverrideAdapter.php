@@ -20,7 +20,7 @@ class OverrideAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
         $query = $this->repository->createQueryBuilder('override')
             ->orderBy(sprintf('override.%s', $sort ?: 'type'), $order)
@@ -35,7 +35,7 @@ class OverrideAdapter extends AbstractAdapter
      */
     public function allBy(array $criteria, $limit = null, $page = null)
     {
-        $offset = (null === $page ?: $page * $limit - $limit);
+        $offset = (null === $page ? null : ($page - 1) * $limit);
 
         return $this->repository->findBy($criteria, null, $limit, $offset);
     }

@@ -3,8 +3,7 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
+use Rb\Specification\Doctrine\Logic;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Server;
@@ -13,10 +12,8 @@ use SourceBans\CoreBundle\Event\ServerAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ServerForm;
 use SourceBans\CoreBundle\Specification\ById;
-use SourceBans\CoreBundle\Specification\Server\IsEnabled;
 use SourceBans\CoreBundle\Specification\ServerSpecification;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * ServerAdapter
@@ -27,22 +24,16 @@ class ServerAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $resolver = new OptionsResolver;
-        $resolver->setDefault('enabled', false);
-        $options = $resolver->resolve($options);
-
         $specification = new ServerSpecification;
+        array_map([$specification, 'add'], $criteria);
         if ($sort) {
             $specification->add(new Query\OrderBy($sort, $order));
         } else {
             $specification->add(new Query\OrderBy('name', null, 'game'));
             $specification->add(new Query\OrderBy('host'));
             $specification->add(new Query\OrderBy('port'));
-        }
-        if ($options['enabled']) {
-            $specification->add(new IsEnabled);
         }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
@@ -55,9 +46,7 @@ class ServerAdapter extends AbstractAdapter
     public function allBy(array $criteria, $limit = null, $page = null)
     {
         $specification = new ServerSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -68,7 +57,7 @@ class ServerAdapter extends AbstractAdapter
      */
     public function get($id)
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new ServerSpecification,
             new ById($id)
         );
@@ -83,9 +72,7 @@ class ServerAdapter extends AbstractAdapter
     public function getBy(array $criteria)
     {
         $specification = new ServerSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

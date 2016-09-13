@@ -3,8 +3,6 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Specification\BlockSpecification;
@@ -19,12 +17,15 @@ class BlockAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $specification = new AndX(
-            new BlockSpecification,
-            new Query\OrderBy('createTime', Query\OrderBy::DESC)
-        );
+        $specification = new BlockSpecification;
+        array_map([$specification, 'add'], $criteria);
+        if ($sort) {
+            $specification->add(new Query\OrderBy($sort, $order));
+        } else {
+            $specification->add(new Query\OrderBy('createTime', Query\OrderBy::DESC));
+        }
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -35,13 +36,8 @@ class BlockAdapter extends AbstractAdapter
      */
     public function allBy(array $criteria, $limit = null, $page = null)
     {
-        $specification = new AndX(
-            new BlockSpecification,
-            new Query\OrderBy('createTime', Query\OrderBy::DESC)
-        );
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        $specification = new BlockSpecification;
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }

@@ -17,7 +17,16 @@
                             {{ form_row(form.language) }}
                             {{ form_row(form.theme) }}
                             {{ form_row(form.timezone) }}
-                            {{ form_row(form.date_format) }}
+                            <div class="form-group">
+                                {{ form_label(form.date_format) }}
+                                <div class="col-sm-9">
+                                    {{ form_widget(form.date_format) }}
+                                    <small class="help-block">
+                                        {% set dateFormatLink = '<a href="http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table" target="_blank">ICU date format</a>' %}
+                                        {{ 'views.admin.settings.help.date_format' | trans({'{link}': dateFormatLink}) | raw }}
+                                    </small>
+                                </div>
+                            </div>
                             {{ form_row(form.items_per_page) }}
                             <div class="form-group">
                                 {{ form_label(form.steam_web_api_key) }}

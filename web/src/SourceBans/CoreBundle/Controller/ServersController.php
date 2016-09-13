@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use SourceBans\CoreBundle\Adapter\ServerAdapter;
 use SourceBans\CoreBundle\Entity\Server;
 use SourceBans\CoreBundle\Entity\SettingRepository;
+use SourceBans\CoreBundle\Specification\Server as ServerSpecification;
 use SourceBans\CoreBundle\Util\SourceQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +76,8 @@ class ServersController
             $this->settings->get('items_per_page'),
             $request->query->getInt('page', 1),
             $request->query->get('sort'),
-            $request->query->get('order')
+            $request->query->get('order'),
+            [new ServerSpecification\IsEnabled]
         );
 
         return ['servers' => $servers];
@@ -195,11 +197,6 @@ class ServersController
                 }
 
                 return strcasecmp($playerA['name'], $playerB['name']);
-            });
-
-            // Round connection time to minutes
-            array_walk($result['players'], function ($player) {
-                $player['time'] /= 60;
             });
         }
         if ($queries & self::QUERY_RULES) {

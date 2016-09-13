@@ -3,17 +3,14 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
+use Rb\Specification\Doctrine\Logic;
 use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\Admin;
 use SourceBans\CoreBundle\Entity\EntityInterface;
-use SourceBans\CoreBundle\Entity\Server;
 use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\AdminAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\AdminForm;
-use SourceBans\CoreBundle\Specification\Admin\Servers;
 use SourceBans\CoreBundle\Specification\AdminSpecification;
 use SourceBans\CoreBundle\Specification\ById;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,12 +24,13 @@ class AdminAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new AdminSpecification,
             new Query\OrderBy($sort ?: 'name', $order)
         );
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -44,25 +42,7 @@ class AdminAdapter extends AbstractAdapter
     public function allBy(array $criteria, $limit = null, $page = null)
     {
         $specification = new AdminSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
-
-        return static::queryToPager($this->repository->match($specification), $limit, $page);
-    }
-
-    /**
-     * @param integer|Server $server
-     * @param integer $limit
-     * @param integer $page
-     * @return Pagerfanta
-     */
-    public function allByServer($server, $limit = null, $page = null)
-    {
-        $specification = new AndX(
-            new Servers,
-            new Condition\Equals('id', $server, 'servers')
-        );
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -73,7 +53,7 @@ class AdminAdapter extends AbstractAdapter
      */
     public function get($id)
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new AdminSpecification,
             new ById($id)
         );
@@ -88,9 +68,7 @@ class AdminAdapter extends AbstractAdapter
     public function getBy(array $criteria)
     {
         $specification = new AdminSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }
@@ -157,7 +135,9 @@ class AdminAdapter extends AbstractAdapter
     protected function postSubmit(EntityInterface $entity)
     {
         /** @var Admin $entity */
-        if ($entity->getPlainPassword() != '') {
+        if ($entity->getPlainPassword() == '') {
+            $entity->setPassword(null);
+        } elseif ($entity->getPlainPassword() != AdminForm::PASSWORD_PLACEHOLDER_VALUE) {
             $encoder = $this->container->get('security.password_encoder');
             $password = $encoder->encodePassword($entity, $entity->getPlainPassword());
 

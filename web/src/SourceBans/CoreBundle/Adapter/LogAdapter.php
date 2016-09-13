@@ -3,8 +3,8 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
+use Rb\Specification\Doctrine\Logic;
+use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Log;
 use SourceBans\CoreBundle\Specification\ById;
@@ -20,9 +20,13 @@ class LogAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $specification = new LogSpecification;
+        $specification = new Logic\AndX(
+            new LogSpecification,
+            new Query\OrderBy($sort ?: 'createTime', $order)
+        );
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -34,9 +38,7 @@ class LogAdapter extends AbstractAdapter
     public function allBy(array $criteria, $limit = null, $page = null)
     {
         $specification = new LogSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -47,7 +49,7 @@ class LogAdapter extends AbstractAdapter
      */
     public function get($id)
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new LogSpecification,
             new ById($id)
         );
@@ -62,9 +64,7 @@ class LogAdapter extends AbstractAdapter
     public function getBy(array $criteria)
     {
         $specification = new LogSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

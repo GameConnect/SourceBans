@@ -27,8 +27,9 @@ class ServerForm extends AbstractType
             ->add('port', null, [
                 'label' => 'Port',
             ])
-            ->add('rcon', null, [
+            ->add('rcon', OptionalPasswordType::class, [
                 'label' => 'RCON password',
+                'required' => false,
             ])
             ->add('game', GameType::class, [
                 'label' => 'Game',

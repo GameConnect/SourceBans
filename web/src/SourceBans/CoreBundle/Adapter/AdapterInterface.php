@@ -17,10 +17,10 @@ interface AdapterInterface
      * @param integer $page
      * @param string $sort
      * @param string $order
-     * @param array $options
+     * @param array $criteria
      * @return \IteratorAggregate
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = []);
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = []);
 
     /**
      * Get a collection of entities

@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Util\Admin;
 
+use Rb\Specification\Doctrine\Condition;
 use SourceBans\CoreBundle\Entity\Admin;
 
 /**
@@ -14,8 +15,6 @@ class SimpleImport extends AbstractImport
      */
     public function import($file)
     {
-        $serverGroups = $this->serverGroupAdapter->all();
-
         preg_match_all('/"(.+?)"[ \t]*"(.+?)"([ \t]*"(.+?)")?/', file_get_contents($file), $admins);
 
         for ($i = 0; $i < count($admins[0]); $i++) {
@@ -28,7 +27,13 @@ class SimpleImport extends AbstractImport
             $this->parseIdentity($admin, $identity);
 
             if ($flags{0} == '@') {
-                $admin->addServerGroup($serverGroups[substr($flags, 1)]);
+                $serverGroup = $this->serverGroupAdapter->getBy([
+                    new Condition\Equals('name', substr($flags, 1)),
+                ]);
+
+                if ($serverGroup !== null) {
+                    $admin->addServerGroup($serverGroup);
+                }
             }
             if (!empty($password)) {
                 $admin->setPlainPassword($password);

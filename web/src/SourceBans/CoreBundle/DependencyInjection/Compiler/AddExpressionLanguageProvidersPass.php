@@ -25,7 +25,7 @@ class AddExpressionLanguageProvidersPass implements CompilerPassInterface
         if ($container->has('sensio_framework_extra.security.expression_language')) {
             $definition = $container->findDefinition('sensio_framework_extra.security.expression_language');
             foreach ($container->findTaggedServiceIds('security.expression_language_provider') as $id => $attributes) {
-                $definition->addMethodCall('registerProvider', array(new Reference($id)));
+                $definition->addMethodCall('registerProvider', [new Reference($id)]);
             }
         }
     }

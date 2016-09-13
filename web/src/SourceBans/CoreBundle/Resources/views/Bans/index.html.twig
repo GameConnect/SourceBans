@@ -22,7 +22,7 @@
                             <tbody>
                                 {% for ban in bans %}
                                 <tr>
-                                    <td>{{ ban.createTime | date(settings.date_format) }}</td>
+                                    <td>{{ ban.createTime | localizeddate('none', 'none', null, null, settings.date_format) }}</td>
                                     <td>
                                         {% if ban.name %}
                                             {{ ban.name }}
@@ -31,11 +31,11 @@
                                         {% endif %}
                                     </td>
                                     <td class="hidden-xs">{{ ban.admin | default(parameters.console_name) }}</td>
-                                    <td class="text-right{% if ban.isInactive %} success{% endif %}">
+                                    <td class="text-right{% if not ban.isActive %} success{% endif %}">
                                         {% if ban.isPermanent %}
                                             {{ 'Permanent' | trans }}
                                         {% else %}
-                                            {{ (ban.length * 60) | formatLength }}
+                                            {{ (ban.length * 60) | formatLengthText }}
                                         {% endif %}
                                     </td>
                                 </tr>

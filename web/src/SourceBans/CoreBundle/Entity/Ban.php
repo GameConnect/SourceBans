@@ -4,6 +4,7 @@ namespace SourceBans\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serialize;
 use SourceBans\CoreBundle\Validator\Constraints\Ban as BanAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="bans", indexes={@ORM\Index(name="server_id", columns={"server_id"}), @ORM\Index(name="admin_id", columns={"admin_id"}), @ORM\Index(name="unban_admin_id", columns={"unban_admin_id"})})
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  * @ORM\HasLifecycleCallbacks
+ * @Serialize\ExclusionPolicy("all")
  */
 class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountInterface
 {
@@ -28,6 +30,7 @@ class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountI
      * @ORM\Id
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Serialize\Expose
      */
     private $id;
 
@@ -58,6 +61,7 @@ class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountI
      *
      * @Assert\Length(max=64)
      * @ORM\Column(name="name", type="string", length=64, nullable=true)
+     * @Serialize\Expose
      */
     private $name;
 
@@ -75,6 +79,7 @@ class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountI
      *
      * @Assert\Type("integer")
      * @ORM\Column(name="length", type="integer", nullable=false)
+     * @Serialize\Expose
      */
     private $length;
 
@@ -104,6 +109,7 @@ class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountI
      * @var \DateTime
      *
      * @ORM\Column(name="create_time", type="timestamp", nullable=false)
+     * @Serialize\Expose
      */
     private $createTime;
 
@@ -455,14 +461,6 @@ class Ban extends AbstractSteamAccount implements EntityInterface, SteamAccountI
         $expireTime = $this->getCreateTime()->modify('+' . $this->getLength() . ' minutes');
 
         return !$this->isPermanent() && $expireTime < new \DateTime;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isInactive()
-    {
-        return $this->isExpired() || $this->isUnbanned();
     }
 
     /**

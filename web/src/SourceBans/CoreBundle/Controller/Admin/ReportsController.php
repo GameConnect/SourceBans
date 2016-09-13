@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Controller\Admin;
 
+use Rb\Specification\Doctrine\Logic;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -10,6 +11,7 @@ use SourceBans\CoreBundle\Adapter\ReportAdapter;
 use SourceBans\CoreBundle\Entity\Report;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
+use SourceBans\CoreBundle\Specification;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,20 +55,23 @@ class ReportsController
      * @param Request $request
      * @return array|Response
      *
-     * @Route("/admin/reports/{type}", defaults={"type": null})
+     * @Route("/admin/reports")
      * @Security("has_role('ROLE_REPORTS')")
      * @Template
      */
     public function indexAction(Request $request)
     {
-        $isArchive = $request->query->get('type') == 'archive';
+        $specification = new Specification\IsArchived;
+        if ($request->query->get('type') != 'archive') {
+            $specification = new Logic\Not($specification);
+        }
 
         $reports = $this->adapter->all(
             $this->settings->get('items_per_page'),
             $request->query->getInt('page', 1),
             $request->query->get('sort'),
             $request->query->get('order'),
-            [($isArchive ? 'archive' : 'active') => true]
+            [$specification]
         );
 
         return ['reports' => $reports];

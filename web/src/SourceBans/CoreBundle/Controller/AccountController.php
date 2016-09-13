@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Controller;
 
+use Rb\Specification\Doctrine\Condition;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -191,7 +192,10 @@ class AccountController
         $validationKey = $request->query->get('key');
 
         if (!empty($email) && !empty($validationKey)) {
-            $admin = $this->adapter->getBy(['email' => $email, 'validationKey' => $validationKey]);
+            $admin = $this->adapter->getBy([
+                new Condition\Equals('email', $email),
+                new Condition\Equals('validationKey', $validationKey),
+            ]);
 
             if ($admin === null) {
                 throw new BadRequestHttpException('The validation key does not match the email address for this reset request.');
@@ -209,14 +213,15 @@ class AccountController
 
         if ($form->isValid()) {
             $email = $form->get('email')->getData();
-            $admin = $this->adapter->getBy(['email' => $email]);
+            $admin = $this->adapter->getBy([
+                new Condition\Equals('email', $email),
+            ]);
 
             $admin->setValidationKey(bin2hex(random_bytes(16)));
             $this->adapter->persist($admin);
             $this->mailer->sendPasswordResetMail($admin);
 
             return new RedirectResponse($request->getUri());
-
         }
 
         return ['form' => $form->createView()];

@@ -39,7 +39,7 @@ class GameAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
         $query = $this->repository->createQueryBuilder('game')
             ->orderBy(sprintf('game.%s', $sort ?: 'name'), $order)
@@ -53,7 +53,7 @@ class GameAdapter extends AbstractAdapter
      */
     public function allBy(array $criteria, $limit = null, $page = null)
     {
-        $offset = (null === $page ?: $page * $limit - $limit);
+        $offset = (null === $page ? null : ($page - 1) * $limit);
 
         return $this->repository->findBy($criteria, null, $limit, $offset);
     }

@@ -1,4 +1,13 @@
 services:
+    jms_serializer.identical_property_naming_strategy:
+        class: JMS\Serializer\Naming\IdenticalPropertyNamingStrategy
+        public: false
+
+    jms_serializer.serialized_name_annotation_strategy:
+        class: %jms_serializer.serialized_name_annotation_strategy.class%
+        public: false
+        arguments: ["@jms_serializer.identical_property_naming_strategy"]
+
     sourcebans.core.settings:
         class: SourceBans\CoreBundle\Entity\SettingRepository
         factory: ["@doctrine", getRepository]

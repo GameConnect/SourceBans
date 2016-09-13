@@ -4,6 +4,10 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     argv = require('yargs').argv;
 
+var resolve = function (module) {
+    return require.resolve(module).replace(/\.js$/, '');
+};
+
 var vendorPath = __dirname + '/node_modules';
 var srcPaths = {
     sass: 'app/Resources/assets/sass/app.scss',
@@ -26,18 +30,19 @@ var autoprefixerOptions = {
 var requirejsOptions = {
     baseUrl: 'app/Resources/assets/js',
     include: 'app',
-    name: require.resolve('almond'),
+    name: 'almond',
     optimize: argv.production ? 'uglify2' : 'none',
     out: 'app.js',
     paths: {
+        almond: resolve('almond'),
         axios: vendorPath + '/axios/dist/axios',
-        bootstrap: vendorPath + '/bootstrap-sass/assets/javascripts/bootstrap',
-        jquery: vendorPath + '/jquery/dist/jquery',
-        lodash: vendorPath + '/lodash/lodash',
-        matches: vendorPath + '/desandro-matches-selector/matches-selector',
-        raf: vendorPath + '/requestanimationframe/app/requestAnimationFrame',
-        ramda: vendorPath + '/ramda/dist/ramda',
-        tpl: vendorPath + '/lodash-template-loader/loader'
+        bootstrap: resolve('bootstrap-sass'),
+        jquery: resolve('jquery'),
+        lodash: resolve('lodash'),
+        matches: resolve('desandro-matches-selector'),
+        raf: resolve('requestanimationframe'),
+        ramda: resolve('ramda'),
+        tpl: resolve('lodash-template-loader')
     },
     preserveLicenseComments: false,
     shim: {

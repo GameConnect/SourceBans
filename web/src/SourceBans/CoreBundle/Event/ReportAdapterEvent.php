@@ -5,6 +5,9 @@ namespace SourceBans\CoreBundle\Event;
 use SourceBans\CoreBundle\Entity\Report;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * ReportAdapterEvent
+ */
 class ReportAdapterEvent extends Event
 {
     /**

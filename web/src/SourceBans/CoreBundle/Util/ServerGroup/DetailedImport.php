@@ -26,7 +26,7 @@ class DetailedImport extends AbstractImport
             if (isset($data['flags'])) {
                 $serverGroup->setFlags($data['flags']);
             }
-            if (isset($data['identity'])) {
+            if (isset($data['immunity'])) {
                 $serverGroup->setImmunity($data['immunity']);
             }
 

@@ -2,6 +2,7 @@
 
 namespace SourceBans\CoreBundle\Controller\Admin;
 
+use Rb\Specification\Doctrine\Condition;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,6 +13,7 @@ use SourceBans\CoreBundle\Entity\Server;
 use SourceBans\CoreBundle\Entity\SettingRepository;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ImportForm;
+use SourceBans\CoreBundle\Specification\Admin as AdminSpecification;
 use SourceBans\CoreBundle\Util\Admin\ImportFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -190,7 +192,10 @@ class AdminsController
     public function serverAction(Request $request, Server $server)
     {
         return [
-            'admins' => $this->adapter->allByServer($server),
+            'admins' => $this->adapter->allBy([
+                new AdminSpecification\Servers,
+                new Condition\Equals('id', $server, 'servers'),
+            ]),
             'server' => $server,
         ];
     }

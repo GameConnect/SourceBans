@@ -3,11 +3,10 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
+use Rb\Specification\Doctrine\Logic;
 use Rb\Specification\Doctrine\Query;
-use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Comment;
+use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Event\AdapterEvents;
 use SourceBans\CoreBundle\Event\CommentAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
@@ -25,12 +24,13 @@ class CommentAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new CommentSpecification,
-            new Query\OrderBy('createTime')
+            new Query\OrderBy($sort ?: 'createTime', $order)
         );
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -41,13 +41,8 @@ class CommentAdapter extends AbstractAdapter
      */
     public function allBy(array $criteria, $limit = null, $page = null)
     {
-        $specification = new AndX(
-            new CommentSpecification,
-            new Query\OrderBy('createTime')
-        );
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        $specification = new CommentSpecification;
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -58,7 +53,7 @@ class CommentAdapter extends AbstractAdapter
      */
     public function get($id)
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new CommentSpecification,
             new ById($id)
         );
@@ -73,9 +68,7 @@ class CommentAdapter extends AbstractAdapter
     public function getBy(array $criteria)
     {
         $specification = new CommentSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }

@@ -2,6 +2,9 @@
 
 namespace SourceBans\CoreBundle\Twig\Extension;
 
+/**
+ * FormatExtension
+ */
 class FormatExtension extends \Twig_Extension
 {
     /**
@@ -11,6 +14,7 @@ class FormatExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('formatLength', [$this, 'formatLength']),
+            new \Twig_SimpleFilter('formatLengthText', [$this, 'formatLengthText']),
             new \Twig_SimpleFilter('formatSize', [$this, 'formatSize']),
         ];
     }
@@ -24,25 +28,32 @@ class FormatExtension extends \Twig_Extension
     }
 
     /**
-     * Format seconds as "1mo 2wk 3d 4hr 5min 6sec" or "1132:05:06"
+     * Format seconds as "12:34:56"
      *
      * @param integer $secs
-     * @param boolean $textual Whether to output as "1mo 2wk 3d 4hr 5min 6sec" or "1132:05:06"
      * @return string
      */
-    public function formatLength($secs, $textual = true)
+    public function formatLength($secs)
     {
-        if (! $textual) {
-            $hours = (int)($secs / 60 / 60);
-            $secs -= $hours * 60 * 60;
-            $mins = (int)($secs / 60);
-            $secs %= 60;
+        $hours = (int)($secs / 60 / 60);
+        $secs -= $hours * 60 * 60;
+        $mins  = (int)($secs / 60);
+        $secs %= 60;
 
-            return $hours . ':' . $mins . ':' . $secs;
-        }
+        return $hours . ':' . $mins . ':' . $secs;
+    }
 
+    /**
+     * Format seconds as "1 yr, 2 mo, 3 wk, 4 d, 5 hr, 6 min, 7 sec"
+     *
+     * @param integer $secs
+     * @return string
+     */
+    public function formatLengthText($secs)
+    {
         $ret = '';
         $units = [
+            'yr'  => 60 * 60 * 24 * 365,
             'mo'  => 60 * 60 * 24 * 30,
             'wk'  => 60 * 60 * 24 * 7,
             'd'   => 60 * 60 * 24,

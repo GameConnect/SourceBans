@@ -29,6 +29,7 @@
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
+        "jms/serializer-bundle": "^1.1",
         "knplabs/knp-menu-bundle": "~2.0",
         "white-october/pagerfanta-bundle": ">=1.0.2",
         "stfalcon/tinymce-bundle": "~0.4",
@@ -59,8 +60,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
-        "test": "bin/phpspec run",
-        "fix-style": "bin/php-cs-fixer fix"
+        "test": "phpspec run",
+        "fix-style": "php-cs-fixer fix"
     },
     "config": {
         "platform": {

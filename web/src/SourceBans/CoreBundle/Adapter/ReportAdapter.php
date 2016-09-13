@@ -3,8 +3,8 @@
 namespace SourceBans\CoreBundle\Adapter;
 
 use Pagerfanta\Pagerfanta;
-use Rb\Specification\Doctrine\Condition;
-use Rb\Specification\Doctrine\Logic\AndX;
+use Rb\Specification\Doctrine\Logic;
+use Rb\Specification\Doctrine\Query;
 use SourceBans\CoreBundle\Entity\EntityInterface;
 use SourceBans\CoreBundle\Entity\Report;
 use SourceBans\CoreBundle\Event\AdapterEvents;
@@ -12,11 +12,8 @@ use SourceBans\CoreBundle\Event\ReportAdapterEvent;
 use SourceBans\CoreBundle\Exception\InvalidFormException;
 use SourceBans\CoreBundle\Form\ReportForm;
 use SourceBans\CoreBundle\Specification\ById;
-use SourceBans\CoreBundle\Specification\IsActive;
-use SourceBans\CoreBundle\Specification\IsArchived;
 use SourceBans\CoreBundle\Specification\ReportSpecification;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * ReportAdapter
@@ -27,19 +24,13 @@ class ReportAdapter extends AbstractAdapter
      * @inheritdoc
      * @return Pagerfanta
      */
-    public function all($limit = null, $page = null, $sort = null, $order = null, array $options = [])
+    public function all($limit = null, $page = null, $sort = null, $order = null, array $criteria = [])
     {
-        $resolver = new OptionsResolver;
-        $resolver->setDefault('active', false);
-        $resolver->setDefault('archive', false);
-        $options = $resolver->resolve($options);
-
-        $specification = new ReportSpecification;
-        if ($options['active']) {
-            $specification->add(new IsActive);
-        } elseif ($options['archive']) {
-            $specification->add(new IsArchived);
-        }
+        $specification = new Logic\AndX(
+            new ReportSpecification,
+            new Query\OrderBy($sort ?: 'createTime', $order)
+        );
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -51,9 +42,7 @@ class ReportAdapter extends AbstractAdapter
     public function allBy(array $criteria, $limit = null, $page = null)
     {
         $specification = new ReportSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return static::queryToPager($this->repository->match($specification), $limit, $page);
     }
@@ -64,7 +53,7 @@ class ReportAdapter extends AbstractAdapter
      */
     public function get($id)
     {
-        $specification = new AndX(
+        $specification = new Logic\AndX(
             new ReportSpecification,
             new ById($id)
         );
@@ -79,9 +68,7 @@ class ReportAdapter extends AbstractAdapter
     public function getBy(array $criteria)
     {
         $specification = new ReportSpecification;
-        foreach ($criteria as $field => $value) {
-            $specification->add(new Condition\Equals($field, $value));
-        }
+        array_map([$specification, 'add'], $criteria);
 
         return $this->repository->match($specification)->getOneOrNullResult();
     }
@@ -138,8 +125,8 @@ class ReportAdapter extends AbstractAdapter
         /** @var Report $entity */
         $entity->setArchived(true);
 
-        $this->objectManager->persist($entity);
-        $this->objectManager->flush();
+        parent::persist($entity);
+
         $this->dispatcher->dispatch(AdapterEvents::REPORT_ARCHIVE, new ReportAdapterEvent($entity));
     }
 

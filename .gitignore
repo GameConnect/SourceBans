@@ -1,0 +1,13 @@
+###> symfony/framework-bundle ###
+/web/.env.local
+/web/.env.*.local
+/web/public/bundles/
+/web/var/
+/web/vendor/
+###< symfony/framework-bundle ###
+
+/.idea/
+/db/
+/web/.env
+/web/node_modules/
+/web/public/build/

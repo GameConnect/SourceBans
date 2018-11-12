@@ -2,11 +2,12 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}SourceBans{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <link rel="stylesheet" href="{{ asset('build/main.css') }}">
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        <script src="{{ asset('build/main.js') }}"></script>
     </body>
 </html>

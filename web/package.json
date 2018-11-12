@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@symfony/webpack-encore": "^0.21.0",
+    "bootstrap": "^4.1.3",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0"
+  }
+}

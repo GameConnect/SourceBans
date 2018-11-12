@@ -19,6 +19,7 @@ doctrine:
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
+        default_repository_class: Rb\Specification\Doctrine\SpecificationRepository
         auto_mapping: true
         mappings:
             SourceBans:

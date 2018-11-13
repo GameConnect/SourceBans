@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="{{ asset('build/main.css') }}">
     </head>
     <body>
+        {% include 'layout/_page-header.html.twig' %}
         {% block body %}{% endblock %}
         <script src="{{ asset('build/main.js') }}"></script>
     </body>

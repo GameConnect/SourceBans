@@ -1,0 +1,20 @@
+.page-header {
+    @extend .mb-3;
+
+    > nav {
+        @extend .navbar;
+        @extend .navbar-expand-lg;
+        @extend .navbar-dark;
+        @extend .bg-dark;
+
+        > div {
+            @extend .container;
+        }
+    }
+
+    &__brand {
+        @extend .navbar-brand;
+        @extend .h1;
+        @extend .mb-0;
+    }
+}

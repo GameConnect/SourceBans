@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Games « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <div class="row">
+            <div class="col">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th width="50%">Folder</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for game in games %}
+                        <tr>
+                            <td>{{ game.name }}</td>
+                            <td>{{ game.folder }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

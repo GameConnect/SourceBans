@@ -8,3 +8,15 @@ login:
 
 logout:
     path: /logout
+
+admin_admins_index:
+    path: /admin/admins
+    controller: SourceBans\Controller\Admin\AdminsController::index
+
+admin_games_index:
+    path: /admin/games
+    controller: SourceBans\Controller\Admin\GamesController::index
+
+admin_servers_index:
+    path: /admin/servers
+    controller: SourceBans\Controller\Admin\ServersController::index

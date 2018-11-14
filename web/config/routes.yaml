@@ -1,3 +1,10 @@
 index:
     path: /
     controller: SourceBans\Controller\DefaultController::index
+
+login:
+    path: /login
+    controller: SourceBans\Controller\DefaultController::login
+
+logout:
+    path: /logout

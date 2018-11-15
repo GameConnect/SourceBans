@@ -6,6 +6,11 @@
 /web/vendor/
 ###< symfony/framework-bundle ###
 
+###> friendsofphp/php-cs-fixer ###
+/web/.php_cs
+/web/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###
+
 /.idea/
 /db/
 /web/.env

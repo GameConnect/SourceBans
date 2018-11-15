@@ -22,6 +22,7 @@
         "xpaw/steamid": "^1.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.13",
         "symfony/dotenv": "4.1.*",
         "symfony/profiler-pack": "^1.0"
     },
@@ -59,7 +60,8 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "fix": "php-cs-fixer fix"
     },
     "conflict": {
         "symfony/symfony": "*"

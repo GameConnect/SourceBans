@@ -1,0 +1,14 @@
+<?php
+
+return PhpCsFixer\Config::create()
+    ->setFinder(
+        PhpCsFixer\Finder::create()
+            ->in(__DIR__.'/src')
+            ->notPath('Kernel.php')
+    )
+    ->setRules([
+        '@Symfony' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'yoda_style' => false,
+    ])
+;

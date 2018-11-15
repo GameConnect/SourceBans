@@ -13,6 +13,7 @@
         "symfony/flex": "^1.1",
         "symfony/form": "4.1.*",
         "symfony/framework-bundle": "4.1.*",
+        "symfony/messenger": "4.1.*",
         "symfony/orm-pack": "^1.0",
         "symfony/security-bundle": "4.1.*",
         "symfony/templating": "4.1.*",

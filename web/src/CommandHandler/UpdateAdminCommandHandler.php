@@ -1,0 +1,37 @@
+<?php
+
+namespace SourceBans\CommandHandler;
+
+use Doctrine\ORM\EntityManagerInterface;
+use SourceBans\Command\UpdateAdmin;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
+class UpdateAdminCommandHandler
+{
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var UserPasswordEncoderInterface */
+    private $passwordEncoder;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserPasswordEncoderInterface $passwordEncoder
+    ) {
+        $this->entityManager = $entityManager;
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    public function __invoke(UpdateAdmin $command)
+    {
+        $admin = $command->getAdmin();
+
+        if ($admin->getPlainPassword()) {
+            $password = $this->passwordEncoder->encodePassword($admin, $admin->getPlainPassword());
+            $admin->setPassword($password);
+        }
+
+        $this->entityManager->persist($admin);
+        $this->entityManager->flush();
+    }
+}

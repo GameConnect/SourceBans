@@ -1,0 +1,8 @@
+framework:
+    messenger:
+        # The bus that is going to be injected when injecting MessageBusInterface:
+        default_bus: messenger.bus.commands
+
+        buses:
+            messenger.bus.commands: ~
+            messenger.bus.events: ~

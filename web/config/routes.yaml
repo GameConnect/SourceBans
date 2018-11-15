@@ -13,6 +13,18 @@ admin_admins_index:
     path: /admin/admins
     controller: SourceBans\Controller\Admin\AdminsController::index
 
+admin_admins_add:
+    path: /admin/admins/add
+    controller: SourceBans\Controller\Admin\AdminsController::add
+
+admin_admins_edit:
+    path: /admin/admins/edit/{id}
+    controller: SourceBans\Controller\Admin\AdminsController::edit
+
+admin_admins_delete:
+    path: /admin/admins/delete/{id}
+    controller: SourceBans\Controller\Admin\AdminsController::delete
+
 admin_games_index:
     path: /admin/games
     controller: SourceBans\Controller\Admin\GamesController::index

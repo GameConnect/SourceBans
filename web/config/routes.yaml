@@ -25,6 +25,22 @@ admin_admins_delete:
     path: /admin/admins/delete/{id}
     controller: SourceBans\Controller\Admin\AdminsController::delete
 
+admin_bans_add:
+    path: /admin/bans/add
+    controller: SourceBans\Controller\Admin\BansController::add
+
+admin_bans_edit:
+    path: /admin/bans/edit/{id}
+    controller: SourceBans\Controller\Admin\BansController::edit
+
+admin_bans_delete:
+    path: /admin/bans/delete/{id}
+    controller: SourceBans\Controller\Admin\BansController::delete
+
+admin_bans_unban:
+    path: /admin/bans/unban/{id}
+    controller: SourceBans\Controller\Admin\BansController::unban
+
 admin_games_index:
     path: /admin/games
     controller: SourceBans\Controller\Admin\GamesController::index

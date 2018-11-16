@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Unban ban « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                {{ form_start(form) }}
+                    {{ form_row(form.unbanReason) }}
+                    {{ form_row(form.submit, {'attr': {'class': 'btn-primary'}}) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </main>
+{% endblock %}

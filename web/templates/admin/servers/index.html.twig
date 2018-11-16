@@ -9,12 +9,14 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th width="16">Game</th>
                             <th>Hostname</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for server in servers %}
                         <tr>
+                            <td><img src="{{ asset('images/games/' ~ server.game.icon) }}" alt="{{ server.game }}"></td>
                             <td>{{ server }}</td>
                         </tr>
                         {% endfor %}

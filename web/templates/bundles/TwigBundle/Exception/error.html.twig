@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Error « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page page--error">
+        <div class="row">
+            <div class="col">
+                <h2>{{ status_code }}</h2>
+                <p>{{ status_text }}</p>
+            </div>
+        </div>
+    </main>
+{% endblock %}

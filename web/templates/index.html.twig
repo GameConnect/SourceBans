@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Hello {{ app.user.name ?? 'world' }}!
+    <main class="page">
+        Hello {{ app.user.name ?? 'world' }}!
+    </main>
 {% endblock %}

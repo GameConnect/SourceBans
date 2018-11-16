@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Server groups « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row">
+            <div class="col">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for serverGroup in serverGroups %}
+                        <tr>
+                            <td>{{ serverGroup.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

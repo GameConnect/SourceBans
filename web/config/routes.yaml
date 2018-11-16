@@ -57,6 +57,38 @@ admin_games_delete:
     path: /admin/games/delete/{id}
     controller: SourceBans\Controller\Admin\GamesController::delete
 
+admin_groups_index:
+    path: /admin/web-groups
+    controller: SourceBans\Controller\Admin\GroupsController::index
+
+admin_groups_add:
+    path: /admin/web-groups/add
+    controller: SourceBans\Controller\Admin\GroupsController::add
+
+admin_groups_edit:
+    path: /admin/web-groups/edit/{id}
+    controller: SourceBans\Controller\Admin\GroupsController::edit
+
+admin_groups_delete:
+    path: /admin/web-groups/delete/{id}
+    controller: SourceBans\Controller\Admin\GroupsController::delete
+
+admin_server_groups_index:
+    path: /admin/server-groups
+    controller: SourceBans\Controller\Admin\ServerGroupsController::index
+
+admin_server_groups_add:
+    path: /admin/server-groups/add
+    controller: SourceBans\Controller\Admin\ServerGroupsController::add
+
+admin_server_groups_edit:
+    path: /admin/server-groups/edit/{id}
+    controller: SourceBans\Controller\Admin\ServerGroupsController::edit
+
+admin_server_groups_delete:
+    path: /admin/server-groups/delete/{id}
+    controller: SourceBans\Controller\Admin\ServerGroupsController::delete
+
 admin_servers_index:
     path: /admin/servers
     controller: SourceBans\Controller\Admin\ServersController::index

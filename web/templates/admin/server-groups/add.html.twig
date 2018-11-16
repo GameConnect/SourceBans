@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add server group « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row">
+            <div class="col">
+                {% include 'admin/server-groups/_form.html.twig' %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

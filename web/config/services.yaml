@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    sourcebans.games_images_dir: '%kernel.project_dir%/public/images/games'
 
 services:
     # default configuration for services in *this* file
@@ -29,4 +30,19 @@ services:
 
     SourceBans\CommandHandler\:
         resource: '../src/CommandHandler'
+        tags: ['messenger.message_handler']
+
+    SourceBans\Controller\Admin\GamesController:
+        arguments:
+            $imagesDir: '%sourcebans.games_images_dir%'
+        tags: ['controller.service_arguments']
+
+    SourceBans\CommandHandler\CreateGameCommandHandler:
+        arguments:
+            $imagesDir: '%sourcebans.games_images_dir%'
+        tags: ['messenger.message_handler']
+
+    SourceBans\CommandHandler\UpdateGameCommandHandler:
+        arguments:
+            $imagesDir: '%sourcebans.games_images_dir%'
         tags: ['messenger.message_handler']

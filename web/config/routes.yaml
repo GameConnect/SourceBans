@@ -29,6 +29,30 @@ admin_games_index:
     path: /admin/games
     controller: SourceBans\Controller\Admin\GamesController::index
 
+admin_games_add:
+    path: /admin/games/add
+    controller: SourceBans\Controller\Admin\GamesController::add
+
+admin_games_edit:
+    path: /admin/games/edit/{id}
+    controller: SourceBans\Controller\Admin\GamesController::edit
+
+admin_games_delete:
+    path: /admin/games/delete/{id}
+    controller: SourceBans\Controller\Admin\GamesController::delete
+
 admin_servers_index:
     path: /admin/servers
     controller: SourceBans\Controller\Admin\ServersController::index
+
+admin_servers_add:
+    path: /admin/servers/add
+    controller: SourceBans\Controller\Admin\ServersController::add
+
+admin_servers_edit:
+    path: /admin/servers/edit/{id}
+    controller: SourceBans\Controller\Admin\ServersController::edit
+
+admin_servers_delete:
+    path: /admin/servers/delete/{id}
+    controller: SourceBans\Controller\Admin\ServersController::delete

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit server « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <div class="row">
+            <div class="col">
+                {% include 'admin/servers/_form.html.twig' %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

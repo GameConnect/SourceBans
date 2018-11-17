@@ -9,6 +9,10 @@ login:
 logout:
     path: /logout
 
+bans:
+    path: /bans
+    controller: SourceBans\Controller\BansController::index
+
 admin_admins_index:
     path: /admin/admins
     controller: SourceBans\Controller\Admin\AdminsController::index

@@ -6,3 +6,6 @@ twig:
         format: m-d-y H:i
         timezone: Europe/Amsterdam
     form_themes: ['bootstrap_4_layout.html.twig']
+    globals:
+        sourcebans:
+            console_name: '%sourcebans.console_name%'

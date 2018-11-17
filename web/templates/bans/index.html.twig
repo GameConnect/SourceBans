@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bans « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row">
+            <div class="col">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th width="10%">Added on</th>
+                            <th>Name</th>
+                            <th width="30%">Admin</th>
+                            <th width="10%" class="text-right">Length</th>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <th width="5%">&nbsp;</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <h2>
+                            Bans
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin_bans_add') }}" class="btn btn-secondary float-right">Add ban</a>
+                            {% endif %}
+                        </h2>
+                        {% for ban in bans %}
+                        <tr>
+                            <td>{{ ban.createTime | date }}</td>
+                            <td>
+                                {% if ban.name %}
+                                    {{ ban.name }}
+                                {% else %}
+                                    <em class="text-muted">Unknown</em>
+                                {% endif %}
+                            </td>
+                            <td>{{ ban.admin | default(sourcebans.console_name) }}</td>
+                            <td class="text-right {% if not ban.isActive %}bg-success{% endif %}">
+                                {% if ban.isPermanent %}
+                                    Permanent
+                                {% else %}
+                                    {{ (ban.length * 60) | formatLengthText }}
+                                {% endif %}
+                            </td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                <a href="{{ path('admin_bans_edit', {'id': ban.id}) }}">Edit</a>
+                                {% if ban.isActive %}
+                                <a href="{{ path('admin_bans_unban', {'id': ban.id}) }}">Unban</a>
+                                {% endif %}
+                                <a href="{{ path('admin_bans_delete', {'id': ban.id}) }}">Delete</a>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

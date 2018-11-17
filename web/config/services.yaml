@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    sourcebans.console_name: 'CONSOLE'
     sourcebans.games_images_dir: '%kernel.project_dir%/public/images/games'
 
 services:

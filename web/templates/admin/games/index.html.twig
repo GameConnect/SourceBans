@@ -6,11 +6,16 @@
     <main class="page">
         <div class="row">
             <div class="col">
+                <h2>
+                    Games
+                    <a href="{{ path('admin_games_add') }}" class="btn btn-secondary float-right">Add game</a>
+                </h2>
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th width="50%">Folder</th>
+                            <th width="45%">Folder</th>
+                            <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -18,6 +23,10 @@
                         <tr>
                             <td>{{ game.name }}</td>
                             <td>{{ game.folder }}</td>
+                            <td>
+                                <a href="{{ path('admin_games_edit', {'id': game.id}) }}">Edit</a>
+                                <a href="{{ path('admin_games_delete', {'id': game.id}) }}">Delete</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

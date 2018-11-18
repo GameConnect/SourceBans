@@ -17,4 +17,20 @@
         @extend .h1;
         @extend .mb-0;
     }
+
+    &__nav {
+        @extend .navbar-nav;
+
+        &--admin {
+            @extend .ml-auto;
+        }
+
+        > li {
+            @extend .nav-item;
+
+            > a {
+                @extend .nav-link;
+            }
+        }
+    }
 }

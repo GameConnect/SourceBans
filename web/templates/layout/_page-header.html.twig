@@ -2,6 +2,44 @@
     <nav>
         <div>
             <a href="{{ path('index') }}" class="page-header__brand">SourceBans</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-toggler"
+                    aria-controls="navbar-toggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbar-toggler" class="collapse navbar-collapse">
+                <ul class="page-header__nav">
+                    <li {% if is_current_route('index') %}class="active"{% endif %}>
+                        <a href="{{ path('index') }}">Dashboard</a>
+                    </li>
+                    <li {% if is_current_route('bans') %}class="active"{% endif %}>
+                        <a href="{{ path('bans') }}">Bans</a>
+                    </li>
+                </ul>
+                <ul class="page-header__nav page-header__nav--admin">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li class="dropdown">
+                        <a href="#" role="button" id="admin-dropdown" class="dropdown-toggle"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Admin
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="admin-dropdown">
+                            <a href="{{ path('admin_admins_index') }}" class="dropdown-item">Admins</a>
+                            <a href="{{ path('admin_games_index') }}" class="dropdown-item">Games</a>
+                            <a href="{{ path('admin_servers_index') }}" class="dropdown-item">Servers</a>
+                            <a href="{{ path('admin_server_groups_index') }}" class="dropdown-item">Server groups</a>
+                            <a href="{{ path('admin_groups_index') }}" class="dropdown-item">Web groups</a>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{{ path('logout') }}">Log out</a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ path('login') }}">Log in</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </nav>
 </header>

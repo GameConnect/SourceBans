@@ -1,0 +1,7 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "nl"			"U bent gebanned van deze server, kijk op {1} voor meer informatie"
+    }
+}

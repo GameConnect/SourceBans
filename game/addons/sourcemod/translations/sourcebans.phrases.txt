@@ -1,0 +1,8 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "#format"		"{1:s}"
+        "en"			"You have been banned by this server, check {1} for more information"
+    }
+}

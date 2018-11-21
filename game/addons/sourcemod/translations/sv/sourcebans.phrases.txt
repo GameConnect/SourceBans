@@ -1,0 +1,7 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "sv"			"Du är bannlyst ifrån denna server, besök {1} för mer information"
+    }
+}

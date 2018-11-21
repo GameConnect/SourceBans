@@ -1,0 +1,7 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "pl"			"Zostałeś zbanowany na tym serwerze, odwiedź {1} aby poznać szczegóły"
+    }
+}

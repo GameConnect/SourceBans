@@ -1,0 +1,7 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "chi"			"你被当前服务器封禁, 请检查 {1} 获取更多信息"
+    }
+}

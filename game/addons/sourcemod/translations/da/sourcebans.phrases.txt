@@ -1,0 +1,7 @@
+"Phrases"
+{
+    "Banned Check Site"
+    {
+        "da"			"Du er blevet udlukket fra denne server, check {1} for mere info"
+    }
+}

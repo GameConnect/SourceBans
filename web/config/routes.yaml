@@ -41,6 +41,15 @@ admin_admins_delete:
     path: /admin/admins/delete/{id}
     controller: SourceBans\Controller\Admin\AdminsController::delete
 
+admin_appeals_index:
+    path: /admin/appeals/{type}
+    controller: SourceBans\Controller\Admin\AppealsController::index
+    defaults: { type: '' }
+
+admin_appeals_archive:
+    path: /admin/appeals/archive/{id}
+    controller: SourceBans\Controller\Admin\AppealsController::archive
+
 admin_bans_add:
     path: /admin/bans/add
     controller: SourceBans\Controller\Admin\BansController::add
@@ -88,6 +97,15 @@ admin_groups_edit:
 admin_groups_delete:
     path: /admin/web-groups/delete/{id}
     controller: SourceBans\Controller\Admin\GroupsController::delete
+
+admin_reports_index:
+    path: /admin/reports/{type}
+    controller: SourceBans\Controller\Admin\ReportsController::index
+    defaults: { type: '' }
+
+admin_reports_archive:
+    path: /admin/reports/archive/{id}
+    controller: SourceBans\Controller\Admin\ReportsController::archive
 
 admin_server_groups_index:
     path: /admin/server-groups

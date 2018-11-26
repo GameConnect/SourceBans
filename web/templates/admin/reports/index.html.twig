@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reports « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row">
+            <div class="col">
+                <h2>Reports</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th width="45%">Identity</th>
+                            <th width="5%">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr>
+                            <td>{{ report.name }}</td>
+                            <td>{{ report.steam | default(report.ip) }}</td>
+                            <td>
+                                <a href="{{ path('admin_reports_archive', {'id': report.id}) }}">Archive</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+{% endblock %}

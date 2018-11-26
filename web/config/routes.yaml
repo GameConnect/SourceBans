@@ -13,6 +13,10 @@ bans:
     path: /bans
     controller: SourceBans\Controller\BansController::index
 
+bans_export:
+    path: /bans/export/{type}
+    controller: SourceBans\Controller\BansController::export
+
 admin_admins_index:
     path: /admin/admins
     controller: SourceBans\Controller\Admin\AdminsController::index

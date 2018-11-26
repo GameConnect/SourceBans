@@ -14,6 +14,12 @@
                     <li {% if is_current_route('bans') %}class="active"{% endif %}>
                         <a href="{{ path('bans') }}">Bans</a>
                     </li>
+                    <li {% if is_current_route('appeal') %}class="active"{% endif %}>
+                        <a href="{{ path('appeal') }}">Appeal ban</a>
+                    </li>
+                    <li {% if is_current_route('report') %}class="active"{% endif %}>
+                        <a href="{{ path('report') }}">Report player</a>
+                    </li>
                 </ul>
                 <ul class="page-header__nav page-header__nav--admin">
                     {% if is_granted('ROLE_ADMIN') %}

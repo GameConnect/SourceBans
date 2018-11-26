@@ -2,6 +2,14 @@ index:
     path: /
     controller: SourceBans\Controller\DefaultController::index
 
+appeal:
+    path: /appeal
+    controller: SourceBans\Controller\DefaultController::appeal
+
+report:
+    path: /report
+    controller: SourceBans\Controller\DefaultController::report
+
 login:
     path: /login
     controller: SourceBans\Controller\DefaultController::login

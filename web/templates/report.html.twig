@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Report player « {{ parent() }}{% endblock %}
+
+{% block body %}
+    <main class="page">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                {{ form_start(form) }}
+                    {{ form_row(form.steam) }}
+                    {{ form_row(form.ip) }}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.reason) }}
+                    {{ form_row(form.userName) }}
+                    {{ form_row(form.userEmail) }}
+                    {{ form_row(form.server) }}
+                    {{ form_row(form.submit, {'attr': {'class': 'btn-primary'}}) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </main>
+{% endblock %}

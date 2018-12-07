@@ -76,9 +76,8 @@ class ServerGroupsController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, ServerGroup $serverGroup): Response
     {
-        $serverGroup = $this->repository->find($id);
         $form = $this->formFactory->create(ServerGroupForm::class, $serverGroup)
             ->handleRequest($request);
 
@@ -93,9 +92,9 @@ class ServerGroupsController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(ServerGroup $serverGroup): Response
     {
-        $this->commandBus->dispatch(new DeleteServerGroup($id));
+        $this->commandBus->dispatch(new DeleteServerGroup($serverGroup));
 
         return new RedirectResponse($this->router->generate('admin_server_groups_index'));
     }

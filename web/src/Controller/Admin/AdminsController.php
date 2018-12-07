@@ -81,9 +81,8 @@ class AdminsController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, Admin $admin): Response
     {
-        $admin = $this->repository->find($id);
         $form = $this->formFactory->create(AdminForm::class, $admin)
             ->handleRequest($request);
 
@@ -98,9 +97,9 @@ class AdminsController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(Admin $admin): Response
     {
-        $this->commandBus->dispatch(new DeleteAdmin($id));
+        $this->commandBus->dispatch(new DeleteAdmin($admin));
 
         return new RedirectResponse($this->router->generate('admin_admins_index'));
     }

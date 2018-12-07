@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Report;
+
 class ArchiveReport
 {
-    /** @var int */
-    private $id;
+    /** @var Report */
+    private $report;
 
-    public function __construct(int $id)
+    public function __construct(Report $report)
     {
-        $this->id = $id;
+        $this->report = $report;
     }
 
-    public function getId(): int
+    public function getReport(): Report
     {
-        return $this->id;
+        return $this->report;
     }
 }

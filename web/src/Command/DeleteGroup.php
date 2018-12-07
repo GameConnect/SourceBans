@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Group;
+
 class DeleteGroup
 {
-    /** @var int */
-    private $id;
+    /** @var Group */
+    private $group;
 
-    public function __construct(int $id)
+    public function __construct(Group $group)
     {
-        $this->id = $id;
+        $this->group = $group;
     }
 
-    public function getId(): int
+    public function getGroup(): Group
     {
-        return $this->id;
+        return $this->group;
     }
 }

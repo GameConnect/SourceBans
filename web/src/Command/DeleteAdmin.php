@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Admin;
+
 class DeleteAdmin
 {
-    /** @var int */
-    private $id;
+    /** @var Admin */
+    private $admin;
 
-    public function __construct(int $id)
+    public function __construct(Admin $admin)
     {
-        $this->id = $id;
+        $this->admin = $admin;
     }
 
-    public function getId(): int
+    public function getAdmin(): Admin
     {
-        return $this->id;
+        return $this->admin;
     }
 }

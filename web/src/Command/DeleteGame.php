@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Game;
+
 class DeleteGame
 {
-    /** @var int */
-    private $id;
+    /** @var Game */
+    private $game;
 
-    public function __construct(int $id)
+    public function __construct(Game $game)
     {
-        $this->id = $id;
+        $this->game = $game;
     }
 
-    public function getId(): int
+    public function getGame(): Game
     {
-        return $this->id;
+        return $this->game;
     }
 }

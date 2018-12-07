@@ -83,9 +83,8 @@ class ServersController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, Server $server): Response
     {
-        $server = $this->repository->find($id);
         $form = $this->formFactory->create(ServerForm::class, $server)
             ->handleRequest($request);
 
@@ -100,9 +99,9 @@ class ServersController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(Server $server): Response
     {
-        $this->commandBus->dispatch(new DeleteServer($id));
+        $this->commandBus->dispatch(new DeleteServer($server));
 
         return new RedirectResponse($this->router->generate('admin_servers_index'));
     }

@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Server;
+
 class DeleteServer
 {
-    /** @var int */
-    private $id;
+    /** @var Server */
+    private $server;
 
-    public function __construct(int $id)
+    public function __construct(Server $server)
     {
-        $this->id = $id;
+        $this->server = $server;
     }
 
-    public function getId(): int
+    public function getServer(): Server
     {
-        return $this->id;
+        return $this->server;
     }
 }

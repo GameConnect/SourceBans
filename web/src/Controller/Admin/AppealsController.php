@@ -61,9 +61,9 @@ class AppealsController
         ]);
     }
 
-    public function archive(int $id): Response
+    public function archive(Appeal $appeal): Response
     {
-        $this->commandBus->dispatch(new ArchiveAppeal($id));
+        $this->commandBus->dispatch(new ArchiveAppeal($appeal));
 
         return new RedirectResponse($this->router->generate('admin_appeals_index'));
     }

@@ -2,8 +2,6 @@
 
 namespace SourceBans\Controller\Admin;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use SourceBans\Command\CreateBan;
 use SourceBans\Command\DeleteBan;
 use SourceBans\Command\UnbanBan;
@@ -25,9 +23,6 @@ class BansController
     /** @var EngineInterface */
     private $templating;
 
-    /** @var EntityRepository */
-    private $repository;
-
     /** @var FormFactoryInterface */
     private $formFactory;
 
@@ -42,14 +37,12 @@ class BansController
 
     public function __construct(
         EngineInterface $templating,
-        EntityManagerInterface $entityManager,
         FormFactoryInterface $formFactory,
         MessageBusInterface $commandBus,
         RouterInterface $router,
         Security $security
     ) {
         $this->templating = $templating;
-        $this->repository = $entityManager->getRepository(Ban::class);
         $this->formFactory = $formFactory;
         $this->commandBus = $commandBus;
         $this->router = $router;
@@ -76,9 +69,8 @@ class BansController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, Ban $ban): Response
     {
-        $ban = $this->repository->find($id);
         $form = $this->formFactory->create(BanForm::class, $ban)
             ->handleRequest($request);
 
@@ -93,9 +85,8 @@ class BansController
         ]);
     }
 
-    public function unban(Request $request, int $id): Response
+    public function unban(Request $request, Ban $ban): Response
     {
-        $ban = $this->repository->find($id);
         $form = $this->formFactory->create(UnbanForm::class, $ban)
             ->handleRequest($request);
 
@@ -112,9 +103,9 @@ class BansController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(Ban $ban): Response
     {
-        $this->commandBus->dispatch(new DeleteBan($id));
+        $this->commandBus->dispatch(new DeleteBan($ban));
 
         return new RedirectResponse($this->router->generate('index'));
     }

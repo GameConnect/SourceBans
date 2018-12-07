@@ -76,9 +76,8 @@ class GroupsController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, Group $group): Response
     {
-        $group = $this->repository->find($id);
         $form = $this->formFactory->create(GroupForm::class, $group)
             ->handleRequest($request);
 
@@ -93,9 +92,9 @@ class GroupsController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(Group $group): Response
     {
-        $this->commandBus->dispatch(new DeleteGroup($id));
+        $this->commandBus->dispatch(new DeleteGroup($group));
 
         return new RedirectResponse($this->router->generate('admin_groups_index'));
     }

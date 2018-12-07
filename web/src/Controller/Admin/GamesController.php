@@ -82,9 +82,8 @@ class GamesController
         ]);
     }
 
-    public function edit(Request $request, int $id): Response
+    public function edit(Request $request, Game $game): Response
     {
-        $game = $this->repository->find($id);
         $game->setIcon(new File($this->imagesDir.'/'.$game->getIcon()));
 
         $form = $this->formFactory->create(GameForm::class, $game)
@@ -101,9 +100,9 @@ class GamesController
         ]);
     }
 
-    public function delete(int $id): Response
+    public function delete(Game $game): Response
     {
-        $this->commandBus->dispatch(new DeleteGame($id));
+        $this->commandBus->dispatch(new DeleteGame($game));
 
         return new RedirectResponse($this->router->generate('admin_games_index'));
     }

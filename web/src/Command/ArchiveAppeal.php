@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Appeal;
+
 class ArchiveAppeal
 {
-    /** @var int */
-    private $id;
+    /** @var Appeal */
+    private $appeal;
 
-    public function __construct(int $id)
+    public function __construct(Appeal $appeal)
     {
-        $this->id = $id;
+        $this->appeal = $appeal;
     }
 
-    public function getId(): int
+    public function getAppeal(): Appeal
     {
-        return $this->id;
+        return $this->appeal;
     }
 }

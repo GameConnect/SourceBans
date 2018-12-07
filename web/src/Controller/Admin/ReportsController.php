@@ -61,9 +61,9 @@ class ReportsController
         ]);
     }
 
-    public function archive(int $id): Response
+    public function archive(Report $report): Response
     {
-        $this->commandBus->dispatch(new ArchiveReport($id));
+        $this->commandBus->dispatch(new ArchiveReport($report));
 
         return new RedirectResponse($this->router->generate('admin_reports_index'));
     }

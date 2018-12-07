@@ -2,18 +2,20 @@
 
 namespace SourceBans\Command;
 
+use SourceBans\Entity\Ban;
+
 class DeleteBan
 {
-    /** @var int */
-    private $id;
+    /** @var Ban */
+    private $ban;
 
-    public function __construct(int $id)
+    public function __construct(Ban $ban)
     {
-        $this->id = $id;
+        $this->ban = $ban;
     }
 
-    public function getId(): int
+    public function getBan(): Ban
     {
-        return $this->id;
+        return $this->ban;
     }
 }

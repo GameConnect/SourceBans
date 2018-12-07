@@ -1,0 +1,10 @@
+th,
+td {
+    &.icon {
+        width: 16px;
+
+        > img {
+            vertical-align: text-top;
+        }
+    }
+}

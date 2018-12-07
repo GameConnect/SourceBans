@@ -10,19 +10,19 @@
                     Servers
                     <a href="{{ path('admin_servers_add') }}" class="btn btn-secondary float-right">Add server</a>
                 </h2>
-                <table class="table table-hover">
+                <table id="server-list" class="table table-hover" data-info-url="{{ path('servers_info', {'id': '__ID__'}) }}">
                     <thead>
                         <tr>
-                            <th width="16">Game</th>
+                            <th class="icon">Game</th>
                             <th>Hostname</th>
                             <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for server in servers %}
-                        <tr>
-                            <td><img src="{{ asset('images/games/' ~ server.game.icon) }}" alt="{{ server.game }}"></td>
-                            <td>{{ server }}</td>
+                        <tr data-id="{{ server.id }}">
+                            <td class="icon"><img src="{{ asset('images/games/' ~ server.game.icon) }}" alt="{{ server.game }}"></td>
+                            <td data-column="hostname">{{ server }}</td>
                             <td>
                                 <a href="{{ path('admin_servers_edit', {'id': server.id}) }}">Edit</a>
                                 <a href="{{ path('admin_servers_delete', {'id': server.id}) }}">Delete</a>

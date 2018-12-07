@@ -125,6 +125,15 @@
     "rikbruil/specification": {
         "version": "0.9.4"
     },
+    "sensio/framework-extra-bundle": {
+        "version": "5.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
+        }
+    },
     "symfony/asset": {
         "version": "v4.1.7"
     },
@@ -304,6 +313,9 @@
     },
     "twig/twig": {
         "version": "v2.5.0"
+    },
+    "xpaw/php-source-query-class": {
+        "version": "1.0.0"
     },
     "xpaw/steamid": {
         "version": "1.0.1"

@@ -25,6 +25,11 @@ bans_export:
     path: /bans/export/{type}
     controller: SourceBans\Controller\BansController::export
 
+servers_info:
+    path: /servers/info/{id}
+    controller: SourceBans\Controller\ServersController::info
+    defaults: {_format: 'json'}
+
 admin_admins_index:
     path: /admin/admins
     controller: SourceBans\Controller\Admin\AdminsController::index

@@ -5,18 +5,22 @@
         <div class="row">
             <div class="col">
                 <h2>Servers</h2>
-                <table class="table table-hover">
+                <table id="server-list" class="table table-hover" data-info-url="{{ path('servers_info', {'id': '__ID__'}) }}">
                     <thead>
                         <tr>
-                            <th width="16">Game</th>
+                            <th class="icon">Game</th>
                             <th>Hostname</th>
+                            <th width="10%">Map</th>
+                            <th width="10%">Players</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for server in servers %}
-                        <tr>
-                            <td><img src="{{ asset('images/games/' ~ server.game.icon) }}" alt="{{ server.game }}"></td>
-                            <td>{{ server }}</td>
+                        <tr data-id="{{ server.id }}">
+                            <td class="icon"><img src="{{ asset('images/games/' ~ server.game.icon) }}" alt="{{ server.game }}"></td>
+                            <td data-column="hostname">{{ server }}</td>
+                            <td data-column="map">N/A</td>
+                            <td data-column="players">N/A</td>
                         </tr>
                         {% endfor %}
                     </tbody>
